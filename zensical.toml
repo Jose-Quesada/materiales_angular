@@ -46,7 +46,7 @@ Copyright &copy; 2026 The authors
 # Read more: https://zensical.org/docs/setup/navigation/
 # Añade el menú aquí, con este nuevo formato:
 nav = [
-  { "01-introduccion" = "01-introduccion.md"},
+  { "01-introduccion" = "index.md"},
   { "02-crear-proyecto" = "02-crear-proyecto.md"},
   { "03-componentes" = "03-componentes.md"},
   { "04-plantillas" = "04-plantillas.md"},
