@@ -44,10 +44,26 @@ Copyright &copy; 2026 The authors
 # can be defined using TOML syntax.
 #
 # Read more: https://zensical.org/docs/setup/navigation/
-# nav = [
-#   { "Get started" = "index.md" },
-#   { "Markdown in 5min" = "markdown.md" },
-# ]
+# Añade el menú aquí, con este nuevo formato:
+nav = [
+  { "01-introduccion" = "01-introduccion.md"},
+  { "02-crear-proyecto" = "02-crear-proyecto.md"},
+  { "03-componentes" = "03-componentes.md"},
+  { "04-plantillas" = "04-plantillas.md"},
+  { "05-signals" = "05-signals.md"},
+  { "06-pipes" = "06-pipes.md"},
+  { "07-anidar-componentes" = "07-anidar-componentes.md"},
+  { "08-directivas" = "08-directivas.md"},
+  { "09-servicios" = "09-servicios.md"},
+  { "10-http1" = "10-http.md"},
+  { "11-router" = "11-router.md"},
+  { "12-formularios" = "12-formularios.md"},
+  { "13-proyeccion-contenido" = "13-proyeccion-contenido.md"},
+  { "14-queries" = "14-queries.md"},
+  { "15-ssr" = "15-ssr.md"},
+  { "16-integracion-librerias" = "16-integracion-librerias.md"},
+  { "17-proyecto-final" = "17-proyecto-final.md"},
+]
 
 # With the "extra_css" option you can add your own CSS styling to customize
 # your Zensical project according to your needs. You can add any number of
@@ -312,5 +328,41 @@ pygments_lang_class = true
 [project.markdown_extensions.pymdownx.inlinehilite]
 [project.markdown_extensions.pymdownx.snippets]
 [project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.pymdownx.details]
+
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
 
 
+# 1. Para las notas al pie de página (Footnotes)
+[project.markdown_extensions.footnotes]
+
+# 2. Para las casillas de las listas de tareas (Task Lists)
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
+
+# 3. Para los formatos de texto especiales (Resaltado, subrayado, tachado y teclas)
+[project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.caret]
+[project.markdown_extensions.pymdownx.tilde]
+[project.markdown_extensions.pymdownx.keys]
+
+# 4. Para las fórmulas matemáticas complejas (Maths)
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+
+
+# Activar el motor de renderizado matemático (MathJax)
+[[project.javascript]]
+url = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"
+
+
+# Para activar los iconos y emojis
+[project.markdown_extensions.pymdownx.emoji]
+emoji_index = "zensical.extensions.emoji.twemoji"
+emoji_generator = "zensical.extensions.emoji.to_svg"

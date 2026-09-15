@@ -1,0 +1,3574 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes básicos de Angular para Martos y alrededores.">
+      
+      
+        <meta name="author" content="Jose Quesada">
+      
+      
+      
+      
+        <link rel="next" href="../02-crear-proyecto/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.24">
+    
+    
+      
+        <title>Introducción a Angular - Curso de Angular</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.28978c9b.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduccion-a-angular" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="Curso de Angular" class="md-header__button md-logo" aria-label="Curso de Angular" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Curso de Angular
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introducción a Angular
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Curso de Angular" class="md-nav__button md-logo" aria-label="Curso de Angular" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Curso de Angular
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01-introduccion
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01-introduccion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resultados-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resultados de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desarrollo-teorico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desarrollo teórico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Desarrollo teórico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Qué es Angular?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Qué es Angular?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framework-vs-biblioteca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework vs Biblioteca
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#historia-y-evolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia y evolución
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia y evolución">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angularjs-2010-la-revolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AngularJS (2010) - La revolución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-2-septiembre-2016-la-reinvencion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 2 (septiembre 2016) - La reinvención
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-4-marzo-2017-la-normalizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 4 (marzo 2017) - La normalización
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#de-angular-5-a-angular-16-madurez-incremental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        De Angular 5 a Angular 16 - Madurez incremental
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-17-y-18-la-nueva-era" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 17 y 18 - La nueva era
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-moderno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular moderno
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Angular moderno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server-side-rendering-ssr-nativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Rendering (SSR) nativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura SPA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura SPA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-una-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo funciona una SPA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventajas-de-las-spas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventajas de las SPAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desventajas-de-las-spas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desventajas de las SPAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spa-vs-mpa-multi-page-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPA vs MPA (Multi-Page Application)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-frente-a-react-y-vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular frente a React y Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casos de uso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Casos de uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aplicaciones-empresariales-enterprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicaciones empresariales (Enterprise)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboards-y-paneles-de-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboards y paneles de control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-web-apps-pwa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Web Apps (PWA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aplicaciones-multiplataforma-con-ionic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicaciones multiplataforma con Ionic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sitios-con-ssr-para-seo-optimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitios con SSR para SEO óptimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#micro-frontends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Micro-frontends
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecosistema-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ecosistema Angular
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ecosistema Angular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-material" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Material
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-cdk-component-dev-kit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CDK (Component Dev Kit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-universal-ssr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Universal / SSR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-devtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rxjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RxJS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ionic-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ionic Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#herramientas-oficiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas oficiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Herramientas oficiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angular-cli_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-devtools_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-language-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Language Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-material-cdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Material CDK
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplos-guiados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos guiados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejemplos guiados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-1-instalacion-del-entorno-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 1: Instalación del entorno de desarrollo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-2-verificacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 2: Verificación del entorno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-3-explorar-angular-devtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 3: Explorar Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios-resueltos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicios resueltos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejercicios resueltos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-instalar-nodejs-mediante-nvm-y-angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 1: Instalar Node.js mediante nvm y Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-configurar-vs-code-con-las-extensiones-recomendadas-para-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 2: Configurar VS Code con las extensiones recomendadas para Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-propuestas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades propuestas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades propuestas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-1-investigar-la-hoja-de-ruta-oficial-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 1: Investigar la hoja de ruta oficial de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-2-instalar-y-configurar-el-entorno-de-desarrollo-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 2: Instalar y configurar el entorno de desarrollo completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-3-comparar-la-sintaxis-de-un-componente-simple-en-angular-react-y-vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 3: Comparar la sintaxis de un componente simple en Angular, React y Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-4-crear-una-cuenta-en-github-y-configurar-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 4: Crear una cuenta en GitHub y configurar git
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-5-explorar-la-documentacion-oficial-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 5: Explorar la documentación oficial de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-de-ampliacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades de ampliación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades de ampliación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-1-investigar-empresas-en-andalucia-y-espana-que-usen-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 1: Investigar empresas en Andalucía y España que usen Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-2-configurar-eslint-y-prettier-en-un-proyecto-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 2: Configurar ESLint y Prettier en un proyecto Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-3-crear-una-presentacion-sobre-la-evolucion-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 3: Crear una presentación sobre la evolución de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-profesionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas profesionales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errores frecuentes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursos-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursos adicionales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recursos adicionales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentacion-oficial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentación oficial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursos-y-tutoriales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursos y tutoriales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Libros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comunidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comunidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#herramientas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02-crear-proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03-componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04-plantillas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05-signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06-pipes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07-anidar-componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08-directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09-servicios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10-http1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11-router
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12-formularios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13-proyeccion-contenido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14-queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15-ssr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16-integracion-librerias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17-proyecto-final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resultados-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resultados de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desarrollo-teorico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desarrollo teórico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Desarrollo teórico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Qué es Angular?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Qué es Angular?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framework-vs-biblioteca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework vs Biblioteca
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#historia-y-evolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia y evolución
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia y evolución">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angularjs-2010-la-revolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AngularJS (2010) - La revolución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-2-septiembre-2016-la-reinvencion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 2 (septiembre 2016) - La reinvención
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-4-marzo-2017-la-normalizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 4 (marzo 2017) - La normalización
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#de-angular-5-a-angular-16-madurez-incremental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        De Angular 5 a Angular 16 - Madurez incremental
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-17-y-18-la-nueva-era" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular 17 y 18 - La nueva era
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-moderno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular moderno
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Angular moderno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server-side-rendering-ssr-nativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Rendering (SSR) nativo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquitectura-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura SPA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitectura SPA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona-una-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo funciona una SPA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventajas-de-las-spas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventajas de las SPAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desventajas-de-las-spas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desventajas de las SPAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spa-vs-mpa-multi-page-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPA vs MPA (Multi-Page Application)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-frente-a-react-y-vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular frente a React y Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casos de uso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Casos de uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aplicaciones-empresariales-enterprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicaciones empresariales (Enterprise)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboards-y-paneles-de-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboards y paneles de control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-web-apps-pwa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Web Apps (PWA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aplicaciones-multiplataforma-con-ionic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicaciones multiplataforma con Ionic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sitios-con-ssr-para-seo-optimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitios con SSR para SEO óptimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#micro-frontends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Micro-frontends
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecosistema-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ecosistema Angular
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ecosistema Angular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-material" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Material
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-cdk-component-dev-kit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CDK (Component Dev Kit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-universal-ssr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Universal / SSR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-devtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rxjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RxJS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ionic-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ionic Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#herramientas-oficiales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas oficiales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Herramientas oficiales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#angular-cli_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-devtools_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-language-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Language Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-material-cdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular Material CDK
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplos-guiados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos guiados
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejemplos guiados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-1-instalacion-del-entorno-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 1: Instalación del entorno de desarrollo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-2-verificacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 2: Verificación del entorno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-3-explorar-angular-devtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo 3: Explorar Angular DevTools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios-resueltos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicios resueltos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejercicios resueltos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-instalar-nodejs-mediante-nvm-y-angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 1: Instalar Node.js mediante nvm y Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-configurar-vs-code-con-las-extensiones-recomendadas-para-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 2: Configurar VS Code con las extensiones recomendadas para Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-propuestas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades propuestas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades propuestas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-1-investigar-la-hoja-de-ruta-oficial-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 1: Investigar la hoja de ruta oficial de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-2-instalar-y-configurar-el-entorno-de-desarrollo-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 2: Instalar y configurar el entorno de desarrollo completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-3-comparar-la-sintaxis-de-un-componente-simple-en-angular-react-y-vue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 3: Comparar la sintaxis de un componente simple en Angular, React y Vue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-4-crear-una-cuenta-en-github-y-configurar-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 4: Crear una cuenta en GitHub y configurar git
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-5-explorar-la-documentacion-oficial-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 5: Explorar la documentación oficial de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-de-ampliacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades de ampliación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades de ampliación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-1-investigar-empresas-en-andalucia-y-espana-que-usen-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 1: Investigar empresas en Andalucía y España que usen Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-2-configurar-eslint-y-prettier-en-un-proyecto-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 2: Configurar ESLint y Prettier en un proyecto Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-de-ampliacion-3-crear-una-presentacion-sobre-la-evolucion-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad de ampliación 3: Crear una presentación sobre la evolución de Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-profesionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas profesionales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errores frecuentes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursos-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursos adicionales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recursos adicionales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentacion-oficial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentación oficial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cursos-y-tutoriales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursos y tutoriales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Libros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comunidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comunidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#herramientas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="introduccion-a-angular">Introducción a Angular</h1>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al finalizar esta unidad, el alumnado será capaz de:</p>
+<ol>
+<li>Identificar qué es Angular y su posición dentro del ecosistema de desarrollo web actual.</li>
+<li>Diferenciar entre framework y biblioteca, comprendiendo las implicaciones arquitectónicas de cada enfoque.</li>
+<li>Conocer la historia y evolución de Angular desde AngularJS hasta las versiones modernas.</li>
+<li>Comprender la arquitectura SPA y sus diferencias fundamentales con las aplicaciones MPA tradicionales.</li>
+<li>Comparar Angular con otros frameworks y bibliotecas populares como React y Vue.</li>
+<li>Identificar los casos de uso más apropiados para desarrollar con Angular.</li>
+<li>Conocer las herramientas oficiales que componen el ecosistema Angular.</li>
+<li>Identificar las tendencias actuales del framework: Standalone Components, Signals y SSR.</li>
+</ol>
+<h2 id="resultados-de-aprendizaje">Resultados de aprendizaje</h2>
+<p>Tras completar esta unidad, el estudiante será capaz de:</p>
+<ul>
+<li>Explicar con sus propias palabras qué es Angular y por qué se considera un framework estructural.</li>
+<li>Instalar y configurar un entorno de desarrollo completo para trabajar con Angular.</li>
+<li>Enumerar las versiones principales de Angular y las novedades introducidas en cada una.</li>
+<li>Argumentar en qué situaciones es recomendable usar Angular frente a otras alternativas.</li>
+<li>Navegar por la documentación oficial de Angular para resolver dudas técnicas.</li>
+<li>Reconocer la estructura básica de un proyecto Angular generado con Angular CLI.</li>
+</ul>
+<h2 id="introduccion">Introducción</h2>
+<p>Imagina que entras en una biblioteca. Hace veinte años, las bibliotecas web eran estáticas: cada vez que querías leer un libro diferente, tenías que volver al mostrador, pedirlo, esperar a que el bibliotecario fuera al depósito y te lo trajera. Esto es exactamente cómo funcionaban las aplicaciones web tradicionales (Multi-Page Applications o MPA): cada vez que el usuario hacía clic en un enlace, el servidor generaba una página completamente nueva, la enviaba por la red y el navegador la renderizaba desde cero. El resultado: parpadeos constantes, tiempos de carga largos y una experiencia de usuario mediocre.</p>
+<p>Luego llegaron las Single-Page Applications (SPA). Siguiendo con nuestra analogía, ahora entras en una biblioteca moderna donde todos los libros están disponibles instantáneamente en una gran mesa interactiva. No hay que volver al mostrador: simplemente deslizas, tocas y la información aparece. La página se carga una sola vez y, a partir de ahí, todo ocurre dinámicamente mediante JavaScript, sin recargar la página completa. Esta revolución cambió para siempre la web.</p>
+<p>En 2010, Google presentó AngularJS, un framework que facilitaba enormemente la creación de estas SPAs mediante data binding bidireccional, inyección de dependencias y directivas. Fue un éxito rotundo... hasta que la web siguió evolucionando. En 2016, Google reescribió el framework desde cero y nació Angular (a secas, también conocido como Angular 2). No fue una actualización: fue un nuevo framework, incompatible con AngularJS, pero construido sobre las lecciones aprendidas.</p>
+<p>Hoy, Angular es mucho más que un framework para SPAs. Con la llegada de Angular 17 y 18, los Standalone Components, las Signals y el Server-Side Rendering (SSR) nativo, Angular se ha transformado en una plataforma de desarrollo completa que abarca desde aplicaciones web progresivas (PWA) hasta aplicaciones renderizadas en el servidor con hidratación parcial. Es, sin exagerar, uno de los frameworks más completos y mejor mantenidos del ecosistema JavaScript.</p>
+<p>En esta unidad, sentaremos las bases conceptuales necesarias antes de escribir nuestra primera línea de código. Entender de dónde viene Angular, qué problemas resuelve y cómo encaja en el panorama actual es fundamental para valorar adecuadamente las herramientas que vamos a utilizar durante todo el curso.</p>
+<h2 id="desarrollo-teorico">Desarrollo teórico</h2>
+<h3 id="que-es-angular">¿Qué es Angular?</h3>
+<p>Angular es un <strong>framework estructural de código abierto</strong> para construir aplicaciones web dinámicas, mantenido por Google y una comunidad activa de desarrolladores. Escrito en TypeScript, Angular proporciona una arquitectura completa y opinada (opinionated) que abarca desde la interfaz de usuario hasta la lógica de negocio, la gestión de estado, el enrutamiento, la comunicación con servidores, la validación de formularios y las animaciones.</p>
+<p>La palabra "framework" no es casual. A diferencia de una biblioteca (library) como React, que se limita a la capa de vista (la V en MVC), Angular proporciona una solución integral y estructurada. Vamos a desglosar esta diferencia fundamental:</p>
+<h4 id="framework-vs-biblioteca">Framework vs Biblioteca</h4>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Framework (Angular)</th>
+<th>Biblioteca (React)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Control del flujo</strong></td>
+<td>El framework dicta cómo se estructura la aplicación. "No me llames tú, yo te llamo a ti" (IoC - Inversión de Control).</td>
+<td>La biblioteca es llamada por tu código cuando la necesitas. Tú controlas el flujo.</td>
+</tr>
+<tr>
+<td><strong>Opinión sobre arquitectura</strong></td>
+<td>Opinado: propone una forma concreta de organizar el código (módulos/componentes, servicios, pipes, directivas).</td>
+<td>No opinado: te deja decidir cómo organizar todo. Necesitas elegir librerías complementarias.</td>
+</tr>
+<tr>
+<td><strong>Baterías incluidas</strong></td>
+<td>Incluye router, cliente HTTP, validación de formularios, animaciones, i18n, testing, SSR. Todo integrado y coherente.</td>
+<td>Solo la capa de UI. Necesitas instalar y configurar React Router, React Query/Axios, React Hook Form, etc.</td>
+</tr>
+<tr>
+<td><strong>Curva de aprendizaje</strong></td>
+<td>Alta: hay que aprender TypeScript, decoradores, inyección de dependencias, observables, módulos, etc.</td>
+<td>Media-baja: JSX, hooks, estado. Lo básico se aprende rápido. Lo avanzado se complica.</td>
+</tr>
+<tr>
+<td><strong>Consistencia entre proyectos</strong></td>
+<td>Muy alta: la estructura opinada hace que proyectos de diferentes equipos sean muy similares.</td>
+<td>Baja: cada proyecto puede ser muy diferente. Más libertad, menos homogeneidad.</td>
+</tr>
+<tr>
+<td><strong>Rendimiento</strong></td>
+<td>Muy bueno con las técnicas modernas (OnPush, Signals, compilación AOT). Detección de cambios basada en Zone.js o Signals.</td>
+<td>Bueno con Virtual DOM y reconciliación. React 18 añade Concurrent Mode.</td>
+</tr>
+<tr>
+<td><strong>TypeScript</strong></td>
+<td>Obligatorio y profundamente integrado. El ecosistema está diseñado para TypeScript.</td>
+<td>Opcional. Se puede usar con JavaScript plano o TypeScript. La integración no es tan profunda.</td>
+</tr>
+</tbody>
+</table>
+<p>Angular, al ser un framework, te dice: "así es como se hacen las cosas aquí". Esto puede parecer restrictivo, pero en equipos grandes y proyectos empresariales donde trabajan decenas o cientos de desarrolladores simultáneamente, esa homogeneidad es una ventaja competitiva enorme. Cualquier desarrollador Angular puede incorporarse a un proyecto Angular existente y ser productivo en horas.</p>
+<h3 id="historia-y-evolucion">Historia y evolución</h3>
+<p>La historia de Angular es fascinante porque ilustra cómo Google aprendió de sus propios errores para crear algo mejor. Recorramos el viaje:</p>
+<h4 id="angularjs-2010-la-revolucion">AngularJS (2010) - La revolución</h4>
+<p>AngularJS fue presentado por Miško Hevery, un ingeniero de Google, en 2010. Su propuesta era radical: data binding bidireccional (two-way data binding) en el navegador. Cualquier cambio en el modelo de datos se reflejaba automáticamente en la vista, y viceversa. Además introducía:</p>
+<ul>
+<li><strong>Directivas</strong>: atributos HTML personalizados que extendían el comportamiento del DOM.</li>
+<li><strong>Inyección de dependencias</strong>: un contenedor de servicios integrado en el framework.</li>
+<li><strong>Filtros</strong>: para formatear datos en las plantillas (el precursor de los pipes actuales).</li>
+<li><strong>Scope</strong>: un mecanismo para conectar controladores y vistas.</li>
+<li><strong>$digest cycle</strong>: un ciclo de "dirty checking" que recorría todos los scopes buscando cambios.</li>
+</ul>
+<p>AngularJS fue un éxito masivo. Empresas, startups y desarrolladores lo adoptaron rápidamente. Sin embargo, a medida que las aplicaciones crecían en complejidad, surgían problemas de rendimiento. El ciclo <code>$digest</code> podía volverse extremadamente costoso en aplicaciones grandes porque comprobaba cada binding en cada ciclo. Las aplicaciones con cientos o miles de watchers se volvían lentas.</p>
+<h4 id="angular-2-septiembre-2016-la-reinvencion">Angular 2 (septiembre 2016) - La reinvención</h4>
+<p>Google decidió que no podía simplemente "arreglar" AngularJS. Los problemas eran arquitectónicos y requerían una reescritura completa. Angular 2 fue un framework completamente nuevo:</p>
+<ul>
+<li><strong>TypeScript</strong> como lenguaje principal (AngularJS usaba JavaScript).</li>
+<li><strong>Arquitectura basada en componentes</strong> en lugar de controladores y scopes.</li>
+<li><strong>Detección de cambios unidireccional</strong> en lugar de two-way binding por defecto.</li>
+<li><strong>Compilación AOT (Ahead-of-Time)</strong>: las plantillas se compilaban durante el build, no en el navegador.</li>
+<li><strong>Sistema de módulos (NgModule)</strong>: para organizar la aplicación.</li>
+<li><strong>Renderizado multiplataforma</strong>: el mismo código podía ejecutarse en web, móvil (NativeScript) y escritorio.</li>
+<li><strong>RxJS y Observables</strong>: como núcleo de la programación reactiva.</li>
+</ul>
+<p>Esta reinvención causó división en la comunidad. Muchos proyectos estaban en AngularJS y la migración no era automática. Google creó <code>ngUpgrade</code> para permitir la migración gradual, pero el daño reputacional estaba hecho. Algunos desarrolladores migraron a React.</p>
+<h4 id="angular-4-marzo-2017-la-normalizacion">Angular 4 (marzo 2017) - La normalización</h4>
+<p>Nota: Angular 3 nunca existió públicamente. Se saltó la versión 3 debido a un desajuste interno en los paquetes de Google.</p>
+<p>Angular 4 introdujo mejoras incrementales: directiva <code>*ngIf</code> con <code>else</code>, pipes <code>titlecase</code>, animaciones separadas en <code>@angular/animations</code>, y un paquete AOT más rápido. Angular empezó a adoptar el versionado semántico y se comprometió a lanzar una versión mayor cada 6 meses aproximadamente.</p>
+<h4 id="de-angular-5-a-angular-16-madurez-incremental">De Angular 5 a Angular 16 - Madurez incremental</h4>
+<ul>
+<li><strong>Angular 5</strong> (noviembre 2017): <code>HttpClient</code> como reemplazo de <code>@angular/http</code>, build optimizer, internationalization con i18n.</li>
+<li><strong>Angular 6</strong> (mayo 2018): Angular Elements (web components con Angular), <code>ng update</code> para migraciones automáticas, CLI workspace, schematic workflows, RxJS 6.</li>
+<li><strong>Angular 7</strong> (octubre 2018): CLI prompts, Virtual Scrolling, Drag and Drop, Actualizaciones de rendimiento.</li>
+<li><strong>Angular 8</strong> (mayo 2019): Ivy como compilador experimental, differential loading (ES2015 y ES5), Web Workers, TypeScript 3.4.</li>
+<li><strong>Angular 9</strong> (febrero 2020): IVY se convierte en el motor de renderizado por defecto. Mejoras en el tamaño de bundles, testabilidad mejora drásticamente.</li>
+<li><strong>Angular 10</strong> (junio 2020): Angular Material con rangos de fecha, strict mode opcional, TypeScript 3.9.</li>
+<li><strong>Angular 11</strong> (noviembre 2020): HMR (Hot Module Replacement), webpack 5 experimental, stricter types.</li>
+<li><strong>Angular 12</strong> (mayo 2021): Migración de i18n, eliminación de View Engine, migración a Sass moderno de Angular Material.</li>
+<li><strong>Angular 13</strong> (noviembre 2021): View Engine completamente eliminado, Ivy en todas partes, componentes dinámicos, RxJS 7, TypeScript 4.4.</li>
+<li><strong>Angular 14</strong> (junio 2022): Standalone Components (developer preview), Typed Forms, inject() funcional, Angular DevTools con profiling.</li>
+<li><strong>Angular 15</strong> (noviembre 2022): Standalone Components estables, <code>provideHttpClient</code>, <code>provideRouter</code>, <code>withInterceptorsFromDi</code>, Directiva composition API, imágenes NgOptimizedImage.</li>
+<li><strong>Angular 16</strong> (mayo 2023): Signals (developer preview), SSR con hydration progresiva, esbuild como builder experimental, Required Inputs, <code>takeUntilDestroyed()</code>.</li>
+</ul>
+<h4 id="angular-17-y-18-la-nueva-era">Angular 17 y 18 - La nueva era</h4>
+<p><strong>Angular 17</strong> (noviembre 2023) marcó un antes y un después, apodado "Angular Renaissance":</p>
+<ul>
+<li><strong>Nueva sintaxis de control de flujo</strong> (<code>@if</code>, <code>@for</code>, <code>@switch</code>): reemplaza las directivas <code>*ngIf</code>, <code>*ngFor</code>, <code>*ngSwitch</code> con una sintaxis más limpia y tipada.</li>
+<li><strong>Deferrable Views</strong> (<code>@defer</code>): carga diferida de componentes basada en triggers (interacción, viewport, timer).</li>
+<li><strong>esbuild y Vite como builders por defecto</strong>: los tiempos de build se redujeron hasta un 87%.</li>
+<li><strong>SSR con hidratación (developer preview)</strong>: renderizado en el servidor sin perder interactividad.</li>
+<li><strong>Signals estables</strong>: fuera de developer preview, Signals se convirtieron en el sistema de reactividad recomendado.</li>
+</ul>
+<p><strong>Angular 18</strong> (mayo 2024) continuó la transformación:</p>
+<ul>
+<li><strong>Zoneless Angular (experimental)</strong>: permite ejecutar Angular sin Zone.js, utilizando exclusivamente Signals para la detección de cambios. Las aplicaciones pueden ser hasta un 40% más pequeñas.</li>
+<li><strong>SSR mejorado</strong>: i18n en SSR, mejor hidratación, event replay.</li>
+<li><strong>Signal APIs ampliadas</strong>: <code>linkedSignal()</code>, <code>resource()</code>, mejor integración con formularios.</li>
+<li><strong>Angular Material 18</strong>: nuevos componentes, mejor accesibilidad.</li>
+<li><strong>Fallback content en @defer</strong>: contenido mientras se carga el componente diferido.</li>
+</ul>
+<p><strong>Angular 19</strong> (noviembre 2024) - La versión más reciente:</p>
+<ul>
+<li><strong>Incremental Hydration</strong>: hidratación progresiva de componentes bajo demanda.</li>
+<li><strong>linkedSignal</strong> y <strong>resource()</strong> estables.</li>
+<li><strong>Zoneless estable</strong>: se puede construir aplicaciones completas sin Zone.js.</li>
+<li><strong>Standalone Components por defecto</strong>: al usar <code>ng new</code>, los proyectos son standalone por defecto.</li>
+<li><strong>Reactivity con Signals integrada en todo el framework</strong>: formularios, router, todo usa Signals.</li>
+<li><strong>@let</strong> en templates: nueva sintaxis para variables locales en plantillas.</li>
+</ul>
+<h3 id="angular-moderno">Angular moderno</h3>
+<p>El Angular de hoy es radicalmente diferente al Angular de 2016. Los cambios más significativos que definen el Angular moderno son:</p>
+<h4 id="standalone-components">Standalone Components</h4>
+<p>Hasta Angular 14, todo componente debía declararse en un NgModule. Esto creaba fricción: para crear un simple componente necesitabas crear o modificar un módulo, entender el sistema de imports/exports de módulos, y lidiar con una capa adicional de burocracia.</p>
+<p>Los Standalone Components eliminan esta complejidad. Un componente standalone se declara a sí mismo, indicando directamente qué otros componentes, directivas y pipes necesita:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Antes (con NgModules)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">@NgModule</span><span class="p">({</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">declarations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">MiComponente</span><span class="p">],</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">CommonModule</span><span class="p">,</span><span class="w"> </span><span class="nx">FormsModule</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nx">exports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">MiComponente</span><span class="p">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">})</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">MiModulo</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">// Ahora (Standalone)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;app-mi-componente&#39;</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nx">standalone</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">CommonModule</span><span class="p">,</span><span class="w"> </span><span class="nx">FormsModule</span><span class="p">,</span><span class="w"> </span><span class="nx">OtroComponente</span><span class="p">],</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;./mi-componente.component.html&#39;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">})</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">MiComponente</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+<p>Los módulos no desaparecen (siguen siendo útiles para organizar servicios con NgModule.providers o para lazy loading basado en módulos), pero ya no son obligatorios para la mayoría de los casos de uso.</p>
+<h4 id="signals">Signals</h4>
+<p>Las Signals representan el cambio más profundo en la reactividad de Angular desde su creación. Hasta Angular 16, la detección de cambios se basaba en Zone.js: una biblioteca que "parchea" (monkey-patches) todas las APIs asíncronas del navegador (setTimeout, requestAnimationFrame, eventos, Promises, etc.) para detectar cuándo algo ha cambiado y ejecutar la detección de cambios desde la raíz del árbol de componentes.</p>
+<p>Este enfoque funciona, pero tiene desventajas:
+- Zone.js añade overhead y tamaño al bundle.
+- La detección de cambios recorre el árbol completo (aunque OnPush optimiza esto).
+- Las ExpressionChangedAfterItHasBeenCheckedError son difíciles de entender y depurar.</p>
+<p>Las Signals introducen un nuevo modelo de reactividad "fina" (fine-grained reactivity): solo los componentes que dependen de una Signal que ha cambiado se re-renderizan. No hay zone.js, no hay recorrido del árbol completo, no hay ExpressionChangedAfterItHasBeenCheckedError.</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Con Signals</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">contador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nx">incrementar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="nx">contador</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// Solo este componente y los que dependan de contador se actualizan</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="control-flow-syntax">Control Flow Syntax</h4>
+<p>La nueva sintaxis de control de flujo (<code>@if</code>, <code>@for</code>, <code>@switch</code>) reemplaza las antiguas directivas <code>*ngIf</code>, <code>*ngFor</code>, <code>*ngSwitch</code>. La nueva sintaxis es más legible, está integrada en el compilador (no necesita CommonModule), tiene mejor soporte de tipos, y permite el seguimiento de track más intuitivo en bucles:</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">&lt;!-- Antes --&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="err">*</span><span class="na">ngIf</span><span class="o">=</span><span class="s">&quot;usuario; else noAuth&quot;</span><span class="p">&gt;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="p">&lt;</span><span class="nt">p</span> <span class="err">*</span><span class="na">ngFor</span><span class="o">=</span><span class="s">&quot;let item of items; trackBy: trackById&quot;</span><span class="p">&gt;</span>{{ item.nombre }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">&lt;</span><span class="nt">ng-template</span> <span class="err">#</span><span class="na">noAuth</span><span class="p">&gt;&lt;</span><span class="nt">p</span><span class="p">&gt;</span>No autenticado<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;&lt;/</span><span class="nt">ng-template</span><span class="p">&gt;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="cm">&lt;!-- Ahora --&gt;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>@if (usuario) {
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  @for (item of items; track item.id) {
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ item.nombre }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  }
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>} @else {
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>No autenticado<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>}
+</span></code></pre></div>
+<h4 id="server-side-rendering-ssr-nativo">Server-Side Rendering (SSR) nativo</h4>
+<p>Angular siempre ha tenido SSR mediante Angular Universal, pero era complejo de configurar y mantener. A partir de Angular 17, el SSR es una opción nativa en <code>ng new</code> (con el flag <code>--ssr</code>). El SSR mejora el SEO, el Core Web Vitals y reduce el Time to First Byte (TTFB). Con Angular 19, la hidratación incremental permite que los componentes se hidraten (se vuelvan interactivos) bajo demanda, mejorando aún más el rendimiento percibido.</p>
+<h3 id="arquitectura-spa">Arquitectura SPA</h3>
+<p>Una <strong>Single-Page Application (SPA)</strong> es una aplicación web que se ejecuta completamente en el navegador del usuario, cargando una única página HTML inicialmente. A partir de ahí, la navegación y la interacción del usuario se gestionan mediante JavaScript, que manipula el DOM y se comunica con el servidor mediante APIs (normalmente REST o GraphQL) para obtener o enviar datos.</p>
+<h4 id="como-funciona-una-spa">Cómo funciona una SPA</h4>
+<ol>
+<li>El usuario solicita la URL de la aplicación.</li>
+<li>El servidor devuelve un archivo <code>index.html</code> casi vacío, con referencias a los bundles de JavaScript y CSS.</li>
+<li>El navegador descarga y ejecuta el JavaScript.</li>
+<li>El framework (Angular) arranca, lee la URL actual, y renderiza la vista correspondiente mediante su router interno.</li>
+<li>Cuando el usuario navega a otra sección, el router intercepta el clic, modifica la URL mediante la History API del navegador (sin recargar la página), y reemplaza el contenido del DOM con la nueva vista.</li>
+<li>Los datos se obtienen del servidor mediante peticiones AJAX (fetch, HttpClient).</li>
+</ol>
+<h4 id="ventajas-de-las-spas">Ventajas de las SPAs</h4>
+<ul>
+<li><strong>Experiencia de usuario fluida</strong>: sin parpadeos ni pantallas en blanco entre navegaciones. Las transiciones son instantáneas.</li>
+<li><strong>Menor carga del servidor</strong>: el servidor solo sirve datos (JSON, XML) y assets estáticos. La lógica de renderizado se traslada al cliente.</li>
+<li><strong>Desarrollo desacoplado</strong>: el frontend y el backend pueden desarrollarse de forma independiente por equipos diferentes.</li>
+<li><strong>Offline y PWA</strong>: las SPAs pueden cachearse en el navegador para funcionar sin conexión (usando Service Workers).</li>
+<li><strong>Reutilización de código</strong>: con frameworks como Ionic, el mismo código Angular puede compilarse para iOS y Android.</li>
+</ul>
+<h4 id="desventajas-de-las-spas">Desventajas de las SPAs</h4>
+<ul>
+<li><strong>SEO tradicional limitado</strong>: el contenido renderizado con JavaScript puede no ser indexado correctamente por los motores de búsqueda (aunque Googlebot ha mejorado y el SSR de Angular aborda este problema).</li>
+<li><strong>Tiempo de carga inicial</strong>: descargar todo el JavaScript necesario puede ser lento en conexiones pobres. Las técnicas de lazy loading y SSR mitigan esto.</li>
+<li><strong>Complejidad del estado</strong>: el estado se mantiene en el navegador y debe gestionarse correctamente (con bibliotecas de gestión de estado, Signals, etc.).</li>
+<li><strong>Seguridad</strong>: al ser el frontend el que renderiza, se debe prestar especial atención a XSS, CSRF y exposición de lógica sensible.</li>
+<li><strong>Accesibilidad</strong>: las SPAs deben gestionar manualmente el foco, los anuncios de lectores de pantalla y los cambios de título de página.</li>
+</ul>
+<h4 id="spa-vs-mpa-multi-page-application">SPA vs MPA (Multi-Page Application)</h4>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>SPA (Angular)</th>
+<th>MPA (tradicional)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Carga inicial</strong></td>
+<td>Más lenta (descarga JS)</td>
+<td>Rápida (HTML desde servidor)</td>
+</tr>
+<tr>
+<td><strong>Navegación</strong></td>
+<td>Instantánea</td>
+<td>Recarga completa de página</td>
+</tr>
+<tr>
+<td><strong>SEO</strong></td>
+<td>Difícil sin SSR</td>
+<td>Excelente por defecto</td>
+</tr>
+<tr>
+<td><strong>Desarrollo</strong></td>
+<td>Complejo pero productivo</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td><strong>Interactividad</strong></td>
+<td>Muy alta</td>
+<td>Limitada</td>
+</tr>
+<tr>
+<td><strong>Uso de recursos</strong></td>
+<td>Más CPU en cliente</td>
+<td>Más CPU en servidor</td>
+</tr>
+<tr>
+<td><strong>Offline</strong></td>
+<td>Posible</td>
+<td>Muy limitado</td>
+</tr>
+<tr>
+<td><strong>Ejemplos</strong></td>
+<td>Gmail, Google Maps, Trello</td>
+<td>Blogs, sitios de noticias, e-commerce tradicional</td>
+</tr>
+</tbody>
+</table>
+<h3 id="angular-frente-a-react-y-vue">Angular frente a React y Vue</h3>
+<p>La eterna pregunta del estudiante: ¿cuál debería aprender? La respuesta honesta es: los tres, pero empezando por el que mejor se alinee con tus objetivos profesionales y el mercado laboral de tu zona. Vamos a una comparativa detallada:</p>
+<table>
+<thead>
+<tr>
+<th>Dimensión</th>
+<th>Angular</th>
+<th>React</th>
+<th>Vue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Creador / Mantenedor</strong></td>
+<td>Google</td>
+<td>Meta (Facebook)</td>
+<td>Evan You (ex-Google, comunidad)</td>
+</tr>
+<tr>
+<td><strong>Tipo</strong></td>
+<td>Framework completo</td>
+<td>Biblioteca (UI) + ecosistema</td>
+<td>Framework progresivo</td>
+</tr>
+<tr>
+<td><strong>Lenguaje principal</strong></td>
+<td>TypeScript (obligatorio)</td>
+<td>JavaScript / JSX (TypeScript opcional)</td>
+<td>JavaScript (TypeScript opcional)</td>
+</tr>
+<tr>
+<td><strong>Filosofía</strong></td>
+<td>Opinado, estructura predefinida, "baterías incluidas"</td>
+<td>Flexible, solo la vista, "elige tu propia aventura"</td>
+<td>Equilibrado: opinionado en lo importante, flexible en lo accesorio</td>
+</tr>
+<tr>
+<td><strong>Curva de aprendizaje</strong></td>
+<td>Alta (TypeScript, DI, RxJS, Decoradores, NgModule/Standalone)</td>
+<td>Media (JSX, hooks, elegir librerías complementarias)</td>
+<td>Baja (HTML, CSS, JS estándar, API simple)</td>
+</tr>
+<tr>
+<td><strong>Arquitectura</strong></td>
+<td>Componentes + Servicios + Inyección de dependencias + Módulos</td>
+<td>Componentes + Hooks</td>
+<td>Componentes (Options API o Composition API)</td>
+</tr>
+<tr>
+<td><strong>Renderizado</strong></td>
+<td>Incremental DOM + Compilación AOT</td>
+<td>Virtual DOM + Reconciliación</td>
+<td>Virtual DOM + Compilación de plantillas</td>
+</tr>
+<tr>
+<td><strong>Detección de cambios</strong></td>
+<td>Zone.js (legacy) / Signals (moderno)</td>
+<td>Virtual DOM diff</td>
+<td>Reactividad basada en Proxy</td>
+</tr>
+<tr>
+<td><strong>Estado global</strong></td>
+<td>RxJS, Signals, NgRx, Akita</td>
+<td>Redux, Zustand, Context API, Jotai</td>
+<td>Pinia, Vuex</td>
+</tr>
+<tr>
+<td><strong>Enrutamiento</strong></td>
+<td>Angular Router (nativo)</td>
+<td>React Router, TanStack Router</td>
+<td>Vue Router (nativo)</td>
+</tr>
+<tr>
+<td><strong>Formularios</strong></td>
+<td>Template-driven + Reactive Forms (nativo)</td>
+<td>Sin solución nativa (Formik, React Hook Form)</td>
+<td>Vue Form, VeeValidate</td>
+</tr>
+<tr>
+<td><strong>Animaciones</strong></td>
+<td>Angular Animations (nativo, potente)</td>
+<td>React Transition Group, Framer Motion</td>
+<td>Vue Transitions (nativo)</td>
+</tr>
+<tr>
+<td><strong>SSR</strong></td>
+<td>Angular Universal / SSR nativo</td>
+<td>Next.js (líder), Remix</td>
+<td>Nuxt.js</td>
+</tr>
+<tr>
+<td><strong>Mobile</strong></td>
+<td>Ionic, NativeScript</td>
+<td>React Native</td>
+<td>NativeScript, Capacitor</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Jasmine/Karma (nativo), Jest, Cypress, Playwright</td>
+<td>Jest + React Testing Library</td>
+<td>Vitest + Vue Test Utils</td>
+</tr>
+<tr>
+<td><strong>Ecosistema</strong></td>
+<td>Completo y oficial (Material, CDK, CLI, DevTools)</td>
+<td>Masivo pero fragmentado (muchas librerías de terceros)</td>
+<td>Creciente, librerías oficiales y comunitarias</td>
+</tr>
+<tr>
+<td><strong>Mercado laboral (España)</strong></td>
+<td>Muy fuerte en sector empresarial y banca</td>
+<td>Alta demanda generalizada</td>
+<td>Creciente, especialmente en startups</td>
+</tr>
+<tr>
+<td><strong>Salario medio (España 2024)</strong></td>
+<td>32.000€ - 50.000€</td>
+<td>30.000€ - 48.000€</td>
+<td>28.000€ - 42.000€</td>
+</tr>
+<tr>
+<td><strong>Versión estable actual</strong></td>
+<td>Angular 19</td>
+<td>React 19</td>
+<td>Vue 3.5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>¿Cuándo elegir Angular?</strong>
+- Proyectos empresariales grandes y de larga duración.
+- Equipos grandes donde la consistencia es crítica.
+- Aplicaciones complejas con formularios avanzados y lógica de negocio densa.
+- Necesidad de un ecosistema completo sin depender de muchas librerías de terceros.
+- Empresas que ya tienen experiencia con TypeScript.</p>
+<p><strong>¿Cuándo elegir React?</strong>
+- Necesidad de máxima flexibilidad arquitectónica.
+- Proyectos que requieren React Native para móvil.
+- Equipos que prefieren elegir cada herramienta.
+- Proyectos con mucho contenido dinámico donde el Virtual DOM brilla.</p>
+<p><strong>¿Cuándo elegir Vue?</strong>
+- Proyectos pequeños o medianos con plazos ajustados.
+- Migración gradual de aplicaciones jQuery o vanilla JS.
+- Equipos con menos experiencia en TypeScript.
+- Startups que necesitan moverse rápido.</p>
+<h3 id="casos-de-uso">Casos de uso</h3>
+<p>Angular brilla en los siguientes escenarios:</p>
+<h4 id="aplicaciones-empresariales-enterprise">Aplicaciones empresariales (Enterprise)</h4>
+<p>Angular fue diseñado pensando en las necesidades de Google: aplicaciones enormes mantenidas por cientos de ingenieros durante años. La estructura opinada, TypeScript, la inyección de dependencias y la arquitectura basada en servicios hacen que Angular sea ideal para aplicaciones empresariales complejas como ERPs, CRMs, sistemas de gestión de inventario, plataformas de banca online, y software administrativo.</p>
+<h4 id="dashboards-y-paneles-de-control">Dashboards y paneles de control</h4>
+<p>Los paneles de administración con tablas, gráficos, formularios complejos y múltiples widgets se benefician enormemente de las capacidades de Angular: lazy loading para cargar solo lo necesario, formularios reactivos para validación compleja, y un ecosistema de librerías de UI como Angular Material, PrimeNG o DevExtreme.</p>
+<h4 id="progressive-web-apps-pwa">Progressive Web Apps (PWA)</h4>
+<p>Angular tiene soporte nativo para PWAs mediante <code>@angular/pwa</code>. Con un solo comando (<code>ng add @angular/pwa</code>), tu aplicación se convierte en una Progressive Web App con Service Worker, manifiesto, instalabilidad y soporte offline. Empresas como Twitter Lite, Forbes y Alibaba han usado técnicas similares.</p>
+<h4 id="aplicaciones-multiplataforma-con-ionic">Aplicaciones multiplataforma con Ionic</h4>
+<p>Ionic Framework, construido sobre Angular (y también compatible con React y Vue), permite compilar la misma base de código para web, iOS y Android. Es una opción excelente para empresas que necesitan presencia tanto web como móvil sin duplicar el desarrollo.</p>
+<h4 id="sitios-con-ssr-para-seo-optimo">Sitios con SSR para SEO óptimo</h4>
+<p>Con el SSR nativo de Angular 17+, es posible crear sitios web que necesitan SEO (tiendas online, blogs corporativos, portales de noticias) combinando la interactividad de una SPA con el SEO de una MPA.</p>
+<h4 id="micro-frontends">Micro-frontends</h4>
+<p>Angular, combinado con herramientas como Module Federation de webpack, es una elección sólida para implementar arquitecturas de micro-frontends, donde equipos independientes desarrollan y despliegan partes de una aplicación mayor de forma autónoma.</p>
+<h3 id="ecosistema-angular">Ecosistema Angular</h3>
+<p>El ecosistema de Angular es rico y está bien mantenido. Estas son las herramientas y bibliotecas fundamentales:</p>
+<h4 id="angular-cli">Angular CLI</h4>
+<p>La interfaz de línea de comandos oficial para crear, desarrollar, probar y desplegar aplicaciones Angular. Permite generar proyectos, componentes, servicios, directivas, pipes, módulos y más con comandos simples. Incluye un servidor de desarrollo con hot reload, builders para compilación, y schematics para automatizar tareas.</p>
+<h4 id="angular-material">Angular Material</h4>
+<p>La biblioteca de componentes de interfaz de usuario oficial de Angular, basada en Material Design de Google. Incluye decenas de componentes accesibles, temáticos y bien documentados: botones, formularios, tablas, diálogos, menús, navegación, tarjetas, etc.</p>
+<h4 id="angular-cdk-component-dev-kit">Angular CDK (Component Dev Kit)</h4>
+<p>El CDK es el núcleo sobre el que se construye Angular Material. Proporciona primitivas de comportamiento sin estilos impuestos: virtual scrolling, drag and drop, overlay (modales, tooltips), a11y, layout, testing harnesses, etc. Puedes usar el CDK para construir tu propia biblioteca de componentes con comportamientos complejos.</p>
+<h4 id="angular-universal-ssr">Angular Universal / SSR</h4>
+<p>El sistema de Server-Side Rendering de Angular, ahora integrado nativamente en el CLI (<code>ng new --ssr</code>). Permite renderizar la aplicación en el servidor (Node.js), enviando HTML completo al navegador y luego hidratando la aplicación para hacerla interactiva. Mejora SEO, Core Web Vitals y rendimiento percibido.</p>
+<h4 id="angular-devtools">Angular DevTools</h4>
+<p>Una extensión para Chrome y Firefox que permite inspeccionar y depurar aplicaciones Angular. Características:
+- <strong>Árbol de componentes</strong>: ver la jerarquía completa de componentes, sus propiedades y estado.
+- <strong>Profiler</strong>: medir tiempos de renderizado e identificar cuellos de botella.
+- <strong>Injector Tree</strong>: visualizar el árbol de inyectores y dependencias.
+- <strong>Signal Debugging</strong>: inspeccionar el valor de las Signals en tiempo real.</p>
+<h4 id="rxjs">RxJS</h4>
+<p>Reactive Extensions for JavaScript. Aunque no es exclusivo de Angular, RxJS está profundamente integrado. El <code>HttpClient</code> devuelve Observables, los formularios reactivos exponen Observables de valores y estados, y el router expone Observables de parámetros y eventos de navegación. Con la llegada de Signals, RxJS sigue siendo la herramienta principal para flujos asíncronos complejos, mientras Signals manejan el estado sincrónico.</p>
+<h4 id="typescript">TypeScript</h4>
+<p>TypeScript es el lenguaje en el que está escrito Angular y el lenguaje recomendado para desarrollar aplicaciones. Añade tipado estático opcional, interfaces, genéricos, decoradores, enums y otras características a JavaScript. La integración con el IDE (especialmente VS Code) es excelente: autocompletado, refactorización, navegación y detección de errores en tiempo real.</p>
+<h4 id="nx">Nx</h4>
+<p>Nx (de Nrwl) es un conjunto de herramientas para monorepositorios. Aunque no es exclusivo de Angular, es muy popular en el ecosistema. Nx permite gestionar múltiples aplicaciones y bibliotecas en un mismo repositorio, con caché de builds, gráficos de dependencias, generadores personalizados y ejecución de tareas optimizada. Grandes empresas como Google, Microsoft y Cisco usan Nx con Angular.</p>
+<h4 id="ionic-framework">Ionic Framework</h4>
+<p>Ionic es un framework para construir aplicaciones móviles híbridas usando tecnologías web. Aunque ahora soporta React y Vue, su integración original y más madura es con Angular. Permite acceder a funcionalidades nativas (cámara, GPS, notificaciones) mediante Capacitor o Cordova.</p>
+<h3 id="herramientas-oficiales">Herramientas oficiales</h3>
+<h4 id="angular-cli_1">Angular CLI</h4>
+<p>Ya mencionada, es la herramienta fundamental. Comandos esenciales:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ng<span class="w"> </span>new<span class="w"> </span>mi-proyecto<span class="w">      </span><span class="c1"># Crear nuevo proyecto</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ng<span class="w"> </span>serve<span class="w">                </span><span class="c1"># Iniciar servidor de desarrollo</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ng<span class="w"> </span>generate<span class="w"> </span>component<span class="w"> </span>x<span class="w"> </span><span class="c1"># Generar un componente</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ng<span class="w"> </span>build<span class="w">                </span><span class="c1"># Compilar para producción</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ng<span class="w"> </span><span class="nb">test</span><span class="w">                 </span><span class="c1"># Ejecutar tests unitarios</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ng<span class="w"> </span>lint<span class="w">                 </span><span class="c1"># Ejecutar linter</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ng<span class="w"> </span>update<span class="w">               </span><span class="c1"># Actualizar dependencias de Angular</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ng<span class="w"> </span>add<span class="w"> </span>@angular/material<span class="w"> </span><span class="c1"># Añadir Angular Material</span>
+</span></code></pre></div>
+<h4 id="angular-devtools_1">Angular DevTools</h4>
+<p>Como se mencionó anteriormente, es la extensión de navegador para depuración. Es indispensable para el desarrollo diario. Permite:
+- Ver el estado de los componentes (inputs, outputs, propiedades).
+- Medir el rendimiento de la detección de cambios.
+- Inspeccionar el árbol de inyección de dependencias.
+- Depurar Signals.</p>
+<h4 id="angular-language-service">Angular Language Service</h4>
+<p>Un plugin para editores de código (VS Code, WebStorm, Sublime Text) que proporciona:
+- Autocompletado en plantillas HTML.
+- Información de tipos y validación inline en expresiones de plantilla.
+- Navegación a definiciones desde la plantilla.
+- Detección de errores en tiempo real.
+- Soporte para la nueva sintaxis de control de flujo.</p>
+<h4 id="angular-material-cdk">Angular Material CDK</h4>
+<p>Ya mencionado en el ecosistema, el CDK merece una mención especial como herramienta de desarrollo. Sus primitivas de accesibilidad (<code>a11y</code>), gestión de foco, overlay, drag and drop y virtual scrolling son reutilizables incluso si no usas Angular Material.</p>
+<h2 id="ejemplos-guiados">Ejemplos guiados</h2>
+<h3 id="ejemplo-1-instalacion-del-entorno-de-desarrollo">Ejemplo 1: Instalación del entorno de desarrollo</h3>
+<p><strong>Explicación</strong>: Antes de crear cualquier proyecto Angular, necesitamos instalar Node.js y el Angular CLI. Node.js es el runtime de JavaScript para el servidor, y npm es su gestor de paquetes. El Angular CLI es una herramienta de línea de comandos que facilita la creación, desarrollo y mantenimiento de proyectos Angular.</p>
+<p><strong>Paso 1: Instalar Node.js</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verificar si Node.js ya está instalado</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>node<span class="w"> </span>--version
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>npm<span class="w"> </span>--version
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Si no está instalado, descargar desde https://nodejs.org/</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># RECOMENDACIÓN: usar nvm (Node Version Manager) para gestionar múltiples versiones</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Instalar nvm (Linux / macOS)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-o-<span class="w"> </span>https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Cerrar y reabrir la terminal, o recargar el perfil</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Instalar la versión LTS de Node.js (recomendada para Angular)</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>nvm<span class="w"> </span>install<span class="w"> </span>--lts
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>nvm<span class="w"> </span>use<span class="w"> </span>--lts
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Instalar la versión actual (más reciente)</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>nvm<span class="w"> </span>install<span class="w"> </span>node
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Verificar versiones</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>node<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Debería mostrar v20.x.x o v22.x.x</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>npm<span class="w"> </span>--version<span class="w">   </span><span class="c1"># Debería mostrar 10.x.x</span>
+</span></code></pre></div>
+<p><strong>Paso 2: Instalar Angular CLI globalmente</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Instalar el CLI de Angular de forma global</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@angular/cli
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verificar la instalación</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ng<span class="w"> </span>version
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># La salida debería ser similar a:</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># </span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1">#      _                      _                 ____ _     ___</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1">#     / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1">#    / △ \ | &#39;_ \ / _` | | | | |/ _` | &#39;__|   | |   | |    | |</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1">#   / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1">#  /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1">#                 |___/</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># </span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Angular CLI: 18.x.x</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Node: 20.x.x</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Package Manager: npm 10.x.x</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># OS: linux x64 (o win32, darwin)</span>
+</span></code></pre></div>
+<h3 id="ejemplo-2-verificacion-del-entorno">Ejemplo 2: Verificación del entorno</h3>
+<p><strong>Explicación</strong>: Vamos a crear un proyecto mínimo "hola-mundo" para verificar que todo el entorno funciona correctamente. No profundizaremos en la estructura del proyecto todavía (lo haremos en la siguiente unidad), solo verificaremos que podemos crear, compilar y servir una aplicación Angular.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Crear un proyecto de prueba (sin routing, sin SSR, CSS simple, standalone)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ng<span class="w"> </span>new<span class="w"> </span>hola-mundo<span class="w"> </span>--standalone<span class="w"> </span>--routing<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--style<span class="o">=</span>css<span class="w"> </span>--ssr<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--strict
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Durante la instalación, Angular CLI preguntará si queremos usar Strict Mode.</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Responderemos &quot;Yes&quot; para este ejemplo.</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Navegar al directorio del proyecto</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">cd</span><span class="w"> </span>hola-mundo
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Iniciar el servidor de desarrollo</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ng<span class="w"> </span>serve<span class="w"> </span>--open
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># El flag --open abre automáticamente el navegador en http://localhost:4200</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Deberías ver en el navegador una página con:</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># - Un texto que dice &quot;hola-mundo app is running!&quot;</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># - Enlaces a recursos de aprendizaje de Angular</span>
+</span></code></pre></div>
+<p>El comando <code>ng serve</code> inicia un servidor de desarrollo local en <code>http://localhost:4200</code>. Cualquier cambio que hagamos en los archivos del proyecto se reflejará automáticamente en el navegador gracias al Hot Module Replacement (HMR).</p>
+<p>Para detener el servidor, presionamos <code>Ctrl + C</code> en la terminal.</p>
+<h3 id="ejemplo-3-explorar-angular-devtools">Ejemplo 3: Explorar Angular DevTools</h3>
+<p><strong>Explicación</strong>: Angular DevTools es una extensión de navegador que nos permite inspeccionar y depurar aplicaciones Angular en tiempo real.</p>
+<p><strong>Pasos:</strong></p>
+<ol>
+<li>Abrir Google Chrome o Microsoft Edge.</li>
+<li>Ir a la Chrome Web Store y buscar "Angular DevTools".</li>
+<li>Instalar la extensión oficial de Google.</li>
+<li>Volver a nuestra aplicación en <code>http://localhost:4200</code>.</li>
+<li>Abrir las DevTools del navegador (<code>F12</code> o <code>Ctrl + Shift + I</code>).</li>
+<li>Buscar la pestaña "Angular" en la barra superior de las DevTools.</li>
+</ol>
+<p>En la pestaña Angular podrás ver:
+- El árbol de componentes de la aplicación.
+- Seleccionar un componente para ver sus propiedades, inputs y outputs.
+- La pestaña "Profiler" para medir el rendimiento.
+- La pestaña "Injector Tree" para ver el árbol de inyección de dependencias.</p>
+<p>Esta herramienta será fundamental durante todo el curso para depurar nuestras aplicaciones.</p>
+<h2 id="ejercicios-resueltos">Ejercicios resueltos</h2>
+<h3 id="ejercicio-1-instalar-nodejs-mediante-nvm-y-angular-cli">Ejercicio 1: Instalar Node.js mediante nvm y Angular CLI</h3>
+<p><strong>Objetivo</strong>: Configurar un entorno de desarrollo Angular profesional utilizando Node Version Manager para gestionar las versiones de Node.js de forma flexible.</p>
+<p><strong>Solución paso a paso:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># === PASO 1: Instalar nvm (Node Version Manager) ===</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># nvm permite instalar y cambiar entre múltiples versiones de Node.js</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Descargar e instalar nvm</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-o-<span class="w"> </span>https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Recargar el perfil de la terminal</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">NVM_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.nvm&quot;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="o">[</span><span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\.</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NVM_DIR</span><span class="s2">/nvm.sh&quot;</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Verificar que nvm se instaló correctamente</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>nvm<span class="w"> </span>--version
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Salida esperada: 0.39.7</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># === PASO 2: Instalar la versión LTS de Node.js ===</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># La versión LTS (Long Term Support) es la recomendada para producción</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Listar versiones LTS disponibles</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>nvm<span class="w"> </span>ls-remote<span class="w"> </span>--lts
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="c1"># Instalar la versión LTS más reciente</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>nvm<span class="w"> </span>install<span class="w"> </span>--lts
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># Establecerla como versión por defecto</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>nvm<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>default<span class="w"> </span><span class="s1">&#39;lts/*&#39;</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="c1"># Verificar instalación</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>node<span class="w"> </span>--version<span class="w">   </span><span class="c1"># Ejemplo: v20.15.0</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>npm<span class="w"> </span>--version<span class="w">    </span><span class="c1"># Ejemplo: 10.8.0</span>
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="c1"># === PASO 3: Instalar Angular CLI ===</span>
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="c1"># Angular CLI se instala globalmente con npm</span>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@angular/cli
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="c1"># Verificar la instalación completa</span>
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>ng<span class="w"> </span>version
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="c1"># La salida muestra las versiones de Angular CLI, Node, npm y SO</span>
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="c1"># === PASO 4: Verificación final del entorno ===</span>
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="c1"># Comprobar que podemos crear un proyecto</span>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>
+</span><span id="__span-7-43"><a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>ng<span class="w"> </span>new<span class="w"> </span>test-env<span class="w"> </span>--create-application<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--standalone
+</span><span id="__span-7-44"><a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="c1"># Esto crea un workspace sin aplicación, solo para verificar que funciona</span>
+</span><span id="__span-7-45"><a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>
+</span><span id="__span-7-46"><a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="nb">cd</span><span class="w"> </span>test-env
+</span><span id="__span-7-47"><a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>ng<span class="w"> </span>generate<span class="w"> </span>application<span class="w"> </span>test-app<span class="w"> </span>--standalone<span class="w"> </span>--style<span class="o">=</span>css
+</span><span id="__span-7-48"><a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a><span class="c1"># Genera una aplicación dentro del workspace</span>
+</span><span id="__span-7-49"><a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>
+</span><span id="__span-7-50"><a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a>ng<span class="w"> </span>build<span class="w"> </span>test-app
+</span><span id="__span-7-51"><a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a><span class="c1"># Compila la aplicación. Si no hay errores, todo está correctamente configurado.</span>
+</span></code></pre></div>
+<p><strong>Verificación</strong>: El entorno está correctamente configurado si:
+- <code>node --version</code> muestra una versión &gt;= 18.13.0
+- <code>npm --version</code> muestra una versión &gt;= 9.0.0
+- <code>ng version</code> muestra Angular CLI &gt;= 17.0.0
+- <code>ng build</code> completa sin errores</p>
+<h3 id="ejercicio-2-configurar-vs-code-con-las-extensiones-recomendadas-para-angular">Ejercicio 2: Configurar VS Code con las extensiones recomendadas para Angular</h3>
+<p><strong>Objetivo</strong>: Preparar Visual Studio Code como editor principal para desarrollo Angular, instalando las extensiones que maximizan la productividad.</p>
+<p><strong>Solución paso a paso:</strong></p>
+<ol>
+<li><strong>Instalar VS Code</strong></li>
+<li>Descargar desde https://code.visualstudio.com/</li>
+<li>
+<p>Instalar siguiendo las instrucciones del sistema operativo.</p>
+</li>
+<li>
+<p><strong>Extensiones esenciales para Angular:</strong></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Extensión</th>
+<th>Propósito</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Angular Language Service</strong></td>
+<td>Autocompletado en plantillas, diagnóstico de errores</td>
+<td><code>angular.ng-template</code></td>
+</tr>
+<tr>
+<td><strong>ESLint</strong></td>
+<td>Linting de JavaScript/TypeScript</td>
+<td><code>dbaeumer.vscode-eslint</code></td>
+</tr>
+<tr>
+<td><strong>Prettier</strong></td>
+<td>Formateo de código automático</td>
+<td><code>esbenp.prettier-vscode</code></td>
+</tr>
+<tr>
+<td><strong>TypeScript God</strong></td>
+<td>Mejores tooltips y navegación en TypeScript</td>
+<td>(buscar en marketplace)</td>
+</tr>
+<tr>
+<td><strong>Path Intellisense</strong></td>
+<td>Autocompletado de rutas de archivo</td>
+<td><code>christian-kohler.path-intellisense</code></td>
+</tr>
+<tr>
+<td><strong>Material Icon Theme</strong></td>
+<td>Iconos para archivos y carpetas (mejora la navegación visual)</td>
+<td><code>pkief.material-icon-theme</code></td>
+</tr>
+<tr>
+<td><strong>GitLens</strong></td>
+<td>Información de Git en el editor (blame, historial)</td>
+<td><code>eamodio.gitlens</code></td>
+</tr>
+<tr>
+<td><strong>Angular Snippets</strong></td>
+<td>Snippets para componentes, servicios, directivas</td>
+<td><code>johnpapa.angular2</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong>Configuración recomendada de VS Code</strong> (añadir a <code>settings.json</code>):</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="c1">// Formateo al guardar</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;esbenp.prettier-vscode&quot;</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="c1">// Configuración específica para TypeScript</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nt">&quot;[typescript]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;esbenp.prettier-vscode&quot;</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">&quot;editor.codeActionsOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">      </span><span class="nt">&quot;source.organizeImports&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explicit&quot;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// Configuración para plantillas HTML de Angular</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="nt">&quot;[html]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;esbenp.prettier-vscode&quot;</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="c1">// Angular Language Service</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="nt">&quot;angular.experimental-ivy&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="c1">// TypeScript</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="nt">&quot;typescript.updateImportsOnFileMove.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;always&quot;</span><span class="p">,</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span><span class="nt">&quot;typescript.preferences.importModuleSpecifier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;relative&quot;</span><span class="p">,</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span><span class="c1">// Prettier</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span><span class="nt">&quot;prettier.singleQuote&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span><span class="nt">&quot;prettier.trailingComma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">  </span><span class="nt">&quot;prettier.printWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">  </span><span class="c1">// ESLint</span>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">  </span><span class="nt">&quot;eslint.validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">    </span><span class="s2">&quot;javascript&quot;</span><span class="p">,</span>
+</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">    </span><span class="s2">&quot;typescript&quot;</span><span class="p">,</span>
+</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="w">    </span><span class="s2">&quot;html&quot;</span>
+</span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>
+</span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">  </span><span class="c1">// Explorador de archivos</span>
+</span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="w">  </span><span class="nt">&quot;explorer.compactFolders&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="w">  </span><span class="nt">&quot;explorer.sortOrder&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;type&quot;</span><span class="p">,</span>
+</span><span id="__span-8-41"><a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>
+</span><span id="__span-8-42"><a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="w">  </span><span class="c1">// Editor</span>
+</span><span id="__span-8-43"><a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a><span class="w">  </span><span class="nt">&quot;editor.tabSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-8-44"><a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a><span class="w">  </span><span class="nt">&quot;editor.rulers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">100</span><span class="p">],</span>
+</span><span id="__span-8-45"><a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a><span class="w">  </span><span class="nt">&quot;editor.bracketPairColorization.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-8-46"><a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a><span class="w">  </span><span class="nt">&quot;editor.guides.bracketPairs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-8-47"><a id="__codelineno-8-47" name="__codelineno-8-47" href="#__codelineno-8-47"></a><span class="p">}</span>
+</span></code></pre></div>
+<ol>
+<li><strong>Atajos de teclado recomendados:</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Atajo</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl + Shift + P</code></td>
+<td>Paleta de comandos (buscar cualquier acción)</td>
+</tr>
+<tr>
+<td><code>Ctrl + P</code></td>
+<td>Abrir archivo rápidamente</td>
+</tr>
+<tr>
+<td>`Ctrl + ``</td>
+<td>Abrir terminal integrada</td>
+</tr>
+<tr>
+<td><code>Ctrl + B</code></td>
+<td>Mostrar/ocultar barra lateral</td>
+</tr>
+<tr>
+<td><code>Ctrl + Shift + F</code></td>
+<td>Buscar en todos los archivos</td>
+</tr>
+<tr>
+<td><code>Ctrl + D</code></td>
+<td>Seleccionar siguiente ocurrencia</td>
+</tr>
+<tr>
+<td><code>F2</code></td>
+<td>Renombrar símbolo (refactorización)</td>
+</tr>
+<tr>
+<td><code>F12</code></td>
+<td>Ir a definición</td>
+</tr>
+<tr>
+<td><code>Alt + F12</code></td>
+<td>Ver definición (peek)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="actividades-propuestas">Actividades propuestas</h2>
+<h3 id="actividad-1-investigar-la-hoja-de-ruta-oficial-de-angular">Actividad 1: Investigar la hoja de ruta oficial de Angular</h3>
+<p><strong>Descripción</strong>: Visita el repositorio oficial de Angular en GitHub y explora la sección de proyectos y milestones. Escribe un resumen de 500 palabras sobre las funcionalidades planificadas para las próximas versiones de Angular.</p>
+<p><strong>Objetivos</strong>:
+- Familiarizarse con el desarrollo abierto de Angular.
+- Comprender la dirección futura del framework.
+- Desarrollar el hábito de seguir las novedades técnicas.</p>
+<p><strong>Entregable</strong>: Documento PDF con el resumen, incluyendo capturas de pantalla del roadmap y comentarios personales sobre qué funcionalidades te parecen más relevantes.</p>
+<h3 id="actividad-2-instalar-y-configurar-el-entorno-de-desarrollo-completo">Actividad 2: Instalar y configurar el entorno de desarrollo completo</h3>
+<p><strong>Descripción</strong>: Siguiendo los ejercicios resueltos, instala Node.js mediante nvm, Angular CLI, VS Code y las extensiones recomendadas. Documenta el proceso con capturas de pantalla de cada paso.</p>
+<p><strong>Objetivos</strong>:
+- Configurar correctamente el entorno de desarrollo.
+- Familiarizarse con la terminal y la línea de comandos.
+- Aprender a gestionar versiones de Node.js.</p>
+<p><strong>Entregable</strong>: Documento con capturas de pantalla mostrando las versiones instaladas de cada herramienta.</p>
+<h3 id="actividad-3-comparar-la-sintaxis-de-un-componente-simple-en-angular-react-y-vue">Actividad 3: Comparar la sintaxis de un componente simple en Angular, React y Vue</h3>
+<p><strong>Descripción</strong>: Investiga cómo se escribe un mismo componente simple (por ejemplo, un contador con botones de incrementar y decrementar) en Angular, React y Vue. Escribe los tres componentes y un análisis comparativo.</p>
+<p><strong>Objetivos</strong>:
+- Comprender las diferencias sintácticas y filosóficas entre los tres frameworks.
+- Desarrollar criterio para elegir herramientas según el contexto.
+- Practicar la lectura de código ajeno.</p>
+<p><strong>Entregable</strong>: Documento con el código de los tres componentes y un análisis de 300-500 palabras.</p>
+<h3 id="actividad-4-crear-una-cuenta-en-github-y-configurar-git">Actividad 4: Crear una cuenta en GitHub y configurar git</h3>
+<p><strong>Descripción</strong>: Si aún no tienes cuenta en GitHub, créala. Instala git en tu equipo, configura tu nombre de usuario y correo electrónico, y crea un repositorio para el curso. Sube un archivo README.md con tus expectativas del curso.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Configuración básica de git</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Tu Nombre&quot;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;tu.email@ejemplo.com&quot;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Crear repositorio local</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>mkdir<span class="w"> </span>curso-angular
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">cd</span><span class="w"> </span>curso-angular
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>git<span class="w"> </span>init
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;# Curso de Angular - DAW&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>README.md
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>git<span class="w"> </span>add<span class="w"> </span>README.md
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Commit inicial&quot;</span>
+</span></code></pre></div>
+<p><strong>Objetivos</strong>:
+- Aprender control de versiones.
+- Crear un portfolio profesional en GitHub.
+- Preparar el entorno para entregar las actividades del curso.</p>
+<h3 id="actividad-5-explorar-la-documentacion-oficial-de-angular">Actividad 5: Explorar la documentación oficial de Angular</h3>
+<p><strong>Descripción</strong>: Navega por la documentación oficial de Angular (https://angular.dev) e identifica las siguientes secciones: Getting Started, Tutorial: Tour of Heroes, In-Depth Guides, y API Reference. Escribe un breve resumen de qué información se encuentra en cada sección.</p>
+<p><strong>Objetivos</strong>:
+- Aprender a navegar la documentación técnica en inglés.
+- Familiarizarse con los recursos oficiales.
+- Desarrollar autonomía para resolver dudas.</p>
+<h2 id="actividades-de-ampliacion">Actividades de ampliación</h2>
+<h3 id="actividad-de-ampliacion-1-investigar-empresas-en-andalucia-y-espana-que-usen-angular">Actividad de ampliación 1: Investigar empresas en Andalucía y España que usen Angular</h3>
+<p><strong>Descripción</strong>: Investiga en LinkedIn, InfoJobs, Tecnoempleo y otras plataformas de empleo qué empresas en Andalucía y España demandan desarrolladores Angular. Crea un listado con al menos 10 empresas, incluyendo ubicación, sector y tipo de proyectos que desarrollan con Angular.</p>
+<p><strong>Objetivos</strong>:
+- Conectar el aprendizaje con el mercado laboral real.
+- Conocer el ecosistema empresarial tecnológico local.
+- Identificar posibles empresas para realizar las prácticas de FP.</p>
+<p><strong>Entregable</strong>: Tabla con el listado de empresas y una breve reflexión sobre el mercado laboral Angular en tu zona.</p>
+<h3 id="actividad-de-ampliacion-2-configurar-eslint-y-prettier-en-un-proyecto-angular">Actividad de ampliación 2: Configurar ESLint y Prettier en un proyecto Angular</h3>
+<p><strong>Descripción</strong>: Añade ESLint y Prettier al proyecto <code>hola-mundo</code> creado en el Ejemplo 2. Configura reglas de estilo adaptadas a un entorno profesional. Documenta el proceso.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Añadir ESLint al proyecto</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ng<span class="w"> </span>add<span class="w"> </span>@angular-eslint/schematics
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Instalar Prettier y su integración con ESLint</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>prettier<span class="w"> </span>eslint-config-prettier<span class="w"> </span>eslint-plugin-prettier
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verificar la configuración</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ng<span class="w"> </span>lint
+</span></code></pre></div>
+<p><strong>Objetivos</strong>:
+- Aprender a configurar herramientas de calidad de código.
+- Entender la importancia del linting en proyectos profesionales.
+- Familiarizarse con las reglas de ESLint.</p>
+<h3 id="actividad-de-ampliacion-3-crear-una-presentacion-sobre-la-evolucion-de-angular">Actividad de ampliación 3: Crear una presentación sobre la evolución de Angular</h3>
+<p><strong>Descripción</strong>: Prepara una presentación de 10 diapositivas sobre la evolución de Angular desde 2010 hasta la actualidad. Incluye las versiones principales, las novedades más relevantes y tu opinión sobre hacia dónde va el framework.</p>
+<p><strong>Objetivos</strong>:
+- Profundizar en la historia del framework.
+- Practicar habilidades de comunicación técnica.
+- Sintetizar información compleja.</p>
+<h2 id="buenas-practicas-profesionales">Buenas prácticas profesionales</h2>
+<ol>
+<li>
+<p><strong>Mantener el entorno actualizado</strong>: Revisa periódicamente si hay nuevas versiones de Node.js (con <code>nvm ls-remote</code>), Angular CLI (<code>npm outdated -g @angular/cli</code>) y las extensiones de VS Code. Un entorno actualizado evita incompatibilidades y vulnerabilidades de seguridad.</p>
+</li>
+<li>
+<p><strong>Leer el changelog antes de actualizar</strong>: Antes de ejecutar <code>ng update</code>, lee las notas de versión (release notes) en el blog oficial de Angular (https://blog.angular.dev). Así conocerás los breaking changes y podrás planificar la migración.</p>
+</li>
+<li>
+<p><strong>Usar siempre TypeScript en modo estricto</strong>: Al crear un proyecto Angular, activa el modo estricto (<code>--strict</code> o responder "Yes" cuando el CLI pregunte). El modo estricto activa comprobaciones de tipos más rigurosas, evitando muchos errores comunes.</p>
+</li>
+<li>
+<p><strong>Seguir el estilo de código oficial de Angular</strong>: Consulta la guía de estilo oficial de Angular (https://angular.dev/style-guide). Cubre desde la nomenclatura de archivos hasta la organización de carpetas y las mejores prácticas para componentes.</p>
+</li>
+<li>
+<p><strong>Documentar las decisiones de arquitectura</strong>: En proyectos profesionales, documenta por qué elegiste Angular frente a otras opciones. Esto es útil cuando nuevos miembros se unen al equipo o cuando se revisa la viabilidad técnica del proyecto.</p>
+</li>
+<li>
+<p><strong>Separar el entorno personal del profesional</strong>: Usa nvm para gestionar versiones de Node.js. Así puedes tener una versión LTS para trabajo y probar versiones experimentales sin afectar tus proyectos.</p>
+</li>
+<li>
+<p><strong>Automatizar las comprobaciones de calidad</strong>: Configura ESLint, Prettier y tests unitarios para que se ejecuten automáticamente antes de cada commit (usando husky y lint-staged). Esto evita que código de baja calidad llegue al repositorio.</p>
+</li>
+<li>
+<p><strong>Participar en la comunidad</strong>: Angular tiene una comunidad muy activa. Participa en foros (Stack Overflow con la etiqueta <code>[angular]</code>), grupos de Telegram/Discord, y eventos como Angular Madrid, NgSpain o Angular Community Meetups. La comunidad es una fuente inagotable de aprendizaje.</p>
+</li>
+</ol>
+<h2 id="errores-frecuentes">Errores frecuentes</h2>
+<ol>
+<li>
+<p><strong>Confundir Angular con AngularJS</strong>: Son frameworks completamente diferentes. Si buscas información en internet, asegúrate de que los artículos se refieran a Angular (versión 2 en adelante), no a AngularJS (versión 1.x). Los artículos, blogs y tutoriales de AngularJS NO son aplicables a Angular moderno.</p>
+</li>
+<li>
+<p><strong>Instalar Angular CLI sin permisos adecuados</strong>: En Linux y macOS, instalar paquetes globales con <code>sudo npm install -g</code> puede causar problemas de permisos. La solución recomendada es usar nvm, que instala Node.js y npm en el directorio del usuario sin necesidad de permisos de administrador.</p>
+</li>
+<li>
+<p><strong>No verificar los requisitos de versión de Node.js</strong>: Cada versión de Angular requiere una versión mínima de Node.js. Usar una versión demasiado antigua o demasiado nueva puede causar errores. Consulta la tabla de compatibilidad en https://angular.dev/reference/versions.</p>
+</li>
+<li>
+<p><strong>Asumir que Angular CLI funciona sin Node.js instalado</strong>: Angular CLI es una herramienta de Node.js. Necesita Node.js instalado para funcionar. El comando <code>ng</code> ejecuta scripts de Node.js internamente.</p>
+</li>
+<li>
+<p><strong>Ignorar los avisos de seguridad de npm</strong>: Cuando ejecutas <code>npm install</code>, npm puede mostrar avisos de vulnerabilidades. No los ignores. Ejecuta <code>npm audit</code> para ver los detalles y <code>npm audit fix</code> para corregir las vulnerabilidades que tengan solución automática.</p>
+</li>
+<li>
+<p><strong>No usar control de versiones desde el principio</strong>: Inicializa git (<code>git init</code>) justo después de crear el proyecto. Haz commits frecuentes con mensajes descriptivos. Si algo sale mal, siempre podrás volver atrás.</p>
+</li>
+<li>
+<p><strong>Crear proyectos sin --standalone en Angular moderno</strong>: A partir de Angular 19, los componentes standalone son el comportamiento por defecto, pero en versiones anteriores debes especificarlo explícitamente. Crear proyectos con NgModules en 2025 es técnicamente posible pero no recomendado para nuevos proyectos.</p>
+</li>
+<li>
+<p><strong>Aprender Angular sin aprender TypeScript</strong>: Angular está profundamente integrado con TypeScript. Intentar aprender Angular sin conocimientos previos de TypeScript es como intentar aprender a escribir sin conocer el alfabeto. Dedica tiempo a dominar los fundamentos de TypeScript: tipos básicos, interfaces, genéricos, decoradores y utility types.</p>
+</li>
+</ol>
+<h2 id="resumen">Resumen</h2>
+<p>En esta unidad introductoria hemos cubierto los fundamentos conceptuales necesarios para abordar el estudio de Angular con una base sólida. Los puntos clave son:</p>
+<ul>
+<li>
+<p><strong>Angular es un framework estructural completo</strong> (no una simple biblioteca), mantenido por Google y construido sobre TypeScript. Proporciona una solución "llave en mano" para el desarrollo web moderno: enrutamiento, formularios, cliente HTTP, animaciones, testing y SSR, todo integrado y coherente.</p>
+</li>
+<li>
+<p><strong>La evolución de Angular refleja la madurez del ecosistema web</strong>: desde el revolucionario AngularJS (2010), pasando por la reescritura total de Angular 2 (2016), hasta la era moderna de Signals, Standalone Components y SSR nativo (2023-2024). Cada versión ha aportado mejoras incrementales manteniendo la estabilidad del framework.</p>
+</li>
+<li>
+<p><strong>Las SPA representan un cambio de paradigma</strong> en cómo se construyen aplicaciones web: la carga inicial es más pesada, pero la experiencia de navegación es mucho más fluida y cercana a la de una aplicación nativa. Angular fue diseñado específicamente para este modelo.</p>
+</li>
+<li>
+<p><strong>La elección entre Angular, React y Vue depende del contexto</strong>: Angular destaca en proyectos empresariales grandes y equipos que valoran la consistencia; React ofrece máxima flexibilidad; Vue combina facilidad de aprendizaje con potencia. Ninguno es inherentemente "mejor", cada uno resuelve problemas diferentes.</p>
+</li>
+<li>
+<p><strong>El ecosistema Angular es rico y oficial</strong>: Angular CLI, Angular Material, Angular DevTools y Angular Language Service forman un toolkit completo respaldado por Google.</p>
+</li>
+</ul>
+<p>Con estos conceptos claros, estamos listos para comenzar a crear nuestro primer proyecto Angular en la siguiente unidad.</p>
+<h2 id="recursos-adicionales">Recursos adicionales</h2>
+<h3 id="documentacion-oficial">Documentación oficial</h3>
+<ul>
+<li><strong>Angular.dev</strong> (documentación oficial moderna): https://angular.dev</li>
+<li><strong>Angular Blog</strong>: https://blog.angular.dev</li>
+<li><strong>Angular Style Guide</strong>: https://angular.dev/style-guide</li>
+<li><strong>Angular CLI Reference</strong>: https://angular.dev/cli</li>
+<li><strong>Angular Version Compatibility</strong>: https://angular.dev/reference/versions</li>
+</ul>
+<h3 id="cursos-y-tutoriales">Cursos y tutoriales</h3>
+<ul>
+<li><strong>Tour of Heroes</strong> (tutorial oficial): https://angular.dev/tutorials</li>
+<li><strong>Angular University</strong> (blog y cursos avanzados): https://blog.angular-university.io</li>
+<li><strong>Codecademy - Learn AngularJS / Angular</strong>: https://www.codecademy.com</li>
+<li><strong>Udemy - Angular: De cero a experto (Fernando Herrera)</strong> - Muy recomendado en español.</li>
+</ul>
+<h3 id="libros">Libros</h3>
+<ul>
+<li>"Angular: Up and Running" - Shyam Seshadri (O'Reilly)</li>
+<li>"Pro Angular" - Adam Freeman (Apress)</li>
+<li>"Learning Angular" - Aristeidis Bampakos (Packt Publishing)</li>
+<li>"Angular for Enterprise Applications" - Doguhan Uluca (Packt Publishing)</li>
+</ul>
+<h3 id="comunidades">Comunidades</h3>
+<ul>
+<li><strong>Stack Overflow</strong> (etiqueta <code>[angular]</code>): https://stackoverflow.com/questions/tagged/angular</li>
+<li><strong>Angular Discord</strong>: https://discord.com/invite/angular</li>
+<li><strong>Reddit r/angular</strong>: https://reddit.com/r/angular</li>
+<li><strong>Angular Madrid Meetup</strong>: https://www.meetup.com/es/angular-madrid/</li>
+<li><strong>NgSpain</strong> (conferencia anual en España): https://ngspain.com</li>
+<li><strong>Angular Community</strong>: https://angular.dev/community</li>
+</ul>
+<h3 id="herramientas">Herramientas</h3>
+<ul>
+<li><strong>VS Code</strong>: https://code.visualstudio.com</li>
+<li><strong>Node.js</strong>: https://nodejs.org</li>
+<li><strong>nvm (Windows)</strong>: https://github.com/coreybutler/nvm-windows</li>
+<li><strong>Angular DevTools (Chrome)</strong>: https://chromewebstore.google.com/detail/angular-devtools</li>
+<li><strong>Git</strong>: https://git-scm.com</li>
+<li><strong>GitHub</strong>: https://github.com</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+        
+          
+          <a href="../02-crear-proyecto/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 02-crear-proyecto">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                02-crear-proyecto
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1211 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes básicos de Angular para Martos y alrededores.">
+      
+      
+        <meta name="author" content="Jose Quesada">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.24">
+    
+    
+      
+        <title>Introducción a Angular - Curso de Angular</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.28978c9b.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduccion-a-angular" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="Curso de Angular" class="md-header__button md-logo" aria-label="Curso de Angular" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Curso de Angular
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introducción a Angular
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Curso de Angular" class="md-nav__button md-logo" aria-label="Curso de Angular" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Curso de Angular
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01-introduccion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02-crear-proyecto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03-componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04-plantillas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05-signals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06-pipes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07-anidar-componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08-directivas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09-servicios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10-http1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11-router
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12-formularios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13-proyeccion-contenido
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14-queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15-ssr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16-integracion-librerias
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17-proyecto-final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objetivos-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resultados-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resultados de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contenidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contenidos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desarrollo-teorico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desarrollo teórico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Desarrollo teórico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ¿Qué es Angular?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#historia-y-evolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia y evolución
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spa-vs-aplicaciones-tradicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPA vs aplicaciones tradicionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación del entorno
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instalación del entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Angular CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-primer-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creación del primer proyecto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estructura-de-carpetas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estructura de carpetas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplos-practicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplos prácticos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejemplos prácticos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crear-un-proyecto-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear un proyecto Angular
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-propuestas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades propuestas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades propuestas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actividad-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades-de-ampliacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades de ampliación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actividades de ampliación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actividad-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursos-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursos adicionales
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="introduccion-a-angular">Introducción a Angular</h1>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<ul>
+<li>Conocer qué es Angular y sus principales características.</li>
+<li>Entender la historia y evolución de Angular.</li>
+<li>Comparar Single Page Applications (SPA) con aplicaciones tradicionales.</li>
+<li>Instalar y configurar el entorno de desarrollo para Angular.</li>
+<li>Crear y entender la estructura de un proyecto Angular inicial.</li>
+</ul>
+<h2 id="resultados-de-aprendizaje">Resultados de aprendizaje</h2>
+<p>Al finalizar esta unidad, el estudiante será capaz de:
+- Explicar qué es Angular y sus ventajas.
+- Describir la historia y evolución de Angular.
+- Comparar SPA con aplicaciones tradicionales.
+- Configurar su entorno de desarrollo para trabajar con Angular.
+- Crear un proyecto Angular básico y comprender su estructura.</p>
+<h2 id="contenidos">Contenidos</h2>
+<ol>
+<li>¿Qué es Angular?</li>
+<li>Historia y evolución.</li>
+<li>SPA vs aplicaciones tradicionales.</li>
+<li>Instalación del entorno.</li>
+<li>Node.js.</li>
+<li>Angular CLI.</li>
+<li>Creación del primer proyecto.</li>
+<li>Estructura de carpetas.</li>
+</ol>
+<h2 id="desarrollo-teorico">Desarrollo teórico</h2>
+<h3 id="que-es-angular">¿Qué es Angular?</h3>
+<p>Angular es un framework de desarrollo web mantenido por Google y la comunidad. Proporciona una plataforma robusta para construir aplicaciones web dinámicas y de alto rendimiento. Angular utiliza TypeScript, un superconjunto de JavaScript, lo que permite escribir código más seguro y mantenible.</p>
+<h3 id="historia-y-evolucion">Historia y evolución</h3>
+<p>Angular se originó en 2010 como AngularJS, una biblioteca de JavaScript para crear aplicaciones web interactivas. En 2016, se lanzó Angular 2, que marcó un cambio significativo hacia un framework más potente y modular. Desde entonces, Angular ha continuado evolucionando, lanzando nuevas versiones con mejoras y nuevas características.</p>
+<h3 id="spa-vs-aplicaciones-tradicionales">SPA vs aplicaciones tradicionales</h3>
+<p>Las aplicaciones tradicionales recargan toda la página web cada vez que el usuario interactúa con ella. Por otro lado, las Single Page Applications (SPA) solo actualizan partes específicas de la página, lo que resulta en una experiencia de usuario más fluida y rápida.</p>
+<h3 id="instalacion-del-entorno">Instalación del entorno</h3>
+<h4 id="nodejs">Node.js</h4>
+<p>Node.js es un entorno de tiempo de ejecución de JavaScript que permite ejecutar código JavaScript fuera del navegador. Angular requiere Node.js para instalar y ejecutar herramientas de desarrollo.</p>
+<p>Para instalar Node.js, puedes descargarlo desde <a href="https://nodejs.org/">nodejs.org</a> y seguir las instrucciones de instalación.</p>
+<h4 id="angular-cli">Angular CLI</h4>
+<p>Angular CLI es una interfaz de línea de comandos que facilita la creación y gestión de proyectos Angular. Para instalar Angular CLI, abre tu terminal y ejecuta el siguiente comando:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@angular/cli
+</span></code></pre></div>
+<h3 id="creacion-del-primer-proyecto">Creación del primer proyecto</h3>
+<p>Para crear un nuevo proyecto Angular, usa el siguiente comando:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ng<span class="w"> </span>new<span class="w"> </span>my-angular-app
+</span></code></pre></div>
+<p>Este comando crea una nueva carpeta llamada <code>my-angular-app</code> con la estructura básica de un proyecto Angular.</p>
+<h3 id="estructura-de-carpetas">Estructura de carpetas</h3>
+<p>La estructura de carpetas de un proyecto Angular típico es la siguiente:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>my-angular-app/
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── e2e/
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├── src/
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   ├── app/
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   │   ├── app.component.css
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │   ├── app.component.html
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │   ├── app.component.spec.ts
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │   ├── app.component.ts
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │   └── app.module.ts
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   ├── assets/
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   ├── environments/
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   ├── index.html
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│   ├── main.ts
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│   ├── polyfills.ts
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│   ├── styles.css
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│   └── test.ts
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>├── angular.json
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>├── package.json
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>├── tsconfig.app.json
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>├── tsconfig.json
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>└── tsconfig.spec.json
+</span></code></pre></div>
+<h2 id="ejemplos-practicos">Ejemplos prácticos</h2>
+<h3 id="crear-un-proyecto-angular">Crear un proyecto Angular</h3>
+<ol>
+<li>Abre tu terminal y ejecuta el siguiente comando:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ng<span class="w"> </span>new<span class="w"> </span>my-angular-app
+</span></code></pre></div>
+<ol>
+<li>Navega a la carpeta del proyecto:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>my-angular-app
+</span></code></pre></div>
+<ol>
+<li>Inicia el servidor de desarrollo:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ng<span class="w"> </span>serve
+</span></code></pre></div>
+<ol>
+<li>Abre tu navegador y ve a <a href="http://localhost:4200">http://localhost:4200</a> para ver tu aplicación Angular en acción.</li>
+</ol>
+<h2 id="actividades-propuestas">Actividades propuestas</h2>
+<h3 id="actividad-1">Actividad 1</h3>
+<p><strong>Objetivo</strong></p>
+<p>Crear un proyecto Angular básico y familiarizarse con su estructura.</p>
+<p><strong>Enunciado</strong></p>
+<p>Crea un nuevo proyecto Angular llamado <code>mi-primer-proyecto</code> y explora su estructura de carpetas.</p>
+<p><strong>Requisitos</strong></p>
+<ul>
+<li>Tener Node.js y Angular CLI instalados.</li>
+</ul>
+<p><strong>Pistas</strong></p>
+<ul>
+<li>Usa el comando <code>ng new</code> para crear el proyecto.</li>
+<li>Usa el comando <code>cd</code> para navegar a la carpeta del proyecto.</li>
+<li>Usa el comando <code>ng serve</code> para iniciar el servidor de desarrollo.</li>
+</ul>
+<p><strong>Criterios de evaluación</strong></p>
+<ul>
+<li>El proyecto se crea correctamente.</li>
+<li>Se puede acceder a la aplicación en <a href="http://localhost:4200">http://localhost:4200</a>.</li>
+<li>Se explica la estructura de carpetas del proyecto.</li>
+</ul>
+<h3 id="actividad-2">Actividad 2</h3>
+<p><strong>Objetivo</strong></p>
+<p>Modificar el componente raíz de la aplicación.</p>
+<p><strong>Enunciado</strong></p>
+<p>Modifica el componente raíz (<code>app.component.html</code>) para que muestre un mensaje personalizado.</p>
+<p><strong>Requisitos</strong></p>
+<ul>
+<li>Tener un proyecto Angular creado.</li>
+</ul>
+<p><strong>Pistas</strong></p>
+<ul>
+<li>Edita el archivo <code>src/app/app.component.html</code>.</li>
+<li>Usa interpolación para mostrar un mensaje personalizado.</li>
+</ul>
+<p><strong>Criterios de evaluación</strong></p>
+<ul>
+<li>El mensaje personalizado se muestra correctamente en la aplicación.</li>
+<li>El código está bien formateado y comentado.</li>
+</ul>
+<h2 id="actividades-de-ampliacion">Actividades de ampliación</h2>
+<h3 id="actividad-3">Actividad 3</h3>
+<p><strong>Objetivo</strong></p>
+<p>Crear un componente adicional.</p>
+<p><strong>Enunciado</strong></p>
+<p>Crea un nuevo componente llamado <code>about</code> y añádelo al proyecto.</p>
+<p><strong>Requisitos</strong></p>
+<ul>
+<li>Tener un proyecto Angular creado.</li>
+</ul>
+<p><strong>Pistas</strong></p>
+<ul>
+<li>Usa el comando <code>ng generate component about</code> para crear el componente.</li>
+<li>Añade el componente al módulo principal (<code>app.module.ts</code>).</li>
+</ul>
+<p><strong>Criterios de evaluación</strong></p>
+<ul>
+<li>El componente se crea correctamente.</li>
+<li>El componente se añade al módulo principal.</li>
+<li>El componente se muestra en la aplicación.</li>
+</ul>
+<h2 id="resumen">Resumen</h2>
+<p>En esta unidad hemos aprendido qué es Angular, su historia y evolución, y cómo compararlo con aplicaciones tradicionales. También hemos configurado nuestro entorno de desarrollo y creado nuestro primer proyecto Angular.</p>
+<h2 id="recursos-adicionales">Recursos adicionales</h2>
+<ul>
+<li><a href="https://angular.io/docs">Documentación oficial de Angular</a></li>
+<li><a href="https://cli.angular.io/">Angular CLI</a></li>
+<li><a href="https://nodejs.org/">Node.js</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.16f8adc2.min.js"></script>
+      
+    
+  </body>
+</html>
