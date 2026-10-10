@@ -1,0 +1,21 @@
+/* Ajustes globales y tipografía */
+:root {
+  --md-text-font: "Inter", system-ui, sans-serif;
+  --md-primary-fg-color: #dd0031; /* Rojo oficial de Angular */
+  --md-primary-bg-color: #ffffff;
+}
+
+/* Bordes redondeados y sombra sutil en bloques de código y advertencias */
+.md-typeset pre, 
+.md-typeset .admonition {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+/* Títulos más oscuros y compactos */
+.md-typeset h1, .md-typeset h2, .md-typeset h3 {
+  color: #0f172a;
+  letter-spacing: -0.025em;
+}
