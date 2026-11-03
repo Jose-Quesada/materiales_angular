@@ -1,0 +1,2267 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guía docente, código paso a paso y manual de referencia para el aula - Angular">
+      
+      
+      
+      
+      
+        <link rel="prev" href="./..">
+      
+      
+        <link rel="next" href="../03-bases-typescript/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.73">
+    
+    
+      
+        <title>Conceptos Generales - F3 Martos | Angular </title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Saltar a contenido
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="F3 Martos | Angular " class="md-header__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegación</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            F3 Martos | Angular 
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Conceptos Generales
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Buscar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="././" class="md-tabs__link">
+          
+  
+  Guías de Clase
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../manual/01-introduccion/" class="md-tabs__link">
+          
+  
+  Manual de Referencia
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="F3 Martos | Angular " class="md-nav__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    F3 Martos | Angular 
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guías de Clase
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guías de Clase
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ficha-tecnica-y-objetivos-didacticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Ficha Técnica y Objetivos Didácticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-al-modulo-conceptual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción al Módulo Conceptual
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-typescript-y-por-que-angular-lo-utiliza" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es TypeScript y por qué Angular lo utiliza?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Qué es TypeScript y por qué Angular lo utiliza?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es TypeScript?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demostracion-practica-en-codigo-javascript-vs-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Demostración Práctica en Código: JavaScript vs TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-angular-eligio-typescript-desde-su-version-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Por qué Angular eligió TypeScript desde su versión 2?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Por qué Angular eligió TypeScript desde su versión 2?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-deteccion-temprana-de-errores-compile-time-vs-run-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Detección Temprana de Errores (Compile-Time vs Run-Time)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-autodocumentacion-y-refactorizacion-segura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. Autodocumentación y Refactorización Segura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-soporte-avanzado-de-programacion-orientada-a-objetos-poo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Soporte Avanzado de Programación Orientada a Objetos (POO)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-inyeccion-de-dependencias-robusta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D. Inyección de Dependencias Robusta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-experiencia-de-desarrollo-superior-dx-intellisense" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        E. Experiencia de Desarrollo Superior (DX / IntelliSense)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-flujo-de-vida-del-codigo-del-editor-al-navegador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Flujo de Vida del Código: Del Editor al Navegador
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-10-mitos-y-realidades-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los 10 Mitos y Realidades de Angular
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Los 10 Mitos y Realidades de Angular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mito-1-angular-es-excesivamente-complejo-y-tiene-una-curva-de-aprendizaje-imposible" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 1: "Angular es excesivamente complejo y tiene una curva de aprendizaje imposible"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-2-angular-es-lento-pesado-y-genera-bundles-gigantescos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 2: "Angular es lento, pesado y genera bundles gigantescos"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-3-angular-esta-perdiendo-cuota-de-mercado-y-se-usa-poco" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 3: "Angular está perdiendo cuota de mercado y se usa poco"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-4-tienes-que-crear-y-gestionar-decenas-de-modulos-ngmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 4: "Tienes que crear y gestionar decenas de módulos (<code>NgModule</code>)"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-5-angularjs-y-angular-son-lo-mismo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 5: "AngularJS y Angular son lo mismo"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-6-angular-te-obliga-a-usar-librerias-y-componentes-visuales-de-google" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 6: "Angular te obliga a usar librerías y componentes visuales de Google"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-7-la-deteccion-de-cambios-de-angular-consume-mucha-memoria-y-degrada-el-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 7: "La detección de cambios de Angular consume mucha memoria y degrada el rendimiento"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-8-actualizar-de-version-en-angular-rompe-todo-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 8: "Actualizar de versión en Angular rompe todo el proyecto"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-9-angular-solo-sirve-para-aplicaciones-gigantescas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 9: "Angular solo sirve para aplicaciones gigantescas"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-10-typescript-solo-anade-burocracia-y-ralentiza-el-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 10: "TypeScript solo añade burocracia y ralentiza el desarrollo"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glosario-esencial-para-el-alumno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📚 Glosario Esencial para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sintesis-conceptual-para-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Síntesis Conceptual para el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-de-referencia-y-profundizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Material de Referencia y Profundización
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-bases-typescript/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Bases de TypeScript
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-angular-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-expandir-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect width="8" height="8" x="14" y="2" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Expandir Bases: Componentes y Servicios
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Manual de Referencia
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Manual de Referencia
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  01. Introducción al Framework
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Creación del Proyecto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Componentes Standalone
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Plantillas y Control Flow
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Signals y Reactividad
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  06. Pipes Nativos y Custom
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  07. Comunicación entre Componentes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  08. Directivas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  09. Servicios e Inyección de Dependencias
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Cliente HTTP, APIs e Interceptores
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Angular Router y Navegación
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Formularios Reactivos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Proyección de Contenido
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Queries del DOM (viewChild)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Server-Side Rendering (SSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Integración de Librerías y UI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Proyecto Integrador Final
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/18-testing-vitest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Pruebas Unitarias y de Integración con Vitest
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ficha-tecnica-y-objetivos-didacticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Ficha Técnica y Objetivos Didácticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-al-modulo-conceptual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción al Módulo Conceptual
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-typescript-y-por-que-angular-lo-utiliza" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es TypeScript y por qué Angular lo utiliza?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Qué es TypeScript y por qué Angular lo utiliza?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es TypeScript?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demostracion-practica-en-codigo-javascript-vs-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Demostración Práctica en Código: JavaScript vs TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-angular-eligio-typescript-desde-su-version-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Por qué Angular eligió TypeScript desde su versión 2?
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="¿Por qué Angular eligió TypeScript desde su versión 2?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-deteccion-temprana-de-errores-compile-time-vs-run-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Detección Temprana de Errores (Compile-Time vs Run-Time)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-autodocumentacion-y-refactorizacion-segura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. Autodocumentación y Refactorización Segura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-soporte-avanzado-de-programacion-orientada-a-objetos-poo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Soporte Avanzado de Programación Orientada a Objetos (POO)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-inyeccion-de-dependencias-robusta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D. Inyección de Dependencias Robusta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-experiencia-de-desarrollo-superior-dx-intellisense" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        E. Experiencia de Desarrollo Superior (DX / IntelliSense)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-flujo-de-vida-del-codigo-del-editor-al-navegador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Flujo de Vida del Código: Del Editor al Navegador
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-10-mitos-y-realidades-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los 10 Mitos y Realidades de Angular
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Los 10 Mitos y Realidades de Angular">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mito-1-angular-es-excesivamente-complejo-y-tiene-una-curva-de-aprendizaje-imposible" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 1: "Angular es excesivamente complejo y tiene una curva de aprendizaje imposible"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-2-angular-es-lento-pesado-y-genera-bundles-gigantescos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 2: "Angular es lento, pesado y genera bundles gigantescos"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-3-angular-esta-perdiendo-cuota-de-mercado-y-se-usa-poco" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 3: "Angular está perdiendo cuota de mercado y se usa poco"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-4-tienes-que-crear-y-gestionar-decenas-de-modulos-ngmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 4: "Tienes que crear y gestionar decenas de módulos (<code>NgModule</code>)"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-5-angularjs-y-angular-son-lo-mismo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 5: "AngularJS y Angular son lo mismo"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-6-angular-te-obliga-a-usar-librerias-y-componentes-visuales-de-google" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 6: "Angular te obliga a usar librerías y componentes visuales de Google"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-7-la-deteccion-de-cambios-de-angular-consume-mucha-memoria-y-degrada-el-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 7: "La detección de cambios de Angular consume mucha memoria y degrada el rendimiento"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-8-actualizar-de-version-en-angular-rompe-todo-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 8: "Actualizar de versión en Angular rompe todo el proyecto"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-9-angular-solo-sirve-para-aplicaciones-gigantescas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 9: "Angular solo sirve para aplicaciones gigantescas"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mito-10-typescript-solo-anade-burocracia-y-ralentiza-el-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Mito 10: "TypeScript solo añade burocracia y ralentiza el desarrollo"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glosario-esencial-para-el-alumno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📚 Glosario Esencial para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sintesis-conceptual-para-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Síntesis Conceptual para el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-de-referencia-y-profundizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Material de Referencia y Profundización
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegación" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="./.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Guías de Clase
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="conceptos-generales-typescript-y-angular">Conceptos Generales — TypeScript y Angular<a class="headerlink" href="#conceptos-generales-typescript-y-angular" title="Permanent link">&para;</a></h1>
+<p>Esta sección sienta las bases teóricas y conceptuales indispensables antes de comenzar el desarrollo de aplicaciones. Su propósito didáctico es que el alumno comprenda <strong>por qué existe TypeScript</strong>, por qué Angular lo adoptó como su lenguaje nativo y derribe los <strong>mitos históricos</strong> que rodean al framework.</p>
+<hr />
+<h2 id="ficha-tecnica-y-objetivos-didacticos">📋 Ficha Técnica y Objetivos Didácticos<a class="headerlink" href="#ficha-tecnica-y-objetivos-didacticos" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Nivel:</strong> Conceptual / Fundacional.</li>
+<li><strong>Enfoque:</strong> Arquitectura de software, comparativa de lenguajes y análisis del ecosistema.</li>
+<li><strong>Objetivo de la sesión:</strong> Que el estudiante entienda el valor del tipado estático en el ciclo de vida del software empresarial y adquiera confianza frente al ecosistema moderno de Angular.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    subgraph A ["1. El Problema: Dinamismo sin Control"]
+        JS["&lt;b&gt;JavaScript Dinámico&lt;/b&gt;&lt;br/&gt;Tipado débil y resolución tardía"] --&gt; Err["&lt;b&gt;Errores en Producción&lt;/b&gt;&lt;br/&gt;Excepciones tipo 'undefined is not a function'"]
+    end
+
+    subgraph B ["2. La Solución: Tipado Estático"]
+        TS["&lt;b&gt;TypeScript: Superset&lt;/b&gt;&lt;br/&gt;Añade contratos e inferencia estricta"] --&gt; Comp["&lt;b&gt;Comprobación Estática&lt;/b&gt;&lt;br/&gt;Detección de errores antes de compilar"]
+    end
+
+    subgraph C ["3. El Framework: Arquitectura Enterprise"]
+        NG["&lt;b&gt;Angular Moderno (v19 - v22)&lt;/b&gt;&lt;br/&gt;Standalone Components, Signals &amp; Zoneless"] --&gt; App["&lt;b&gt;Aplicaciones Robustas&lt;/b&gt;&lt;br/&gt;Escalabilidad y mantenibilidad profesional"]
+    end
+
+    A ==&gt; B ==&gt; C</code></pre>
+<hr />
+<h2 id="introduccion-al-modulo-conceptual">Introducción al Módulo Conceptual<a class="headerlink" href="#introduccion-al-modulo-conceptual" title="Permanent link">&para;</a></h2>
+<p>En el desarrollo web moderno, la elección de herramientas no responde a modas pasajeras, sino a la necesidad de resolver problemas reales de escalabilidad, mantenimiento y colaboración en equipo.</p>
+<p>Antes de escribir la primera línea de código en Angular, es vital responder a dos preguntas fundamentales:</p>
+<ol>
+<li><em>¿Por qué no usamos simplemente JavaScript estándar?</em></li>
+<li><em>¿Por qué Angular es el estándar indiscutible en aplicaciones de gran envergadura?</em></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Guía Didáctica para el Profesor</p>
+<p><strong>Pregunta de apertura en clase:</strong><br />
+<em>"¿A cuántos de vosotros os ha fallado una página web con el error <code>Uncaught TypeError: Cannot read properties of undefined</code>? ¿En qué momento os enterasteis del fallo: mientras programabais o cuando ya estaba publicada?"</em><br />
+Use esta pregunta para evidenciar que <strong>JavaScript avisa del error en tiempo de ejecución (runtime)</strong>, mientras que <strong>TypeScript avisa en tiempo de compilación (compile-time)</strong>.</p>
+</div>
+<hr />
+<h2 id="que-es-typescript-y-por-que-angular-lo-utiliza">¿Qué es TypeScript y por qué Angular lo utiliza?<a class="headerlink" href="#que-es-typescript-y-por-que-angular-lo-utiliza" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para conocer los fundamentos de diseño de Angular, la comparación frente a bibliotecas como React o Vue y la arquitectura SPA vs MPA, consulta el <strong><a href="../manual/01-introduccion/">Manual de Referencia: 01. Introducción al Framework</a></strong>.</p>
+</div>
+<h3 id="que-es-typescript">¿Qué es TypeScript?<a class="headerlink" href="#que-es-typescript" title="Permanent link">&para;</a></h3>
+<p><strong>TypeScript</strong> es un lenguaje de programación de código abierto desarrollado y mantenido por Microsoft (creado por <strong>Anders Hejlsberg</strong>, el legendario arquitecto de C# y Turbo Pascal).</p>
+<p>Técnicamente se define como un <strong>Superconjunto Tipado de JavaScript</strong> (<em>Typed Superset of JS</em>):</p>
+<ul>
+<li><strong>Superconjunto:</strong> Todo código JavaScript válido es, por definición, código TypeScript válido. TypeScript no inventa una sintaxis ajena; extiende JavaScript agregando un sistema de tipos estático y opcional.</li>
+<li><strong>Transpilación:</strong> Los motores de navegación (V8 en Chrome/Edge, SpiderMonkey en Firefox, JavaScriptCore en Safari) no entienden TypeScript de forma directa. El compilador de TypeScript (<code>tsc</code>) o empaquetadores como <code>esbuild</code>/<code>Vite</code> transforman el código TypeScript en JavaScript puro compatible con cualquier navegador.</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[Código TypeScript (.ts)] ──(Compilación / Transpilación)──&gt; [Código JavaScript (.js)]
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>          │                                                              │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Tipado estricto                                                Ejecutado por el
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Interfaces y contratos                                        motor V8 / Navegador
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Detección temprana de errores
+</span></code></pre></div>
+<hr />
+<h3 id="demostracion-practica-en-codigo-javascript-vs-typescript">Demostración Práctica en Código: JavaScript vs TypeScript<a class="headerlink" href="#demostracion-practica-en-codigo-javascript-vs-typescript" title="Permanent link">&para;</a></h3>
+<p>Para ilustrar de forma contundente la diferencia a los alumnos en el aula, analicemos este caso clásico de cálculo financiero en un carrito de compras:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JavaScript Clásico (Fallo Silencioso)</label><label for="__tabbed_1_2">TypeScript (Prevención Inmediata en el Editor)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Función que calcula el total con impuestos</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">calculateTotal</span><span class="p">(</span><span class="nx">price</span><span class="p">,</span><span class="w"> </span><span class="nx">taxRate</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">price</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">taxRate</span><span class="p">);</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">// Un desarrollador o una respuesta de API envía el precio como string:</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">calculateTotal</span><span class="p">(</span><span class="s2">"100"</span><span class="p">,</span><span class="w"> </span><span class="mf">0.21</span><span class="p">);</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">total</span><span class="p">);</span><span class="w"> </span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">// SALIDA: "10021"  &lt;-- ¡CATÁSTROFE! </span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">// JavaScript concatenó los textos en lugar de sumar números.</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">// El código se ejecuta SIN lanzar ningún error, pero la lógica de negocio está rota.</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Tipado explícito de argumentos y retorno</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">calculateTotal</span><span class="p">(</span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">taxRate</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">price</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">taxRate</span><span class="p">);</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// Si alguien intenta pasar un string o tipo incorrecto:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">calculateTotal</span><span class="p">(</span><span class="s2">"100"</span><span class="p">,</span><span class="w"> </span><span class="mf">0.21</span><span class="p">);</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">//                           ^^^^^</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">// ERROR DE COMPILACIÓN: </span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">// Argument of type 'string' is not assignable to parameter of type 'number'.</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">// El proyecto NI SIQUIERA COMPILA hasta que el error sea corregido.</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">⚠️ El Peligro de los Errores Silenciosos</p>
+<p>En JavaScript, una concatenación no deseada como <code>"100" + 21 = "10021"</code> puede provocar cobros erróneos de miles de euros en un entorno bancario o de comercio electrónico. TypeScript elimina de raíz esta categoría completa de fallos humanos.</p>
+</div>
+<hr />
+<h3 id="por-que-angular-eligio-typescript-desde-su-version-2">¿Por qué Angular eligió TypeScript desde su versión 2?<a class="headerlink" href="#por-que-angular-eligio-typescript-desde-su-version-2" title="Permanent link">&para;</a></h3>
+<p>Cuando el equipo de Google diseñó la reescritura moderna de Angular, evaluó múltiples opciones (incluyendo Dart y JavaScript con AtScript). Decidieron apostar al 100% por TypeScript por cinco pilares de arquitectura:</p>
+<h4 id="a-deteccion-temprana-de-errores-compile-time-vs-run-time">A. Detección Temprana de Errores (Compile-Time vs Run-Time)<a class="headerlink" href="#a-deteccion-temprana-de-errores-compile-time-vs-run-time" title="Permanent link">&para;</a></h4>
+<p>En JavaScript tradicional, si pasas un parámetro incorrecto o escribes mal el nombre de una propiedad (<code>user.namee</code> en vez de <code>user.name</code>), el intérprete no dice nada: devuelve <code>undefined</code> y el error revienta en la cara del cliente en producción. TypeScript subraya el error en rojo en el editor en el milisegundo en que lo escribes.</p>
+<h4 id="b-autodocumentacion-y-refactorizacion-segura">B. Autodocumentación y Refactorización Segura<a class="headerlink" href="#b-autodocumentacion-y-refactorizacion-segura" title="Permanent link">&para;</a></h4>
+<p>En un proyecto de 50.000 líneas y 20 desarrolladores, cambiar el nombre de un campo en una base de datos o modelo en JavaScript puro es una ruleta rusa. En TypeScript, las interfaces documentan la estructura de los datos y el editor actualiza todas las referencias automáticamente en un segundo mediante <code>F2</code> (Rename Symbol).</p>
+<h4 id="c-soporte-avanzado-de-programacion-orientada-a-objetos-poo">C. Soporte Avanzado de Programación Orientada a Objetos (POO)<a class="headerlink" href="#c-soporte-avanzado-de-programacion-orientada-a-objetos-poo" title="Permanent link">&para;</a></h4>
+<p>Proporciona interfaces, clases abstractas, genéricos, modificadores de acceso (<code>public</code>, <code>private</code>, <code>protected</code>, <code>readonly</code>) y decoradores, indispensables para diseñar arquitecturas empresariales desacopladas y escalables.</p>
+<h4 id="d-inyeccion-de-dependencias-robusta">D. Inyección de Dependencias Robusta<a class="headerlink" href="#d-inyeccion-de-dependencias-robusta" title="Permanent link">&para;</a></h4>
+<p>Angular cuenta con uno de los sistemas de Inyección de Dependencias (<em>Dependency Injection</em>) más potentes de la industria. TypeScript permite resolver dependencias automáticamente analizando los tipos declarados en los constructores o funciones de inyección (<code>inject()</code>).</p>
+<h4 id="e-experiencia-de-desarrollo-superior-dx-intellisense">E. Experiencia de Desarrollo Superior (DX / IntelliSense)<a class="headerlink" href="#e-experiencia-de-desarrollo-superior-dx-intellisense" title="Permanent link">&para;</a></h4>
+<p>El autocompletado inteligente en editores como VS Code reduce los fallos humanos a cero: el editor sabe exactamente qué métodos y propiedades tiene cada objeto sin necesidad de memorizarlos.</p>
+<hr />
+<h3 id="el-flujo-de-vida-del-codigo-del-editor-al-navegador">El Flujo de Vida del Código: Del Editor al Navegador<a class="headerlink" href="#el-flujo-de-vida-del-codigo-del-editor-al-navegador" title="Permanent link">&para;</a></h3>
+<p>Es vital que los alumnos comprendan qué ocurre desde que pulsan guardar en su editor hasta que la aplicación corre en Google Chrome:</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph FaseDev ["1. Desarrollo y Verificación Estática"]
+        A["&lt;b&gt;1. Edición en VS Code&lt;/b&gt;&lt;br/&gt;TypeScript estricto, contratos y autocompletado en vivo"] --&gt; B["&lt;b&gt;2. Language Service (tsc)&lt;/b&gt;&lt;br/&gt;Comprobación estática de tipos e interfaces antes de compilar"]
+    end
+
+    subgraph FaseBuild ["2. Compilación y Ejecución en Navegador"]
+        C["&lt;b&gt;3. Application Builder (esbuild + Vite)&lt;/b&gt;&lt;br/&gt;Empaquetado ultra-rápido, tree-shaking y recarga HMR"] --&gt; D["&lt;b&gt;4. Navegador Web (Motor V8)&lt;/b&gt;&lt;br/&gt;Ejecución de JavaScript moderno y renderizado en DOM"]
+    end
+
+    FaseDev ==&gt; FaseBuild</code></pre>
+<ol>
+<li><strong>Edición:</strong> El desarrollador escribe TypeScript tipado con ayuda de la extensión <em>Angular Language Service</em>.</li>
+<li><strong>Transpilación:</strong> <code>esbuild</code> strip-down (elimina los tipos, interfaces y decoradores) transformándolos en JavaScript estándar optimizado.</li>
+<li><strong>Source Maps (.map):</strong> Archivos especiales que le dicen a las herramientas de desarrollo del navegador: <em>"esta línea de JavaScript corresponde a esta línea del archivo TypeScript original"</em>, permitiendo poner puntos de interrupción (<em>breakpoints</em>) directamente sobre código <code>.ts</code>.</li>
+</ol>
+<hr />
+<h2 id="los-10-mitos-y-realidades-de-angular">Los 10 Mitos y Realidades de Angular<a class="headerlink" href="#los-10-mitos-y-realidades-de-angular" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para profundizar en el motor de compilación <code>esbuild</code>/<code>Vite</code>, la arquitectura Zoneless y la eliminación definitiva de <code>NgModule</code>, consulta el <strong><a href="../manual/02-crear-proyecto/">Manual de Referencia: 02. Creación del Proyecto</a></strong>.</p>
+</div>
+<p>A lo largo de los años se han acumulado ideas preconcebidas sobre Angular. A continuación, desglosamos los 10 mitos más frecuentes contrastados con la realidad del desarrollo con <strong>Angular 19+ (Edición 2025)</strong>:</p>
+<h3 id="mito-1-angular-es-excesivamente-complejo-y-tiene-una-curva-de-aprendizaje-imposible">Mito 1: "Angular es excesivamente complejo y tiene una curva de aprendizaje imposible"<a class="headerlink" href="#mito-1-angular-es-excesivamente-complejo-y-tiene-una-curva-de-aprendizaje-imposible" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Este mito proviene de la época en que había que aprender obligatoriamente <code>NgModule</code>, sintaxis complejas de Zone.js y RxJS exhaustivo para el caso más simple. Con <strong>Angular 19</strong>, la arquitectura se basa en <strong>Componentes Standalone</strong>, <strong>Señales</strong> y el nuevo flujo de control declarativo (<code>@if</code>, <code>@for</code>). Crear una aplicación funcional hoy es tan directo y limpio como en cualquier otro framework moderno.</li>
+</ul>
+<h3 id="mito-2-angular-es-lento-pesado-y-genera-bundles-gigantescos">Mito 2: "Angular es lento, pesado y genera bundles gigantescos"<a class="headerlink" href="#mito-2-angular-es-lento-pesado-y-genera-bundles-gigantescos" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Angular utiliza el nuevo motor de compilación <strong>Application Builder</strong> basado en <strong><code>esbuild</code></strong> y <strong><code>Vite</code></strong>. Las aplicaciones compilan en milisegundos, generan fragmentos mínimos optimizados (<em>tree-shaking</em> agresivo) y alcanzan puntuaciones de 100/100 en Google Lighthouse.</li>
+</ul>
+<h3 id="mito-3-angular-esta-perdiendo-cuota-de-mercado-y-se-usa-poco">Mito 3: "Angular está perdiendo cuota de mercado y se usa poco"<a class="headerlink" href="#mito-3-angular-esta-perdiendo-cuota-de-mercado-y-se-usa-poco" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Angular domina con puño de hierro el sector <strong>empresarial, financiero, asegurador, gubernamental y de telecomunicaciones</strong>. Mientras otras librerías son populares en startups de ciclo rápido, las grandes corporaciones eligen Angular porque ofrece soporte a largo plazo (LTS), directrices claras de Google y estabilidad donde millones de euros dependen del software.</li>
+</ul>
+<h3 id="mito-4-tienes-que-crear-y-gestionar-decenas-de-modulos-ngmodule">Mito 4: "Tienes que crear y gestionar decenas de módulos (<code>NgModule</code>)"<a class="headerlink" href="#mito-4-tienes-que-crear-y-gestionar-decenas-de-modulos-ngmodule" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Los <code>NgModule</code> son <strong>opcionales y están en desuso</strong>. Desde Angular 17 a 22, el CLI genera aplicaciones <strong>100% Standalone por defecto</strong>. Cada componente importa directamente lo que necesita en su decorador (<code>imports: [...]</code>), y los servicios evolucionan hacia el nuevo <code>@Service()</code>, eliminando por completo el código repetitivo (<em>boilerplate</em>).</li>
+</ul>
+<h3 id="mito-5-angularjs-y-angular-son-lo-mismo">Mito 5: "AngularJS y Angular son lo mismo"<a class="headerlink" href="#mito-5-angularjs-y-angular-son-lo-mismo" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Son tecnologías completamente distintas. <strong>AngularJS (versiones 1.x)</strong> era un framework de 2010 basado en JavaScript que ya está oficialmente obsoleto. <strong>Angular (versiones 2 a 22+)</strong> es una plataforma moderna reescrita desde los cimientos en TypeScript.</li>
+</ul>
+<h3 id="mito-6-angular-te-obliga-a-usar-librerias-y-componentes-visuales-de-google">Mito 6: "Angular te obliga a usar librerías y componentes visuales de Google"<a class="headerlink" href="#mito-6-angular-te-obliga-a-usar-librerias-y-componentes-visuales-de-google" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Angular es completamente agnóstico a la capa de diseño. Puedes utilizar <strong>Bootstrap 5</strong>, <strong>Tailwind CSS</strong>, <strong>PrimeNG</strong>, <strong>Angular Material</strong>, <strong>DaisyUI</strong> o CSS nativo según la necesidad del proyecto.</li>
+</ul>
+<h3 id="mito-7-la-deteccion-de-cambios-de-angular-consume-mucha-memoria-y-degrada-el-rendimiento">Mito 7: "La detección de cambios de Angular consume mucha memoria y degrada el rendimiento"<a class="headerlink" href="#mito-7-la-deteccion-de-cambios-de-angular-consume-mucha-memoria-y-degrada-el-rendimiento" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> La llegada de las <strong>Señales (<em>Signals</em>)</strong> ha inaugurado la era de la <strong>reactividad fina</strong> (<em>fine-grained reactivity</em>). Ya no es necesario que Angular verifique todo el árbol de componentes; Angular actualiza únicamente el nodo exacto del DOM que ha cambiado, consolidando en Angular 22 la arquitectura <strong>Zoneless estable</strong> ultraeficiente (sin la sobrecarga de <code>zone.js</code>) y componentes con estrategia <code>OnPush</code> por defecto.</li>
+</ul>
+<h3 id="mito-8-actualizar-de-version-en-angular-rompe-todo-el-proyecto">Mito 8: "Actualizar de versión en Angular rompe todo el proyecto"<a class="headerlink" href="#mito-8-actualizar-de-version-en-angular-rompe-todo-el-proyecto" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Angular cuenta con el comando oficial <code>ng update</code>. Mediante <em>schematics</em> (scripts de migración automatizada de código), el equipo de Google actualiza la sintaxis de tu proyecto de forma transparente entre versiones mayores.</li>
+</ul>
+<h3 id="mito-9-angular-solo-sirve-para-aplicaciones-gigantescas">Mito 9: "Angular solo sirve para aplicaciones gigantescas"<a class="headerlink" href="#mito-9-angular-solo-sirve-para-aplicaciones-gigantescas" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Aunque brilla especialmente en proyectos medianos y grandes, su CLI optimizado permite crear desde prototipos y paneles administrativos pequeños hasta portales gubernamentales con millones de usuarios y arquitecturas de microfrontends.</li>
+</ul>
+<h3 id="mito-10-typescript-solo-anade-burocracia-y-ralentiza-el-desarrollo">Mito 10: "TypeScript solo añade burocracia y ralentiza el desarrollo"<a class="headerlink" href="#mito-10-typescript-solo-anade-burocracia-y-ralentiza-el-desarrollo" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Realidad:</strong> Dedicar 5 segundos a tipar una variable o una interfaz ahorra horas de depuración de errores tipográficos en el navegador. En proyectos de equipo, TypeScript es el contrato que garantiza que el trabajo de un compañero no rompa el tuyo.</li>
+</ul>
+<hr />
+<h2 id="glosario-esencial-para-el-alumno">📚 Glosario Esencial para el Alumno<a class="headerlink" href="#glosario-esencial-para-el-alumno" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Término</th>
+<th style="text-align: left;">Definición Técnica</th>
+<th style="text-align: left;">Analogía Cotidiana</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Transpilación</strong></td>
+<td style="text-align: left;">Traducir código fuente de un lenguaje a otro del mismo nivel de abstracción (TS <span class="arithmatex">\(\rightarrow\)</span> JS).</td>
+<td style="text-align: left;">Traducir un libro de inglés a español para que lo lea quien no sabe inglés.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Inferencia de Tipos</strong></td>
+<td style="text-align: left;">Capacidad del compilador para deducir el tipo de dato sin que el programador lo escriba.</td>
+<td style="text-align: left;">Si ves un animal con pico, plumas y que dice <em>cuac</em>, deduces que es un pato sin que lleve un cartel.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Compile-Time</strong></td>
+<td style="text-align: left;">Momento en el que el código se escribe y analiza en el editor / compilador.</td>
+<td style="text-align: left;">La revisión ortográfica y gramatical antes de imprimir un periódico.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Run-Time</strong></td>
+<td style="text-align: left;">Momento en el que el usuario final interactúa con la aplicación en el navegador.</td>
+<td style="text-align: left;">El lector leyendo el periódico impreso y encontrando una errata en directo.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Zoneless</strong></td>
+<td style="text-align: left;">Modo de ejecución de Angular donde no se requiere la librería <code>zone.js</code> para detectar cambios.</td>
+<td style="text-align: left;">Un timbre inteligente que suena solo cuando tocan a la puerta, en vez de vigilar la puerta cada 2 segundos.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sintesis-conceptual-para-el-aula">🎯 Síntesis Conceptual para el Aula<a class="headerlink" href="#sintesis-conceptual-para-el-aula" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph F1 ["Garantía de Código y Arquitectura"]
+        V1["&lt;b&gt;Tipado Estricto&lt;/b&gt;&lt;br/&gt;Detección temprana de errores en compilación"]
+        V2["&lt;b&gt;Arquitectura Standalone&lt;/b&gt;&lt;br/&gt;Componentes directos, modulares y sin NgModules"]
+    end
+
+    subgraph F2 ["Reactividad y Ecosistema Oficial"]
+        V3["&lt;b&gt;Signals Nativos&lt;/b&gt;&lt;br/&gt;Reactividad granular sin la sobrecarga de Zone.js"]
+        V4["&lt;b&gt;Ecosistema Integrado&lt;/b&gt;&lt;br/&gt;CLI, Router, Formularios reactivos, HTTP y SSR sincronizados"]
+    end
+
+    F1 ==&gt; F2</code></pre>
+<div class="admonition question">
+<p class="admonition-title">Preguntas Clave para Debate en Clase</p>
+<ol>
+<li><em>¿Qué diferencia existe entre un error en tiempo de compilación y un error en tiempo de ejecución?</em></li>
+<li><em>¿Por qué una empresa financiera preferiría Angular sobre una librería que requiera ensamblar 15 paquetes externos de la comunidad?</em></li>
+<li><em>¿Qué ventajas aporta un componente Standalone frente a la arquitectura clásica de módulos?</em></li>
+</ol>
+</div>
+<hr />
+<h2 id="material-de-referencia-y-profundizacion">📖 Material de Referencia y Profundización<a class="headerlink" href="#material-de-referencia-y-profundizacion" title="Permanent link">&para;</a></h2>
+<p>Para una base teórica exhaustiva, consulta los siguientes capítulos del <strong>Manual de Referencia</strong>:</p>
+<ul>
+<li><strong><a href="../manual/01-introduccion/">Manual de Referencia: 01. Introducción al Framework Angular</a>:</strong> Historia detallada, arquitectura SPA vs MPA, comparativa exhaustiva Framework vs Biblioteca y evolución hacia Angular 19.</li>
+<li><strong><a href="../manual/02-crear-proyecto/">Manual de Referencia: 02. Creación del Proyecto y Ecosistema CLI</a>:</strong> Comandos esenciales del CLI, análisis profundo de <code>angular.json</code> y la transición al paradigma Zoneless.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="./.." class="md-footer__link md-footer__link--prev" aria-label="Anterior: Inicio">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Inicio
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03-bases-typescript/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 03. Bases de TypeScript">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                03. Bases de TypeScript
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.77dd0ce9.min.js"></script>
+      
+    
+  </body>
+</html>

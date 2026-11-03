@@ -1,0 +1,3581 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guía docente, código paso a paso y manual de referencia para el aula - Angular">
+      
+      
+      
+      
+      
+        <link rel="prev" href="../03-bases-typescript/">
+      
+      
+        <link rel="next" href="../05-expandir-bases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.73">
+    
+    
+      
+        <title>04. Bases de Angular - F3 Martos | Angular </title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Saltar a contenido
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="F3 Martos | Angular " class="md-header__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegación</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            F3 Martos | Angular 
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              04. Bases de Angular
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Buscar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../02-conceptos-generales/" class="md-tabs__link">
+          
+  
+  Guías de Clase
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../manual/01-introduccion/" class="md-tabs__link">
+          
+  
+  Manual de Referencia
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="F3 Martos | Angular " class="md-nav__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    F3 Martos | Angular 
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guías de Clase
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guías de Clase
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-conceptos-generales/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-bases-typescript/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Bases de TypeScript
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ficha-tecnica-y-objetivos-didacticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Ficha Técnica y Objetivos Didácticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-y-temas-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción y Temas Clave
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción y Temas Clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lo-que-aprenderemos-en-esta-seccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Lo que aprenderemos en esta sección
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-angular-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción a Angular 19+
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a Angular 19+">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framework-vs-libreria" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Framework vs Librería
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-revolucion-de-angular-moderno-angular-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La Revolución de Angular Moderno (Angular 17+)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primer-proyecto-en-angular-creacion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Primer Proyecto en Angular: Creación Paso a Paso
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primer Proyecto en Angular: Creación Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comprobación del Entorno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-proyecto-bases" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Proyecto <code>bases</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-del-servidor-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejecución del Servidor de Desarrollo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomia-del-proyecto-archivos-y-directorios-de-la-raiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Proyecto: Archivos y Directorios de la Raíz
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomía del Proyecto: Archivos y Directorios de la Raíz">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabla-de-responsabilidades-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de Responsabilidades Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomia-del-directorio-src-y-flujo-de-arranque" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Directorio <code>src/</code> y Flujo de Arranque
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomía del Directorio src&#x2f; y Flujo de Arranque">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srcindexhtml-shell-de-la-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/index.html</code> (Shell de la SPA)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcmaints-punto-de-arranque-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/main.ts</code> (Punto de Arranque de la Aplicación)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcappappconfigts-configuracion-y-proveedores-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/app/app.config.ts</code> (Configuración y Proveedores Globales)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-del-primer-componente-counterpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Primer Componente: <code>CounterPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación del Primer Componente: CounterPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-archivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Archivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anatomia-del-componente-con-plantilla-inline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Componente con Plantilla Inline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conceptos-clave-a-explicar-en-clase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceptos Clave a Explicar en Clase:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-practica-separar-template-de-la-logica-en-counterpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Tarea Práctica: Separar Template de la Lógica en <code>CounterPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Tarea Práctica: Separar Template de la Lógica en CounterPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-del-reto-para-el-alumno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado del Reto para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reto-practico-intentalo-tu-mismo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso-y-explicacion-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🛠️ Solución Paso a Paso y Explicación Técnica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Solución Paso a Paso y Explicación Técnica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-crear-counter-pagecomponenthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Crear <code>counter-page.component.html</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-actualizar-counter-pagecomponentts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Actualizar <code>counter-page.component.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analisis-de-la-solucion-y-conceptos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🔍 Análisis de la Solución y Conceptos Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errores-tipicos-del-alumno-en-esta-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⚠️ Errores Típicos del Alumno en esta Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-didactica-para-el-docente-en-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧑‍🏫 Guía Didáctica para el Docente en el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enrutamiento-declarativo-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Enrutamiento Declarativo de la Aplicación
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enrutamiento Declarativo de la Aplicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-rutas-en-srcappapproutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración de Rutas en <code>src/app/app.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-del-shell-en-srcappappcomponenthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración del Shell en <code>src/app/app.component.html</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-revolucion-de-las-senales-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La Revolución de las Señales (<code>Signals</code>)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La Revolución de las Señales (Signals)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actualizacion-del-contador-con-senales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualización del Contador con Señales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metodos-fundamentales-de-una-senal-writable" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Métodos Fundamentales de una Señal Writable
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deteccion-de-cambios-de-zonejs-a-zoneless" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Detección de Cambios: De Zone.js a Zoneless
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detección de Cambios: De Zone.js a Zoneless">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-modelo-tradicional-con-zonejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Modelo Tradicional con <code>Zone.js</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-modelo-moderno-zoneless-con-senales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Modelo Moderno: Zoneless con Señales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-de-refuerzo-y-solucion-heropagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea de Refuerzo y Solución: <code>HeroPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea de Refuerzo y Solución: HeroPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado de la Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Solución Paso a Paso
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solución Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Archivo TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Archivo HTML
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-la-ruta-en-srcappapproutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Registro de la Ruta en <code>src/app/app.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#senales-computadas-computed-y-pipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Señales Computadas (<code>computed</code>) y Pipes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Señales Computadas (computed) y Pipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-una-senal-computada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es una Señal Computada?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternativa-pipes-uppercasepipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Alternativa: Pipes (<code>UpperCasePipe</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codigo-final-de-heropagecomponent-con-computed-y-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Código Final de <code>HeroPageComponent</code> con <code>computed</code> y <code>Pipe</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterio-de-arquitectura-cuando-usar-computed-vs-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Criterio de Arquitectura: ¿Cuándo usar <code>computed()</code> vs <code>Pipe</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-y-sintesis-de-conceptos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Resumen y Síntesis de Conceptos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repositorio-oficial-y-recursos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Repositorio Oficial y Recursos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#banco-de-preguntas-y-evaluacion-rapida-para-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧪 Banco de Preguntas y Evaluación Rápida para el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-de-referencia-y-profundizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Material de Referencia y Profundización
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-expandir-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect width="8" height="8" x="14" y="2" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Expandir Bases: Componentes y Servicios
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Manual de Referencia
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Manual de Referencia
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  01. Introducción al Framework
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Creación del Proyecto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Componentes Standalone
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Plantillas y Control Flow
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Signals y Reactividad
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  06. Pipes Nativos y Custom
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  07. Comunicación entre Componentes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  08. Directivas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  09. Servicios e Inyección de Dependencias
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Cliente HTTP, APIs e Interceptores
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Angular Router y Navegación
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Formularios Reactivos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Proyección de Contenido
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Queries del DOM (viewChild)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Server-Side Rendering (SSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Integración de Librerías y UI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Proyecto Integrador Final
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/18-testing-vitest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Pruebas Unitarias y de Integración con Vitest
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ficha-tecnica-y-objetivos-didacticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Ficha Técnica y Objetivos Didácticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-y-temas-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción y Temas Clave
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción y Temas Clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lo-que-aprenderemos-en-esta-seccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Lo que aprenderemos en esta sección
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-angular-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Introducción a Angular 19+
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a Angular 19+">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framework-vs-libreria" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Framework vs Librería
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-revolucion-de-angular-moderno-angular-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La Revolución de Angular Moderno (Angular 17+)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primer-proyecto-en-angular-creacion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Primer Proyecto en Angular: Creación Paso a Paso
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primer Proyecto en Angular: Creación Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comprobación del Entorno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-proyecto-bases" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Proyecto <code>bases</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejecucion-del-servidor-de-desarrollo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejecución del Servidor de Desarrollo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomia-del-proyecto-archivos-y-directorios-de-la-raiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Proyecto: Archivos y Directorios de la Raíz
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomía del Proyecto: Archivos y Directorios de la Raíz">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tabla-de-responsabilidades-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de Responsabilidades Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomia-del-directorio-src-y-flujo-de-arranque" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Directorio <code>src/</code> y Flujo de Arranque
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomía del Directorio src&#x2f; y Flujo de Arranque">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srcindexhtml-shell-de-la-spa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/index.html</code> (Shell de la SPA)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcmaints-punto-de-arranque-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/main.ts</code> (Punto de Arranque de la Aplicación)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcappappconfigts-configuracion-y-proveedores-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>src/app/app.config.ts</code> (Configuración y Proveedores Globales)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-del-primer-componente-counterpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Primer Componente: <code>CounterPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación del Primer Componente: CounterPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-archivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Archivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anatomia-del-componente-con-plantilla-inline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Anatomía del Componente con Plantilla Inline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conceptos-clave-a-explicar-en-clase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conceptos Clave a Explicar en Clase:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-practica-separar-template-de-la-logica-en-counterpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Tarea Práctica: Separar Template de la Lógica en <code>CounterPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Tarea Práctica: Separar Template de la Lógica en CounterPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-del-reto-para-el-alumno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado del Reto para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reto-practico-intentalo-tu-mismo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso-y-explicacion-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🛠️ Solución Paso a Paso y Explicación Técnica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Solución Paso a Paso y Explicación Técnica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-crear-counter-pagecomponenthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Crear <code>counter-page.component.html</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-actualizar-counter-pagecomponentts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Actualizar <code>counter-page.component.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analisis-de-la-solucion-y-conceptos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🔍 Análisis de la Solución y Conceptos Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errores-tipicos-del-alumno-en-esta-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⚠️ Errores Típicos del Alumno en esta Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-didactica-para-el-docente-en-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧑‍🏫 Guía Didáctica para el Docente en el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enrutamiento-declarativo-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Enrutamiento Declarativo de la Aplicación
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enrutamiento Declarativo de la Aplicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-rutas-en-srcappapproutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración de Rutas en <code>src/app/app.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-del-shell-en-srcappappcomponenthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración del Shell en <code>src/app/app.component.html</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-revolucion-de-las-senales-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La Revolución de las Señales (<code>Signals</code>)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La Revolución de las Señales (Signals)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actualizacion-del-contador-con-senales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualización del Contador con Señales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metodos-fundamentales-de-una-senal-writable" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Métodos Fundamentales de una Señal Writable
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deteccion-de-cambios-de-zonejs-a-zoneless" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Detección de Cambios: De Zone.js a Zoneless
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detección de Cambios: De Zone.js a Zoneless">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-modelo-tradicional-con-zonejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Modelo Tradicional con <code>Zone.js</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-modelo-moderno-zoneless-con-senales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Modelo Moderno: Zoneless con Señales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-de-refuerzo-y-solucion-heropagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea de Refuerzo y Solución: <code>HeroPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea de Refuerzo y Solución: HeroPageComponent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-de-la-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado de la Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Solución Paso a Paso
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solución Paso a Paso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archivo-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Archivo TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archivo-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Archivo HTML
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-la-ruta-en-srcappapproutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Registro de la Ruta en <code>src/app/app.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#senales-computadas-computed-y-pipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Señales Computadas (<code>computed</code>) y Pipes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Señales Computadas (computed) y Pipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-es-una-senal-computada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es una Señal Computada?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternativa-pipes-uppercasepipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Alternativa: Pipes (<code>UpperCasePipe</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codigo-final-de-heropagecomponent-con-computed-y-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Código Final de <code>HeroPageComponent</code> con <code>computed</code> y <code>Pipe</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterio-de-arquitectura-cuando-usar-computed-vs-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Criterio de Arquitectura: ¿Cuándo usar <code>computed()</code> vs <code>Pipe</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-y-sintesis-de-conceptos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Resumen y Síntesis de Conceptos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repositorio-oficial-y-recursos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Repositorio Oficial y Recursos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#banco-de-preguntas-y-evaluacion-rapida-para-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧪 Banco de Preguntas y Evaluación Rápida para el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-de-referencia-y-profundizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Material de Referencia y Profundización
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegación" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="./.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../02-conceptos-generales/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Guías de Clase
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="seccion-04-bases-de-angular-guia-de-clase">Sección 04: Bases de Angular (Guía de Clase)<a class="headerlink" href="#seccion-04-bases-de-angular-guia-de-clase" title="Permanent link">&para;</a></h1>
+<p>Esta guía paso a paso recoge todo el desarrollo, código incremental y explicaciones técnicas de la <strong>Sección 04 del Curso Angular (Edición 2025)</strong>. Está diseñada para que el docente pueda guiar las sesiones con los alumnos en clase y para que los estudiantes puedan reproducir el proyecto desde cero con la máxima claridad conceptual.</p>
+<hr />
+<h2 id="ficha-tecnica-y-objetivos-didacticos">📋 Ficha Técnica y Objetivos Didácticos<a class="headerlink" href="#ficha-tecnica-y-objetivos-didacticos" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Versión de Angular:</strong> 19.x (Modern Angular).</li>
+<li><strong>Paradigma:</strong> Componentes Standalone, Reactividad con Señales (<em>Signals</em>), Zoneless-ready.</li>
+<li><strong>Proyecto a construir:</strong> <code>bases</code> (SPA con páginas de contador reactivo y gestión de héroes).</li>
+<li><strong>Repositorio de referencia final:</strong> <a href="https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-04">GitHub - DevTalles Bases (fin-seccion-04)</a></li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    subgraph S1 ["Fase 1 · Setup Inicial y Arquitectura de la SPA"]
+        A["&lt;b&gt;1. Creación del Proyecto (ng new bases)&lt;/b&gt;&lt;br/&gt;Angular 19, componentes standalone puros y sin NgModules"] --&gt; B["&lt;b&gt;2. Estructura de Directorios src/&lt;/b&gt;&lt;br/&gt;Análisis de main.ts, index.html y app.config.ts"]
+    end
+
+    subgraph S2 ["Fase 2 · Creación de Componentes y Navegación"]
+        C["&lt;b&gt;3. CounterPageComponent (SoC)&lt;/b&gt;&lt;br/&gt;Separación estricta de responsabilidades (HTML, CSS, TS)"] --&gt; D["&lt;b&gt;4. Angular Router Declarativo&lt;/b&gt;&lt;br/&gt;Configuración de rutas con router-outlet y RouterLink"]
+    end
+
+    subgraph S3 ["Fase 3 · Reactividad Moderna con Signals"]
+        E["&lt;b&gt;5. Signals Básicos (set y update)&lt;/b&gt;&lt;br/&gt;Primitivas reactivas con mutación atómica y sin Zone.js"] --&gt; F["&lt;b&gt;6. Signals Computadas (computed)&lt;/b&gt;&lt;br/&gt;Cálculo derivado reactivo en HeroPageComponent"]
+    end
+
+    S1 ==&gt; S2 ==&gt; S3</code></pre>
+<hr />
+<h2 id="introduccion-y-temas-clave">Introducción y Temas Clave<a class="headerlink" href="#introduccion-y-temas-clave" title="Permanent link">&para;</a></h2>
+<h3 id="lo-que-aprenderemos-en-esta-seccion">🎯 Lo que aprenderemos en esta sección<a class="headerlink" href="#lo-que-aprenderemos-en-esta-seccion" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Componentes Standalone:</strong> Creación manual y uso sin módulos (<code>NgModule</code>).</li>
+<li><strong>Señales (<em>Signals</em>):</strong> El nuevo motor de reactividad nativo de Angular (<code>signal</code>, <code>computed</code>).</li>
+<li><strong>Estado:</strong> Diferencia entre variables tradicionales y reactividad fina.</li>
+<li><strong>Propiedades y Métodos:</strong> Definición de contratos y funciones de mutación.</li>
+<li><strong>Enrutamiento Básico:</strong> Configuración de <code>app.routes.ts</code> y salida visual con <code>&lt;router-outlet /&gt;</code>.</li>
+<li><strong>Sintaxis de Plantillas:</strong> Interpolación <code>{{ }}</code>, Enlace de Eventos <code>(click)</code> y Pipes (<code>uppercase</code>).</li>
+<li><strong>Arquitectura y Archivos:</strong> Entender el propósito exacto de cada directorio y configuración del proyecto.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Guía Didáctica para el Profesor</p>
+<p><strong>Pregunta detonante al iniciar la clase:</strong><br />
+<em>"¿Qué ocurre en el navegador cuando un usuario hace clic en un botón y un número cambia en pantalla? ¿Cómo se entera el framework de que tiene que repintar el DOM?"</em><br />
+Use esta pregunta para despertar la curiosidad sobre la <strong>detección de cambios</strong>, que conectará más adelante con la revolución de las <strong>Señales</strong> y el modo <strong>Zoneless</strong>.</p>
+</div>
+<hr />
+<h2 id="introduccion-a-angular-19">Introducción a Angular 19+<a class="headerlink" href="#introduccion-a-angular-19" title="Permanent link">&para;</a></h2>
+<h3 id="framework-vs-libreria">Framework vs Librería<a class="headerlink" href="#framework-vs-libreria" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Librería (ej: React):</strong> Proporciona solo la capa de vista; el desarrollador debe elegir y ensamblar enrutador, cliente HTTP, linter, herramientas de compilación y empaquetado.</li>
+<li><strong>Framework (Angular):</strong> Una plataforma completa e integrada respaldada por Google. Ofrece CLI, router, validación de formularios, inyección de dependencias, compilador de alto rendimiento (<code>esbuild</code> + <code>Vite</code>) y estándares de arquitectura empresarial.</li>
+</ul>
+<h3 id="la-revolucion-de-angular-moderno-angular-17">La Revolución de Angular Moderno (Angular 17+)<a class="headerlink" href="#la-revolucion-de-angular-moderno-angular-17" title="Permanent link">&para;</a></h3>
+<p>Tradicionalmente, Angular requería agrupar todo en módulos (<code>@NgModule</code>). A partir de las versiones recientes, el estándar de facto son los <strong>Componentes Standalone</strong>:</p>
+<ul>
+<li>Menos código repetitivo (<em>boilerplate</em>).</li>
+<li>Carga perezosa (<em>lazy loading</em>) nativa y directa.</li>
+<li>Sistema de señales atómico e independiente de <code>Zone.js</code>.</li>
+</ul>
+<hr />
+<h2 id="primer-proyecto-en-angular-creacion-paso-a-paso">Primer Proyecto en Angular: Creación Paso a Paso<a class="headerlink" href="#primer-proyecto-en-angular-creacion-paso-a-paso" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Material de Referencia</p>
+<p>Para el análisis pormenorizado del archivo <code>angular.json</code>, las fases del compilador <code>esbuild</code>/<code>Vite</code> y opciones avanzadas de scaffolding, consulta el <strong><a href="../manual/02-crear-proyecto/">Manual de Referencia: 02. Creación del Proyecto</a></strong>.</p>
+</div>
+<h3 id="comprobacion-del-entorno">Comprobación del Entorno<a class="headerlink" href="#comprobacion-del-entorno" title="Permanent link">&para;</a></h3>
+<p>Antes de comenzar, verificamos que Node.js y el Angular CLI estén instalados en el equipo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>node<span class="w"> </span>-v<span class="w">          </span><span class="c1"># Requiere v20.x o superior</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>npm<span class="w"> </span>-v<span class="w">           </span><span class="c1"># Gestor de paquetes</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ng<span class="w"> </span>version<span class="w">       </span><span class="c1"># Comprueba Angular CLI 19+</span>
+</span></code></pre></div>
+<p>Si el Angular CLI no está instalado:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@angular/cli
+</span></code></pre></div></p>
+<h3 id="creacion-del-proyecto-bases">Creación del Proyecto <code>bases</code><a class="headerlink" href="#creacion-del-proyecto-bases" title="Permanent link">&para;</a></h3>
+<p>Ejecutamos en la terminal el comando interactivo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ng<span class="w"> </span>new<span class="w"> </span>bases
+</span></code></pre></div>
+<p>Durante el asistente de configuración, seleccionamos las siguientes opciones:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Pregunta del CLI</th>
+<th style="text-align: center;">Opción a Seleccionar</th>
+<th style="text-align: left;">Justificación Didáctica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Which stylesheet format would you like to use?</strong></td>
+<td style="text-align: center;"><strong><code>CSS</code></strong></td>
+<td style="text-align: left;">Mantenerlo simple para enfocarse en la lógica de TypeScript y Angular.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Do you want to enable Server-Side Rendering (SSR)?</strong></td>
+<td style="text-align: center;"><strong><code>No</code> (N)</strong></td>
+<td style="text-align: left;">Para esta primera etapa nos enfocamos exclusivamente en Client-Side Rendering (SPA).</td>
+</tr>
+</tbody>
+</table>
+<details class="info">
+<summary>Comando directo sin asistente interactivo</summary>
+<p>Si prefieres crear el proyecto en un solo comando sin preguntas interactivas:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ng<span class="w"> </span>new<span class="w"> </span>bases<span class="w"> </span>--style<span class="o">=</span>css<span class="w"> </span>--ssr<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--routing
+</span></code></pre></div></p>
+</details>
+<h3 id="ejecucion-del-servidor-de-desarrollo">Ejecución del Servidor de Desarrollo<a class="headerlink" href="#ejecucion-del-servidor-de-desarrollo" title="Permanent link">&para;</a></h3>
+<p>Navegamos dentro del proyecto y levantamos el servidor local:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>bases
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ng<span class="w"> </span>serve<span class="w"> </span>-o
+</span></code></pre></div>
+<p>El parámetro <code>-o</code> (<code>--open</code>) abrirá automáticamente la aplicación en tu navegador en <code>http://localhost:4200/</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Recomendación de Terminal y Editor</p>
+<ul>
+<li><strong>Editor:</strong> Visual Studio Code con la extensión oficial <strong>Angular Language Service</strong>.</li>
+<li><strong>Terminal:</strong> Warp, PowerShell 7 o la terminal integrada de VS Code.</li>
+</ul>
+</div>
+<hr />
+<h2 id="anatomia-del-proyecto-archivos-y-directorios-de-la-raiz">Anatomía del Proyecto: Archivos y Directorios de la Raíz<a class="headerlink" href="#anatomia-del-proyecto-archivos-y-directorios-de-la-raiz" title="Permanent link">&para;</a></h2>
+<p>Analicemos la estructura generada en la raíz del proyecto bajo el principio del <em>Chesterton's Fence</em> (comprender por qué existe cada archivo antes de modificarlo):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>bases/
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── .vscode/               # Ajustes y recomendaciones de extensiones para VS Code
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── public/                # Activos estáticos públicos servidos en la raíz (ej: favicon.ico)
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>├── src/                   # Código fuente de la aplicación
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>├── .editorconfig          # Convenciones de formateo de código entre editores
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>├── .gitignore             # Archivos ignorados por Git (node_modules, dist, etc.)
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>├── angular.json           # Configuración del CLI y del proceso de compilación (build/serve)
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>├── package.json           # Manifiesto de dependencias npm y scripts de ejecución
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>├── package-lock.json      # Árbol de dependencias exacto para reproducibilidad
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>├── tsconfig.json          # Configuración base de TypeScript para el workspace
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>├── tsconfig.app.json      # Configuración de compilación TS para la aplicación
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>└── tsconfig.spec.json     # Configuración de TypeScript para las pruebas unitarias
+</span></code></pre></div>
+<h3 id="tabla-de-responsabilidades-clave">Tabla de Responsabilidades Clave<a class="headerlink" href="#tabla-de-responsabilidades-clave" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Archivo</th>
+<th style="text-align: left;">Responsabilidad Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>angular.json</code></strong></td>
+<td style="text-align: left;">Es el cerebro del CLI. Define constructores (<em>builders</em>), rutas de entrada (<code>main.ts</code>, <code>index.html</code>), hojas de estilo globales (<code>styles.css</code>) y configuraciones de producción/desarrollo.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>package.json</code></strong></td>
+<td style="text-align: left;">Contiene scripts (<code>start: "ng serve"</code>, <code>build: "ng build"</code>) y dependencias organizadas en <code>@angular/*</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>tsconfig.json</code></strong></td>
+<td style="text-align: left;">Define la configuración global del compilador TypeScript (<code>target: "ES2022"</code>, <code>strict: true</code>, rutas relativas). Hereda a <code>tsconfig.app.json</code> (código fuente) y <code>tsconfig.spec.json</code> (tests).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>public/</code></strong></td>
+<td style="text-align: left;">En las versiones modernas de Angular, sustituye a <code>src/assets</code>. Todo lo que se aloje aquí se expone directamente en la raíz de la URL pública.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="anatomia-del-directorio-src-y-flujo-de-arranque">Anatomía del Directorio <code>src/</code> y Flujo de Arranque<a class="headerlink" href="#anatomia-del-directorio-src-y-flujo-de-arranque" title="Permanent link">&para;</a></h2>
+<p>El directorio <code>src/</code> contiene todo el código que escribimos y compilamos:</p>
+<pre class="mermaid"><code>%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'actorFontSize': '20px',
+    'actorFontWeight': '700',
+    'actorLineColor': '#1976d2',
+    'messageFontSize': '18px',
+    'messageFontWeight': '600',
+    'noteFontSize': '16px',
+    'actorMargin': 35,
+    'boxMargin': 8
+  }
+}}%%
+sequenceDiagram
+    autonumber
+    actor Navegador
+    participant HTML as index.html
+    participant Main as main.ts
+    participant Config as app.config.ts
+    participant App as app.component.ts
+
+    Navegador-&gt;&gt;HTML: Carga index.html
+    HTML-&gt;&gt;Main: Ejecuta bundle principal (main.ts)
+    Main-&gt;&gt;Config: Carga appConfig (providers, rutas, zone)
+    Main-&gt;&gt;App: bootstrapApplication(AppComponent, appConfig)
+    App--&gt;&gt;HTML: Renderiza la vista dentro de app-root</code></pre>
+<h3 id="srcindexhtml-shell-de-la-spa"><code>src/index.html</code> (Shell de la SPA)<a class="headerlink" href="#srcindexhtml-shell-de-la-spa" title="Permanent link">&para;</a></h3>
+<p>Es el único archivo HTML que el servidor entrega al cliente. Agregaremos el CDN de <strong>Bootstrap 5</strong> en el <code>&lt;head&gt;</code> para estilizar la aplicación rápidamente en clase sin perder tiempo redactando CSS manual:</p>
+<div class="language-html highlight"><span class="filename">src/index.html</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">"es"</span><span class="p">&gt;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span> <span class="p">/&gt;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Bases de Angular<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">&lt;</span><span class="nt">base</span> <span class="na">href</span><span class="o">=</span><span class="s">"/"</span> <span class="p">/&gt;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">"viewport"</span> <span class="na">content</span><span class="o">=</span><span class="s">"width=device-width, initial-scale=1"</span> <span class="p">/&gt;</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"icon"</span> <span class="na">type</span><span class="o">=</span><span class="s">"image/x-icon"</span> <span class="na">href</span><span class="o">=</span><span class="s">"favicon.ico"</span> <span class="p">/&gt;</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="hll">    <span class="cm">&lt;!-- Bootstrap 5 CSS para estilos rápidos en clase --&gt;</span>
+</span></span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="hll">    <span class="p">&lt;</span><span class="nt">link</span>
+</span></span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="hll">      <span class="na">href</span><span class="o">=</span><span class="s">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"</span>
+</span></span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="hll">      <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span>
+</span></span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="hll">      <span class="na">integrity</span><span class="o">=</span><span class="s">"sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"</span>
+</span></span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="hll">      <span class="na">crossorigin</span><span class="o">=</span><span class="s">"anonymous"</span>
+</span></span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="p">/&gt;</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="p">&lt;</span><span class="nt">app-root</span><span class="p">&gt;&lt;/</span><span class="nt">app-root</span><span class="p">&gt;</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<h3 id="srcmaints-punto-de-arranque-de-la-aplicacion"><code>src/main.ts</code> (Punto de Arranque de la Aplicación)<a class="headerlink" href="#srcmaints-punto-de-arranque-de-la-aplicacion" title="Permanent link">&para;</a></h3>
+<p>Inicia la aplicación de forma standalone mediante la función <code>bootstrapApplication</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/main.ts</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">bootstrapApplication</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">appConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./app/app.config'</span><span class="p">;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AppComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./app/app.component'</span><span class="p">;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nx">bootstrapApplication</span><span class="p">(</span><span class="nx">AppComponent</span><span class="p">,</span><span class="w"> </span><span class="nx">appConfig</span><span class="p">).</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="srcappappconfigts-configuracion-y-proveedores-globales"><code>src/app/app.config.ts</code> (Configuración y Proveedores Globales)<a class="headerlink" href="#srcappappconfigts-configuracion-y-proveedores-globales" title="Permanent link">&para;</a></h3>
+<p>Define los proveedores (<em>providers</em>) globales, tales como la detección de cambios y el enrutador:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/app.config.ts</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ApplicationConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">provideZoneChangeDetection</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">provideRouter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./app.routes'</span><span class="p">;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">appConfig</span><span class="o">:</span><span class="w"> </span><span class="kt">ApplicationConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">providers</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="c1">// Coalescencia de eventos para optimizar ciclos de detección de cambio</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nx">provideZoneChangeDetection</span><span class="p">({</span><span class="w"> </span><span class="nx">eventCoalescing</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}),</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="c1">// Inyección de rutas de la aplicación</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nx">provideRouter</span><span class="p">(</span><span class="nx">routes</span><span class="p">),</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">};</span>
+</span></code></pre></div>
+<hr />
+<h2 id="creacion-del-primer-componente-counterpagecomponent">Creación del Primer Componente: <code>CounterPageComponent</code><a class="headerlink" href="#creacion-del-primer-componente-counterpagecomponent" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para conocer todos los metadatos del decorador <code>@Component</code>, la encapsulación de estilos (<code>ViewEncapsulation</code>) y el ciclo de vida, consulta el <strong><a href="../manual/03-componentes/">Manual de Referencia: 03. Componentes Standalone</a></strong>.</p>
+</div>
+<p>Para que los alumnos asimilen la estructura interna de un componente sin depender de la magia de los generadores automáticos, <strong>construiremos este primer componente de forma 100% manual</strong>.</p>
+<h3 id="creacion-del-archivo">Creación del Archivo<a class="headerlink" href="#creacion-del-archivo" title="Permanent link">&para;</a></h3>
+<p>Creamos la carpeta y el archivo: <code>src/app/pages/counter/counter-page.component.ts</code>.</p>
+<h3 id="anatomia-del-componente-con-plantilla-inline">Anatomía del Componente con Plantilla Inline<a class="headerlink" href="#anatomia-del-componente-con-plantilla-inline" title="Permanent link">&para;</a></h3>
+<p>En esta primera fase, incluimos la plantilla de forma <em>inline</em> con template strings para visualizar la relación directa entre la clase TypeScript y su HTML:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/pages/counter/counter-page.component.ts</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="sb">    &lt;h1&gt;Counter: {{ counter }}&lt;/h1&gt;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="sb">    &lt;hr /&gt;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="sb">    &lt;button (click)="increaseBy(1)"&gt;+1&lt;/button&gt;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="sb">    &lt;button (click)="increaseBy(-1)"&gt;-1&lt;/button&gt;</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="sb">    &lt;button (click)="resetCounter()"&gt;Reset&lt;/button&gt;</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="nx">styles</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="sb">    button {</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="sb">      padding: 5px;</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="sb">      margin: 5px 10px;</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="sb">      width: 75px;</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="sb">    }</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="p">})</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">  </span><span class="c1">// Estado tradicional (propiedad de clase)</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">  </span><span class="nx">increaseBy</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">  </span><span class="nx">resetCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="conceptos-clave-a-explicar-en-clase">Conceptos Clave a Explicar en Clase:<a class="headerlink" href="#conceptos-clave-a-explicar-en-clase" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Decorador <code>@Component</code>:</strong> Metadatos que transforman una clase TypeScript estándar en un componente Angular.</li>
+<li><strong>Interpolación <code>{{ counter }}</code>:</strong> Mecanismo unidireccional para imprimir el valor de una propiedad en la vista.</li>
+<li><strong>Event Binding <code>(click)="increaseBy(1)"</code>:</strong> Escucha eventos del DOM y dispara métodos de la clase.</li>
+<li><strong>¿Por qué no tiene <code>selector</code>?:</strong> Los componentes que se cargan exclusivamente como páginas mediante el sistema de rutas no necesitan un selector de etiqueta HTML (<code>&lt;app-counter&gt;</code>).</li>
+</ol>
+<hr />
+<h2 id="tarea-practica-separar-template-de-la-logica-en-counterpagecomponent">🎯 Tarea Práctica: Separar Template de la Lógica en <code>CounterPageComponent</code><a class="headerlink" href="#tarea-practica-separar-template-de-la-logica-en-counterpagecomponent" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para profundizar en la sintaxis de plantillas, enlaces y directivas, consulta el <strong><a href="../manual/04-plantillas/">Manual de Referencia: 04. Plantillas y Control Flow</a></strong>.</p>
+</div>
+<p>Hasta ahora hemos construido nuestro primer componente con la plantilla integrada de forma <em>inline</em> (<code>template:</code>...``). Sin embargo, a medida que la interfaz crece, mantener el HTML dentro del archivo TypeScript viola el principio de <strong>Separación de Responsabilidades (SoC)</strong> y dificulta el mantenimiento del código.</p>
+<p>Es momento de aplicar una refactorización guiada para desacoplar la vista de la lógica.</p>
+<hr />
+<h3 id="enunciado-del-reto-para-el-alumno">📋 Enunciado del Reto para el Alumno<a class="headerlink" href="#enunciado-del-reto-para-el-alumno" title="Permanent link">&para;</a></h3>
+<p>Antes de consultar la solución, realiza de forma autónoma los siguientes pasos en tu proyecto:</p>
+<ol>
+<li><strong>Crear el archivo de vista:</strong> Dentro de la carpeta <code>src/app/pages/counter/</code>, crea un nuevo archivo llamado <code>counter-page.component.html</code>.</li>
+<li><strong>Mover el marcado HTML:</strong> Corta el contenido HTML que se encuentra dentro del template literal del componente y pégalo limpiamente en el nuevo archivo <code>.html</code>.</li>
+<li><strong>Vincular el template externo:</strong> En <code>counter-page.component.ts</code>, sustituye la propiedad <code>template</code> por la propiedad de metadatos <code>templateUrl</code>, asignándole la ruta relativa al archivo HTML recién creado.</li>
+<li><strong>Decisión sobre los estilos:</strong> Mantén los estilos de los botones en el archivo <code>.ts</code> mediante la propiedad <code>styles</code> (o de forma opcional, sepáralos en un archivo <code>counter-page.component.css</code> usando <code>styleUrl</code>).</li>
+<li><strong>Verificación interactiva:</strong> Abre el navegador en <code>http://localhost:4200</code> y comprueba que:</li>
+<li>El título y el valor del contador se rendericen sin advertencias ni errores en la consola de desarrollo (F12).</li>
+<li>Los botones <code>+1</code>, <code>-1</code> y <code>Reset</code> mantengan intacta su funcionalidad y reactividad ante los clics.</li>
+</ol>
+<hr />
+<h3 id="reto-practico-intentalo-tu-mismo">⏸️ Reto Práctico: ¡Inténtalo tú mismo!<a class="headerlink" href="#reto-practico-intentalo-tu-mismo" title="Permanent link">&para;</a></h3>
+<div class="admonition exercise">
+<p class="admonition-title">Pausa de Trabajo Autónomo</p>
+<p>Realiza esta refactorización de forma autónoma en tu editor de código antes de consultar la solución detallada.</p>
+<p><em>Criterio de éxito:</em> La aplicación debe compilar de forma limpia y responder exactamente igual a las interacciones del usuario.</p>
+</div>
+<hr />
+<h3 id="solucion-paso-a-paso-y-explicacion-tecnica">🛠️ Solución Paso a Paso y Explicación Técnica<a class="headerlink" href="#solucion-paso-a-paso-y-explicacion-tecnica" title="Permanent link">&para;</a></h3>
+<h4 id="paso-1-crear-counter-pagecomponenthtml">Paso 1: Crear <code>counter-page.component.html</code><a class="headerlink" href="#paso-1-crear-counter-pagecomponenthtml" title="Permanent link">&para;</a></h4>
+<p>Creamos el archivo de vista <code>src/app/pages/counter/counter-page.component.html</code> y trasladamos el marcado HTML puro, beneficiándonos inmediatamente del resaltado de sintaxis, formateo automático y autocompletado del editor:</p>
+<div class="language-html highlight"><span class="filename">src/app/pages/counter/counter-page.component.html</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Counter: {{ counter }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">&lt;</span><span class="nt">hr</span> <span class="p">/&gt;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">1</span><span class="err">)"</span><span class="p">&gt;</span>+1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">-1</span><span class="err">)"</span><span class="p">&gt;</span>-1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">resetCounter</span><span class="err">()"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<h4 id="paso-2-actualizar-counter-pagecomponentts">Paso 2: Actualizar <code>counter-page.component.ts</code><a class="headerlink" href="#paso-2-actualizar-counter-pagecomponentts" title="Permanent link">&para;</a></h4>
+<p>En el archivo TypeScript, cambiamos la propiedad <code>template</code> por <code>templateUrl</code>, indicando la ruta relativa con <code>./</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/pages/counter/counter-page.component.ts</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="hll"><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./counter-page.component.html'</span><span class="p">,</span>
+</span></span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nx">styles</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="sb">    button {</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="sb">      padding: 5px;</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="sb">      margin: 5px 10px;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="sb">      width: 75px;</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="sb">    }</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="p">})</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="nx">increaseBy</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="nx">resetCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h3 id="analisis-de-la-solucion-y-conceptos-clave">🔍 Análisis de la Solución y Conceptos Clave<a class="headerlink" href="#analisis-de-la-solucion-y-conceptos-clave" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong><code>template</code> frente a <code>templateUrl</code>:</strong></li>
+<li><strong><code>template</code>:</strong> Espera una cadena de texto (<em>string</em>) con el código HTML incrustado directamente en el archivo TypeScript. Es útil para componentes diminutos o prototipos rápidos.</li>
+<li><strong><code>templateUrl</code>:</strong> Espera una ruta relativa (<em>string</em>) hacia un archivo físico <code>.html</code>. Es el estándar recomendado para componentes de mediana o gran complejidad en proyectos reales.</li>
+<li><strong>El prefijo obligatorio <code>./</code>:</strong> En Angular moderno, la ruta asignada a <code>templateUrl</code> debe ser <strong>relativa al directorio del propio componente</strong>. Omitir el <code>./</code> puede generar fallos de resolución durante el empaquetado con Vite / esbuild.</li>
+<li><strong>Manejo flexible de estilos (<code>styles</code> vs <code>styleUrl</code>):</strong>
+   Angular ofrece total flexibilidad: cuando un componente solo requiere 2 o 3 reglas CSS sencillas (como el espaciado y ancho de los botones), mantenerlas en <code>styles:</code>...<code>` dentro del archivo</code>.ts<code>ahorra archivos adicionales. Si las reglas visuales crecen, se extraen a un archivo</code>.css<code>independiente vinculado con</code>styleUrl: './counter-page.component.css'`.</li>
+</ol>
+<hr />
+<h3 id="errores-tipicos-del-alumno-en-esta-tarea">⚠️ Errores Típicos del Alumno en esta Tarea<a class="headerlink" href="#errores-tipicos-del-alumno-en-esta-tarea" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Error Común</th>
+<th style="text-align: left;">Síntoma en el Navegador</th>
+<th style="text-align: left;">Causa y Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Dejar <code>template: './counter-page.component.html'</code></td>
+<td style="text-align: left;">En pantalla aparece el texto plano <code>"./counter-page.component.html"</code> en vez de los botones.</td>
+<td style="text-align: left;"><strong>Causa:</strong> <code>template</code> interpreta el valor como código HTML literal. <br/><strong>Solución:</strong> Cambiar el nombre de la propiedad a <code>templateUrl</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Omitir el <code>./</code> (<code>templateUrl: 'counter-page.component.html'</code>)</td>
+<td style="text-align: left;">Error de compilación: <em>Cannot find module / file not found</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> Sin <code>./</code>, el compilador no sabe que debe buscar en la misma carpeta. <br/><strong>Solución:</strong> Escribir siempre la ruta relativa explícita <code>./nombre-archivo.html</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Discrepancias tipográficas en el nombre del archivo</td>
+<td style="text-align: left;">Error de compilación 404 del servidor de desarrollo.</td>
+<td style="text-align: left;"><strong>Causa:</strong> Sensibilidad a mayúsculas o nombres distintos. <br/><strong>Solución:</strong> Comprobar que el nombre del archivo en disco coincida exactamente con la cadena en <code>templateUrl</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="guia-didactica-para-el-docente-en-el-aula">🧑‍🏫 Guía Didáctica para el Docente en el Aula<a class="headerlink" href="#guia-didactica-para-el-docente-en-el-aula" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Estrategia para Guiar esta Práctica en Clase</p>
+<ol>
+<li><strong>Presentación del reto:</strong> Proyecte únicamente el enunciado de la tarea en pantalla y anime a los alumnos a resolverlo de forma individual antes de mirar la solución.</li>
+<li><strong>Validación de conceptos:</strong> Circule por el aula comprobando que los estudiantes identifiquen claramente la diferencia conceptual y sintáctica entre <code>template</code> y <code>templateUrl</code>.</li>
+<li><strong>Demostración de errores en vivo:</strong> Pida voluntariamente a un alumno que cometa el error de asignar <code>template: './counter-page.component.html'</code> para proyectarlo; esto permite que todo el grupo comprenda visualmente por qué Angular imprime el string de la ruta en el navegador cuando se usa la propiedad incorrecta.</li>
+</ol>
+</div>
+<hr />
+<h2 id="enrutamiento-declarativo-de-la-aplicacion">Enrutamiento Declarativo de la Aplicación<a class="headerlink" href="#enrutamiento-declarativo-de-la-aplicacion" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para profundizar en la configuración de rutas de Angular, <code>RouterOutlet</code> y estrategias de carga, consulta el <strong><a href="../manual/11-router/">Manual de Referencia: 11. Angular Router y Navegación</a></strong>.</p>
+</div>
+<h3 id="configuracion-de-rutas-en-srcappapproutests">Configuración de Rutas en <code>src/app/app.routes.ts</code><a class="headerlink" href="#configuracion-de-rutas-en-srcappapproutests" title="Permanent link">&para;</a></h3>
+<p>Configuramos la ruta inicial vacía (<code>''</code>) para renderizar nuestro componente:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/app.routes.ts</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./pages/counter/counter-page.component'</span><span class="p">;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">Routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">CounterPageComponent</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">];</span>
+</span></code></pre></div>
+<h3 id="configuracion-del-shell-en-srcappappcomponenthtml">Configuración del Shell en <code>src/app/app.component.html</code><a class="headerlink" href="#configuracion-del-shell-en-srcappappcomponenthtml" title="Permanent link">&para;</a></h3>
+<p>Limpiamos el archivo <code>app.component.html</code> original y dejamos únicamente el <code>&lt;router-outlet /&gt;</code> envuelto en un contenedor de Bootstrap:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">src/app/app.component.html</label><label for="__tabbed_1_2">src/app/app.component.ts</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-html highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">"mx-5 mt-2"</span><span class="p">&gt;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  <span class="p">&lt;</span><span class="nt">router-outlet</span> <span class="p">/&gt;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterOutlet</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-root'</span><span class="p">,</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">RouterOutlet</span><span class="p">],</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./app.component.html'</span><span class="p">,</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">})</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="nx">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'bases'</span><span class="p">;</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Error Típico de los Alumnos</p>
+<p>Si los alumnos olvidan agregar <code>RouterOutlet</code> al arreglo <code>imports: [RouterOutlet]</code> de <code>app.component.ts</code>, la etiqueta <code>&lt;router-outlet /&gt;</code> no funcionará y la página quedará en blanco.</p>
+</div>
+<hr />
+<h2 id="la-revolucion-de-las-senales-signals">La Revolución de las Señales (<code>Signals</code>)<a class="headerlink" href="#la-revolucion-de-las-senales-signals" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Material de Referencia</p>
+<p>Para un estudio completo de la reactividad basada en primitivas, comparativa con RxJS y funciones de igualdad personalizadas, consulta el <strong><a href="../manual/05-signals/">Manual de Referencia: 05. Signals y Reactividad</a></strong>.</p>
+</div>
+<p>Las <strong>Señales</strong> (<em>Signals</em>) son la innovación más importante de Angular moderno. Representan un valor que puede cambiar a lo largo del tiempo y que <strong>notifica automáticamente</strong> a quienes dependen de él cuando ocurre una mutación.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Evento ["1. Disparador de Interacción"]
+        Btn["&lt;b&gt;Acción en Plantilla HTML&lt;/b&gt;&lt;br/&gt;Usuario pulsa botón &lt;code&gt;(click)='increaseBy(+1)'&lt;/code&gt;"] --&gt; Method["&lt;b&gt;Invocación en Componente&lt;/b&gt;&lt;br/&gt;Método &lt;code&gt;increaseBy(value: number)&lt;/code&gt;"]
+    end
+
+    subgraph Reactivo ["2. Mutación Reactiva y DOM"]
+        Sig[("&lt;b&gt;Señal Reactiva de Estado&lt;/b&gt;&lt;br/&gt;&lt;code&gt;counter = signal(10)&lt;/code&gt; muta con &lt;code&gt;update()&lt;/code&gt;")] --&gt; View["&lt;b&gt;Actualización Quirúrgica&lt;/b&gt;&lt;br/&gt;El DOM lee &lt;code&gt;{{ counter() }}&lt;/code&gt; sin sobrecarga de Zone.js"]
+    end
+
+    Evento ==&gt; Reactivo</code></pre>
+<h3 id="actualizacion-del-contador-con-senales">Actualización del Contador con Señales<a class="headerlink" href="#actualizacion-del-contador-con-senales" title="Permanent link">&para;</a></h3>
+<p>Vamos a convivir el estado tradicional (<code>counter</code>) con el estado reactivo (<code>counterSignal</code>):</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">src/app/pages/counter/counter-page.component.ts</label><label for="__tabbed_2_2">src/app/pages/counter/counter-page.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span></span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./counter-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nx">styles</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="sb">    button {</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="sb">      padding: 5px;</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="sb">      margin: 5px 10px;</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="sb">      width: 75px;</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="sb">    }</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="p">})</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="hll"><span class="w">  </span><span class="nx">counterSignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">10</span><span class="p">);</span><span class="w"> </span><span class="c1">// Inicialización de la señal</span>
+</span></span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span><span class="nx">increaseBy</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="c1">// Mutación tradicional</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">    </span><span class="c1">// Modificación de la señal usando .update()</span>
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="hll"><span class="w">    </span><span class="c1">// Calcula el nuevo valor a partir del estado actual (función pura e inmutable)</span>
+</span></span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="hll"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counterSignal</span><span class="p">.</span><span class="nx">update</span><span class="p">((</span><span class="nx">current</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">value</span><span class="p">);</span>
+</span></span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">  </span><span class="nx">resetCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="hll"><span class="w">    </span><span class="c1">// Asignación directa y reemplazo usando .set()</span>
+</span></span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counterSignal</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Counter: {{ counter }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="hll"><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Counter Signal: {{ counterSignal() }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="p">&lt;</span><span class="nt">hr</span> <span class="p">/&gt;</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">1</span><span class="err">)"</span><span class="p">&gt;</span>+1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">-1</span><span class="err">)"</span><span class="p">&gt;</span>-1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">resetCounter</span><span class="err">()"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="metodos-fundamentales-de-una-senal-writable">Métodos Fundamentales de una Señal Writable<a class="headerlink" href="#metodos-fundamentales-de-una-senal-writable" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Lectura:</strong> Se invoca como una función <code>counterSignal()</code>. En el HTML <strong>siempre se deben incluir los paréntesis</strong>.</li>
+<li><strong><code>.set(nuevoValor)</code>:</strong> Reemplaza el valor de la señal sin importar cuál era el anterior (ideal para resetear).</li>
+<li><strong><code>.update(fn)</code>:</strong> Actualiza el valor aplicando una función que recibe el valor actual y retorna el nuevo (ideal para incrementos/decrementos).</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">💡 Evolución Angular 22: Expresividad en Plantillas (Arrow Functions directas)</p>
+<p>En el enfoque estándar de Angular, para modificar la señal desde el botón es habitual crear métodos auxiliares en TypeScript (<code>increaseBy</code>, <code>resetCounter</code>).</p>
+<p>En <strong>Angular 22</strong>, el compilador de plantillas admite <strong>expresiones con arrow functions</strong>, permitiendo mutar o actualizar señales directamente desde el HTML en acciones sencillas sin necesidad de declarar métodos puente en la clase:
+<div class="language-html highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="cm">&lt;!-- Sintaxis directa posible en Angular 22 --&gt;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">counterSignal</span><span class="err">.</span><span class="na">update</span><span class="err">(</span><span class="na">c </span><span class="o">=</span><span class="err">&gt; </span><span class="s">c</span> <span class="err">+</span> <span class="na">1</span><span class="err">)"</span><span class="p">&gt;</span>+1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">counterSignal</span><span class="err">.</span><span class="na">update</span><span class="err">(</span><span class="na">c </span><span class="o">=</span><span class="err">&gt; </span><span class="s">c</span> <span class="na">-</span> <span class="na">1</span><span class="err">)"</span><span class="p">&gt;</span>-1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">counterSignal</span><span class="err">.</span><span class="na">set</span><span class="err">(</span><span class="na">0</span><span class="err">)"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<em>Criterio didáctico:</em> Para operaciones complejas con validaciones o llamadas a servicios, mantén un método en TypeScript. Para mutaciones directas de estado local en la interfaz, las expresiones inline de Angular 22 ahorran código repetitivo.</p>
+</div>
+<hr />
+<h2 id="deteccion-de-cambios-de-zonejs-a-zoneless">Detección de Cambios: De Zone.js a Zoneless<a class="headerlink" href="#deteccion-de-cambios-de-zonejs-a-zoneless" title="Permanent link">&para;</a></h2>
+<h3 id="el-modelo-tradicional-con-zonejs">El Modelo Tradicional con <code>Zone.js</code><a class="headerlink" href="#el-modelo-tradicional-con-zonejs" title="Permanent link">&para;</a></h3>
+<p>Durante años, Angular utilizó <code>Zone.js</code> para interceptar todas las operaciones asíncronas del navegador (<em>monkey-patching</em> de <code>addEventListener</code>, <code>setTimeout</code>, <code>fetch</code>, etc.). Cuando ocurría un evento asíncrono, Angular ejecutaba una verificación sucia (<em>dirty checking</em>) recorriendo <strong>todo el árbol de componentes</strong> para averiguar qué había cambiado.</p>
+<h3 id="el-modelo-moderno-zoneless-con-senales">El Modelo Moderno: Zoneless con Señales<a class="headerlink" href="#el-modelo-moderno-zoneless-con-senales" title="Permanent link">&para;</a></h3>
+<p>Con las Señales, Angular sabe <strong>exactamente</strong> qué componente y qué nodo del DOM depende de cada señal. Ya no es necesario recorrer todo el árbol de componentes:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>[Árbol con Zone.js]
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Disparo de Evento ──&gt; Revisa Raíz ──&gt; Revisa Rama A ──&gt; Revisa Rama B ──&gt; Repinta Nodo
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>[Árbol Zoneless con Signals]
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Disparo de Evento ──&gt; Señal mutada ──&gt; Repinta ÚNICAMENTE el nodo suscrito
+</span></code></pre></div>
+<details class="note">
+<summary>Configuración Zoneless en Angular 19 vs Angular 22</summary>
+<p>En <code>app.config.ts</code>, Angular 19 permitía activar el modo Zoneless experimental mediante:
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">provideExperimentalZonelessChangeDetection</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">appConfig</span><span class="o">:</span><span class="w"> </span><span class="kt">ApplicationConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="nx">providers</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">    </span><span class="nx">provideExperimentalZonelessChangeDetection</span><span class="p">(),</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">    </span><span class="nx">provideRouter</span><span class="p">(</span><span class="nx">routes</span><span class="p">),</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="p">};</span>
+</span></code></pre></div></p>
+<p><strong>💡 Evolución Angular 22:</strong>
+* <strong>Zoneless Oficial y Estable:</strong> Desaparece el prefijo <code>Experimental</code>, utilizándose directamente <code>provideZonelessChangeDetection()</code>.
+* <strong><code>OnPush</code> por defecto:</strong> Los nuevos componentes en Angular 22 asumen la estrategia <code>ChangeDetectionStrategy.OnPush</code> por defecto (la estrategia tradicional pasa a llamarse <code>Eager</code>), garantizando cero desperdicio de ciclos de CPU en el navegador.</p>
+</details>
+<hr />
+<h2 id="tarea-de-refuerzo-y-solucion-heropagecomponent">Tarea de Refuerzo y Solución: <code>HeroPageComponent</code><a class="headerlink" href="#tarea-de-refuerzo-y-solucion-heropagecomponent" title="Permanent link">&para;</a></h2>
+<p>Para afianzar el uso de señales, enrutamiento y enlace de eventos, planteamos la siguiente práctica guiada.</p>
+<h3 id="enunciado-de-la-tarea">📋 Enunciado de la Tarea<a class="headerlink" href="#enunciado-de-la-tarea" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Crear el componente <code>HeroPageComponent</code> en <code>src/app/pages/hero/</code>.</li>
+<li>Registrar la ruta <code>/hero</code> en <code>src/app/app.routes.ts</code>.</li>
+<li>Definir dos señales en la clase:</li>
+<li><code>name</code>: señal con valor inicial <code>'Ironman'</code>.</li>
+<li><code>age</code>: señal con valor inicial <code>45</code>.</li>
+<li>Implementar los siguientes métodos:</li>
+<li><code>changeHero()</code>: Cambia <code>name</code> a <code>'Spiderman'</code> y <code>age</code> a <code>22</code>.</li>
+<li><code>changeAge()</code>: Cambia <code>age</code> a <code>60</code>.</li>
+<li><code>resetForm()</code>: Restablece <code>name</code> a <code>'Ironman'</code> y <code>age</code> a <code>45</code>.</li>
+<li>Estructurar la plantilla con una lista descriptiva <code>&lt;dl&gt;</code> y botones de acción.</li>
+</ol>
+<hr />
+<h3 id="solucion-paso-a-paso">Solución Paso a Paso<a class="headerlink" href="#solucion-paso-a-paso" title="Permanent link">&para;</a></h3>
+<h4 id="archivo-typescript">Archivo TypeScript<a class="headerlink" href="#archivo-typescript" title="Permanent link">&para;</a></h4>
+<p>Creamos <code>src/app/pages/hero/hero-page.component.ts</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/pages/hero/hero-page.component.ts</span><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./hero-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="p">})</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HeroPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">'Ironman'</span><span class="p">);</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span><span class="nx">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">45</span><span class="p">);</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span><span class="nx">changeHero</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Spiderman'</span><span class="p">);</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">22</span><span class="p">);</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">  </span><span class="nx">changeAge</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">60</span><span class="p">);</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
+</span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="w">  </span><span class="nx">resetForm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Ironman'</span><span class="p">);</span>
+</span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">45</span><span class="p">);</span>
+</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="archivo-html">Archivo HTML<a class="headerlink" href="#archivo-html" title="Permanent link">&para;</a></h4>
+<p>Creamos <code>src/app/pages/hero/hero-page.component.html</code>:</p>
+<div class="language-html highlight"><span class="filename">src/app/pages/hero/hero-page.component.html</span><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ name() }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="p">&lt;</span><span class="nt">dl</span><span class="p">&gt;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Nombre:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ name() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Edad:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ age() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Método:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ name() }} - {{ age() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Capitalizado:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ name() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="p">&lt;/</span><span class="nt">dl</span><span class="p">&gt;</span>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">changeHero</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary mx-2"</span><span class="p">&gt;</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>  Cambiar nombre
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">changeAge</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary"</span><span class="p">&gt;</span>Cambiar edad<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
+</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">resetForm</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary mx-2"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<h4 id="registro-de-la-ruta-en-srcappapproutests">Registro de la Ruta en <code>src/app/app.routes.ts</code><a class="headerlink" href="#registro-de-la-ruta-en-srcappapproutests" title="Permanent link">&para;</a></h4>
+<p>Agregamos la ruta <code>{ path: 'hero', component: HeroPageComponent }</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/app.routes.ts</span><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./pages/counter/counter-page.component'</span><span class="p">;</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">HeroPageComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./pages/hero/hero-page.component'</span><span class="p">;</span>
+</span></span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">Routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">CounterPageComponent</span><span class="p">,</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'hero'</span><span class="p">,</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="hll"><span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">HeroPageComponent</span><span class="p">,</span>
+</span></span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="hll"><span class="w">  </span><span class="p">},</span>
+</span></span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="hll"><span class="p">];</span>
+</span></span></code></pre></div>
+<p>Prueba en el navegador navegando a <code>http://localhost:4200/hero</code>.</p>
+<hr />
+<h2 id="senales-computadas-computed-y-pipes">Señales Computadas (<code>computed</code>) y Pipes<a class="headerlink" href="#senales-computadas-computed-y-pipes" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para conocer el catálogo completo de pipes de Angular (<code>DatePipe</code>, <code>CurrencyPipe</code>, <code>JsonPipe</code>) y cómo crear pipes puros personalizados, consulta el <strong><a href="../manual/06-pipes/">Manual de Referencia: 06. Pipes Nativos y Custom</a></strong>.</p>
+</div>
+<h3 id="que-es-una-senal-computada">¿Qué es una Señal Computada?<a class="headerlink" href="#que-es-una-senal-computada" title="Permanent link">&para;</a></h3>
+<p>Una señal computada (<code>computed</code>) genera un <strong>estado derivado de solo lectura</strong>. Se recalcula automáticamente solo cuando alguna de las señales de las que depende produce un nuevo valor, y cuenta con <strong>memorización</strong> (<em>memoization</em>).</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">// Sintaxis básica</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">señalA</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">señalB</span><span class="p">());</span>
+</span></code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Reglas de una Señal Computada</p>
+<ol>
+<li><strong>Es de solo lectura:</strong> No posee <code>.set()</code> ni <code>.update()</code>.</li>
+<li><strong>Es pura:</strong> No debe producir efectos secundarios (no hagas llamadas HTTP ni manipules variables externas dentro de un <code>computed</code>).</li>
+<li><strong>Evaluación perezosa (Lazy):</strong> Solo se evalúa cuando es leída por la vista o por otra señal.</li>
+</ol>
+</div>
+<h3 id="alternativa-pipes-uppercasepipe">Alternativa: Pipes (<code>UpperCasePipe</code>)<a class="headerlink" href="#alternativa-pipes-uppercasepipe" title="Permanent link">&para;</a></h3>
+<p>Para transformar valores exclusivamente visuales en la plantilla, Angular proporciona <strong>Pipes</strong>. En componentes standalone, los pipes deben importarse explícitamente en el arreglo <code>imports</code> del decorador <code>@Component</code>.</p>
+<hr />
+<h3 id="codigo-final-de-heropagecomponent-con-computed-y-pipe">Código Final de <code>HeroPageComponent</code> con <code>computed</code> y <code>Pipe</code><a class="headerlink" href="#codigo-final-de-heropagecomponent-con-computed-y-pipe" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">src/app/pages/hero/hero-page.component.ts</label><label for="__tabbed_3_2">src/app/pages/hero/hero-page.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/pages/hero/hero-page.component.ts</span><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">computed</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span></span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UpperCasePipe</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common'</span><span class="p">;</span>
+</span></span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./hero-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="hll"><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">UpperCasePipe</span><span class="p">],</span><span class="w"> </span><span class="c1">// Importación obligatoria para usar | uppercase en el HTML</span>
+</span></span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="p">})</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HeroPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="s1">'Ironman'</span><span class="p">);</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span><span class="nx">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">45</span><span class="p">);</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="hll"><span class="w">  </span><span class="c1">// Señal computada derivada</span>
+</span></span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="hll"><span class="w">  </span><span class="nx">heroDescription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="hll"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">()</span><span class="si">}</span><span class="sb"> - </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">()</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+</span></span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="hll"><span class="w">  </span><span class="p">});</span>
+</span></span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="hll">
+</span></span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="hll"><span class="w">  </span><span class="c1">// Señal computada para mayúsculas</span>
+</span></span><span id="__span-24-18"><a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="w">  </span><span class="nx">capitalizedName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">computed</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">());</span>
+</span><span id="__span-24-19"><a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
+</span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="w">  </span><span class="nx">changeHero</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Spiderman'</span><span class="p">);</span>
+</span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">22</span><span class="p">);</span>
+</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-24-24"><a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>
+</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">  </span><span class="nx">changeAge</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-26"><a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">60</span><span class="p">);</span>
+</span><span id="__span-24-27"><a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-24-28"><a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>
+</span><span id="__span-24-29"><a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a><span class="w">  </span><span class="nx">resetForm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-30"><a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'Ironman'</span><span class="p">);</span>
+</span><span id="__span-24-31"><a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">45</span><span class="p">);</span>
+</span><span id="__span-24-32"><a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-24-33"><a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/pages/hero/hero-page.component.html</span><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ name() }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="p">&lt;</span><span class="nt">dl</span><span class="p">&gt;</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Nombre:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ name() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Edad:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ age() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Método:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>  <span class="cm">&lt;!-- Invocación de señal computada --&gt;</span>
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ heroDescription() }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="hll">
+</span></span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>  <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Capitalizado:<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+</span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>  <span class="cm">&lt;!-- Opción A: Señal computada --&gt;</span>
+</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="hll">  <span class="cm">&lt;!-- &lt;dd&gt;{{ capitalizedName() }}&lt;/dd&gt; --&gt;</span>
+</span></span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="hll">  <span class="cm">&lt;!-- Opción B: Pipe de Angular --&gt;</span>
+</span></span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>  <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>{{ name() | uppercase }}<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a><span class="p">&lt;/</span><span class="nt">dl</span><span class="p">&gt;</span>
+</span><span id="__span-25-20"><a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>
+</span><span id="__span-25-21"><a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">changeHero</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary mx-2"</span><span class="p">&gt;</span>
+</span><span id="__span-25-22"><a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>  Cambiar nombre
+</span><span id="__span-25-23"><a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a><span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-25-24"><a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>
+</span><span id="__span-25-25"><a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">changeAge</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary"</span><span class="p">&gt;</span>Cambiar edad<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-25-26"><a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>
+</span><span id="__span-25-27"><a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a><span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">resetForm</span><span class="err">()"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn btn-primary mx-2"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="criterio-de-arquitectura-cuando-usar-computed-vs-pipe">Criterio de Arquitectura: ¿Cuándo usar <code>computed()</code> vs <code>Pipe</code>?<a class="headerlink" href="#criterio-de-arquitectura-cuando-usar-computed-vs-pipe" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Usa <strong><code>computed()</code></strong> cuando la lógica derivada forma parte del <strong>modelo de datos</strong> y necesites reutilizar ese valor en TypeScript (ej: validaciones, cálculos matemáticos, composición de modelos).</li>
+<li>Usa <strong><code>Pipe</code></strong> cuando se trate únicamente de un <strong>formato cosmético de presentación</strong> en la plantilla (ej: dar formato a una moneda, fecha o transformar a mayúsculas).</li>
+</ul>
+<hr />
+<h2 id="resumen-y-sintesis-de-conceptos">Resumen y Síntesis de Conceptos<a class="headerlink" href="#resumen-y-sintesis-de-conceptos" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Característica</th>
+<th style="text-align: center;">Propiedad Tradicional (<code>counter = 10</code>)</th>
+<th style="text-align: center;">Señal Writable (<code>signal(10)</code>)</th>
+<th style="text-align: center;">Señal Computada (<code>computed(...)</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Tipo de reactividad</strong></td>
+<td style="text-align: center;">Dependiente de <code>Zone.js</code></td>
+<td style="text-align: center;">Reactividad fina nativa</td>
+<td style="text-align: center;">Reactividad fina derivada</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Sintaxis de lectura</strong></td>
+<td style="text-align: center;"><code>{{ counter }}</code></td>
+<td style="text-align: center;"><code>{{ counter() }}</code></td>
+<td style="text-align: center;"><code>{{ heroDescription() }}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>¿Cómo se muta?</strong></td>
+<td style="text-align: center;">Asignación directa (<code>this.counter = 20</code>)</td>
+<td style="text-align: center;"><code>.set(20)</code> o <code>.update(c =&gt; c + 1)</code></td>
+<td style="text-align: center;">Inmutable (de solo lectura)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Soporte Zoneless</strong></td>
+<td style="text-align: center;">Incompatible</td>
+<td style="text-align: center;">Totalmente compatible</td>
+<td style="text-align: center;">Totalmente compatible</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="repositorio-oficial-y-recursos">Repositorio Oficial y Recursos<a class="headerlink" href="#repositorio-oficial-y-recursos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Código fuente final de la sección:</strong> <a href="https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-04">Repositorio GitHub: <code>angular-bases</code> (rama <code>fin-seccion-04</code>)</a></p>
+</li>
+<li>
+<p><strong>Gist de la tarea de héroes:</strong> <a href="https://gist.github.com/Klerith/b07bfb16b4d6aa27b8ccdbb991d316b2">Gist GitHub: Tarea de reforzamiento</a></p>
+</li>
+<li>
+<p><strong>Documentación oficial de Angular sobre Zoneless:</strong> <a href="https://angular.dev/guide/experimental/zoneless">Angular.dev - Experimental Zoneless Guide</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="banco-de-preguntas-y-evaluacion-rapida-para-el-aula">🧪 Banco de Preguntas y Evaluación Rápida para el Aula<a class="headerlink" href="#banco-de-preguntas-y-evaluacion-rapida-para-el-aula" title="Permanent link">&para;</a></h2>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 1: ¿Por qué en la plantilla debemos escribir <code>{{ counterSignal() }}</code> con paréntesis?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p>Porque las señales son funciones <em>getter</em>. Al invocarlas con <code>()</code>, Angular lee su valor actual y registra la suscripción automática del nodo de la vista al valor de la señal.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 2: ¿Cuál es la diferencia entre <code>.set()</code> y <code>.update()</code> en una señal?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p><code>.set(valor)</code> sobrescribe directamente el valor almacenado sin consultar el estado anterior. <code>.update(fn)</code> recibe una función pura con el valor actual y calcula el nuevo estado de forma inmutable a partir de él.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 3: ¿Podemos modificar directamente una señal <code>computed()</code> con <code>.set()</code>?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p>No. Las señales computadas son estrictamente de solo lectura (<em>readonly</em>). Su valor se actualiza exclusivamente cuando alguna de las señales de las que depende cambia de valor.</p>
+</details>
+</div>
+<hr />
+<h2 id="material-de-referencia-y-profundizacion">📖 Material de Referencia y Profundización<a class="headerlink" href="#material-de-referencia-y-profundizacion" title="Permanent link">&para;</a></h2>
+<p>Complementa las prácticas de aula con los capítulos técnicos correspondientes del <strong>Manual de Referencia</strong>:</p>
+<ul>
+<li><strong><a href="../manual/02-crear-proyecto/">Manual de Referencia: 02. Creación del Proyecto</a>:</strong> Anatomía completa de archivos, configuración de compilación y paradigma Zoneless.</li>
+<li><strong><a href="../manual/03-componentes/">Manual de Referencia: 03. Componentes Standalone</a>:</strong> Metadatos del decorador <code>@Component</code>, ciclo de vida e inmutabilidad.</li>
+<li><strong><a href="../manual/05-signals/">Manual de Referencia: 05. Signals y Reactividad</a>:</strong> Primitivas reactivas <code>signal()</code>, <code>computed()</code> y <code>effect()</code>.</li>
+<li><strong><a href="../manual/06-pipes/">Manual de Referencia: 06. Pipes Nativos y Custom</a>:</strong> Transformación cosmética de datos en plantillas.</li>
+<li><strong><a href="../manual/11-router/">Manual de Referencia: 11. Angular Router y Navegación</a>:</strong> Enrutamiento básico y salida visual con <code>&lt;router-outlet /&gt;</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../03-bases-typescript/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 03. Bases de TypeScript">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                03. Bases de TypeScript
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-expandir-bases/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 05. Expandir Bases: Componentes y Servicios">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                05. Expandir Bases: Componentes y Servicios
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.77dd0ce9.min.js"></script>
+      
+    
+  </body>
+</html>

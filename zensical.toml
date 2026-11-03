@@ -1,0 +1,112 @@
+[project]
+site_name = "F3 Martos | Angular "
+site_description = "Guía docente, código paso a paso y manual de referencia para el aula - Angular"
+extra_css = ["assets/css/custom.css"]
+
+nav = [
+  { "Inicio" = "index.md" },
+  { "Guías de Clase" = [
+      { "02. Conceptos Generales: TS y Angular" = "02-conceptos-generales.md" },
+      { "03. Bases de TypeScript" = "03-bases-typescript.md" },
+      { "04. Bases de Angular" = "04-angular-bases.md" },
+      { "05. Expandir Bases: Componentes y Servicios" = "05-expandir-bases.md" },
+   #   { "06. GifsApp: Pensando en Componentes" = "06-gifs-componentes.md" },
+   #   { "07. GifsApp: Servicios, HTTP y Mappers" = "07-gifs-servicio-http.md" },
+   #   { "08. GifsApp: Scroll Infinito y Masonry" = "08-gifs-intermedio-avanzado.md" },
+   #   { "09. CountryApp: Rutas, Layout y DaisyUI" = "09-country-spa.md" },
+   #   { "10. CountryApp: Servicios, Resources y Pipes" = "10-country-funcionalidad.md" },
+   #   { "11. CountryApp: Debounce, Caché y QueryParams" = "11-country-intermedio-avanzado.md" },
+  ]},
+  { "Manual de Referencia" = [
+      { "01. Introducción al Framework" = "manual/01-introduccion.md" },
+      { "02. Creación del Proyecto" = "manual/02-crear-proyecto.md" },
+      { "03. Componentes Standalone" = "manual/03-componentes.md" },
+      { "04. Plantillas y Control Flow" = "manual/04-plantillas.md" },
+      { "05. Signals y Reactividad" = "manual/05-signals.md" },
+      { "06. Pipes Nativos y Custom" = "manual/06-pipes.md" },
+      { "07. Comunicación entre Componentes" = "manual/07-anidar-componentes.md" },
+      { "08. Directivas" = "manual/08-directivas.md" },
+      { "09. Servicios e Inyección de Dependencias" = "manual/09-servicios.md" },
+      { "10. Cliente HTTP, APIs e Interceptores" = "manual/10-http.md" },
+      { "11. Angular Router y Navegación" = "manual/11-router.md" },
+      { "12. Formularios Reactivos" = "manual/12-formularios.md" },
+      { "13. Proyección de Contenido" = "manual/13-proyeccion-contenido.md" },
+      { "14. Queries del DOM (viewChild)" = "manual/14-queries.md" },
+      { "15. Server-Side Rendering (SSR)" = "manual/15-ssr.md" },
+      { "16. Integración de Librerías y UI" = "manual/16-integracion-librerias.md" },
+      { "17. Proyecto Integrador Final" = "manual/17-proyecto-final.md" },
+      { "18. Pruebas Unitarias y de Integración con Vitest" = "manual/18-testing-vitest.md" },
+   #   { "Auditoría Curricular" = "manual/propuesta-mejora-plan-angular.md" },
+  ]},
+]
+
+[project.theme]
+language = "es"
+
+features = [
+    "announce.dismiss",
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.footnote.tooltips",
+    "content.tabs.link",
+    "content.tooltips",
+    "navigation.expand",
+    "navigation.footer",
+    "navigation.indexes",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.path",
+    "navigation.sections",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
+    "navigation.top",
+    "navigation.tracking",
+    "search.highlight",
+]
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Cambiar a modo oscuro"
+
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Cambiar a modo claro"
+
+[project.markdown_extensions.abbr]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+[project.markdown_extensions.pymdownx.betterem]
+[project.markdown_extensions.pymdownx.caret]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.emoji]
+emoji_generator = "zensical.extensions.emoji.to_svg"
+emoji_index = "zensical.extensions.emoji.twemoji"
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.keys]
+[project.markdown_extensions.pymdownx.magiclink]
+[project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.smartsymbols]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+combine_header_slug = true
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
+[project.markdown_extensions.pymdownx.tilde]

@@ -1,0 +1,2594 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guía docente, código paso a paso y manual de referencia para el aula - Angular">
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.73">
+    
+    
+      
+        <title>Auditoría Curricular y Propuesta de Ampliación de Materiales de Angular - F3 Martos | Angular </title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Saltar a contenido
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="F3 Martos | Angular " class="md-header__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegación</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            F3 Martos | Angular 
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Auditoría Curricular y Propuesta de Ampliación de Materiales de Angular
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Buscar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-conceptos-generales/" class="md-tabs__link">
+          
+  
+  Guías de Clase
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01-introduccion/" class="md-tabs__link">
+          
+  
+  Manual de Referencia
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="F3 Martos | Angular " class="md-nav__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    F3 Martos | Angular 
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guías de Clase
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guías de Clase
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-conceptos-generales/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-bases-typescript/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Bases de TypeScript
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-angular-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-expandir-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect width="8" height="8" x="14" y="2" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Expandir Bases: Componentes y Servicios
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Manual de Referencia
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Manual de Referencia
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  01. Introducción al Framework
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Creación del Proyecto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Componentes Standalone
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Plantillas y Control Flow
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Signals y Reactividad
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  06. Pipes Nativos y Custom
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  07. Comunicación entre Componentes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  08. Directivas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  09. Servicios e Inyección de Dependencias
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Cliente HTTP, APIs e Interceptores
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Angular Router y Navegación
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Formularios Reactivos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Proyección de Contenido
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Queries del DOM (viewChild)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Server-Side Rendering (SSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Integración de Librerías y UI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Proyecto Integrador Final
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-testing-vitest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Pruebas Unitarias y de Integración con Vitest
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumen-ejecutivo-y-diagnostico-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Resumen Ejecutivo y Diagnóstico Global
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Resumen Ejecutivo y Diagnóstico Global">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fortalezas-de-los-apuntes-actuales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Fortalezas de los Apuntes Actuales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oportunidades-clave-de-mejora-identificadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Oportunidades Clave de Mejora Identificadas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-matriz-comparativa-apuntes-actuales-vs-fullstackpro-vs-angulardev" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Matriz Comparativa: Apuntes Actuales vs. FullStackPro vs. Angular.dev
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-propuesta-de-modificaciones-y-ampliaciones-detallada-por-capitulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Propuesta de Modificaciones y Ampliaciones Detallada por Capítulo
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Propuesta de Modificaciones y Ampliaciones Detallada por Capítulo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-01-indexmd-introduccion-a-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 01: <code>index.md</code> (Introducción a Angular)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-02-02-crear-proyectomd-crear-un-proyecto-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 02: <code>02-crear-proyecto.md</code> (Crear un Proyecto Angular)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-03-03-componentesmd-componentes-y-standalone" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 03: <code>03-componentes.md</code> (Componentes y Standalone)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-04-04-plantillasmd-plantillas-y-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 04: <code>04-plantillas.md</code> (Plantillas y Binding)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-05-05-signalsmd-signals-y-reactividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 05: <code>05-signals.md</code> (Signals y Reactividad)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-06-06-pipesmd-pipes-y-transformacion-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 06: <code>06-pipes.md</code> (Pipes y Transformación de Datos)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-07-07-anidar-componentesmd-anidamiento-y-comunicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 07: <code>07-anidar-componentes.md</code> (Anidamiento y Comunicación)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-08-08-directivasmd-directivas-personalizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 08: <code>08-directivas.md</code> (Directivas Personalizadas)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-09-09-serviciosmd-servicios-e-inyeccion-de-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 09: <code>09-servicios.md</code> (Servicios e Inyección de Dependencias)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-10-10-httpmd-comunicacion-http-y-asincronia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 10: <code>10-http.md</code> (Comunicación HTTP y Asincronía)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-11-11-routermd-enrutamiento-y-navegacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 11: <code>11-router.md</code> (Enrutamiento y Navegación)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-12-12-formulariosmd-formularios-en-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 12: <code>12-formularios.md</code> (Formularios en Angular)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-13-13-proyeccion-contenidomd-proyeccion-de-contenido" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 13: <code>13-proyeccion-contenido.md</code> (Proyección de Contenido)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-14-14-queriesmd-viewchild-contentchild-y-signal-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 14: <code>14-queries.md</code> (ViewChild, ContentChild y Signal Queries)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-15-15-ssrmd-server-side-rendering-e-hidratacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 15: <code>15-ssr.md</code> (Server-Side Rendering e Hidratación)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-16-16-integracion-libreriasmd-librerias-externas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 16: <code>16-integracion-librerias.md</code> (Librerías Externas)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capitulo-17-17-proyecto-finalmd-proyecto-final-integrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Capítulo 17: <code>17-proyecto-final.md</code> (Proyecto Final Integrador)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-radiografia-de-novedades-desde-angular-19-hasta-angular-22-propuesta-de-inclusion-curricular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Radiografía de Novedades desde Angular 19 hasta Angular 22 (Propuesta de Inclusión Curricular)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Radiografía de Novedades desde Angular 19 hasta Angular 22 (Propuesta de Inclusión Curricular)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-paradigma-zoneless-consolidado-providezonelesschangedetection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1. Paradigma Zoneless Consolidado (<code>provideZonelessChangeDetection</code>)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1. Paradigma Zoneless Consolidado (provideZonelessChangeDetection)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto-y-evolucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto y Evolución
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventajas-didacticas-y-tecnicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas Didácticas y Técnicas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-declaracion-de-variables-locales-en-plantillas-con-let" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.2. Declaración de Variables Locales en Plantillas con <code>@let</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2. Declaración de Variables Locales en Plantillas con @let">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto-y-problema-resuelto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto y Problema Resuelto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-de-codigo-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejemplo de Código Comparativo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-signals-de-segunda-generacion-linkedsignal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.3. Signals de Segunda Generación: <code>linkedSignal()</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3. Signals de Segunda Generación: linkedSignal()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto-y-problema-resuelto_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto y Problema Resuelto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-practico-selector-de-variantes-con-opcion-por-defecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejemplo Práctico: Selector de Variantes con Opción por Defecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-carga-asincrona-declarativa-resource-y-httpresource" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.4. Carga Asíncrona Declarativa: <code>resource()</code> y <code>httpResource()</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4. Carga Asíncrona Declarativa: resource() y httpResource()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto-y-revolucion-en-la-capa-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto y Revolución en la Capa de Datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-de-codigo-declarativo-con-httpresource" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejemplo de Código Declarativo con <code>httpResource()</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-hidratacion-incremental-y-event-replay-en-ssr-con-defer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.5. Hidratación Incremental y Event Replay en SSR con <code>@defer</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.5. Hidratación Incremental y Event Replay en SSR con @defer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto-y-rendimiento-web-moderno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto y Rendimiento Web Moderno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puntos-clave-para-el-alumnado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Puntos Clave para el Alumnado:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-enrutamiento-en-servidor-granular-approutesserverts-y-rendermode" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.6. Enrutamiento en Servidor Granular: <code>app.routes.server.ts</code> y <code>RenderMode</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.6. Enrutamiento en Servidor Granular: app.routes.server.ts y RenderMode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contexto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contexto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-estandarizacion-de-standalone-true-implicito-y-deprecacion-de-decoradores-tradicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.7. Estandarización de <code>standalone: true</code> Implícito y Deprecación de Decoradores Tradicionales
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.7. Estandarización de standalone: true Implícito y Deprecación de Decoradores Tradicionales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cambios-de-convencion-en-el-codigo-fuente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cambios de Convención en el Código Fuente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propuesta-de-inclusion-en-los-apuntes_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Propuesta de Inclusión en los Apuntes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-matriz-de-impacto-curricular-novedades-angular-19-a-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.8. Matriz de Impacto Curricular: Novedades Angular 19 a 22
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-plan-de-accion-y-hoja-de-ruta-para-el-profesor" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Plan de Acción y Hoja de Ruta para el Profesor
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="auditoria-curricular-y-propuesta-de-ampliacion-de-materiales-de-angular">Auditoría Curricular y Propuesta de Ampliación de Materiales de Angular<a class="headerlink" href="#auditoria-curricular-y-propuesta-de-ampliacion-de-materiales-de-angular" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Documento de Trabajo y Plan de Mejora Continua</strong><br />
+<strong>Destinatario:</strong> Coordinación Docente / Alumnado de FP Superior y Especialización Web<br />
+<strong>Referencias:</strong> Documentación oficial de Angular (<a href="https://angular.dev/">angular.dev</a>) y Temario Profesional de <a href="https://fullstackpro.es/courses/curso-angular">FullStackPro.es (Curso de Angular)</a>.</p>
+</blockquote>
+<hr />
+<h2 id="1-resumen-ejecutivo-y-diagnostico-global">1. Resumen Ejecutivo y Diagnóstico Global<a class="headerlink" href="#1-resumen-ejecutivo-y-diagnostico-global" title="Permanent link">&para;</a></h2>
+<p>Tras analizar en detalle los <strong>17 capítulos actuales</strong> que componen los apuntes de Angular, contrastándolos rigurosamente con la documentación oficial contemporánea (Angular 18 y 19 en <code>angular.dev</code>) y con la estructura formativa de <strong>FullStackPro.es</strong>, se extraen las siguientes conclusiones principales:</p>
+<h3 id="fortalezas-de-los-apuntes-actuales">Fortalezas de los Apuntes Actuales<a class="headerlink" href="#fortalezas-de-los-apuntes-actuales" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Modernidad de base:</strong> Los apuntes ya han abandonado el enfoque antiguo centrado en <code>NgModule</code>, adoptando <strong>Standalone Components</strong> por defecto y comenzando a enseñar la reactividad con <strong>Signals</strong>.</li>
+<li><strong>Amplitud temática:</strong> Se tocan aspectos que muchos cursos omiten, como <em>Content Projection</em>, <em>Queries</em>, <em>SSR</em> y la integración de librerías avanzadas (<em>Capacitor</em>, <em>OpenLayers</em>, <em>OAuth</em>).</li>
+<li><strong>Rigurosidad teórica:</strong> La explicación conceptual detrás de la Inversión de Control (IoC), la Detección de Cambios y el ciclo de vida es profunda y sólida.</li>
+</ol>
+<h3 id="oportunidades-clave-de-mejora-identificadas">Oportunidades Clave de Mejora Identificadas<a class="headerlink" href="#oportunidades-clave-de-mejora-identificadas" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Separación de Responsabilidades en el Código de Ejemplo (SoC):</strong><br />
+   Muchos ejemplos combinan en un único archivo <code>.ts</code> la lógica de la clase, más de 60 líneas de HTML dentro de <code>template: '...'</code> y más de 80 líneas de CSS dentro de <code>styles: ['...']</code>.<br />
+<em>Solución requerida:</em> Separar en pestañas de Zensical (<code>.ts</code>, <code>.html</code>, <code>.css</code>), reflejando la arquitectura real de archivos (<code>templateUrl</code> y <code>styleUrl</code>) que genera el Angular CLI en el mundo laboral.</p>
+</li>
+<li>
+<p><strong>Aprovechamiento Didáctico del Ecosistema Zensical:</strong><br />
+   Los apuntes carecían de elementos gráficos interactivos (cero diagramas Mermaid, cero cajas de advertencia/truco <code>admonitions</code>, nula tokenización visual de buenas prácticas).<br />
+<em>Solución requerida:</em> Incorporar diagramas de flujo de datos, cajas de aviso para errores frecuentes y pestañas vinculadas.</p>
+</li>
+<li>
+<p><strong>Brechas Curriculares y Funcionalidades de Angular 18/19 no Explotadas:</strong><br />
+   Existen novedades de primer orden en el framework y en el temario de FullStackPro que enriquecerían enormemente el perfil profesional del alumnado:</p>
+</li>
+<li>
+<p><strong>Vistas Diferidas (<code>@defer</code>, <code>@placeholder</code>, <code>@loading</code>, <code>@error</code>):</strong> Ausente en el capítulo de plantillas (<code>04-plantillas.md</code>), a pesar de ser la revolución de rendimiento más importante de Angular moderno.</p>
+</li>
+<li><strong>Resource API (<code>resource()</code> y <code>rxResource()</code>):</strong> Introducida para sustituir la gestión manual de banderas <code>isLoading</code>, <code>error</code> y peticiones HTTP en componentes reactivos con Signals.</li>
+<li><strong>Signal Forms vs Reactive Forms:</strong> Profundizar en el estado de la API y el enlace bidireccional moderno con <code>model()</code>.</li>
+<li><strong>Directivas de Composición (<code>hostDirectives</code>):</strong> Una de las herramientas de arquitectura limpia más valoradas en empresas para componer comportamientos sin herencia.</li>
+<li><strong>Enrutamiento Funcional Avanzado:</strong> <code>withComponentInputBinding()</code> combinado con <code>input()</code> en componentes de página.</li>
+<li><strong>Zoneless Angular:</strong> Explicar el camino hacia la eliminación de <code>zone.js</code> (<code>provideExperimentalZonelessChangeDetection()</code>).</li>
+</ol>
+<hr />
+<h2 id="2-matriz-comparativa-apuntes-actuales-vs-fullstackpro-vs-angulardev">2. Matriz Comparativa: Apuntes Actuales vs. FullStackPro vs. Angular.dev<a class="headerlink" href="#2-matriz-comparativa-apuntes-actuales-vs-fullstackpro-vs-angulardev" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Módulo / Capacidad</th>
+<th style="text-align: left;">Apuntes Actuales</th>
+<th style="text-align: left;">Temario FullStackPro.es</th>
+<th style="text-align: left;">Documentación Oficial (Angular 18/19)</th>
+<th style="text-align: left;">Dictamen / Acción Propuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Arquitectura de Componentes</strong></td>
+<td style="text-align: left;">Standalone Components explicados; código monolítico en inline templates.</td>
+<td style="text-align: left;">Standalone + Anidamiento + Comunicación limpia.</td>
+<td style="text-align: left;">Standalone por defecto; <code>input()</code>, <code>output()</code>, <code>model()</code>.</td>
+<td style="text-align: left;"><strong>Reestructurar ejemplos en pestañas</strong> (<code>.ts</code>, <code>.html</code>, <code>.css</code>). Añadir comparativa <code>input()</code> vs <code>@Input</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Control de Flujo en Plantillas</strong></td>
+<td style="text-align: left;"><code>@if</code>, <code>@for</code>, <code>@switch</code> presentes.</td>
+<td style="text-align: left;">Sintaxis moderna de control de flujo.</td>
+<td style="text-align: left;">Control Flow nativo + <code>@defer</code> con todos sus triggers (<code>on viewport</code>, <code>hover</code>, etc.).</td>
+<td style="text-align: left;"><strong>Añadir sección completa de <code>@defer</code></strong> con ejemplos prácticos en <code>04-plantillas.md</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Signals &amp; Reactividad</strong></td>
+<td style="text-align: left;"><code>signal()</code>, <code>computed()</code>, <code>effect()</code>, <code>linkedSignal</code>.</td>
+<td style="text-align: left;">Señales, interacción con RxJS y <code>async pipe</code>.</td>
+<td style="text-align: left;">Signals estables, <code>linkedSignal()</code>, <code>toSignal()</code>, <code>toObservable()</code>.</td>
+<td style="text-align: left;"><strong>Añadir comparativa práctica:</strong> ¿Cuándo usar Signal vs Observable? Patrón <em>Store Local Ligero</em>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Peticiones HTTP y Asincronía</strong></td>
+<td style="text-align: left;"><code>HttpClient</code> tradicional + <code>toSignal()</code>.</td>
+<td style="text-align: left;">HTTP, Observables, async pipe + Signals, Resource API, Interceptores.</td>
+<td style="text-align: left;"><code>HttpClient</code>, <code>provideHttpClient(withFetch())</code>, <code>resource()</code> y <code>rxResource()</code>.</td>
+<td style="text-align: left;"><strong>Incorporar <code>rxResource()</code></strong> en <code>10-http.md</code> con estados automáticos de carga/error.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Enrutamiento (Router)</strong></td>
+<td style="text-align: left;">Rutas, Guards funcionales (<code>CanActivateFn</code>), Lazy Loading.</td>
+<td style="text-align: left;">Router, Parámetros de entrada, Route guards, Lazy Loading.</td>
+<td style="text-align: left;"><code>provideRouter</code>, <code>withComponentInputBinding()</code>, redirecciones funcionales.</td>
+<td style="text-align: left;"><strong>Potenciar <code>withComponentInputBinding()</code></strong> mapeando parámetros de URL a <code>input()</code> de señal.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Formularios</strong></td>
+<td style="text-align: left;">Template-driven, Reactive Forms (<code>FormGroup</code>, <code>FormControl</code>).</td>
+<td style="text-align: left;">Template-driven, Reactive Forms, Signal Forms.</td>
+<td style="text-align: left;">Reactive Forms tipados (<code>FormRecord</code>, <code>FormArray</code>), <code>model()</code> binding.</td>
+<td style="text-align: left;"><strong>Enriquecer comparativa de enfoques</strong> e ilustrar validadores asíncronos y buenas prácticas UX.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Arquitectura Avanzada</strong></td>
+<td style="text-align: left;">Proyección (<code>ng-content</code>), Queries (<code>viewChild</code>), SSR.</td>
+<td style="text-align: left;">Content Projection, View/Content queries, SSR con hidratación.</td>
+<td style="text-align: left;">Signal Queries (<code>viewChild()</code>, <code>contentChild()</code>), SSR + Client Hydration.</td>
+<td style="text-align: left;"><strong>Añadir diagramas Mermaid</strong> de inyección y jerarquía de vistas. Modernizar a Signal Queries.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Integración de Librerías</strong></td>
+<td style="text-align: left;">SweetAlert2, FontAwesome, ngBootstrap, OpenLayers, Capacitor, OAuth.</td>
+<td style="text-align: left;">Mismo stack práctico (SweetAlert2, FontAwesome, ngBootstrap, Google/FB Auth, OpenLayers, Capacitor).</td>
+<td style="text-align: left;">Integración de librerías JS externas en proyectos Standalone.</td>
+<td style="text-align: left;"><strong>Excelente alineación con FullStackPro.</strong> Mejorar la presentación visual con ejemplos tabulados.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-propuesta-de-modificaciones-y-ampliaciones-detallada-por-capitulo">3. Propuesta de Modificaciones y Ampliaciones Detallada por Capítulo<a class="headerlink" href="#3-propuesta-de-modificaciones-y-ampliaciones-detallada-por-capitulo" title="Permanent link">&para;</a></h2>
+<p>A continuación se detalla la propuesta quirúrgica para cada archivo, indicando qué se debería modificar, qué se debería añadir y qué recursos visuales de Zensical se van a incorporar.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Revisión de Apuntes Angular"] --&gt; B["1. Refactorización de Código"]
+    A --&gt; C["2. Elevación Visual Zensical"]
+    A --&gt; D["3. Actualización de Contenidos Técnicos"]
+
+    B --&gt; B1["Pestañas: .ts | .html | .css"]
+    B --&gt; B2["Separación SoC estricta"]
+
+    C --&gt; C1["Diagramas Mermaid de Arquitectura"]
+    C --&gt; C2["Admonitions: tip, warning, note"]
+    C --&gt; C3["Code annotations y títulos"]
+
+    D --&gt; D1["@defer y Deferrable Views (Unidad 04)"]
+    D --&gt; D2["Resource API y rxResource (Unidad 10)"]
+    D --&gt; D3["Directivas de Composición (Unidad 08)"]
+    D --&gt; D4["Enlace de parámetros con input() (Unidad 11)"]</code></pre>
+<hr />
+<h3 id="capitulo-01-indexmd-introduccion-a-angular">Capítulo 01: <code>index.md</code> (Introducción a Angular)<a class="headerlink" href="#capitulo-01-indexmd-introduccion-a-angular" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Excelente introducción histórica y comparativa Framework vs Biblioteca.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Añadir diagrama Mermaid conceptual comparando el ciclo de petición de una <strong>MPA tradicional</strong> frente al funcionamiento de una <strong>SPA con Angular</strong>.</li>
+<li>Incorporar una caja <code>!!! info "El Renacimiento de Angular (Angular Renaissance)"</code> explicando el salto generacional a partir de Angular 17-19 (Standalone por defecto, nuevo control flow, Signals, SSR con hidratación).</li>
+<li>Incluir mapa de ruta visual del curso con las competencias clave DAW/DAM.</li>
+</ul>
+<hr />
+<h3 id="capitulo-02-02-crear-proyectomd-crear-un-proyecto-angular">Capítulo 02: <code>02-crear-proyecto.md</code> (Crear un Proyecto Angular)<a class="headerlink" href="#capitulo-02-02-crear-proyectomd-crear-un-proyecto-angular" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Buen detalle del CLI y estructura de carpetas.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Modernizar la sección del builder: explicar <code>@angular/build:application</code> basado en <strong>esbuild y Vite</strong>, en sustitución del antiguo Webpack.</li>
+<li>Añadir pestañas con comandos de instalación para diferentes gestores (<code>npm</code>, <code>pnpm</code>, <code>yarn</code>, <code>bun</code>).</li>
+<li>Añadir llamada de atención <code>!!! tip "Flags de productividad en ng new"</code> con comandos recomendados para clase:
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ng<span class="w"> </span>new<span class="w"> </span>mi-app<span class="w"> </span>--routing<span class="w"> </span>--style<span class="o">=</span>scss<span class="w"> </span>--ssr<span class="o">=</span><span class="nb">false</span>
+</span></code></pre></div></li>
+<li>Diagrama Mermaid del flujo de compilación y ejecución (<code>ng serve</code>).</li>
+</ul>
+<hr />
+<h3 id="capitulo-03-03-componentesmd-componentes-y-standalone">Capítulo 03: <code>03-componentes.md</code> (Componentes y Standalone)<a class="headerlink" href="#capitulo-03-03-componentesmd-componentes-y-standalone" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Muy completo, pero tiene ejemplos como el "Contador Avanzado" (más de 200 líneas) con el template y los estilos embebidos en el <code>.ts</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Separar el ejemplo del Contador en tres pestañas:</strong><ul>
+<li><code>=== "counter.component.ts"</code></li>
+<li><code>=== "counter.component.html"</code></li>
+<li><code>=== "counter.component.css"</code></li>
+</ul>
+</li>
+<li><strong>Separar el ejemplo de Model Inputs (Editor de Notas) en pestañas.</strong></li>
+<li>Añadir diagrama Mermaid del <strong>Ciclo de Vida del Componente</strong> (<code>ngOnInit</code>, <code>ngOnChanges</code>, <code>ngOnDestroy</code>, <code>afterNextRender</code>).</li>
+<li>Comparativa visual clara entre la sintaxis tradicional <code>@Input()</code> / <code>@Output()</code> y las nuevas funciones de señal <code>input()</code>, <code>output()</code> y <code>model()</code>.</li>
+</ul>
+<hr />
+<h3 id="capitulo-04-04-plantillasmd-plantillas-y-binding">Capítulo 04: <code>04-plantillas.md</code> (Plantillas y Binding)<a class="headerlink" href="#capitulo-04-04-plantillasmd-plantillas-y-binding" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Cubre bien interpolación, property binding, event binding y <code>@if</code>, <code>@for</code>, <code>@switch</code>.</li>
+<li><strong>Gran Carencia Identificada:</strong> <strong>No incluye <code>@defer</code> (Vistas Diferidas)</strong>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Añadir Sección Mayor: Deferrable Views (<code>@defer</code>):</strong><ul>
+<li>Sintaxis básica: <code>@defer</code>, <code>@placeholder</code>, <code>@loading</code>, <code>@error</code>.</li>
+<li>Triggers de activación: <code>on idle</code>, <code>on viewport(ref)</code>, <code>on interaction</code>, <code>on hover</code>, <code>on timer(5s)</code>, <code>when condición</code>.</li>
+<li>Estrategias de precarga: <code>prefetch on idle</code>.</li>
+<li>Caso de uso real: componentes pesados (mapas, gráficas, comentarios) que no deben penalizar la métrica LCP (<em>Largest Contentful Paint</em>).</li>
+</ul>
+</li>
+<li>Separar los formularios interactivos de ejemplo en pestañas <code>.ts</code> y <code>.html</code>.</li>
+<li>Caja <code>!!! warning "Regla de Oro en @for: El bloque track es obligatorio"</code> explicando por qué <code>track item.id</code> optimiza la reconciliación del DOM frente al antiguo <code>trackBy</code>.</li>
+</ul>
+<hr />
+<h3 id="capitulo-05-05-signalsmd-signals-y-reactividad">Capítulo 05: <code>05-signals.md</code> (Signals y Reactividad)<a class="headerlink" href="#capitulo-05-05-signalsmd-signals-y-reactividad" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Muy bien estructurado; incluye <code>signal()</code>, <code>computed()</code>, <code>effect()</code> y <code>linkedSignal</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Añadir diagrama Mermaid del <strong>Grafo de Dependencias de Señales (Glitch-free Reactivity)</strong> mostrando cómo un cambio en una señal raíz propaga la actualización únicamente a los nodos computados dependientes.</li>
+<li>Separar en pestañas los ejemplos completos de componentes que usan Signals (Gestor de Tareas, Carrito de la Compra).</li>
+<li>Caja <code>!!! caution "Cuándo NO usar effect()"</code>: explicar las malas prácticas habituales (mutar otras señales dentro de un effect sin <code>allowSignalWrites</code>, llamadas HTTP sin limpieza) y por qué <code>computed()</code> es la opción idónea en el 90% de los casos.</li>
+</ul>
+<hr />
+<h3 id="capitulo-06-06-pipesmd-pipes-y-transformacion-de-datos">Capítulo 06: <code>06-pipes.md</code> (Pipes y Transformación de Datos)<a class="headerlink" href="#capitulo-06-06-pipesmd-pipes-y-transformacion-de-datos" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Cubre pipes nativos y custom.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Separar los ejemplos de componentes consumidores y definición del pipe en pestañas (<code>.ts</code>, <code>.html</code>).</li>
+<li>
+<p>Añadir sección comparativa: <strong><code>async pipe</code> frente a <code>toSignal()</code></strong>. Explicar cómo la comunidad de Angular está pasando de:
+    <code>{{ datos$ | async }}</code><br />
+    hacia:<br />
+<code>datos = toSignal(this.servicio.datos$);</code> con <code>{{ datos() }}</code> en la plantilla.</p>
+</li>
+<li>
+<p>Caja <code>!!! note "Pipes Puros vs Impuros"</code> con diagrama de rendimiento.</p>
+</li>
+</ul>
+<hr />
+<h3 id="capitulo-07-07-anidar-componentesmd-anidamiento-y-comunicacion">Capítulo 07: <code>07-anidar-componentes.md</code> (Anidamiento y Comunicación)<a class="headerlink" href="#capitulo-07-07-anidar-componentesmd-anidamiento-y-comunicacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Contiene múltiples ejemplos ricos (Listas maestras, Detalle, Modales) pero todos con <code>template: '...'</code> y <code>styles: ['...']</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Refactorización urgente en pestañas:</strong> Separar componente Padre (<code>padre.component.ts</code>, <code>padre.component.html</code>, <code>padre.component.css</code>) y componente Hijo (<code>hijo.component.ts</code>, <code>hijo.component.html</code>, <code>hijo.component.css</code>).</li>
+<li>Diagrama Mermaid de comunicación:<ul>
+<li><em>Top-Down:</em> Datos fluyen hacia abajo mediante <code>input()</code> / <code>@Input()</code>.</li>
+<li><em>Bottom-Up:</em> Notificaciones fluyen hacia arriba mediante <code>output()</code> / <code>EventEmitter</code>.</li>
+</ul>
+</li>
+<li>Caja <code>!!! tip "Patrón Contenedor y Presentador (Smart vs Dumb Components)"</code> aplicando los principios de la arquitectura limpia y las reglas de F3 Martos.</li>
+</ul>
+<hr />
+<h3 id="capitulo-08-08-directivasmd-directivas-personalizadas">Capítulo 08: <code>08-directivas.md</code> (Directivas Personalizadas)<a class="headerlink" href="#capitulo-08-08-directivasmd-directivas-personalizadas" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Atributos y estructurales.</li>
+<li><strong>Gran Carencia Identificada:</strong> Falta la <strong>API de Composición de Directivas (<code>hostDirectives</code>)</strong>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Añadir sección sobre <code>hostDirectives</code>:</strong><ul>
+<li>Explicar cómo reutilizar directivas (<code>TooltipDirective</code>, <code>HighlightDirective</code>, <code>CdkTrapFocus</code>) dentro de un componente sin necesidad de herencia múltiple ni marcado duplicado en HTML.</li>
+</ul>
+</li>
+<li>Separar en pestañas la directiva (<code>mi-directiva.directive.ts</code>) y el componente que la prueba (<code>demo.component.html</code>, <code>demo.component.ts</code>).</li>
+</ul>
+<hr />
+<h3 id="capitulo-09-09-serviciosmd-servicios-e-inyeccion-de-dependencias">Capítulo 09: <code>09-servicios.md</code> (Servicios e Inyección de Dependencias)<a class="headerlink" href="#capitulo-09-09-serviciosmd-servicios-e-inyeccion-de-dependencias" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Correcto, usa <code>inject()</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Diagrama Mermaid del <strong>Árbol de Inyección de Dependencias (DI Hierarchical Injectors)</strong>:<ul>
+<li><code>root</code> (Singleton en toda la app).</li>
+<li><code>EnvironmentInjector</code> (Rutas con <code>providers: [...]</code> en configuración).</li>
+<li><code>ElementInjector</code> (Componente con <code>providers: [...]</code> en decorador).</li>
+</ul>
+</li>
+<li>Separar el servicio y el componente consumidor en pestañas.</li>
+<li>Caja <code>!!! tip "La función inject() frente al Constructor"</code>: explicar por qué <code>inject()</code> permite inicializaciones en línea, mejor inferencia de tipos y funciones composables (<em>functional injection context</em>).</li>
+</ul>
+<hr />
+<h3 id="capitulo-10-10-httpmd-comunicacion-http-y-asincronia">Capítulo 10: <code>10-http.md</code> (Comunicación HTTP y Asincronía)<a class="headerlink" href="#capitulo-10-10-httpmd-comunicacion-http-y-asincronia" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Explica <code>HttpClient</code>, interceptores y menciona <code>resource()</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Profundizar en <code>rxResource()</code> y <code>resource()</code>:</strong><ul>
+<li>Mostrar el contraste de código: cómo pasar de suscribirse a un Observable con flags manuales (<code>loading = true</code>, <code>error = null</code>) a una sola declaración reactiva con <code>rxResource</code>.</li>
+</ul>
+</li>
+<li>Separar en pestañas: <code>api.service.ts</code>, <code>interceptor.ts</code>, <code>component.ts</code>, <code>component.html</code>.</li>
+<li>Diagrama Mermaid del <strong>Ciclo de vida de una petición HTTP con Interceptores</strong> (Request -&gt; Auth Interceptor -&gt; Logging -&gt; Servidor -&gt; Response -&gt; Error Interceptor -&gt; Componente).</li>
+</ul>
+<hr />
+<h3 id="capitulo-11-11-routermd-enrutamiento-y-navegacion">Capítulo 11: <code>11-router.md</code> (Enrutamiento y Navegación)<a class="headerlink" href="#capitulo-11-11-routermd-enrutamiento-y-navegacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Muy buen capítulo; tiene guards funcionales.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li><strong>Reforzar <code>withComponentInputBinding()</code> con Signal <code>input()</code>:</strong><ul>
+<li>Mostrar cómo recibir <code>:id</code> de la ruta directamente con <code>id = input.required&lt;string&gt;();</code> sin inyectar <code>ActivatedRoute</code>.</li>
+</ul>
+</li>
+<li>Separar la configuración de rutas (<code>app.routes.ts</code>), el layout (<code>app.component.html</code>) y las vistas en pestañas.</li>
+<li>Diagrama Mermaid del <strong>Pipeline de Resolución de Rutas</strong> (<code>canMatch</code> -&gt; <code>canActivate</code> -&gt; <code>resolve</code> -&gt; <code>canDeactivate</code>).</li>
+</ul>
+<hr />
+<h3 id="capitulo-12-12-formulariosmd-formularios-en-angular">Capítulo 12: <code>12-formularios.md</code> (Formularios en Angular)<a class="headerlink" href="#capitulo-12-12-formulariosmd-formularios-en-angular" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Cubre Template-driven y Reactive Forms extensamente; menciona Signal Forms.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Diagrama comparativo de decisión: <strong>¿Cuándo usar Template-Driven, cuándo Reactive Forms y qué esperar de Signal Forms?</strong></li>
+<li>Separar formularios complejos (validadores personalizados, <code>FormArray</code> dinámico) en pestañas: <code>.ts</code>, <code>.html</code>, <code>.css</code>.</li>
+<li>Caja <code>!!! warning "Evitar arrow-code en validaciones"</code>: aplicar el patrón Early Return para mostrar errores de formulario en la plantilla de manera elegante.</li>
+</ul>
+<hr />
+<h3 id="capitulo-13-13-proyeccion-contenidomd-proyeccion-de-contenido">Capítulo 13: <code>13-proyeccion-contenido.md</code> (Proyección de Contenido)<a class="headerlink" href="#capitulo-13-13-proyeccion-contenidomd-proyeccion-de-contenido" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Explica <code>ng-content</code>, selectores y <code>ngProjectAs</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Separar los componentes reutilizables (Card, Modal, Layout con slots) en pestañas claras de <code>.ts</code>, <code>.html</code> y <code>.css</code>.</li>
+<li>Diagrama Mermaid visualizando los "huecos" (slots) de proyección en un componente contenedor.</li>
+</ul>
+<hr />
+<h3 id="capitulo-14-14-queriesmd-viewchild-contentchild-y-signal-queries">Capítulo 14: <code>14-queries.md</code> (ViewChild, ContentChild y Signal Queries)<a class="headerlink" href="#capitulo-14-14-queriesmd-viewchild-contentchild-y-signal-queries" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Cubre <code>@ViewChild</code> y <code>viewChild()</code>.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Consolidar la recomendación oficial: <strong>migrar a Signal Queries</strong> (<code>viewChild()</code>, <code>viewChildren()</code>, <code>contentChild()</code>, <code>contentChildren()</code>).</li>
+<li>Separar ejemplos en pestañas.</li>
+</ul>
+<hr />
+<h3 id="capitulo-15-15-ssrmd-server-side-rendering-e-hidratacion">Capítulo 15: <code>15-ssr.md</code> (Server-Side Rendering e Hidratación)<a class="headerlink" href="#capitulo-15-15-ssrmd-server-side-rendering-e-hidratacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Conceptos de SSR explicados.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Diagrama Mermaid del flujo de <strong>Hidratación en el Navegador</strong> (HTML pre-renderizado en Node.js -&gt; Descarga de JS -&gt; Hidratación no destructiva de eventos y estado).</li>
+<li>Explicar la directiva <code>ngSkipHydration</code> y problemas comunes con <code>window</code>, <code>document</code> y <code>localStorage</code>.</li>
+</ul>
+<hr />
+<h3 id="capitulo-16-16-integracion-libreriasmd-librerias-externas">Capítulo 16: <code>16-integracion-librerias.md</code> (Librerías Externas)<a class="headerlink" href="#capitulo-16-16-integracion-libreriasmd-librerias-externas" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Gran cobertura práctica (SweetAlert2, Font Awesome, ngBootstrap, OpenLayers, Capacitor, OAuth). Coincide al 100% con los bloques prácticos del curso de FullStackPro.es.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Separar en pestañas cada ejemplo:<ul>
+<li>Instalación y configuración (<code>terminal</code>).</li>
+<li>Servicio wrapper desacoplado (<code>mi-libreria.service.ts</code>) respetando la regla de <strong>Agnosticismo de Dependencias</strong>.</li>
+<li>Componente consumidor (<code>demo.component.ts</code> y <code>demo.component.html</code>).</li>
+</ul>
+</li>
+<li>Añadir caja <code>!!! tip "Regla de Oro: Wrappers para Librerías de Terceros"</code> fundamentada en los principios de arquitectura de F3 Martos.</li>
+</ul>
+<hr />
+<h3 id="capitulo-17-17-proyecto-finalmd-proyecto-final-integrador">Capítulo 17: <code>17-proyecto-final.md</code> (Proyecto Final Integrador)<a class="headerlink" href="#capitulo-17-17-proyecto-finalmd-proyecto-final-integrador" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Estado Actual:</strong> Excelente aplicación completa que amalgama todo lo aprendido.</li>
+<li><strong>Qué modificar/añadir:</strong></li>
+<li>Presentar la arquitectura del proyecto mediante pestañas de código por módulo/capa (Modelos, Servicios, Componentes, Estilos globales).</li>
+<li>Diagrama Mermaid con la arquitectura modular y el flujo de datos del proyecto final.</li>
+</ul>
+<hr />
+<h2 id="4-radiografia-de-novedades-desde-angular-19-hasta-angular-22-propuesta-de-inclusion-curricular">4. Radiografía de Novedades desde Angular 19 hasta Angular 22 (Propuesta de Inclusión Curricular)<a class="headerlink" href="#4-radiografia-de-novedades-desde-angular-19-hasta-angular-22-propuesta-de-inclusion-curricular" title="Permanent link">&para;</a></h2>
+<p>Con la llegada y consolidación de <strong>Angular 19, 20, 21 y 22</strong>, el ecosistema de Angular ha culminado la mayor transición arquitectónica de su historia moderna: el paso definitivo desde un framework dependiente de Zone.js y decoradores imperativos hacia una plataforma <strong>100% reactiva por señales (Signal-First)</strong>, <strong>Zoneless por defecto</strong>, con <strong>sintaxis de plantillas declarativa</strong> y capacidades avanzadas de <strong>renderizado híbrido e hidratación incremental</strong>.</p>
+<p>A continuación se detallan las innovaciones clave que han madurado en estas versiones y que se propone incorporar a los materiales formativos para mantener los apuntes en la vanguardia absoluta de la industria.</p>
+<hr />
+<h3 id="41-paradigma-zoneless-consolidado-providezonelesschangedetection">4.1. Paradigma Zoneless Consolidado (<code>provideZonelessChangeDetection</code>)<a class="headerlink" href="#41-paradigma-zoneless-consolidado-providezonelesschangedetection" title="Permanent link">&para;</a></h3>
+<h4 id="contexto-y-evolucion">Contexto y Evolución<a class="headerlink" href="#contexto-y-evolucion" title="Permanent link">&para;</a></h4>
+<p>Históricamente, Angular dependía de <code>zone.js</code> para interceptar llamadas asíncronas (<code>setTimeout</code>, <code>fetch</code>, eventos DOM) y disparar un barrido global de detección de cambios de arriba hacia abajo en todo el árbol de componentes.
+A partir de Angular 19 (donde se estabilizó) y su consagración como estándar recomendado en <strong>Angular 20, 21 y 22</strong>, el framework puede operar de forma totalmente <strong>Zoneless</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Antiguo["Modelo Tradicional con Zone.js"]
+        Z1["Evento Asíncrono (Click / HTTP)"] --&gt; Z2["Zone.js intercepta"]
+        Z2 --&gt; Z3["Detección de Cambios Global (Árbol Completo)"]
+        Z3 --&gt; Z4["Comprobación innecesaria en componentes no afectados"]
+    end
+
+    subgraph Moderno["Modelo Contemporáneo Zoneless (Angular 19-22)"]
+        S1["Mutación de Signal / Evento"] --&gt; S2["Scheduler Nativo (Microtask)"]
+        S2 --&gt; S3["Notificación Quirúrgica solo a vistas que leen el Signal"]
+        S3 --&gt; S4["Renderizado Atómico y Eficiente"]
+    end</code></pre>
+<h4 id="ventajas-didacticas-y-tecnicas">Ventajas Didácticas y Técnicas<a class="headerlink" href="#ventajas-didacticas-y-tecnicas" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Reducción del Bundle:</strong> Supresión de <code>zone.js</code> del bundle inicial (~35 KB gzipped eliminados).</li>
+<li><strong>Compatibilidad Nativa con <code>async</code>/<code>await</code>:</strong> El compilador ya no necesita convertir <code>async/await</code> en generadores o promesas parcheadas.</li>
+<li><strong>Stack Traces Limpios:</strong> En la consola del navegador, los errores apuntan directamente al código del alumno sin decenas de llamadas intermedias e incomprensibles de <code>zone.js</code>.</li>
+<li><strong>Arquitectura Reactiva Predecible:</strong> La vista se actualiza porque una señal cambió, eliminando bugs sutiles donde la UI "no se enteraba" del cambio.</li>
+</ol>
+<h4 id="propuesta-de-inclusion-en-los-apuntes">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong>En <a href="../02-crear-proyecto/"><code>02-crear-proyecto.md</code></a>:</strong><br />
+  Actualizar la configuración de arranque en <code>app.config.ts</code>:
+  <div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ApplicationConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">provideZonelessChangeDetection</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">appConfig</span><span class="o">:</span><span class="w"> </span><span class="kt">ApplicationConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">providers</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nx">provideZonelessChangeDetection</span><span class="p">(),</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nx">provideRouter</span><span class="p">(</span><span class="nx">routes</span><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">};</span>
+</span></code></pre></div>
+  Añadir una llamada explicativa de por qué ya no existe la dependencia de <code>zone.js</code> en <code>package.json</code> ni en <code>angular.json</code>.</p>
+</li>
+<li>
+<p><strong>En <a href="../03-componentes/"><code>03-componentes.md</code></a>:</strong><br />
+  Explicar cómo el ciclo de detección de cambios deja de ser un barrido masivo del árbol y pasa a ser dirigido por Signals.</p>
+</li>
+</ul>
+<hr />
+<h3 id="42-declaracion-de-variables-locales-en-plantillas-con-let">4.2. Declaración de Variables Locales en Plantillas con <code>@let</code><a class="headerlink" href="#42-declaracion-de-variables-locales-en-plantillas-con-let" title="Permanent link">&para;</a></h3>
+<h4 id="contexto-y-problema-resuelto">Contexto y Problema Resuelto<a class="headerlink" href="#contexto-y-problema-resuelto" title="Permanent link">&para;</a></h4>
+<p>Hasta versiones anteriores, si una plantilla necesitaba reutilizar un cálculo complejo o el resultado de un observable/signal en múltiples partes de la vista, los desarrolladores debían recurrir a getters en la clase TypeScript o a trucos con directivas estructurales (<code>@if (datos$ | async; as datos)</code>).</p>
+<p>Angular introdujo la directiva nativa <strong><code>@let</code></strong> dentro del nuevo Control Flow de plantillas.</p>
+<h4 id="ejemplo-de-codigo-comparativo">Ejemplo de Código Comparativo<a class="headerlink" href="#ejemplo-de-codigo-comparativo" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Sintaxis Moderna con @let (Angular 19-22)</label><label for="__tabbed_1_2">Sintaxis Clásica / Alternativa Previa</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-html highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">&lt;!-- Cálculo de variables locales declarativas directamente en la vista --&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>@let usuario = perfilUsuario();
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>@let total = calcularTotal(carrito());
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>@let esVip = usuario.puntos &gt; 1000;
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">&lt;</span><span class="nt">header</span> <span class="na">class</span><span class="o">=</span><span class="s">"perfil"</span><span class="p">&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Bienvenido, {{ usuario.nombre }}<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  @if (esVip) {
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"badge-vip"</span><span class="p">&gt;</span>Cliente Preferente ⭐<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  }
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"resumen"</span><span class="p">&gt;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Total a liquidar: <span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>{{ total | currency:'EUR' }}<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  @if (esVip) {
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Descuento aplicado: {{ total * 0.1 | currency:'EUR' }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  }
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cm">&lt;!-- Requería anidar bloques @if artificiales para capturar variables --&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>@if (perfilUsuario(); as usuario) {
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="p">&lt;</span><span class="nt">header</span> <span class="na">class</span><span class="o">=</span><span class="s">"perfil"</span><span class="p">&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Bienvenido, {{ usuario.nombre }}<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    @if (usuario.puntos &gt; 1000) {
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"badge-vip"</span><span class="p">&gt;</span>Cliente Preferente ⭐<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    }
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  <span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>}
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_1">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong>En <a href="../04-plantillas/"><code>04-plantillas.md</code></a>:</strong><br />
+  Crear una sección específica: <strong>"Variables de Plantilla con <code>@let</code>"</strong>, detallando:</p>
+</li>
+<li>
+<p>Reglas de ámbito (scope): las variables <code>@let</code> son de solo lectura y solo son visibles dentro de su bloque contenedor o hacia adelante en el mismo nivel.</p>
+</li>
+<li>Inmutabilidad: no se pueden reasignar con operaciones tipo <code>@let x = x + 1</code>.</li>
+<li>Casos de uso típicos: operaciones matemáticas en UI, formateo de cadenas reutilizadas y desempaquetado de signals de forma limpia.</li>
+</ul>
+<hr />
+<h3 id="43-signals-de-segunda-generacion-linkedsignal">4.3. Signals de Segunda Generación: <code>linkedSignal()</code><a class="headerlink" href="#43-signals-de-segunda-generacion-linkedsignal" title="Permanent link">&para;</a></h3>
+<h4 id="contexto-y-problema-resuelto_1">Contexto y Problema Resuelto<a class="headerlink" href="#contexto-y-problema-resuelto_1" title="Permanent link">&para;</a></h4>
+<p>Una de las situaciones más complejas en Angular 16-18 ocurría cuando un estado dependía de una señal origen (origen de verdad), pero debía permitir modificaciones locales por parte del usuario (estado derivado editable).</p>
+<ul>
+<li><code>computed()</code> es de solo lectura y no permite <code>.set()</code>.</li>
+<li>Usar un <code>effect()</code> para escuchar la fuente y mutar otra señal manual provocaba bucles de actualización infinita y requería el flag desaconsejado <code>{ allowSignalWrites: true }</code>.</li>
+</ul>
+<p>Angular 19 solventó esto introduciendo <strong><code>linkedSignal()</code></strong>.</p>
+<h4 id="ejemplo-practico-selector-de-variantes-con-opcion-por-defecto">Ejemplo Práctico: Selector de Variantes con Opción por Defecto<a class="headerlink" href="#ejemplo-practico-selector-de-variantes-con-opcion-por-defecto" title="Permanent link">&para;</a></h4>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="p">,</span><span class="w"> </span><span class="nx">linkedSignal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-selector-producto'</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sb">    &lt;h3&gt;Producto: {{ productoSeleccionado().nombre }}&lt;/h3&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="sb">    &lt;label&gt;Opciones disponibles:&lt;/label&gt;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="sb">    &lt;select [value]="opcionElegida()" (change)="opcionElegida.set($any($event.target).value)"&gt;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="sb">      @for (opcion of productoSeleccionado().opciones; track opcion) {</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="sb">        &lt;option [value]="opcion"&gt;{{ opcion }}&lt;/option&gt;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="sb">      }</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="sb">    &lt;/select&gt;</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="sb">    &lt;p&gt;Opción actualmente activa: &lt;strong&gt;{{ opcionElegida() }}&lt;/strong&gt;&lt;/p&gt;</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="sb">    &lt;button (click)="cambiarProducto()"&gt;Cargar Siguiente Producto&lt;/button&gt;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="sb">  `</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="p">})</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SelectorProductoComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="c1">// Señal fuente</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="nx">productoSeleccionado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">({</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="nx">nombre</span><span class="o">:</span><span class="w"> </span><span class="s1">'Camiseta Deportiva'</span><span class="p">,</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="nx">opciones</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'Talla S'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Talla M'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Talla L'</span><span class="p">]</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span><span class="c1">// linkedSignal: Se resetea automáticamente al primer elemento si cambia el producto,</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span><span class="c1">// pero el usuario puede modificarla libremente con .set() mediante el &lt;select&gt;.</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="nx">opcionElegida</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">linkedSignal</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">productoSeleccionado</span><span class="p">().</span><span class="nx">opciones</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">  </span><span class="nx">cambiarProducto</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">productoSeleccionado</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">      </span><span class="nx">nombre</span><span class="o">:</span><span class="w"> </span><span class="s1">'Zapatillas Running'</span><span class="p">,</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">      </span><span class="nx">opciones</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">'Número 41'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Número 42'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Número 43'</span><span class="p">]</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">    </span><span class="c1">// ¡opcionElegida se reinicia automáticamente a 'Número 41' sin ningún effect()!</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_2">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>En <a href="../05-signals/"><code>05-signals.md</code></a>:</strong><br />
+  Añadir un apartado dedicado a <code>linkedSignal()</code> como la alternativa arquitectónicamente correcta a los efectos con escritura. Explicar su variante simple y su variante con objeto de configuración <code>{ source, computation }</code>.</li>
+</ul>
+<hr />
+<h3 id="44-carga-asincrona-declarativa-resource-y-httpresource">4.4. Carga Asíncrona Declarativa: <code>resource()</code> y <code>httpResource()</code><a class="headerlink" href="#44-carga-asincrona-declarativa-resource-y-httpresource" title="Permanent link">&para;</a></h3>
+<h4 id="contexto-y-revolucion-en-la-capa-de-datos">Contexto y Revolución en la Capa de Datos<a class="headerlink" href="#contexto-y-revolucion-en-la-capa-de-datos" title="Permanent link">&para;</a></h4>
+<p>En versiones previas de Angular, cargar datos de una API REST exigía:</p>
+<ol>
+<li>Inyectar <code>HttpClient</code>.</li>
+<li>Crear un observable, suscribirse manualmente o usar <code>toSignal()</code>.</li>
+<li>Manejar señales manuales para <code>cargando = signal(true)</code> y <code>error = signal(null)</code>.</li>
+</ol>
+<p>A partir de Angular 19 y consolidado en Angular 20-22, la librería <code>@angular/core</code> introdujo <strong><code>resource()</code></strong> / <strong><code>rxResource()</code></strong>, y el paquete HTTP incorporó <strong><code>httpResource()</code></strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    URL["&lt;b&gt;1. Parámetro Reactivo / URL&lt;/b&gt;&lt;br/&gt;&lt;code&gt;id = input.required&amp;lt;string&amp;gt;()&lt;/code&gt;"] --&gt; RES["&lt;b&gt;2. Cliente Reactivo: httpResource()&lt;/b&gt;&lt;br/&gt;Gestión automática de ciclo de vida y cancelación"]
+
+    subgraph Salidas ["Signals Derivadas del Recurso"]
+        V["&lt;b&gt;resource.value()&lt;/b&gt;&lt;br/&gt;Datos resueltos"]
+        L["&lt;b&gt;resource.isLoading()&lt;/b&gt;&lt;br/&gt;Estado de carga"]
+        E["&lt;b&gt;resource.error()&lt;/b&gt;&lt;br/&gt;Error de conexión"]
+        S["&lt;b&gt;resource.status()&lt;/b&gt;&lt;br/&gt;Estado del ciclo de vida"]
+        R["&lt;b&gt;resource.reload()&lt;/b&gt;&lt;br/&gt;Reintento manual"]
+    end
+
+    RES ==&gt; Salidas</code></pre>
+<h4 id="ejemplo-de-codigo-declarativo-con-httpresource">Ejemplo de Código Declarativo con <code>httpResource()</code><a class="headerlink" href="#ejemplo-de-codigo-declarativo-con-httpresource" title="Permanent link">&para;</a></h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Nuevo Enfoque con httpResource (Angular 19-22)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">httpResource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/common/http'</span><span class="p">;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./models/user.interface'</span><span class="p">;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-detalle-usuario'</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="sb">    &lt;div class="control"&gt;</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="sb">      &lt;button (click)="userId.set(userId() - 1)" [disabled]="userId() &lt;= 1"&gt;Anterior&lt;/button&gt;</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="sb">      &lt;span&gt;Usuario ID: {{ userId() }}&lt;/span&gt;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="sb">      &lt;button (click)="userId.set(userId() + 1)"&gt;Siguiente&lt;/button&gt;</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="sb">      &lt;button (click)="usuarioResource.reload()"&gt;🔄 Reintentar&lt;/button&gt;</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="sb">    &lt;/div&gt;</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="sb">    @if (usuarioResource.isLoading()) {</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="sb">      &lt;div class="spinner"&gt;Cargando datos del usuario...&lt;/div&gt;</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="sb">    } @else if (usuarioResource.error()) {</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="sb">      &lt;div class="alerta-error"&gt;Error al cargar: {{ usuarioResource.error() }}&lt;/div&gt;</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="sb">    } @else if (usuarioResource.value(); as usuario) {</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="sb">      &lt;article class="ficha"&gt;</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="sb">        &lt;h2&gt;{{ usuario.name }}&lt;/h2&gt;</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="sb">        &lt;p&gt;Email: {{ usuario.email }}&lt;/p&gt;</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="sb">        &lt;p&gt;Empresa: {{ usuario.company?.name }}&lt;/p&gt;</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="sb">      &lt;/article&gt;</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="sb">    }</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="sb">  `</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="p">})</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">DetalleUsuarioComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span><span class="nx">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="c1">// httpResource enlaza automáticamente la señal userId con la petición HTTP.</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">  </span><span class="c1">// Cuando userId cambia, cancela la petición anterior y lanza la nueva.</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">  </span><span class="nx">usuarioResource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">httpResource</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="sb">`https://jsonplaceholder.typicode.com/users/</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">userId</span><span class="p">()</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_3">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>En <a href="../10-http/"><code>10-http.md</code></a>:</strong><br />
+  Presentar una subsección principal que compare el enfoque imperativo basado en Observables (<code>subscribe</code> / <code>AsyncPipe</code>) con el paradigma declarativo con <code>httpResource()</code>, destacando la eliminación de variables booleanas de carga y manejo de cancelación automática de peticiones (race conditions resueltas de serie).</li>
+</ul>
+<hr />
+<h3 id="45-hidratacion-incremental-y-event-replay-en-ssr-con-defer">4.5. Hidratación Incremental y Event Replay en SSR con <code>@defer</code><a class="headerlink" href="#45-hidratacion-incremental-y-event-replay-en-ssr-con-defer" title="Permanent link">&para;</a></h3>
+<h4 id="contexto-y-rendimiento-web-moderno">Contexto y Rendimiento Web Moderno<a class="headerlink" href="#contexto-y-rendimiento-web-moderno" title="Permanent link">&para;</a></h4>
+<p>En Angular 17 se introdujo la hidratación no destructiva completa. Sin embargo, para páginas extensas (como e-commerces con cientos de productos, comentarios y widgets), descargar e hidratar todo el JavaScript del cliente de golpe deterioraba el <strong>INP (Interaction to Next Paint)</strong>.</p>
+<p>Angular 19+ incorporó <strong>Hidratación Incremental</strong> combinada con <code>@defer</code> y <strong>Event Replay</strong>.</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cm">&lt;!-- El bloque se renderiza en el servidor como HTML estático. --&gt;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="cm">&lt;!-- No descarga ni ejecuta JS hasta que el usuario hace scroll y entra en el viewport. --&gt;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>@defer (hydrate on viewport; on interaction) {
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="p">&lt;</span><span class="nt">app-carrusel-opiniones</span> <span class="err">[</span><span class="na">productoId</span><span class="err">]="</span><span class="na">producto</span><span class="err">().</span><span class="na">id</span><span class="err">"</span> <span class="p">/&gt;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>} @placeholder {
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"esqueleto-carrusel"</span><span class="p">&gt;</span>Cargando opiniones...<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>}
+</span></code></pre></div>
+<h4 id="puntos-clave-para-el-alumnado">Puntos Clave para el Alumnado:<a class="headerlink" href="#puntos-clave-para-el-alumnado" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Hidratación Bajo Demanda:</strong> La página carga instantáneamente y solo las partes con las que el usuario interactúa o que se vuelven visibles son hidratadas.</li>
+<li><strong>Event Replay:</strong> Si el usuario hace click en un botón antes de que el script del componente haya terminado de descargarse e hidratarse, el navegador retiene el evento y lo despacha de forma transparente tan pronto como la hidratación se completa, evitando la frustración del "clic fantasma".</li>
+</ol>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_4">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>En <a href="../15-ssr/"><code>15-ssr.md</code></a>:</strong><br />
+  Añadir el apartado <strong>"Hidratación Incremental e Islas de Interactividad con <code>@defer (hydrate ...)</code>"</strong>.</li>
+</ul>
+<hr />
+<h3 id="46-enrutamiento-en-servidor-granular-approutesserverts-y-rendermode">4.6. Enrutamiento en Servidor Granular: <code>app.routes.server.ts</code> y <code>RenderMode</code><a class="headerlink" href="#46-enrutamiento-en-servidor-granular-approutesserverts-y-rendermode" title="Permanent link">&para;</a></h3>
+<h4 id="contexto">Contexto<a class="headerlink" href="#contexto" title="Permanent link">&para;</a></h4>
+<p>Anteriormente, una aplicación Angular se configuraba globalmente: o todo era SSR dinámico o todo era SSG estático pre-renderizado.
+En las versiones recientes, Angular unifica esto mediante el archivo <code>app.routes.server.ts</code> con modos por ruta:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// app.routes.server.ts</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RenderMode</span><span class="p">,</span><span class="w"> </span><span class="nx">ServerRoute</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/ssr'</span><span class="p">;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">serverRoutes</span><span class="o">:</span><span class="w"> </span><span class="kt">ServerRoute</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="c1">// Páginas estáticas generadas en tiempo de compilación (SSG)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">''</span><span class="p">,</span><span class="w"> </span><span class="nx">renderMode</span><span class="o">:</span><span class="w"> </span><span class="kt">RenderMode.Prerender</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'aviso-legal'</span><span class="p">,</span><span class="w"> </span><span class="nx">renderMode</span><span class="o">:</span><span class="w"> </span><span class="kt">RenderMode.Prerender</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="c1">// Páginas con datos dinámicos en tiempo real renderizadas en cada petición (SSR)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'productos/:id'</span><span class="p">,</span><span class="w"> </span><span class="nx">renderMode</span><span class="o">:</span><span class="w"> </span><span class="kt">RenderMode.Server</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="c1">// Rutas privadas exclusivas del cliente (SPA pura sin SSR)</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'panel-admin/**'</span><span class="p">,</span><span class="w"> </span><span class="nx">renderMode</span><span class="o">:</span><span class="w"> </span><span class="kt">RenderMode.Client</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">];</span>
+</span></code></pre></div>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_5">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>En <a href="../15-ssr/"><code>15-ssr.md</code></a>:</strong><br />
+  Incluir la explicación de los tres modos de renderizado (<code>Prerender</code>, <code>Server</code>, <code>Client</code>) y cómo configurar arquitecturas híbridas según los requisitos SEO y de privacidad de cada página.</li>
+</ul>
+<hr />
+<h3 id="47-estandarizacion-de-standalone-true-implicito-y-deprecacion-de-decoradores-tradicionales">4.7. Estandarización de <code>standalone: true</code> Implícito y Deprecación de Decoradores Tradicionales<a class="headerlink" href="#47-estandarizacion-de-standalone-true-implicito-y-deprecacion-de-decoradores-tradicionales" title="Permanent link">&para;</a></h3>
+<h4 id="cambios-de-convencion-en-el-codigo-fuente">Cambios de Convención en el Código Fuente<a class="headerlink" href="#cambios-de-convencion-en-el-codigo-fuente" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong><code>standalone: true</code> es ahora el valor por defecto:</strong><br />
+   Desde Angular 19, escribir <code>standalone: true</code> en <code>@Component({})</code>, <code>@Directive({})</code> o <code>@Pipe({})</code> ya no es necesario; el compilador asume por defecto que todos los artefactos son standalone. Si por alguna razón histórica se requiere un módulo tradicional, se debe especificar <code>standalone: false</code>.</p>
+</li>
+<li>
+<p><strong>Reemplazo Formal de Decoradores por Funciones Signal:</strong><br />
+   La documentación oficial en <code>angular.dev</code> marca los decoradores <code>@Input()</code>, <code>@Output()</code>, <code>@ViewChild()</code> y <code>@ContentChild()</code> como APIs históricas (legacy), promoviendo de forma exclusiva:</p>
+</li>
+<li>
+<p><code>input()</code> y <code>input.required()</code></p>
+</li>
+<li><code>output()</code> (sustituye a <code>EventEmitter</code>)</li>
+<li><code>model()</code> (enlace bidireccional reactivo nativo)</li>
+<li><code>viewChild()</code> y <code>viewChildren()</code></li>
+<li><code>contentChild()</code> y <code>contentChildren()</code></li>
+</ol>
+<h4 id="propuesta-de-inclusion-en-los-apuntes_6">Propuesta de Inclusión en los Apuntes<a class="headerlink" href="#propuesta-de-inclusion-en-los-apuntes_6" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>En <a href="../03-componentes/"><code>03-componentes.md</code></a> y transversalmente:</strong><br />
+  Aclarar la regla a los alumnos para que no se extrañen al encontrar código en Angular 22 donde se omite <code>standalone: true</code>. Enseñar ambas lecturas para garantizar que puedan mantener proyectos anteriores y desarrollar con soltura en versiones nuevas.</li>
+</ul>
+<hr />
+<h3 id="48-matriz-de-impacto-curricular-novedades-angular-19-a-22">4.8. Matriz de Impacto Curricular: Novedades Angular 19 a 22<a class="headerlink" href="#48-matriz-de-impacto-curricular-novedades-angular-19-a-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Versión</th>
+<th style="text-align: left;">Característica Técnica</th>
+<th style="text-align: left;">Archivo de Apuntes Impactado</th>
+<th style="text-align: left;">Nivel de Prioridad Didáctica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;"><code>@let</code> (Variables locales en templates)</td>
+<td style="text-align: left;"><a href="../04-plantillas/"><code>04-plantillas.md</code></a></td>
+<td style="text-align: left;">🟢 <strong>Alta</strong> (Sencillo de aprender y de alto uso)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;"><code>linkedSignal()</code> (Señales vinculadas reseteables)</td>
+<td style="text-align: left;"><a href="../05-signals/"><code>05-signals.md</code></a></td>
+<td style="text-align: left;">🟢 <strong>Alta</strong> (Evita anti-patrones con <code>effect</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;"><code>resource()</code> / <code>rxResource()</code></td>
+<td style="text-align: left;"><a href="../10-http/"><code>10-http.md</code></a></td>
+<td style="text-align: left;">🟡 <strong>Media</strong> (Explicar como evolución de Observables)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;"><code>standalone: true</code> por defecto</td>
+<td style="text-align: left;"><a href="../03-componentes/"><code>03-componentes.md</code></a></td>
+<td style="text-align: left;">🟢 <strong>Alta</strong> (Aclaración conceptual inmediata)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;">Hidratación Incremental y Event Replay</td>
+<td style="text-align: left;"><a href="../15-ssr/"><code>15-ssr.md</code></a></td>
+<td style="text-align: left;">🟡 <strong>Media</strong> (Concepto avanzado de arquitectura)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 19</strong></td>
+<td style="text-align: left;"><code>server.routes.ts</code> (<code>RenderMode</code>)</td>
+<td style="text-align: left;"><a href="../15-ssr/"><code>15-ssr.md</code></a></td>
+<td style="text-align: left;">🟡 <strong>Media</strong> (Estrategia híbrida de despliegue)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 20-22</strong></td>
+<td style="text-align: left;"><code>provideZonelessChangeDetection()</code> por defecto</td>
+<td style="text-align: left;"><a href="../02-crear-proyecto/"><code>02-crear-proyecto.md</code></a>, <a href="../03-componentes/"><code>03-componentes.md</code></a></td>
+<td style="text-align: left;">🟢 <strong>Alta</strong> (Configuración estándar de nuevos proyectos)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 20-22</strong></td>
+<td style="text-align: left;"><code>httpResource()</code> nativo en HTTP</td>
+<td style="text-align: left;"><a href="../10-http/"><code>10-http.md</code></a></td>
+<td style="text-align: left;">🟢 <strong>Alta</strong> (Simplifica drásticamente el consumo REST)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Angular 21-22</strong></td>
+<td style="text-align: left;">Consolidación de Signal Forms &amp; Two-Way Signals</td>
+<td style="text-align: left;"><a href="../12-formularios/"><code>12-formularios.md</code></a></td>
+<td style="text-align: left;">⚪ <strong>Baja/Opcional</strong> (Mantener ReactiveFormsModule como base sólida)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-plan-de-accion-y-hoja-de-ruta-para-el-profesor">5. Plan de Acción y Hoja de Ruta para el Profesor<a class="headerlink" href="#5-plan-de-accion-y-hoja-de-ruta-para-el-profesor" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Fase 1 (Inmediata):</strong>  </li>
+<li>Modernizar los archivos actuales aplicando la <strong>separación por pestañas</strong> en todos los ejemplos significativos que mezclan <code>.ts</code>, <code>.html</code> y <code>.css</code>.</li>
+<li>Incorporar elementos de <strong>Zensical</strong> (admonitions temáticas, diagramas Mermaid arquitectónicos, títulos de bloques de código).</li>
+<li><strong>Fase 2 (Revisión y Aprobación):</strong>  </li>
+<li>El docente revisa esta propuesta y decide si desea incorporar formalmente las secciones de contenido nuevo propuestas:<ul>
+<li>Sección completa de <code>@defer</code> en <code>04-plantillas.md</code>.</li>
+<li>Sección ampliada de <code>rxResource</code> y carga declarativa en <code>10-http.md</code>.</li>
+<li>Sección de directivas de composición <code>hostDirectives</code> en <code>08-directivas.md</code>.</li>
+</ul>
+</li>
+<li><strong>Fase 3 (Despliegue):</strong>  </li>
+<li>Generación de build limpio con <code>zensical build</code> verificado al 100%.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"../../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.77dd0ce9.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2365 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guía docente, código paso a paso y manual de referencia para el aula - Angular">
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.73">
+    
+    
+      
+        <title>06. GifsApp - Componentes - F3 Martos | Angular </title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Saltar a contenido
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="F3 Martos | Angular " class="md-header__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegación</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            F3 Martos | Angular 
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              06. GifsApp - Componentes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Buscar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./.." class="md-tabs__link">
+        
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../02-conceptos-generales/" class="md-tabs__link">
+          
+  
+  Guías de Clase
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../manual/01-introduccion/" class="md-tabs__link">
+          
+  
+  Manual de Referencia
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="F3 Martos | Angular " class="md-nav__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    F3 Martos | Angular 
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guías de Clase
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guías de Clase
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-conceptos-generales/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-bases-typescript/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Bases de TypeScript
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-angular-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-expandir-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect width="8" height="8" x="14" y="2" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Expandir Bases: Componentes y Servicios
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Manual de Referencia
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Manual de Referencia
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  01. Introducción al Framework
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Creación del Proyecto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Componentes Standalone
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Plantillas y Control Flow
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Signals y Reactividad
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  06. Pipes Nativos y Custom
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  07. Comunicación entre Componentes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  08. Directivas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  09. Servicios e Inyección de Dependencias
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Cliente HTTP, APIs e Interceptores
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Angular Router y Navegación
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Formularios Reactivos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Proyección de Contenido
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Queries del DOM (viewChild)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Server-Side Rendering (SSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Integración de Librerías y UI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Proyecto Integrador Final
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/18-testing-vitest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Pruebas Unitarias y de Integración con Vitest
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ficha-tecnica-y-objetivos-didacticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Ficha Técnica y Objetivos Didácticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inicio-del-proyecto-y-configuracion-de-tailwind-css" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inicio del Proyecto y Configuración de Tailwind CSS
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inicio del Proyecto y Configuración de Tailwind CSS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-del-proyecto-con-angular-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Creación del Proyecto con Angular CLI
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instalacion-de-tailwind-css" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Instalación de Tailwind CSS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-tailwindconfigjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración de <code>tailwind.config.js</code>:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inclusion-de-directivas-en-srcstylescss" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inclusión de Directivas en <code>src/styles.css</code>:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integracion-de-fontawesome-en-srcindexhtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Integración de FontAwesome en <code>src/index.html</code>:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rutas-hijas-y-carga-perezosa-lazy-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rutas Hijas y Carga Perezosa (<em>Lazy Loading</em>)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rutas Hijas y Carga Perezosa (Lazy Loading)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-del-arbol-de-rutas-srcappapproutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración del Árbol de Rutas: <code>src/app/app.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-componente-cascaron-dashboardpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El Componente Cascarón: <code>DashboardPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descomposicion-atomica-del-menu-lateral" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Descomposición Atómica del Menú Lateral
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Descomposición Atómica del Menú Lateral">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cabecera-del-menu-sidemenuheadercomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cabecera del Menú: <code>SideMenuHeaderComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-practica-1-menu-lateral-dinamico-y-tipado-con-menuoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Tarea Práctica 1: Menú Lateral Dinámico y Tipado con <code>MenuOption</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Tarea Práctica 1: Menú Lateral Dinámico y Tipado con MenuOption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-del-reto-para-el-alumno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado del Reto para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reto-practico-intentalo-tu-mismo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso-y-explicacion-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🛠️ Solución Paso a Paso y Explicación Técnica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Solución Paso a Paso y Explicación Técnica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-crear-el-controlador-typescript-con-tipado-estricto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Crear el Controlador TypeScript con Tipado Estricto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-la-plantilla-html-declarativa-con-tailwind-css" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear la Plantilla HTML Declarativa con Tailwind CSS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analisis-de-la-solucion-y-conceptos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🔍 Análisis de la Solución y Conceptos Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errores-tipicos-del-alumno-en-esta-tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⚠️ Errores Típicos del Alumno en esta Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-didactica-para-el-docente-en-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧑‍🏫 Guía Didáctica para el Docente en el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componente-ensamblador-sidemenucomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Componente Ensamblador: <code>SideMenuComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alias-de-rutas-path-aliases-y-variables-de-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Alias de Rutas (<em>Path Aliases</em>) y Variables de Entorno
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alias de Rutas (Path Aliases) y Variables de Entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-tsconfigjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configuración de <code>tsconfig.json</code>:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generacion-de-variables-de-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Generación de Variables de Entorno:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentes-de-galeria-reutilizables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Componentes de Galería Reutilizables
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-practica-2-parametrizacion-dinamica-de-la-galeria-con-signal-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Tarea Práctica 2: Parametrización Dinámica de la Galería con Signal Inputs
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Tarea Práctica 2: Parametrización Dinámica de la Galería con Signal Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enunciado-del-reto-para-el-alumno_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📋 Enunciado del Reto para el Alumno
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reto-practico-intentalo-tu-mismo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solucion-paso-a-paso-y-explicacion-tecnica_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🛠️ Solución Paso a Paso y Explicación Técnica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Solución Paso a Paso y Explicación Técnica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-refactorizar-giflistitemcomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Refactorizar <code>GifListItemComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-refactorizar-giflistcomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Refactorizar <code>GifListComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-conectar-los-componentes-en-trendingpagecomponent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Conectar los Componentes en <code>TrendingPageComponent</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analisis-de-la-solucion-y-conceptos-clave_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🔍 Análisis de la Solución y Conceptos Clave
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errores-tipicos-del-alumno-en-esta-tarea_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ⚠️ Errores Típicos del Alumno en esta Tarea
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-didactica-para-el-docente-en-el-aula_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧑‍🏫 Guía Didáctica para el Docente en el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluacion-y-preguntas-para-el-aula" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🧪 Evaluación y Preguntas para el Aula
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-de-referencia-y-profundizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Material de Referencia y Profundización
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="seccion-06-gifsapp-pensando-en-componentes-y-tailwind-css">Sección 06: GifsApp — Pensando en Componentes y Tailwind CSS<a class="headerlink" href="#seccion-06-gifsapp-pensando-en-componentes-y-tailwind-css" title="Permanent link">&para;</a></h1>
+<p>En esta sección construimos los cimientos de nuestra aplicación profesional <strong>GifsApp</strong>. Aplicamos los principios de <strong>Componentización Atómica</strong>, configuramos <strong>Tailwind CSS en Angular 19</strong>, implementamos <strong>Rutas Hijas con Carga Perezosa (<em>Lazy Loading</em>)</strong>, configuramos <strong>Alias de Rutas (<em>Path Aliases</em>)</strong>, integramos <strong>FontAwesome</strong> y preparamos componentes de galería desacoplados alimentados mediante <strong>Signal Inputs</strong>.</p>
+<hr />
+<h2 id="ficha-tecnica-y-objetivos-didacticos">📋 Ficha Técnica y Objetivos Didácticos<a class="headerlink" href="#ficha-tecnica-y-objetivos-didacticos" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Proyecto:</strong> <code>gifs-app</code> (Nuevo proyecto generado con Angular CLI).</li>
+<li><strong>Stack Tecnológico:</strong> Angular 19+, Tailwind CSS &frac34;, FontAwesome 6, Standalone Components.</li>
+<li><strong>Patrones Arquitectónicos:</strong> Atomic Design (Layout <span class="arithmatex">\(\rightarrow\)</span> Componentes Contenedores <span class="arithmatex">\(\rightarrow\)</span> Componentes de Presentación), Lazy Loading con <code>loadComponent</code>.</li>
+<li><strong>Código Fuente de Referencia:</strong> <a href="https://github.com/DevTalles-corp/angular-gif-app/tree/fin-seccion-06">GitHub - DevTalles GifsApp (fin-seccion-06)</a></li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    subgraph CapaLayout ["1. Layout Shell y Estructura Principal"]
+        Shell["&lt;b&gt;DashboardPageComponent&lt;/b&gt;&lt;br/&gt;Componente contenedor maestro con grid layout responsive"]
+    end
+
+    subgraph CapaNavegacion ["2. Navegación Fija (SideMenu Modular)"]
+        Header["&lt;b&gt;SideMenuHeaderComponent&lt;/b&gt;&lt;br/&gt;Identidad de marca F3 Martos y avatar"] --&gt; Opts["&lt;b&gt;SideMenuOptionsComponent&lt;/b&gt;&lt;br/&gt;Opciones de menú con iconos FontAwesome y routerLink"]
+    end
+
+    subgraph CapaVistas ["3. Contenido Dinámico y Tarjetas Atómicas"]
+        Trending["&lt;b&gt;TrendingPageComponent (Lazy Loaded)&lt;/b&gt;&lt;br/&gt;Página de tendencias cargada bajo demanda"] --&gt; List["&lt;b&gt;GifListComponent &amp; GifListItemComponent&lt;/b&gt;&lt;br/&gt;Grid de tarjetas atómicas con renderizado optimizado"]
+    end
+
+    CapaLayout ==&gt; CapaNavegacion
+    CapaLayout ==&gt; CapaVistas</code></pre>
+<hr />
+<h2 id="inicio-del-proyecto-y-configuracion-de-tailwind-css">Inicio del Proyecto y Configuración de Tailwind CSS<a class="headerlink" href="#inicio-del-proyecto-y-configuracion-de-tailwind-css" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para conocer la integración de frameworks CSS (Tailwind, Bootstrap) y librerías de componentes UI en Angular 19, consulta el <strong><a href="../manual/16-integracion-librerias/">Manual de Referencia: 16. Integración de Librerías y UI</a></strong>.</p>
+</div>
+<h3 id="creacion-del-proyecto-con-angular-cli">Creación del Proyecto con Angular CLI<a class="headerlink" href="#creacion-del-proyecto-con-angular-cli" title="Permanent link">&para;</a></h3>
+<p>Generamos el proyecto configurando enrutamiento y estilos CSS nativos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ng<span class="w"> </span>new<span class="w"> </span>gifs-app<span class="w"> </span>--routing<span class="w"> </span>--style<span class="o">=</span>css<span class="w"> </span>--ssr<span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>gifs-app
+</span></code></pre></div>
+<h3 id="instalacion-de-tailwind-css">Instalación de Tailwind CSS<a class="headerlink" href="#instalacion-de-tailwind-css" title="Permanent link">&para;</a></h3>
+<p>Instalamos Tailwind y sus herramientas de procesamiento en desarrollo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>tailwindcss<span class="w"> </span>postcss<span class="w"> </span>autoprefixer
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>npx<span class="w"> </span>tailwindcss<span class="w"> </span>init
+</span></code></pre></div>
+<h3 id="configuracion-de-tailwindconfigjs">Configuración de <code>tailwind.config.js</code>:<a class="headerlink" href="#configuracion-de-tailwindconfigjs" title="Permanent link">&para;</a></h3>
+<p>Indicamos a Tailwind qué archivos debe escanear para compilar únicamente las clases CSS que estemos utilizando (<em>JIT compiler</em>):</p>
+<div class="language-javascript highlight"><span class="filename">tailwind.config.js</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">/** @type {import('tailwindcss').Config} */</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="s2">"./src/**/*.{html,ts}"</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">theme</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nx">extend</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="inclusion-de-directivas-en-srcstylescss">Inclusión de Directivas en <code>src/styles.css</code>:<a class="headerlink" href="#inclusion-de-directivas-en-srcstylescss" title="Permanent link">&para;</a></h3>
+<p>Reemplazamos el contenido de <code>src/styles.css</code> con las tres capas fundamentales de Tailwind:</p>
+<div class="language-css highlight"><span class="filename">src/styles.css</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">@</span><span class="k">tailwind</span><span class="w"> </span><span class="nt">base</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">@</span><span class="k">tailwind</span><span class="w"> </span><span class="nt">components</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">@</span><span class="k">tailwind</span><span class="w"> </span><span class="nt">utilities</span><span class="p">;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">html</span><span class="o">,</span><span class="w"> </span><span class="nt">body</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#0f172a</span><span class="p">;</span><span class="w"> </span><span class="c">/* Slate 900 */</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#f8fafc</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="integracion-de-fontawesome-en-srcindexhtml">Integración de FontAwesome en <code>src/index.html</code>:<a class="headerlink" href="#integracion-de-fontawesome-en-srcindexhtml" title="Permanent link">&para;</a></h3>
+<p>Para los iconos del menú de navegación, añadimos el CDN de FontAwesome en el <code>&lt;head&gt;</code> de <code>src/index.html</code>:</p>
+<div class="language-html highlight"><span class="filename">src/index.html</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;!doctype html&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">"es"</span><span class="p">&gt;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">&gt;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>GifsApp<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="p">&lt;</span><span class="nt">base</span> <span class="na">href</span><span class="o">=</span><span class="s">"/"</span><span class="p">&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">"viewport"</span> <span class="na">content</span><span class="o">=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="p">&gt;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="hll">  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"icon"</span> <span class="na">type</span><span class="o">=</span><span class="s">"image/x-icon"</span> <span class="na">href</span><span class="o">=</span><span class="s">"favicon.ico"</span><span class="p">&gt;</span>
+</span></span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="hll">
+</span></span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="hll">  <span class="cm">&lt;!-- FontAwesome 6 CDN para Iconografía --&gt;</span>
+</span></span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="hll">  <span class="p">&lt;</span><span class="nt">link</span>
+</span></span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="hll">    <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span>
+</span></span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="na">href</span><span class="o">=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="na">crossorigin</span><span class="o">=</span><span class="s">"anonymous"</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  <span class="p">/&gt;</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  <span class="p">&lt;</span><span class="nt">app-root</span><span class="p">&gt;&lt;/</span><span class="nt">app-root</span><span class="p">&gt;</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<hr />
+<h2 id="rutas-hijas-y-carga-perezosa-lazy-loading">Rutas Hijas y Carga Perezosa (<em>Lazy Loading</em>)<a class="headerlink" href="#rutas-hijas-y-carga-perezosa-lazy-loading" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para estudiar la división de código (<em>code-splitting</em>), rutas hijas (<code>children</code>) y protección de rutas con Guards, consulta el <strong><a href="../manual/11-router/">Manual de Referencia: 11. Angular Router y Navegación</a></strong>.</p>
+</div>
+<p>Una buena arquitectura divide la aplicación en módulos funcionales independientes. En Angular 19, utilizamos la función <strong><code>loadComponent</code></strong> en combinación con las importaciones dinámicas de TypeScript (<code>import(...)</code>) para que el navegador solo descargue el JavaScript de una página cuando el usuario entra en ella.</p>
+<h3 id="configuracion-del-arbol-de-rutas-srcappapproutests">Configuración del Árbol de Rutas: <code>src/app/app.routes.ts</code><a class="headerlink" href="#configuracion-del-arbol-de-rutas-srcappapproutests" title="Permanent link">&para;</a></h3>
+<div class="language-typescript highlight"><span class="filename">src/app/app.routes.ts</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Routes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">Routes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'dashboard'</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="c1">// Carga perezosa del Cascarón Principal (Shell)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./gifs/pages/dashboard-page/dashboard-page.component'</span><span class="p">),</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'trending'</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./gifs/pages/trending-page/trending-page.component'</span><span class="p">),</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'search'</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="nx">loadComponent</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">'./gifs/pages/search-page/search-page.component'</span><span class="p">),</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">        </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'**'</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">        </span><span class="nx">redirectTo</span><span class="o">:</span><span class="w"> </span><span class="s1">'trending'</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'**'</span><span class="p">,</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="nx">redirectTo</span><span class="o">:</span><span class="w"> </span><span class="s1">'dashboard'</span><span class="p">,</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="p">];</span>
+</span></code></pre></div>
+<h3 id="el-componente-cascaron-dashboardpagecomponent">El Componente Cascarón: <code>DashboardPageComponent</code><a class="headerlink" href="#el-componente-cascaron-dashboardpagecomponent" title="Permanent link">&para;</a></h3>
+<p>Este componente define el diseño general (<em>layout</em>): un menú lateral fijo a la izquierda y un contenedor de contenido dinámico a la derecha gobernado por <code>&lt;router-outlet /&gt;</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">src/app/gifs/pages/dashboard-page/dashboard-page.component.ts</label><label for="__tabbed_1_2">src/app/gifs/pages/dashboard-page/dashboard-page.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/pages/dashboard-page/dashboard-page.component.ts</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterOutlet</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SideMenuComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../../components/side-menu/side-menu.component'</span><span class="p">;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-dashboard-page'</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">RouterOutlet</span><span class="p">,</span><span class="w"> </span><span class="nx">SideMenuComponent</span><span class="p">],</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./dashboard-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">})</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">DashboardPageComponent</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/gifs/pages/dashboard-page/dashboard-page.component.html</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"flex h-screen bg-slate-900 text-slate-100 overflow-hidden"</span><span class="p">&gt;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="cm">&lt;!-- Menú Lateral Fijo (Ancho 64) --&gt;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="p">&lt;</span><span class="nt">gifs-side-menu</span> <span class="na">class</span><span class="o">=</span><span class="s">"w-64 flex-shrink-0"</span> <span class="p">/&gt;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="cm">&lt;!-- Contenedor Principal Dinámico con Scroll Independiente --&gt;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  <span class="p">&lt;</span><span class="nt">main</span> <span class="na">class</span><span class="o">=</span><span class="s">"flex-1 overflow-y-auto p-4 md:p-6 bg-slate-800"</span><span class="p">&gt;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="p">&lt;</span><span class="nt">router-outlet</span> <span class="p">/&gt;</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  <span class="p">&lt;/</span><span class="nt">main</span><span class="p">&gt;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="descomposicion-atomica-del-menu-lateral">Descomposición Atómica del Menú Lateral<a class="headerlink" href="#descomposicion-atomica-del-menu-lateral" title="Permanent link">&para;</a></h2>
+<p>Siguiendo el principio de <strong>Componentización Recursiva</strong>, dividimos el menú lateral en piezas independientes para facilitar su mantenimiento y evitar archivos sobrecargados:</p>
+<ol>
+<li><code>SideMenuHeaderComponent</code>: Cabecera visual, título de la aplicación y avatar del usuario.</li>
+<li><code>SideMenuOptionsComponent</code>: Lista dinámica de opciones navegables con iconos y rutas activas.</li>
+<li><code>SideMenuComponent</code>: Componente contenedor que ensambla ambas piezas.</li>
+</ol>
+<h3 id="cabecera-del-menu-sidemenuheadercomponent">Cabecera del Menú: <code>SideMenuHeaderComponent</code><a class="headerlink" href="#cabecera-del-menu-sidemenuheadercomponent" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">src/app/gifs/components/side-menu/side-menu-header/side-menu-header.component.ts</label><label for="__tabbed_2_2">src/app/gifs/components/side-menu/side-menu-header/side-menu-header.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/components/side-menu/side-menu-header/side-menu-header.component.ts</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@environments/environment'</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'gifs-side-menu-header'</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./side-menu-header.component.html'</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">})</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SideMenuHeaderComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">// Tomamos valores de configuración o constantes</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="nx">appTitle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'GifsApp'</span><span class="p">;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="nx">appSubTitle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Explorador Interactivo'</span><span class="p">;</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/gifs/components/side-menu/side-menu-header/side-menu-header.component.html</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"px-6 py-5 border-b border-slate-700 flex items-center space-x-3"</span><span class="p">&gt;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md"</span><span class="p">&gt;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="p">&lt;</span><span class="nt">i</span> <span class="na">class</span><span class="o">=</span><span class="s">"fa-solid fa-bolt text-lg"</span><span class="p">&gt;&lt;/</span><span class="nt">i</span><span class="p">&gt;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-lg font-bold text-white tracking-wide"</span><span class="p">&gt;</span>{{ appTitle }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-xs text-slate-400"</span><span class="p">&gt;</span>{{ appSubTitle }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="tarea-practica-1-menu-lateral-dinamico-y-tipado-con-menuoption">🎯 Tarea Práctica 1: Menú Lateral Dinámico y Tipado con <code>MenuOption</code><a class="headerlink" href="#tarea-practica-1-menu-lateral-dinamico-y-tipado-con-menuoption" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para dominar la definición de interfaces en TypeScript, el renderizado de listas con <code>@for</code> y la navegación activa en Angular, consulta el <strong><a href="../manual/11-router/">Manual de Referencia: 11. Angular Router y Navegación</a></strong> y el <strong><a href="../manual/04-plantillas/">Manual de Referencia: 04. Plantillas y Control Flow</a></strong>.</p>
+</div>
+<p>En la arquitectura del panel de control (<em>Dashboard</em>), un menú lateral estático con enlaces duplicados en HTML es difícil de mantener y propenso a inconsistencias. En esta práctica aplicaremos el principio de <strong>Separación de Responsabilidades</strong> para construir un componente navegable autónomo y fuertemente tipado: <code>SideMenuOptionsComponent</code>.</p>
+<hr />
+<h3 id="enunciado-del-reto-para-el-alumno">📋 Enunciado del Reto para el Alumno<a class="headerlink" href="#enunciado-del-reto-para-el-alumno" title="Permanent link">&para;</a></h3>
+<p>Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:</p>
+<ol>
+<li><strong>Definición del contrato de datos:</strong> En <code>src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts</code>, declara una interfaz llamada <code>MenuOption</code> que contenga las siguientes propiedades obligatorias:</li>
+<li><code>icon</code>: string con la clase del icono de FontAwesome (por ejemplo <code>'fa-solid fa-chart-line'</code>).</li>
+<li><code>label</code>: string con el título principal de la opción (por ejemplo <code>'Trending'</code>).</li>
+<li><code>subLabel</code>: string con una descripción secundaria breve (por ejemplo <code>'Gifs Populares'</code>).</li>
+<li><code>route</code>: string con la ruta absoluta del Dashboard (por ejemplo <code>'/dashboard/trending'</code>).</li>
+<li><strong>Colección tipada de rutas:</strong> Dentro de la clase <code>SideMenuOptionsComponent</code>, inicializa una propiedad <code>menuOptions</code> de tipo <code>MenuOption[]</code> que contenga las dos opciones de navegación principales:</li>
+<li><strong>Trending:</strong> Icono <code>'fa-solid fa-chart-line'</code>, título <code>'Trending'</code>, subtítulo <code>'Gifs Populares'</code>, ruta <code>'/dashboard/trending'</code>.</li>
+<li><strong>Buscador:</strong> Icono <code>'fa-solid fa-magnifying-glass'</code>, título <code>'Buscador'</code>, subtítulo <code>'Buscar Gifs'</code>, ruta <code>'/dashboard/search'</code>.</li>
+<li><strong>Plantilla declarativa con Control Flow:</strong> En <code>side-menu-options.component.html</code>, reemplaza cualquier enlace estático por una estructura iterativa utilizando la directiva nativa <code>@for (item of menuOptions; track item.route)</code>.</li>
+<li><strong>Navegación y estilos activos:</strong></li>
+<li>Enlaza cada opción mediante property binding: <code>[routerLink]="item.route"</code>.</li>
+<li>Configura la clase CSS que se activará cuando la ruta esté seleccionada usando: <code>routerLinkActive="bg-blue-600 text-white shadow-lg"</code>.</li>
+<li>Asegúrate de importar <code>RouterLink</code> y <code>RouterLinkActive</code> en el arreglo <code>imports</code> del componente standalone.</li>
+<li><strong>Criterios de éxito y verificación:</strong></li>
+<li>Abre <code>http://localhost:4200/dashboard/trending</code> en tu navegador.</li>
+<li>La opción "Trending" debe aparecer resaltada con fondo azul (<code>bg-blue-600</code>) y sombra.</li>
+<li>Haz clic en "Buscador": la URL debe cambiar fluidamente a <code>/dashboard/search</code> sin recargar la página, y el resalte azul debe trasladarse de inmediato a la opción "Buscador".</li>
+</ol>
+<hr />
+<h3 id="reto-practico-intentalo-tu-mismo">⏸️ Reto Práctico: ¡Inténtalo tú mismo!<a class="headerlink" href="#reto-practico-intentalo-tu-mismo" title="Permanent link">&para;</a></h3>
+<div class="admonition exercise">
+<p class="admonition-title">Pausa de Trabajo Autónomo</p>
+<p>Implementa la interfaz, la colección de opciones y la plantilla iterativa en tu editor antes de verificar la solución técnica.</p>
+<p><em>Criterio de éxito:</em> Menú renderizado dinámicamente mediante <code>@for</code> y navegación SPA reactiva con clases activas sincronizadas.</p>
+</div>
+<hr />
+<h3 id="solucion-paso-a-paso-y-explicacion-tecnica">🛠️ Solución Paso a Paso y Explicación Técnica<a class="headerlink" href="#solucion-paso-a-paso-y-explicacion-tecnica" title="Permanent link">&para;</a></h3>
+<h4 id="paso-1-crear-el-controlador-typescript-con-tipado-estricto">Paso 1: Crear el Controlador TypeScript con Tipado Estricto<a class="headerlink" href="#paso-1-crear-el-controlador-typescript-con-tipado-estricto" title="Permanent link">&para;</a></h4>
+<p>En <code>src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterLink</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLinkActive</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/router'</span><span class="p">;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="hll"><span class="kd">interface</span><span class="w"> </span><span class="nx">MenuOption</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="hll"><span class="w">  </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span></span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="hll"><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span></span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="hll"><span class="w">  </span><span class="nx">subLabel</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span></span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="hll"><span class="w">  </span><span class="nx">route</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span></span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="hll"><span class="p">}</span>
+</span></span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'gifs-side-menu-options'</span><span class="p">,</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="hll"><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">RouterLink</span><span class="p">,</span><span class="w"> </span><span class="nx">RouterLinkActive</span><span class="p">],</span>
+</span></span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./side-menu-options.component.html'</span><span class="p">,</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="p">})</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SideMenuOptionsComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="hll"><span class="w">  </span><span class="nx">menuOptions</span><span class="o">:</span><span class="w"> </span><span class="kt">MenuOption</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span></span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="hll"><span class="w">    </span><span class="p">{</span>
+</span></span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="hll"><span class="w">      </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">'fa-solid fa-chart-line'</span><span class="p">,</span>
+</span></span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="hll"><span class="w">      </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">'Trending'</span><span class="p">,</span>
+</span></span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="hll"><span class="w">      </span><span class="nx">subLabel</span><span class="o">:</span><span class="w"> </span><span class="s1">'Gifs Populares'</span><span class="p">,</span>
+</span></span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="hll"><span class="w">      </span><span class="nx">route</span><span class="o">:</span><span class="w"> </span><span class="s1">'/dashboard/trending'</span><span class="p">,</span>
+</span></span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="hll"><span class="w">    </span><span class="p">},</span>
+</span></span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="hll"><span class="w">    </span><span class="p">{</span>
+</span></span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="hll"><span class="w">      </span><span class="nx">icon</span><span class="o">:</span><span class="w"> </span><span class="s1">'fa-solid fa-magnifying-glass'</span><span class="p">,</span>
+</span></span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="hll"><span class="w">      </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">'Buscador'</span><span class="p">,</span>
+</span></span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="hll"><span class="w">      </span><span class="nx">subLabel</span><span class="o">:</span><span class="w"> </span><span class="s1">'Buscar Gifs'</span><span class="p">,</span>
+</span></span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="hll"><span class="w">      </span><span class="nx">route</span><span class="o">:</span><span class="w"> </span><span class="s1">'/dashboard/search'</span><span class="p">,</span>
+</span></span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="hll"><span class="w">    </span><span class="p">},</span>
+</span></span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="hll"><span class="w">  </span><span class="p">];</span>
+</span></span><span id="__span-10-31"><a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="hll"><span class="p">}</span>
+</span></span></code></pre></div>
+<h4 id="paso-2-crear-la-plantilla-html-declarativa-con-tailwind-css">Paso 2: Crear la Plantilla HTML Declarativa con Tailwind CSS<a class="headerlink" href="#paso-2-crear-la-plantilla-html-declarativa-con-tailwind-css" title="Permanent link">&para;</a></h4>
+<p>En <code>src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.html</code>:</p>
+<div class="language-html highlight"><span class="filename">src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.html</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"nav"</span> <span class="na">class</span><span class="o">=</span><span class="s">"w-full px-4 py-4 space-y-1"</span><span class="p">&gt;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="hll">  @for (item of menuOptions; track item.route) {
+</span></span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="p">&lt;</span><span class="nt">a</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="hll">      <span class="err">[</span><span class="na">routerLink</span><span class="err">]="</span><span class="na">item</span><span class="err">.</span><span class="na">route</span><span class="err">"</span>
+</span></span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="hll">      <span class="na">routerLinkActive</span><span class="o">=</span><span class="s">"bg-blue-600 text-white shadow-lg"</span>
+</span></span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>      <span class="na">class</span><span class="o">=</span><span class="s">"w-full px-3 py-3 inline-flex space-x-3 items-center text-slate-300 hover:bg-slate-800 hover:text-white transition duration-150 rounded-lg cursor-pointer"</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="p">&gt;</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"w-6 text-center text-lg"</span><span class="p">&gt;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">i</span> <span class="err">[</span><span class="na">class</span><span class="err">]="</span><span class="na">item</span><span class="err">.</span><span class="na">icon</span><span class="err">"</span><span class="p">&gt;&lt;/</span><span class="nt">i</span><span class="p">&gt;</span>
+</span></span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"flex flex-col"</span><span class="p">&gt;</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-sm font-semibold"</span><span class="p">&gt;</span>{{ item.label }}<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span></span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-xs text-slate-400"</span><span class="p">&gt;</span>{{ item.subLabel }}<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+</span></span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>  }
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="analisis-de-la-solucion-y-conceptos-clave">🔍 Análisis de la Solución y Conceptos Clave<a class="headerlink" href="#analisis-de-la-solucion-y-conceptos-clave" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Beneficios de la Colección Declarativa (<code>MenuOption[]</code>):</strong></li>
+<li>Desacopla los datos de la presentación visual. Si en el futuro se añade una tercera pantalla (por ejemplo, "Favoritos" o "Historial"), solo se requiere agregar un nuevo objeto al arreglo <code>menuOptions</code>, sin tocar la estructura HTML de la plantilla.</li>
+<li><strong>Optimización con <code>track item.route</code>:</strong></li>
+<li>En Angular moderno, el parámetro <code>track</code> de la directiva <code>@for</code> es mandatorio. Al usar una clave única como <code>item.route</code>, el algoritmo de renderizado de Angular puede identificar de forma determinista qué nodo del DOM corresponde a cada opción, evitando recreaciones innecesarias del árbol de elementos.</li>
+<li><strong>Gestión de Clases Activas (<code>routerLinkActive</code>):</strong></li>
+<li>Angular supervisa las transiciones del router y aplica automáticamente las clases CSS especificadas en <code>routerLinkActive</code> únicamente al elemento cuya ruta coincide con la URL activa en el navegador.</li>
+</ol>
+<hr />
+<h3 id="errores-tipicos-del-alumno-en-esta-tarea">⚠️ Errores Típicos del Alumno en esta Tarea<a class="headerlink" href="#errores-tipicos-del-alumno-en-esta-tarea" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Error Común</th>
+<th style="text-align: left;">Síntoma en el Navegador</th>
+<th style="text-align: left;">Causa y Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Olvidar importar <code>RouterLink</code> y <code>RouterLinkActive</code></td>
+<td style="text-align: left;">Error de compilación: <em>Can't bind to 'routerLink' since it isn't a known property of 'a'</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> En componentes standalone, las directivas del enrutador deben incluirse explícitamente en el arreglo <code>imports</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Usar rutas relativas <code>'trending'</code> en lugar de <code>'/dashboard/trending'</code></td>
+<td style="text-align: left;">La navegación falla o se anida incorrectamente en la URL al hacer clics repetidos.</td>
+<td style="text-align: left;"><strong>Causa:</strong> Las rutas relativas dependen del segmento actual. <br/><strong>Solución:</strong> Usar rutas absolutas que inicien con barra: <code>'/dashboard/trending'</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Omitir el parámetro <code>track</code> en <code>@for</code></td>
+<td style="text-align: left;">Error de compilación en la plantilla: <em>@for statement must have a 'track' expression</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> En el nuevo Control Flow de Angular, <code>track</code> es obligatorio por diseño.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Clases de FontAwesome no visibles</td>
+<td style="text-align: left;">Aparecen cuadrados vacíos o texto sin icono.</td>
+<td style="text-align: left;"><strong>Causa:</strong> No haberse importado la hoja de estilos de FontAwesome en <code>src/index.html</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="guia-didactica-para-el-docente-en-el-aula">🧑‍🏫 Guía Didáctica para el Docente en el Aula<a class="headerlink" href="#guia-didactica-para-el-docente-en-el-aula" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Estrategia para Guiar esta Práctica en Clase</p>
+<ol>
+<li><strong>Demostración de escalabilidad:</strong> Pida a los estudiantes que añadan una tercera opción ficticia (<code>{ icon: 'fa-solid fa-heart', label: 'Favoritos', subLabel: 'Mis Gifs', route: '/dashboard/favorites' }</code>) solo modificando el arreglo TypeScript. Al ver cómo la plantilla se actualiza automáticamente respetando estilos y layout, entenderán el principio de código DRY (Don't Repeat Yourself).</li>
+<li><strong>Inspección de routerLinkActive:</strong> Guíe a los alumnos para que abran las herramientas de desarrollo (F12) e inspeccionen los atributos <code>class</code> de las etiquetas <code>&lt;a&gt;</code> mientras navegan entre "Trending" y "Buscador" para constatar en vivo cómo Angular gestiona las clases CSS dinámicas.</li>
+</ol>
+</div>
+<hr />
+<h3 id="componente-ensamblador-sidemenucomponent">Componente Ensamblador: <code>SideMenuComponent</code><a class="headerlink" href="#componente-ensamblador-sidemenucomponent" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">src/app/gifs/components/side-menu/side-menu.component.ts</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/components/side-menu/side-menu.component.ts</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SideMenuHeaderComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./side-menu-header/side-menu-header.component'</span><span class="p">;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SideMenuOptionsComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./side-menu-options/side-menu-options.component'</span><span class="p">;</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'gifs-side-menu'</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">SideMenuHeaderComponent</span><span class="p">,</span><span class="w"> </span><span class="nx">SideMenuOptionsComponent</span><span class="p">],</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="sb">    &lt;div class="bg-slate-900 border-r border-slate-800 h-full flex flex-col"&gt;</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="sb">      &lt;gifs-side-menu-header /&gt;</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="sb">      &lt;gifs-side-menu-options class="flex-1" /&gt;</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="sb">    &lt;/div&gt;</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="p">})</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">SideMenuComponent</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="alias-de-rutas-path-aliases-y-variables-de-entorno">Alias de Rutas (<em>Path Aliases</em>) y Variables de Entorno<a class="headerlink" href="#alias-de-rutas-path-aliases-y-variables-de-entorno" title="Permanent link">&para;</a></h2>
+<p>A medida que una aplicación crece, escribir rutas relativas como <code>../../../../environments/environment</code> resulta propenso a errores y poco profesional. En Angular configuramos <strong>Path Aliases</strong> en TypeScript.</p>
+<h3 id="configuracion-de-tsconfigjson">Configuración de <code>tsconfig.json</code>:<a class="headerlink" href="#configuracion-de-tsconfigjson" title="Permanent link">&para;</a></h3>
+<p>Abrimos el archivo <code>tsconfig.json</code> en la raíz del proyecto y agregamos las propiedades <code>baseUrl</code> y <code>paths</code>:</p>
+<div class="language-json highlight"><span class="filename">tsconfig.json</span><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">"baseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./"</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="hll"><span class="w">    </span><span class="nt">"paths"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="hll"><span class="w">      </span><span class="nt">"@environments/*"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"src/environments/*"</span><span class="p">],</span>
+</span></span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="hll"><span class="w">      </span><span class="nt">"@gifs/*"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"src/app/gifs/*"</span><span class="p">],</span>
+</span></span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="hll"><span class="w">      </span><span class="nt">"@shared/*"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"src/app/shared/*"</span><span class="p">]</span>
+</span></span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="hll"><span class="w">    </span><span class="p">}</span>
+</span></span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="hll"><span class="w">  </span><span class="p">}</span>
+</span></span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="hll"><span class="p">}</span>
+</span></span></code></pre></div>
+<p>Ahora podemos importar desde cualquier lugar con:
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@environments/environment'</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">GifListComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@gifs/components/gif-list/gif-list.component'</span><span class="p">;</span>
+</span></code></pre></div></p>
+<h3 id="generacion-de-variables-de-entorno">Generación de Variables de Entorno:<a class="headerlink" href="#generacion-de-variables-de-entorno" title="Permanent link">&para;</a></h3>
+<p>Creamos los entornos de trabajo con el CLI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ng<span class="w"> </span>g<span class="w"> </span>environments
+</span></code></pre></div>
+<p>Esto genera <code>src/environments/environment.ts</code>:</p>
+<div class="language-typescript highlight"><span class="filename">src/environments/environment.ts</span><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nx">production</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nx">giphyApiKey</span><span class="o">:</span><span class="w"> </span><span class="s1">'TU_API_KEY_DE_GIPHY'</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nx">giphyUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'https://api.giphy.com/v1'</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">};</span>
+</span></code></pre></div>
+<hr />
+<h2 id="componentes-de-galeria-reutilizables">Componentes de Galería Reutilizables<a class="headerlink" href="#componentes-de-galeria-reutilizables" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para profundizar en la creación de componentes independientes y reutilizables con señales de entrada, consulta el <strong><a href="../manual/03-componentes/">Manual de Referencia: 03. Componentes Standalone</a></strong> y <strong><a href="../manual/07-anidar-componentes/">Manual de Referencia: 07. Comunicación entre Componentes</a></strong>.</p>
+</div>
+<p>Separamos la visualización de las imágenes en dos componentes desacoplados inspirados en los diseños de Flowbite:</p>
+<ul>
+<li><code>GifListItemComponent</code>: Componente atómico responsable de una única imagen.</li>
+<li><code>GifListComponent</code>: Componente contenedor de cuadrícula (<em>grid</em>) responsive.</li>
+</ul>
+<hr />
+<h2 id="tarea-practica-2-parametrizacion-dinamica-de-la-galeria-con-signal-inputs">🎯 Tarea Práctica 2: Parametrización Dinámica de la Galería con Signal Inputs<a class="headerlink" href="#tarea-practica-2-parametrizacion-dinamica-de-la-galeria-con-signal-inputs" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">📖 Para saber más: Manual de Referencia</p>
+<p>Para dominar la API moderna de entradas reactivas <code>input()</code>, <code>input.required()</code> y la comunicación de componentes en Angular, consulta el <strong><a href="../manual/07-anidar-componentes/">Manual de Referencia: 07. Comunicación entre Componentes</a></strong> y el <strong><a href="../manual/05-signals/">Manual de Referencia: 05. Signals y Reactividad</a></strong>.</p>
+</div>
+<p>En el diseño inicial de la aplicación, los componentes de cuadrícula visualizaban imágenes estáticas predefinidas en el código HTML. Para que nuestra galería sea un sistema de presentación verdaderamente profesional y reutilizable, debemos convertir tanto el elemento individual (<code>GifListItemComponent</code>) como la cuadrícula contenedora (<code>GifListComponent</code>) en <strong>Componentes Tontos o Presentacionales (<em>Dumb Components</em>)</strong> altamente desacoplados, alimentados mediante <strong>Signal Inputs obligatorios (<code>input.required()</code>)</strong>.</p>
+<hr />
+<h3 id="enunciado-del-reto-para-el-alumno_1">📋 Enunciado del Reto para el Alumno<a class="headerlink" href="#enunciado-del-reto-para-el-alumno_1" title="Permanent link">&para;</a></h3>
+<p>Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:</p>
+<ol>
+<li><strong>Parametrización del Item Individual (<code>GifListItemComponent</code>):</strong></li>
+<li>En <code>src/app/gifs/components/gif-list/gif-list-item/gif-list-item.component.ts</code>, sustituye cualquier URL fija por una propiedad de entrada reactiva obligatoria llamada <code>imageUrl</code> utilizando la función <code>input.required&lt;string&gt;()</code>.</li>
+<li>En <code>gif-list-item.component.html</code>, enlaza la propiedad <code>src</code> de la etiqueta <code>&lt;img&gt;</code> al valor emitido por la señal: <code>[src]="imageUrl()"</code>.</li>
+<li><strong>Parametrización de la Cuadrícula (<code>GifListComponent</code>):</strong></li>
+<li>En <code>src/app/gifs/components/gif-list/gif-list.component.ts</code>, declara una propiedad de entrada reactiva obligatoria llamada <code>gifs</code> que reciba un arreglo de strings: <code>gifs = input.required&lt;string[]&gt;()</code>.</li>
+<li>En <code>gif-list.component.html</code>, elimina los elementos duplicados e implementa la iteración con <code>@for (gif of gifs(); track gif)</code>, instanciando el componente hijo para cada elemento: <code>&lt;gif-list-item [imageUrl]="gif" /&gt;</code>.</li>
+<li>Añade el bloque <code>@empty</code> para mostrar un mensaje amigable con icono cuando no haya imágenes disponibles.</li>
+<li><strong>Consumo en la Página Contenedora (<code>TrendingPageComponent</code>):</strong></li>
+<li>En <code>src/app/gifs/pages/trending-page/trending-page.component.ts</code>, declara un arreglo constante con URLs de prueba (<code>imageUrls</code>) y define una señal reactiva que custodie este estado: <code>gifs = signal(imageUrls)</code>.</li>
+<li>En <code>trending-page.component.html</code>, consume el componente de cuadrícula vinculando el arreglo reactivo: <code>&lt;gif-list [gifs]="gifs()" /&gt;</code>.</li>
+<li><strong>Criterios de éxito y verificación:</strong></li>
+<li>La aplicación debe compilar de forma limpia sin errores de TypeScript ni advertencias en consola.</li>
+<li>Al acceder a <code>http://localhost:4200/dashboard/trending</code>, deben renderizarse las 12 imágenes del arreglo de prueba distribuidas en la cuadrícula responsive (1 columna en móvil, 2 en pantallas pequeñas, 3 en pantallas medianas y 4 en pantallas grandes gracias a Tailwind CSS).</li>
+<li>Si se inicializa la señal con un arreglo vacío (<code>signal([])</code>), el bloque <code>@empty</code> debe mostrarse correctamente en pantalla.</li>
+</ol>
+<hr />
+<h3 id="reto-practico-intentalo-tu-mismo_1">⏸️ Reto Práctico: ¡Inténtalo tú mismo!<a class="headerlink" href="#reto-practico-intentalo-tu-mismo_1" title="Permanent link">&para;</a></h3>
+<div class="admonition exercise">
+<p class="admonition-title">Pausa de Trabajo Autónomo</p>
+<p>Refactoriza los dos componentes de la galería y conéctalos en <code>TrendingPageComponent</code> de forma autónoma en tu editor antes de revisar la solución detallada.</p>
+<p><em>Criterio de éxito:</em> Galería completamente desacoplada y gobernada por Signal Inputs, con soporte para lista vacía y diseño adaptable.</p>
+</div>
+<hr />
+<h3 id="solucion-paso-a-paso-y-explicacion-tecnica_1">🛠️ Solución Paso a Paso y Explicación Técnica<a class="headerlink" href="#solucion-paso-a-paso-y-explicacion-tecnica_1" title="Permanent link">&para;</a></h3>
+<h4 id="paso-1-refactorizar-giflistitemcomponent">Paso 1: Refactorizar <code>GifListItemComponent</code><a class="headerlink" href="#paso-1-refactorizar-giflistitemcomponent" title="Permanent link">&para;</a></h4>
+<p>Convertimos el elemento atómico en un componente puramente presentacional que exige su URL mediante <code>input.required&lt;string&gt;()</code>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">src/app/gifs/components/gif-list/gif-list-item/gif-list-item.component.ts</label><label for="__tabbed_4_2">src/app/gifs/components/gif-list/gif-list-item/gif-list-item.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/components/gif-list/gif-list-item/gif-list-item.component.ts</span><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span></span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'gif-list-item'</span><span class="p">,</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./gif-list-item.component.html'</span><span class="p">,</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">})</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">GifListItemComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="hll"><span class="w">  </span><span class="nx">imageUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="p">.</span><span class="nx">required</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/gifs/components/gif-list/gif-list-item/gif-list-item.component.html</span><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-slate-800"</span><span class="p">&gt;</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  <span class="p">&lt;</span><span class="nt">img</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="na">class</span><span class="o">=</span><span class="s">"h-48 w-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300"</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="hll">    <span class="err">[</span><span class="na">src</span><span class="err">]="</span><span class="na">imageUrl</span><span class="err">()"</span>
+</span></span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="na">alt</span><span class="o">=</span><span class="s">"Gif image"</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="na">loading</span><span class="o">=</span><span class="s">"lazy"</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  <span class="p">/&gt;</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="paso-2-refactorizar-giflistcomponent">Paso 2: Refactorizar <code>GifListComponent</code><a class="headerlink" href="#paso-2-refactorizar-giflistcomponent" title="Permanent link">&para;</a></h4>
+<p>Definimos la entrada obligatoria <code>gifs = input.required&lt;string[]&gt;()</code> y renderizamos dinámicamente cada tarjeta:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">src/app/gifs/components/gif-list/gif-list.component.ts</label><label for="__tabbed_5_2">src/app/gifs/components/gif-list/gif-list.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/components/gif-list/gif-list.component.ts</span><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="hll"><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span></span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">GifListItemComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./gif-list-item/gif-list-item.component'</span><span class="p">;</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'gif-list'</span><span class="p">,</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">GifListItemComponent</span><span class="p">],</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./gif-list.component.html'</span><span class="p">,</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="p">})</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="hll"><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">GifListComponent</span><span class="w"> </span><span class="p">{</span>
+</span></span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">  </span><span class="nx">gifs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="p">.</span><span class="nx">required</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">();</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/gifs/components/gif-list/gif-list.component.html</span><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"</span><span class="p">&gt;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="hll">  @for (gif of gifs(); track gif) {
+</span></span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="hll">    <span class="p">&lt;</span><span class="nt">gif-list-item</span> <span class="err">[</span><span class="na">imageUrl</span><span class="err">]="</span><span class="na">gif</span><span class="err">"</span> <span class="p">/&gt;</span>
+</span></span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="hll">  } @empty {
+</span></span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="hll">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"col-span-full py-12 text-center text-slate-400"</span><span class="p">&gt;</span>
+</span></span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="hll">      <span class="p">&lt;</span><span class="nt">i</span> <span class="na">class</span><span class="o">=</span><span class="s">"fa-regular fa-image text-4xl mb-3"</span><span class="p">&gt;&lt;/</span><span class="nt">i</span><span class="p">&gt;</span>
+</span></span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="hll">      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>No hay imágenes disponibles para mostrar.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="hll">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  }
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="paso-3-conectar-los-componentes-en-trendingpagecomponent">Paso 3: Conectar los Componentes en <code>TrendingPageComponent</code><a class="headerlink" href="#paso-3-conectar-los-componentes-en-trendingpagecomponent" title="Permanent link">&para;</a></h4>
+<p>En la página contenedora, declaramos la colección de datos de prueba y alimentamos el componente de cuadrícula:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">src/app/gifs/pages/trending-page/trending-page.component.ts</label><label for="__tabbed_6_2">src/app/gifs/pages/trending-page/trending-page.component.html</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-typescript highlight"><span class="filename">src/app/gifs/pages/trending-page/trending-page.component.ts</span><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">GifListComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'../../components/gif-list/gif-list.component'</span><span class="p">;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="hll"><span class="kd">const</span><span class="w"> </span><span class="nx">defaultImageUrls</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span></span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="hll"><span class="w">  </span><span class="s1">'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg'</span><span class="p">,</span>
+</span></span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="hll"><span class="p">];</span>
+</span></span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-trending-page'</span><span class="p">,</span>
+</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="w">  </span><span class="nx">imports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">GifListComponent</span><span class="p">],</span>
+</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./trending-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">})</span>
+</span><span id="__span-21-24"><a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">TrendingPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-21-25"><a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a><span class="hll"><span class="w">  </span><span class="nx">gifs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">defaultImageUrls</span><span class="p">);</span>
+</span></span><span id="__span-21-26"><a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-html highlight"><span class="filename">src/app/gifs/pages/trending-page/trending-page.component.html</span><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">"py-4"</span><span class="p">&gt;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  <span class="p">&lt;</span><span class="nt">h2</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-2xl font-bold text-white mb-4"</span><span class="p">&gt;</span>Gifs Populares (Tendencias)<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  <span class="cm">&lt;!-- Consumo del componente reutilizable pasando la señal desempaquetada --&gt;</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="hll">  <span class="p">&lt;</span><span class="nt">gif-list</span> <span class="err">[</span><span class="na">gifs</span><span class="err">]="</span><span class="na">gifs</span><span class="err">()"</span> <span class="p">/&gt;</span>
+</span></span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h3 id="analisis-de-la-solucion-y-conceptos-clave_1">🔍 Análisis de la Solución y Conceptos Clave<a class="headerlink" href="#analisis-de-la-solucion-y-conceptos-clave_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>La Revolución de <code>input.required&lt;T&gt;()</code> en Angular 19+:</strong></li>
+<li>Sustituye al decorador clásico <code>@Input({ required: true })</code>. Al ser una función reactiva que devuelve una <code>InputSignal&lt;T&gt;</code>, el compilador de Angular realiza una verificación estricta en tiempo de construcción: si el componente padre olvida suministrar el atributo <code>[gifs]</code> o <code>[imageUrl]</code>, la aplicación no compila, eliminando errores en tiempo de ejecución.</li>
+<li><strong>Lectura de Señales en Plantillas (<code>imageUrl()</code> y <code>gifs()</code>):</strong></li>
+<li>Debido a que las entradas basadas en Signal son funciones de lectura de solo lectura (<em>read-only Signals</em>), en el archivo HTML es imprescindible invocar la señal con paréntesis: <code>[src]="imageUrl()"</code>.</li>
+<li><strong>Arquitectura Dumb / Presentacional Pura:</strong></li>
+<li>Ni <code>GifListComponent</code> ni <code>GifListItemComponent</code> conocen la procedencia de los datos (si vienen de una API externa, de LocalStorage o de un arreglo fijo). Esta ausencia total de dependencias permite reutilizar exactamente los mismos componentes en la página de tendencias, en la página de búsquedas o en cualquier otra sección del proyecto sin modificar su código.</li>
+</ol>
+<hr />
+<h3 id="errores-tipicos-del-alumno-en-esta-tarea_1">⚠️ Errores Típicos del Alumno en esta Tarea<a class="headerlink" href="#errores-tipicos-del-alumno-en-esta-tarea_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Error Común</th>
+<th style="text-align: left;">Síntoma en el Navegador</th>
+<th style="text-align: left;">Causa y Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Omitir paréntesis en la plantilla: <code>[src]="imageUrl"</code></td>
+<td style="text-align: left;">En la pantalla la imagen no carga o aparece <code>[object Object]</code> en el atributo <code>src</code>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> <code>imageUrl</code> es una señal (función); debe ejecutarse como <code>imageUrl()</code> para obtener el valor primitivo string.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Olvidar pasar el input requerido en el padre: <code>&lt;gif-list /&gt;</code></td>
+<td style="text-align: left;">Error de compilación estricto: <em>Required input 'gifs' has not been provided</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> <code>input.required()</code> exige obligatoriamente suministrar el binding: <code>&lt;gif-list [gifs]="gifs()" /&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Olvidar importar <code>GifListItemComponent</code> en <code>GifListComponent</code></td>
+<td style="text-align: left;">Error de compilación: <em>'gif-list-item' is not a known element</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> En componentes standalone, los componentes hijos deben registrarse en el array <code>imports</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pasar la señal completa sin invocar en el binding del padre: <code>[gifs]="gifs"</code></td>
+<td style="text-align: left;">Advertencia o error de tipos: <em>Signal<string[]> is not assignable to string[]</em>.</td>
+<td style="text-align: left;"><strong>Causa:</strong> El input espera un arreglo <code>string[]</code>. Debe pasarse <code>[gifs]="gifs()"</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="guia-didactica-para-el-docente-en-el-aula_1">🧑‍🏫 Guía Didáctica para el Docente en el Aula<a class="headerlink" href="#guia-didactica-para-el-docente-en-el-aula_1" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Estrategia para Guiar esta Práctica en Clase</p>
+<ol>
+<li><strong>La prueba del error de compilación:</strong> Pida a los alumnos que eliminen intencionadamente <code>[gifs]="gifs()"</code> en <code>trending-page.component.html</code>. Muéstreles cómo la consola de Angular señala con precisión quirúrgica que el input obligatorio no fue provisto. Esto consolida el enorme valor de seguridad de tipos que introduce <code>input.required()</code>.</li>
+<li><strong>Demostración del bloque <code>@empty</code>:</strong> Indique a los estudiantes que cambien temporalmente la señal en <code>TrendingPageComponent</code> a <code>gifs = signal([])</code>. Al guardar y ver aparecer de inmediato el mensaje con icono de <em>"No hay imágenes disponibles para mostrar"</em>, quedará demostrada la elegancia del nuevo Control Flow sin necesidad de anidar directivas condicionales.</li>
+</ol>
+</div>
+<hr />
+<h2 id="evaluacion-y-preguntas-para-el-aula">🧪 Evaluación y Preguntas para el Aula<a class="headerlink" href="#evaluacion-y-preguntas-para-el-aula" title="Permanent link">&para;</a></h2>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 1: ¿Por qué utilizamos <code>loadComponent</code> en lugar de importar el componente directamente en <code>app.routes.ts</code>?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p>Porque habilita la <strong>Carga Perezosa (Lazy Loading)</strong>. El navegador solo descarga el código JavaScript del componente en el momento exacto en que el usuario navega a esa ruta, acelerando drásticamente la carga inicial de la aplicación.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 2: ¿Qué ventaja ofrece separar <code>GifListComponent</code> de <code>GifListItemComponent</code>?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p>Cumple el principio de responsabilidad única. <code>GifListComponent</code> controla la cuadrícula y la iteración, mientras que <code>GifListItemComponent</code> controla la presentación, carga y posibles efectos visuales de la tarjeta individual.</p>
+</details>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Pregunta 3: ¿Qué problema resuelven los Path Aliases en <code>tsconfig.json</code>?</p>
+<details class="success">
+<summary>Respuesta</summary>
+<p>Evitan el uso de rutas relativas frágiles y complejas (<code>../../../../</code>), permitiendo importar módulos mediante nombres limpios y absolutos (<code>@gifs/components/...</code>), lo que hace que refactorizar o mover archivos de carpeta no rompa las importaciones.</p>
+</details>
+</div>
+<hr />
+<h2 id="material-de-referencia-y-profundizacion">📖 Material de Referencia y Profundización<a class="headerlink" href="#material-de-referencia-y-profundizacion" title="Permanent link">&para;</a></h2>
+<p>Para consultar las especificaciones técnicas completas de los conceptos vistos en esta sección:</p>
+<ul>
+<li><strong><a href="../manual/03-componentes/">Manual de Referencia: 03. Componentes Standalone</a>:</strong> Arquitectura y buenas prácticas en la descomposición de componentes.</li>
+<li><strong><a href="../manual/07-anidar-componentes/">Manual de Referencia: 07. Comunicación entre Componentes</a>:</strong> Señales de entrada obligatorias (<code>input.required&lt;T&gt;()</code>) y tipado seguro.</li>
+<li><strong><a href="../manual/11-router/">Manual de Referencia: 11. Angular Router y Navegación</a>:</strong> Rutas anidadas (<code>children</code>), cascarones de layout y división de código (<em>code-splitting</em>).</li>
+<li><strong><a href="../manual/16-integracion-librerias/">Manual de Referencia: 16. Integración de Librerías y UI</a>:</strong> Guía exhaustiva de integración y personalización de Tailwind CSS en Angular 19.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.77dd0ce9.min.js"></script>
+      
+    
+  </body>
+</html>

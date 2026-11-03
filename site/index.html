@@ -1,0 +1,1686 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guía docente, código paso a paso y manual de referencia para el aula - Angular">
+      
+      
+      
+      
+      
+      
+        <link rel="next" href="./02-conceptos-generales/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="./assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.73">
+    
+    
+      
+        <title>Inicio - F3 Martos | Angular </title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="./assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="./assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="./assets/css/custom.css">
+    
+    <script>__md_scope=new URL(".",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Saltar a contenido
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="" title="F3 Martos | Angular " class="md-header__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navegación</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            F3 Martos | Angular 
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inicio
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Buscar</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="" class="md-tabs__link">
+        
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="./02-conceptos-generales/" class="md-tabs__link">
+          
+  
+  Guías de Clase
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="./manual/01-introduccion/" class="md-tabs__link">
+          
+  
+  Manual de Referencia
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="" title="F3 Martos | Angular " class="md-nav__button md-logo" aria-label="F3 Martos | Angular " data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    F3 Martos | Angular 
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="" class="md-nav__link md-nav__link--active">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open-check" viewBox="0 0 24 24"><path d="M12 5v16M16 12l2 2 4-4"/><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Inicio
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#filosofia-y-metodologia-pedagogica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Filosofía y Metodología Pedagógica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Filosofía y Metodología Pedagógica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principios-de-arquitectura-aplicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Principios de Arquitectura Aplicados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-clase-seguimiento-de-videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📹 Guías de Clase (Seguimiento de Vídeos)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-de-referencia-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Manual de Referencia de Angular
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-utilizar-este-material-en-clase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🚀 Cómo Utilizar este Material en Clase
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guías de Clase
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guías de Clase
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./02-conceptos-generales/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-cpu" viewBox="0 0 24 24"><path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="8" height="8" x="8" y="8" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Conceptos Generales: TS y Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./03-bases-typescript/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Bases de TypeScript
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./04-angular-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Bases de Angular
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./05-expandir-bases/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect width="8" height="8" x="14" y="2" rx="1"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Expandir Bases: Componentes y Servicios
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Manual de Referencia
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Manual de Referencia
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/01-introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  01. Introducción al Framework
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/02-crear-proyecto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  02. Creación del Proyecto
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/03-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  03. Componentes Standalone
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/04-plantillas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  04. Plantillas y Control Flow
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/05-signals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  05. Signals y Reactividad
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/06-pipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  06. Pipes Nativos y Custom
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/07-anidar-componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  07. Comunicación entre Componentes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/08-directivas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  08. Directivas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/09-servicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  09. Servicios e Inyección de Dependencias
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/10-http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Cliente HTTP, APIs e Interceptores
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/11-router/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Angular Router y Navegación
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/12-formularios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Formularios Reactivos
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/13-proyeccion-contenido/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Proyección de Contenido
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/14-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Queries del DOM (viewChild)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/15-ssr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Server-Side Rendering (SSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/16-integracion-librerias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Integración de Librerías y UI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/17-proyecto-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Proyecto Integrador Final
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./manual/18-testing-vitest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Pruebas Unitarias y de Integración con Vitest
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#filosofia-y-metodologia-pedagogica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🎯 Filosofía y Metodología Pedagógica
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Filosofía y Metodología Pedagógica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principios-de-arquitectura-aplicados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Principios de Arquitectura Aplicados
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-clase-seguimiento-de-videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📹 Guías de Clase (Seguimiento de Vídeos)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-de-referencia-de-angular" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        📖 Manual de Referencia de Angular
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-utilizar-este-material-en-clase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        🚀 Cómo Utilizar este Material en Clase
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="curso-angular">Curso Angular<a class="headerlink" href="#curso-angular" title="Permanent link">&para;</a></h1>
+<p>Bienvenido al portal de documentación interactiva y material didáctico para el aula de <strong>Angular</strong>.</p>
+<p>Este portal ha sido diseñado bajo los estándares de desarrollo de <strong>F3 Martos</strong>, estructurado en dos grandes bloques complementarios:</p>
+<ol>
+<li><strong>📹 Guías de Clase:</strong> Material paso a paso con código incremental, explicaciones detalladas y retos rápidos para el proyector y el aula.</li>
+<li><strong>📖 Manual de Referencia:</strong> Documentación técnica exhaustiva con fundamentos de ingeniería, buenas prácticas, errores frecuentes y actividades de nivel profesional.</li>
+</ol>
+<hr />
+<h2 id="filosofia-y-metodologia-pedagogica">🎯 Filosofía y Metodología Pedagógica<a class="headerlink" href="#filosofia-y-metodologia-pedagogica" title="Permanent link">&para;</a></h2>
+<p>El material sigue un enfoque riguroso de <strong>ingeniería de software moderna</strong>, combinando la agilidad de desarrollo con una arquitectura limpia y sólida:</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Bloque1 ["Bloque 1 · Fundamentos y Lenguaje"]
+        A["&lt;b&gt;1. Conceptos Generales&lt;/b&gt;&lt;br/&gt;Arquitectura SPA, TypeScript vs JS y Ecosistema"] --&gt; B["&lt;b&gt;2. Bases de TypeScript&lt;/b&gt;&lt;br/&gt;Tipado estricto, interfaces, POO y genéricos"]
+    end
+
+    subgraph Bloque2 ["Bloque 2 · Angular 19 Core"]
+        C["&lt;b&gt;3. Bases de Angular&lt;/b&gt;&lt;br/&gt;Componentes Standalone, Directivas y Signals"] --&gt; D["&lt;b&gt;4. Expandir Bases&lt;/b&gt;&lt;br/&gt;Signal Inputs/Outputs, Smart/Dumb y Servicios"]
+    end
+
+    subgraph Bloque3 ["Bloque 3 · Proyecto Integrador Enterprise"]
+        E["&lt;b&gt;5. GifsApp Profesional&lt;/b&gt;&lt;br/&gt;Layout modular, HttpClient, Mappers y Scroll Infinito"]
+    end
+
+    Bloque1 ==&gt; Bloque2 ==&gt; Bloque3</code></pre>
+<h3 id="principios-de-arquitectura-aplicados">Principios de Arquitectura Aplicados<a class="headerlink" href="#principios-de-arquitectura-aplicados" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Separación Estricta de Responsabilidades (SoC):</strong> La interfaz (<code>HTML/CSS</code>) es declarativa y desacoplada de la lógica de negocio (<code>TypeScript/Signals</code>).</li>
+<li><strong>Reactividad Fina Nativa:</strong> Adopción total del nuevo paradigma reactivo de Angular basado en <strong>Señales</strong> (<code>Signals</code>), preparando el camino hacia aplicaciones <strong>Zoneless</strong> ultraeficientes.</li>
+<li><strong>Componentes Standalone por Defecto:</strong> Eliminación de la sobrecarga de los módulos tradicionales (<code>NgModule</code>), aprovechando las capacidades nativas de Angular 19.</li>
+<li><strong>Clean Code &amp; Inmutabilidad:</strong> Código auto-documentado, tipado estricto y funciones atómicas.</li>
+</ol>
+<hr />
+<h2 id="guias-de-clase-seguimiento-de-videos">📹 Guías de Clase (Seguimiento de Vídeos)<a class="headerlink" href="#guias-de-clase-seguimiento-de-videos" title="Permanent link">&para;</a></h2>
+<p>Diseñadas para el proyector del aula y el seguimiento continuo de cada sesión de laboratorio:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Sección</th>
+<th style="text-align: left;">Guía de Clase</th>
+<th style="text-align: left;">Enfoque Principal</th>
+<th style="text-align: left;">Enlace al Material</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>02</strong></td>
+<td style="text-align: left;"><strong>Conceptos Generales</strong></td>
+<td style="text-align: left;">TypeScript vs JavaScript, ventajas arquitectónicas y los 10 mitos de Angular.</td>
+<td style="text-align: left;"><a href="02-conceptos-generales/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>03</strong></td>
+<td style="text-align: left;"><strong>Bases de TypeScript</strong></td>
+<td style="text-align: left;">Tipado estricto, interfaces, POO moderna, composición sobre herencia y decoradores.</td>
+<td style="text-align: left;"><a href="03-bases-typescript/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>04</strong></td>
+<td style="text-align: left;"><strong>Bases de Angular</strong></td>
+<td style="text-align: left;">Creación con CLI, componentes standalone, reactividad con <code>signal()</code> y <code>computed()</code>.</td>
+<td style="text-align: left;"><a href="04-angular-bases/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>05</strong></td>
+<td style="text-align: left;"><strong>Expandir Bases</strong></td>
+<td style="text-align: left;">Navegación <code>RouterLink</code>, nuevo Control Flow (<code>@for</code>, <code>@if</code>), inputs/outputs y servicios.</td>
+<td style="text-align: left;"><a href="05-expandir-bases/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>06</strong></td>
+<td style="text-align: left;"><strong>GifsApp: Componentes</strong></td>
+<td style="text-align: left;">Tailwind CSS &frac34;, rutas hijas con <em>lazy loading</em> y descomposición atómica de vistas.</td>
+<td style="text-align: left;"><a href="06-gifs-componentes/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>07</strong></td>
+<td style="text-align: left;"><strong>GifsApp: Servicios y HTTP</strong></td>
+<td style="text-align: left;">Cliente HTTP moderno, variables de entorno, patrón Mapper y conversión con <code>toSignal()</code>.</td>
+<td style="text-align: left;"><a href="07-gifs-servicio-http/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>08</strong></td>
+<td style="text-align: left;"><strong>GifsApp: Avanzado</strong></td>
+<td style="text-align: left;">Cuadrícula Masonry, consultas DOM con <code>viewChild()</code>, infinite scroll y DevTools.</td>
+<td style="text-align: left;"><a href="08-gifs-intermedio-avanzado/"><strong>Ver Guía de Clase</strong></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="manual-de-referencia-de-angular">📖 Manual de Referencia de Angular<a class="headerlink" href="#manual-de-referencia-de-angular" title="Permanent link">&para;</a></h2>
+<p>Guía técnica completa y detallada de cada concepto del framework para consulta, profundización y estándares de desarrollo:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cap.</th>
+<th style="text-align: left;">Tema de Referencia</th>
+<th style="text-align: left;">Conceptos Clave Tratados</th>
+<th style="text-align: left;">Enlace al Manual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>01</strong></td>
+<td style="text-align: left;"><strong>Introducción a Angular</strong></td>
+<td style="text-align: left;">SPA vs MPA, arquitectura opinada, Framework vs Biblioteca y "Angular Renaissance".</td>
+<td style="text-align: left;"><a href="manual/01-introduccion/"><strong>01. Introducción</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>02</strong></td>
+<td style="text-align: left;"><strong>Crear un Proyecto Angular</strong></td>
+<td style="text-align: left;">Angular CLI, Vite/esbuild, anatomía de archivos, <code>angular.json</code> y Zoneless.</td>
+<td style="text-align: left;"><a href="manual/02-crear-proyecto/"><strong>02. Crear Proyecto</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>03</strong></td>
+<td style="text-align: left;"><strong>Componentes Standalone</strong></td>
+<td style="text-align: left;">Decorador <code>@Component</code>, ciclo de vida, ViewEncapsulation y separación de vistas.</td>
+<td style="text-align: left;"><a href="manual/03-componentes/"><strong>03. Componentes</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>04</strong></td>
+<td style="text-align: left;"><strong>Plantillas y Control Flow</strong></td>
+<td style="text-align: left;">Data binding, nuevo Control Flow (<code>@if</code>, <code>@for</code>, <code>@switch</code>) y vistas diferidas (<code>@defer</code>).</td>
+<td style="text-align: left;"><a href="manual/04-plantillas/"><strong>04. Plantillas</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>05</strong></td>
+<td style="text-align: left;"><strong>Signals y Reactividad</strong></td>
+<td style="text-align: left;">Writable signals, computadas, <code>effect()</code>, comparativa con RxJS y OnPush.</td>
+<td style="text-align: left;"><a href="manual/05-signals/"><strong>05. Signals</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>06</strong></td>
+<td style="text-align: left;"><strong>Pipes Nativos y Custom</strong></td>
+<td style="text-align: left;">Pipes puros e impuros, inyección de dependencias en pipes y pipes asíncronos.</td>
+<td style="text-align: left;"><a href="manual/06-pipes/"><strong>06. Pipes</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>07</strong></td>
+<td style="text-align: left;"><strong>Anidar Componentes</strong></td>
+<td style="text-align: left;">Jerarquía padre-hijo, <code>input()</code>, <code>output()</code>, dos vías con <code>model()</code> y Smart/Dumb.</td>
+<td style="text-align: left;"><a href="manual/07-anidar-componentes/"><strong>07. Anidar Componentes</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>08</strong></td>
+<td style="text-align: left;"><strong>Directivas</strong></td>
+<td style="text-align: left;">Directivas de atributo y estructurales, <code>HostListener</code>, <code>HostBinding</code> y <code>hostDirectives</code>.</td>
+<td style="text-align: left;"><a href="manual/08-directivas/"><strong>08. Directivas</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>09</strong></td>
+<td style="text-align: left;"><strong>Servicios e Inyección</strong></td>
+<td style="text-align: left;">Sistema jerárquico de DI, <code>providedIn: 'root'</code>, función <code>inject()</code> y estado reactivo.</td>
+<td style="text-align: left;"><a href="manual/09-servicios/"><strong>09. Servicios</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>10</strong></td>
+<td style="text-align: left;"><strong>Cliente HTTP, APIs e Interceptores</strong></td>
+<td style="text-align: left;"><code>provideHttpClient()</code>, peticiones tipadas, <code>HttpContext</code>, interceptores funcionales y manejo de errores.</td>
+<td style="text-align: left;"><a href="manual/10-http/"><strong>10. Cliente HTTP e Interceptores</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>11</strong></td>
+<td style="text-align: left;"><strong>Angular Router</strong></td>
+<td style="text-align: left;">Configuración de rutas, rutas hijas, Lazy Loading, guards funcionales y resolvers.</td>
+<td style="text-align: left;"><a href="manual/11-router/"><strong>11. Router</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>12</strong></td>
+<td style="text-align: left;"><strong>Formularios Reactivos</strong></td>
+<td style="text-align: left;"><code>FormControl</code>, <code>FormGroup</code>, validaciones síncronas y asíncronas y estado del formulario.</td>
+<td style="text-align: left;"><a href="manual/12-formularios/"><strong>12. Formularios</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>13</strong></td>
+<td style="text-align: left;"><strong>Proyección de Contenido</strong></td>
+<td style="text-align: left;">Slots con <code>&lt;ng-content&gt;</code>, proyección múltiple (<code>select</code>) y encapsulación dinámica.</td>
+<td style="text-align: left;"><a href="manual/13-proyeccion-contenido/"><strong>13. Proyección</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>14</strong></td>
+<td style="text-align: left;"><strong>Queries del DOM</strong></td>
+<td style="text-align: left;">Signal Queries (<code>viewChild()</code>, <code>viewChildren()</code>, <code>contentChild()</code>) frente a decoradores.</td>
+<td style="text-align: left;"><a href="manual/14-queries/"><strong>14. Queries</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>15</strong></td>
+<td style="text-align: left;"><strong>Server-Side Rendering (SSR)</strong></td>
+<td style="text-align: left;">Angular SSR, hidratación en cliente y consideraciones de arquitectura servidora.</td>
+<td style="text-align: left;"><a href="manual/15-ssr/"><strong>15. SSR</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: left;"><strong>Integración de Librerías</strong></td>
+<td style="text-align: left;">Tailwind CSS, Bootstrap, componentes UI de terceros y utilidades JavaScript.</td>
+<td style="text-align: left;"><a href="manual/16-integracion-librerias/"><strong>16. Integración Librerías</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>17</strong></td>
+<td style="text-align: left;"><strong>Proyecto Final Integrador</strong></td>
+<td style="text-align: left;">Aplicación profesional completa integrando todos los bloques de la plataforma.</td>
+<td style="text-align: left;"><a href="manual/17-proyecto-final/"><strong>17. Proyecto Final</strong></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="como-utilizar-este-material-en-clase">🚀 Cómo Utilizar este Material en Clase<a class="headerlink" href="#como-utilizar-este-material-en-clase" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Para el Docente</p>
+<p>En cada sección encontrarás bloques especiales identificados con:</p>
+<ul>
+<li>🎓 <strong>Guía Didáctica:</strong> Analogías y preguntas detonantes para plantear a los alumnos.</li>
+<li>⚠️ <strong>Atención / Errores Típicos:</strong> Advertencias sobre los errores sintácticos o conceptuales más comunes.</li>
+<li>💻 <strong>Código Incremental:</strong> Bloques de código con tabs comparativos (<code>TypeScript</code>, <code>HTML</code>, <code>Styles</code>) para seguir la construcción en vivo sin saltos bruscos.</li>
+<li>🧪 <strong>Retos de Aula:</strong> Micro-ejercicios prácticos con solución desplegable para evaluar el aprendizaje en tiempo real.</li>
+<li>📖 <strong>Conexión con el Manual:</strong> Enlaces contextuales en cada guía de vídeo para abrir directamente el capítulo de referencia correspondiente.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Para el Alumno</p>
+<p>Puedes seguir la guía de vídeo paso a paso desde tu portátil. Cuando tengas dudas teóricas o quieras ver ejemplos avanzados, pulsa sobre los enlaces del <strong>Manual de Referencia</strong> para consultar la explicación técnica completa de cada concepto.</p>
+</div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+        
+          
+          <a href="./02-conceptos-generales/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: 02. Conceptos Generales: TS y Angular">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                02. Conceptos Generales: TS y Angular
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":".","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight"],"redirect":null,"search":"./assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="./assets/javascripts/bundle.77dd0ce9.min.js"></script>
+      
+    
+  </body>
+</html>

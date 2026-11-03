@@ -1,0 +1,508 @@
+/* ==========================================================================
+   Curso de Angular · Materiales Formativos (DAW / DAM / Especialización)
+   Custom Stylesheet para Zensical
+   ========================================================================== */
+
+/* 1. Variables globales y tipografía */
+:root {
+  --md-text-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --md-code-font: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Identidad Angular & Google */
+  --md-primary-fg-color: #dd0031;        /* Angular Red Oficial */
+  --md-primary-fg-color--light: #ff3366; /* Rosa / Rojo claro */
+  --md-primary-fg-color--dark: #b50027;  /* Rojo intenso */
+  --md-accent-fg-color: #1976d2;         /* Azul Material Angular */
+
+  /* Colores temáticos de soporte */
+  --color-angular: #dd0031;
+  --color-signals: #10b981;              /* Verde Esmeralda Reactividad */
+  --color-ts: #3178c6;                   /* Azul TypeScript */
+  --color-rxjs: #d81b60;                 /* Magenta RxJS */
+  --color-warning: #f59e0b;              /* Ámbar Alertas */
+  --color-pro: #8b5cf6;                  /* Violeta Buenas Prácticas */
+}
+
+/* Modo oscuro afinado (Slate theme) */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #ff3b68;
+  --md-primary-fg-color--light: #ff708f;
+  --md-primary-fg-color--dark: #d6002f;
+  --md-accent-fg-color: #60a5fa;
+  --color-angular: #ff4d73;
+}
+
+/* 2. Jerarquía tipográfica y encabezados */
+.md-typeset h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--md-default-fg-color, #0f172a);
+  margin-bottom: 1.2rem;
+}
+
+.md-typeset h2 {
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  margin-top: 2.2rem;
+  border-bottom: 2px solid var(--md-default-fg-color--lightest, #f1f5f9);
+  padding-bottom: 0.4rem;
+}
+
+.md-typeset h3 {
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  margin-top: 1.6rem;
+}
+
+/* 3. Badges temáticos para conceptos clave */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.badge-angular {
+  background: rgba(221, 0, 49, 0.12);
+  color: #dd0031;
+  border: 1px solid rgba(221, 0, 49, 0.4);
+}
+
+[data-md-color-scheme="slate"] .badge-angular {
+  color: #ff5c7c;
+  border-color: #dd0031;
+}
+
+.badge-signals {
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
+  border: 1px solid #34d399;
+}
+
+[data-md-color-scheme="slate"] .badge-signals {
+  color: #6ee7b7;
+  border-color: #10b981;
+}
+
+.badge-standalone {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  border: 1px solid #60a5fa;
+}
+
+[data-md-color-scheme="slate"] .badge-standalone {
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+
+.badge-pro {
+  background: rgba(139, 92, 246, 0.14);
+  color: #7c3aed;
+  border: 1px solid #a78bfa;
+}
+
+[data-md-color-scheme="slate"] .badge-pro {
+  color: #c4b5fd;
+  border-color: #8b5cf6;
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+  border: 1px solid #fbbf24;
+}
+
+[data-md-color-scheme="slate"] .badge-warning {
+  color: #fcd34d;
+  border-color: #f59e0b;
+}
+
+/* 4. Resaltado especial de texto (mark / ==resaltado==) */
+.md-typeset mark {
+  background-color: rgba(254, 240, 138, 0.7);
+  color: inherit;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border-bottom: 2px solid #facc15;
+}
+
+[data-md-color-scheme="slate"] .md-typeset mark {
+  background-color: rgba(234, 179, 8, 0.25);
+  border-bottom-color: #f59e0b;
+  color: #fef08a;
+}
+
+/* 5. Diagramas Mermaid: legibilidad, contraste y adaptación responsive */
+:root {
+  --md-mermaid-font-family: var(--md-text-font);
+  --md-mermaid-edge-color: #64748b;
+  --md-mermaid-node-bg-color: #ffffff;
+  --md-mermaid-node-fg-color: #dd0031;
+  --md-mermaid-label-fg-color: #0f172a;
+  --md-mermaid-label-bg-color: #f8fafc;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-mermaid-edge-color: #94a3b8;
+  --md-mermaid-node-bg-color: #1e293b;
+  --md-mermaid-node-fg-color: #ff4d73;
+  --md-mermaid-label-fg-color: #f8fafc;
+  --md-mermaid-label-bg-color: #334155;
+}
+
+.mermaid {
+  display: block;
+  text-align: center;
+  margin: 2.25rem auto;
+  padding: 1.75rem 1.25rem;
+  background-color: var(--md-code-bg-color, #f8fafc);
+  border: 1px solid var(--md-default-fg-color--lightest, #e2e8f0);
+  border-radius: 0.85rem;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-md-color-scheme="slate"] .mermaid {
+  background-color: #1a2234;
+  border-color: #2e3b52;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.35);
+}
+
+.mermaid svg {
+  display: block;
+  margin: 0 auto;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  font-family: var(--md-text-font, inherit) !important;
+}
+
+/* Tipografía de esquemas con tamaño óptimo de lectura (15px-17px) */
+.mermaid text,
+.mermaid .nodeLabel,
+.mermaid .edgeLabel,
+.mermaid .label,
+.mermaid .actor,
+.mermaid .messageText,
+.mermaid .noteText {
+  font-size: 15.5px !important;
+  font-family: var(--md-text-font, inherit) !important;
+  letter-spacing: -0.01em;
+}
+
+/* Mejoras para diagramas de secuencia (actores / monigotes) */
+.mermaid .actor,
+.mermaid text.actor > tspan {
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+}
+
+.mermaid .messageText {
+  font-size: 15.5px !important;
+  font-weight: 600 !important;
+}
+
+.mermaid .sequenceNumber {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+/* Títulos y subgrafos dentro de esquemas */
+.mermaid .cluster-label,
+.mermaid .cluster text,
+.mermaid .cluster span {
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+}
+
+/* 6. Bloques de código enriquecidos y títulos */
+.md-typeset pre > code {
+  line-height: 1.55;
+}
+
+.md-typeset .highlight .filename {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background-color: rgba(221, 0, 49, 0.06);
+  border-left: 3px solid var(--md-primary-fg-color);
+  padding: 0.4rem 0.8rem;
+}
+
+/* 7. Cajas Admonition con esquinas suaves y sombras sutiles */
+.md-typeset .admonition {
+  border-radius: 0.6rem;
+  box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.06);
+  border-width: 0 0 0 4px;
+}
+
+.md-typeset .admonition .admonition-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* 8. Tablas modernas con hover y esquinas redondeadas */
+.md-typeset table:not([class]) {
+  width: 100%;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  margin: 1.75rem 0;
+  border-collapse: collapse;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: rgba(221, 0, 49, 0.08);
+  color: var(--md-default-fg-color, #0f172a);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: rgba(221, 0, 49, 0.16);
+  color: #f1f5f9;
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.65rem 1rem;
+}
+
+.md-typeset table:not([class]) tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* 9. Grid Cards para resúmenes de competencias */
+.grid.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.grid.cards > ul,
+.grid.cards > ol {
+  display: contents;
+}
+
+.grid.cards > ul > li,
+.grid.cards > ol > li,
+.grid.cards > div {
+  border: 1px solid var(--md-default-fg-color--lightest, #e2e8f0);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background: var(--md-default-bg-color, #ffffff);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  list-style: none;
+}
+
+.grid.cards > ul > li:hover,
+.grid.cards > ol > li:hover,
+.grid.cards > div:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 8px 16px -4px rgba(221, 0, 49, 0.12);
+}
+
+/* 10. Listas de términos / Claves rápidas */
+.key-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  background: var(--md-code-bg-color, #f8fafc);
+  border-left: 3px solid var(--md-primary-fg-color);
+}
+
+/* ==========================================================================
+   11. Pirámide de Pruebas (Componente Visual Pedagógico Jerárquico)
+   ========================================================================== */
+.testing-pyramid-container {
+  margin: 2.25rem 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.pyramid-scale-indicator {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--md-default-fg-color--light, #64748b);
+  padding: 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pyramid-tier {
+  border-radius: 12px;
+  padding: 1.15rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pyramid-tier:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.pyramid-tier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pyramid-tier-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.pyramid-tier-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pyramid-tier-body {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pyramid-tier-body li {
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.pyramid-tier-body li:last-child {
+  margin-bottom: 0;
+}
+
+/* Nivel 3: E2E (Cúspide de la pirámide) */
+.pyramid-tier.tier-e2e {
+  width: 62%;
+  background-color: #fff1f2;
+  border: 2px solid #f43f5e;
+}
+.pyramid-tier.tier-e2e .pyramid-tier-title { color: #e11d48; }
+.pyramid-tier.tier-e2e .pyramid-tier-badge {
+  background: rgba(225, 29, 72, 0.12);
+  color: #be123c;
+  border: 1px solid #f43f5e;
+}
+
+/* Nivel 2: Integración (Cuerpo intermedio) */
+.pyramid-tier.tier-int {
+  width: 82%;
+  background-color: #fffbeb;
+  border: 2px solid #f59e0b;
+}
+.pyramid-tier.tier-int .pyramid-tier-title { color: #b45309; }
+.pyramid-tier.tier-int .pyramid-tier-badge {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border: 1px solid #f59e0b;
+}
+
+/* Nivel 1: Unitarias (Base ancha fundamental) */
+.pyramid-tier.tier-unit {
+  width: 100%;
+  background-color: #f0fdf4;
+  border: 2px solid #10b981;
+}
+.pyramid-tier.tier-unit .pyramid-tier-title { color: #047857; }
+.pyramid-tier.tier-unit .pyramid-tier-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border: 1px solid #10b981;
+}
+
+/* Adaptación Dark Mode (Slate) para Pirámide */
+[data-md-color-scheme="slate"] .pyramid-tier.tier-e2e {
+  background-color: rgba(244, 63, 94, 0.12);
+  border-color: #fb7185;
+}
+[data-md-color-scheme="slate"] .pyramid-tier.tier-e2e .pyramid-tier-title { color: #fda4af; }
+[data-md-color-scheme="slate"] .pyramid-tier.tier-e2e .pyramid-tier-badge {
+  background: rgba(244, 63, 94, 0.25);
+  color: #fecdd3;
+  border-color: #fb7185;
+}
+
+[data-md-color-scheme="slate"] .pyramid-tier.tier-int {
+  background-color: rgba(245, 158, 11, 0.12);
+  border-color: #fbbf24;
+}
+[data-md-color-scheme="slate"] .pyramid-tier.tier-int .pyramid-tier-title { color: #fde68a; }
+[data-md-color-scheme="slate"] .pyramid-tier.tier-int .pyramid-tier-badge {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fef3c7;
+  border-color: #fbbf24;
+}
+
+[data-md-color-scheme="slate"] .pyramid-tier.tier-unit {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: #34d399;
+}
+[data-md-color-scheme="slate"] .pyramid-tier.tier-unit .pyramid-tier-title { color: #a7f3d0; }
+[data-md-color-scheme="slate"] .pyramid-tier.tier-unit .pyramid-tier-badge {
+  background: rgba(16, 185, 129, 0.25);
+  color: #d1fae5;
+  border-color: #34d399;
+}
+
+@media (max-width: 768px) {
+  .pyramid-tier.tier-e2e,
+  .pyramid-tier.tier-int,
+  .pyramid-tier.tier-unit {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   12. Alineación y ancho de diagramas Mermaid
+   ========================================================================== */
+.mermaid .nodeLabel,
+.mermaid .node foreignObject div {
+  text-align: left !important;
+}
