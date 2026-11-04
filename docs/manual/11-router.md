@@ -231,79 +231,297 @@ Para navegar a un outlet nombrado de forma declarativa, usamos un objeto con la 
 
 #### RouterLink (navegación declarativa)
 
-`RouterLink` es una directiva que permite la navegación declarativa desde las plantillas HTML. Sustituye al atributo `href` de los enlaces tradicionales, evitando la recarga completa de la página.
+La navegación declarativa es el mecanismo estándar mediante el cual los usuarios transicionan entre pantallas en una Single Page Application (SPA). En Angular, esta capacidad se implementa mediante la directiva **`RouterLink`**, complementada con **`RouterLinkActive`** para la respuesta visual de estado.
 
-**Uso básico:**
+``` mermaid
+flowchart TD
+    subgraph MPA ["Navegación Tradicional: href"]
+        A1["Clic en elemento &lt;a href&gt;"] --> A2["Petición HTTP GET al servidor"]
+        A2 --> A3["Destrucción completa del DOM<br/>y vaciado de memoria RAM"]
+        A3 --> A4["Pérdida de Signals y Estado"]
+        A4 --> A5["Descarga de scripts y estilos<br/>(Parpadeo en blanco)"]
+    end
+
+    subgraph SPA ["Navegación Angular: RouterLink"]
+        B1["Clic en &lt;a routerLink&gt;"] --> B2["event.preventDefault() nativo"]
+        B2 --> B3["Actualización de URL vía<br/>History API pushState"]
+        B3 --> B4["Evaluación del árbol de rutas"]
+        B4 --> B5["Intercambio atómico en<br/>&lt;router-outlet /&gt;"]
+        B5 --> B6["Preservación total de Signals<br/>y Servicios en memoria"]
+    end
+```
+
+##### 1. Anatomía Interna: ¿Por qué jamás debemos usar `href` en Angular?
+
+Una duda recurrente en el aprendizaje de Angular es: *"¿Por qué no puedo usar un enlace HTML convencional `<a href="/inicio">`?"*.
+
+La diferencia radica en cómo el navegador gestiona el ciclo de vida de la página:
+
+* **Con `<a href="/inicio">` (Comportamiento Multi-Page Application):**  
+  El navegador abandona la aplicación actual. Envía una petición de red al servidor, **destruye el árbol DOM completo y purga toda la memoria de JavaScript**. Al recargar:
+    * Se destruye todo el estado reactivo en memoria: valores de **Signals**, variables locales y datos de formularios en curso.
+    * Los servicios singleton (`@Injectable({ providedIn: 'root' })`) se reinstancian desde cero.
+    * El usuario percibe una pantalla blanca transitoria (*flicker*) mientras se descargan y ejecutan de nuevo los ficheros `.js` y `.css`.
+* **Con `<a routerLink="/inicio">` (Comportamiento Single Page Application):**  
+  La directiva `RouterLink` intercepta el evento de clic en el enlace y ejecuta internamente `event.preventDefault()`. En lugar de recargar la página:
+    * Actualiza la URL visible en la barra de direcciones mediante la API de historial del navegador (`history.pushState()`).
+    * Notifica al motor de enrutamiento de Angular para evaluar la nueva URL.
+    * Destruye únicamente el componente que sale y monta el nuevo componente dentro del contenedor `<router-outlet />`.
+    * **Preservación de Estado en Memoria:** Toda la memoria de la aplicación, el estado de autenticación, las Signals globales y los servicios compartidos permanecen vivos e inalterados. La transición ocurre en milisegundos.
+
+---
+
+##### 2. Sintaxis y Estrategias de Rutas
+
+Angular ofrece dos sintaxis principales para definir enlaces declarativos, según la naturaleza estática o dinámica del destino:
+
+**A. Sintaxis Literal (String simple):**  
+Se utiliza cuando la URL de destino es fija, estática y no contiene variables ni parámetros.
 
 ```html
-<!-- Navegación simple -->
+<!-- Rutas estáticas absolutas -->
 <a routerLink="/inicio">Inicio</a>
-<a routerLink="/productos">Productos</a>
+<a routerLink="/productos">Catálogo de Productos</a>
+<a routerLink="/contacto">Contacto</a>
+```
 
-<!-- Navegación con parámetros -->
-<a [routerLink]="['/productos', productoId]">Ver producto</a>
-<a [routerLink]="['/productos', productoId, 'editar']">Editar producto</a>
+**B. Sintaxis de Enlace de Propiedad (Property Binding con Array):**  
+Se utiliza cuando la ruta se construye dinámicamente incorporando variables, valores de **Signals** o múltiples segmentos.
 
-<!-- Navegación con query params -->
+```html
+<!-- Navegación con segmentos dinámicos y Signals -->
+<a [routerLink]="['/productos', productoId()]">Ver Detalle</a>
+<a [routerLink]="['/productos', categoria(), 'editar']">Modificar</a>
+```
+
+!!! tip "¿Por qué Angular utiliza un Array en `[routerLink]`?"
+    Cada elemento del arreglo representa un **segmento lógico** de la URL. Angular se encarga automáticamente de normalizar las barras separadoras (`/`) y de codificar de forma segura cualquier carácter conflictivo (espacios, caracteres especiales, acentos) mediante `encodeURIComponent`, evitando errores comunes de concatenación manual de cadenas.
+
+**C. Rutas Absolutas vs. Rutas Relativas:**  
+La presencia o ausencia de la barra inclinada inicial (`/`) determina cómo calcula Angular la URL final:
+
+* **Ruta Absoluta (comienza con `/`):**  
+  `[routerLink]="['/usuarios']"`  
+  Navega siempre tomando como base la raíz de la aplicación (`http://localhost:4200/usuarios`), sin importar en qué página nos encontremos.
+* **Ruta Relativa (sin barra inicial o con `./`):**  
+  `[routerLink]="['detalles']"` o `[routerLink]="['./detalles']"`  
+  Añade el segmento al final de la ruta actual. Si estamos en `/usuarios`, navegará a `/usuarios/detalles`.
+* **Ruta Relativa hacia niveles superiores (`../`):**  
+  `[routerLink]="['../']"`  
+  Sube un nivel en la jerarquía de rutas actual, similar a la navegación por directorios del sistema de archivos.
+
+!!! warning "Error Frecuente: Omitir la barra inicial en menús globales"
+    En barras de navegación globales (`NavbarComponent`), todos los enlaces deben comenzar obligatoriamente con `/` (ej. `routerLink="/hero"`). Si escribes `routerLink="hero"` estando en la página `/counter`, Angular intentará resolver `/counter/hero`, lo que terminará en una ruta desconocida o un error 404.
+
+**D. Query Parameters y Fragmentos Hash:**  
+Para enviar parámetros en la cadena de consulta (`?clave=valor`) o saltar a anclas dentro de la página (`#seccion`), se emplean las entradas dedicadas `queryParams` y `fragment`:
+
+```html
+<!-- Genera: /productos?categoria=electronica&orden=precio#ofertas -->
 <a
   [routerLink]="['/productos']"
-  [queryParams]="{ categoria: 'electronica', orden: 'precio' }">
-  Electrónica ordenada por precio
-</a>
-
-<!-- Navegación con fragmento (hash) -->
-<a
-  [routerLink]="['/productos']"
-  fragment="ofertas">
-  Ver ofertas
+  [queryParams]="{ categoria: 'electronica', orden: 'precio' }"
+  fragment="ofertas"
+>
+  Electrónica en oferta
 </a>
 ```
 
-**routerLinkActive y routerLinkActiveOptions:**
+---
 
-`routerLinkActive` permite añadir clases CSS al enlace cuando la ruta asociada está activa. Es especialmente útil para resaltar el elemento de navegación correspondiente a la página actual.
+##### 3. Dominando `routerLinkActive` y la Coincidencia de Rutas
+
+La directiva **`routerLinkActive`** monitoriza continuamente la URL del navegador. Cuando la URL activa coincide con el destino de su `routerLink` asociado, añade de forma automática las clases CSS que le hayamos indicado para destacar visualmente el enlace activo.
 
 ```html
 <nav>
   <a
     routerLink="/inicio"
     routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }">
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
     Inicio
   </a>
   <a
     routerLink="/productos"
-    routerLinkActive="active">
+    routerLinkActive="active"
+  >
     Productos
   </a>
 </nav>
 ```
 
-La opción `{ exact: true }` garantiza que la clase `active` solo se aplica cuando la ruta coincide exactamente. Sin esta opción, la ruta `/` siempre se consideraría activa porque todas las URLs empiezan con `/`.
-
-Podemos pasar múltiples clases CSS separadas por espacios o como array:
+Podemos pasar múltiples clases CSS separadas por espacios o como un array de strings:
 
 ```html
 <a
   routerLink="/productos"
-  routerLinkActive="bg-primary text-white fw-bold">
+  routerLinkActive="bg-primary text-white fw-bold shadow-sm"
+>
   Productos
 </a>
 ```
 
-También podemos vincular la directiva a una template variable para usar el estado activo en otros contextos:
+###### El Dilema de la Ruta Raíz (`/`) y la Coincidencia por Prefijo
+
+Por defecto, `routerLinkActive` utiliza un algoritmo de coincidencia por **prefijo** (*prefix match*): considera que un enlace está activo si la URL actual **comienza** con la ruta del enlace.
+
+Dado que prácticamente cualquier URL de la web comienza por `/` (por ejemplo, `/productos`, `/hero`, `/contacto`), un enlace configurado como:
+
+```html
+<!-- ¡PROBLEMA! Este enlace permanecerá activo en TODAS las páginas -->
+<a routerLink="/" routerLinkActive="active">Inicio</a>
+```
+
+provocará que Angular evalúe: *«¿La URL `/productos` comienza por `/`? Sí.»*. En consecuencia, la clase `active` **permanecerá encendida permanentemente**, sin importar en qué sección esté el usuario.
+
+###### La Solución: `routerLinkActiveOptions`
+
+Para corregir esto, indicamos a Angular que la coincidencia debe ser exacta mediante la propiedad `[routerLinkActiveOptions]="{ exact: true }"`:
+
+```html
+<!-- Solución exacta para la raíz -->
+<a
+  routerLink="/"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }"
+>
+  Inicio
+</a>
+```
+
+###### Configuración Avanzada: `IsActiveMatchOptions`
+
+En proyectos reales con parámetros o filtros, `{ exact: true }` puede ser insuficiente. Angular permite pasar un objeto de configuración granular (`IsActiveMatchOptions`) para definir exactamente qué partes de la URL deben evaluarse:
 
 ```html
 <a
-  routerLink="/inicio"
+  [routerLink]="['/catalogo']"
+  [queryParams]="{ seccion: 'tecnologia' }"
   routerLinkActive="active"
-  #rla="routerLinkActive">
-  Inicio
+  [routerLinkActiveOptions]="{
+    paths: 'exact',            // La ruta base debe coincidir exactamente
+    queryParams: 'ignored',    // Ignora los query params adicionales en la URL
+    fragment: 'ignored',       // Ignora los anclajes (#hash)
+    matrixParams: 'ignored'    // Ignora parámetros de matriz (;id=12)
+  }"
+>
+  Tecnología
+</a>
+```
+
+---
+
+##### 4. Patrones de Diseño en Maquetación Real
+
+###### A. Delegación en Contenedores Padres (`<li>`, `<div>`)
+En librerías de diseño como Bootstrap, Tailwind CSS o componentes de navegación estándar, la clase activa frecuentemente debe aplicarse en el elemento contenedor `<li>` o `<div class="nav-item">`, y no exclusivamente en la etiqueta `<a>`.
+
+Angular soporta este patrón de manera nativa: si colocas `routerLinkActive` en un elemento contenedor, la directiva escaneará automáticamente todos los `routerLink` descendientes y aplicará la clase al elemento contenedor:
+
+```html
+<ul class="nav nav-pills">
+  <!-- routerLinkActive se aplica al <li> contenedor -->
+  <li
+    class="nav-item"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <a class="nav-link" routerLink="/">Inicio</a>
+  </li>
+
+  <li class="nav-item" routerLinkActive="active">
+    <a class="nav-link" routerLink="/hero">Héroes</a>
+  </li>
+
+  <li class="nav-item" routerLinkActive="active">
+    <a class="nav-link" routerLink="/dragonball">DragonBall</a>
+  </li>
+</ul>
+```
+
+###### B. Navegación en Botones y Elementos No-`<a>`
+`RouterLink` no está restringido a elementos `<a>`. Puede aplicarse a botones, tarjetas interactivas o contenedores:
+
+```html
+<!-- Botón estilizado con navegación SPA -->
+<button
+  type="button"
+  class="btn btn-primary"
+  routerLink="/checkout"
+>
+  Proceder al Pago
+</button>
+```
+
+Cuando se aplica sobre elementos no nativos de enlace, Angular configura automáticamente el atributo `tabindex="0"` y escucha eventos de teclado (como las teclas `Enter` y `Espacio`) para garantizar que la navegación sea accesible para personas con discapacidad o usuarios de teclado.
+
+###### C. Accesibilidad Web (WCAG) con `ariaCurrentWhenActive`
+Para cumplir con los estándares de accesibilidad universal (a11y), los lectores de pantalla necesitan conocer cuál es la página actualmente visualizada. Angular permite declarar el atributo ARIA correspondiente de forma sincronizada con el estado activo:
+
+```html
+<a
+  routerLink="/hero"
+  routerLinkActive="active"
+  ariaCurrentWhenActive="page"
+>
+  Héroes
+</a>
+```
+
+Cuando la ruta está activa, Angular inyecta automáticamente en el DOM el atributo `aria-current="page"`, informando a las tecnologías de asistencia sin requerir programación manual.
+
+###### D. Exposición del Estado mediante Template Variable (`#rla`)
+Podemos exportar la instancia de la directiva `routerLinkActive` como una variable de plantilla (`#rla="routerLinkActive"`) para reaccionar condicionalmente a su estado booleano `isActive`:
+
+```html
+<a
+  routerLink="/productos"
+  routerLinkActive="active-link"
+  #rla="routerLinkActive"
+  class="d-flex justify-content-between align-items-center"
+>
+  Catálogo de Productos
+
   @if (rla.isActive) {
-    <span class="badge">Activo</span>
+    <span class="badge bg-success rounded-pill">Viendo ahora</span>
   }
 </a>
 ```
+
+---
+
+##### 5. Guía de Errores Comunes y Checklist Standalone
+
+!!! danger "El Problema del 'Enlace Mudo' en Componentes Standalone"
+    En aplicaciones modernas con componentes standalone, si olvidas importar **`RouterLink`** o **`RouterLinkActive`** en el arreglo `imports: [...]` del componente:
+    
+    1. La plantilla compilará sin arrojar errores bloqueantes evidentes.
+    2. El navegador interpretará `routerLink="/..."` como un atributo HTML desconocido e inerte.
+    3. Al hacer clic, **no ocurrirá absolutamente nada** (el enlace parecerá roto o congelado).
+    
+    *Solución obligatoria:* Asegúrate siempre de incluir `RouterLink` y `RouterLinkActive` en los imports de cualquier componente que contenga enlaces o menús de navegación:
+    ```typescript
+    @Component({
+      selector: 'app-navbar',
+      imports: [RouterLink, RouterLinkActive], // <- Imprescindible
+      templateUrl: './navbar.component.html'
+    })
+    export class NavbarComponent {}
+    ```
+
+###### Tabla Resumen de Sintaxis Declarativa
+
+| Caso de Uso | Sintaxis Declarativa | Comportamiento |
+| :--- | :--- | :--- |
+| **Ruta estática simple** | `routerLink="/ruta"` | Navega de forma absoluta a `/ruta` sin recargar la página. |
+| **Ruta con Signal o variable** | `[routerLink]="['/ruta', miSignal()]"` | Evalúa reactivamente el valor y escapa caracteres de URL de forma segura. |
+| **Ruta relativa a la actual** | `[routerLink]="['detalles']"` o `['./detalles']"` | Concatena `/detalles` a la URL activa en ese instante. |
+| **Ruta raíz con detección activa** | `[routerLinkActiveOptions]="{ exact: true }"` | Previene que el enlace `/` permanezca activo en toda la aplicación. |
+| **Parámetros de consulta (Query)** | `[queryParams]="{ filtro: 'activos' }"` | Concatena `?filtro=activos` preservando o actualizando la consulta. |
+| **Anclaje de sección (Fragment)** | `fragment="seccion-faq"` | Concatena `#seccion-faq` para desplazarse a elementos con ese `id`. |
+| **Contenedor padre de menú** | `routerLinkActive="active"` en `<li>` | Aplica la clase activa al padre si cualquiera de sus hijos coincide con la ruta. |
+| **Accesibilidad universal (a11y)** | `ariaCurrentWhenActive="page"` | Sincroniza el atributo `aria-current="page"` para lectores de pantalla. |
 
 #### Router (navegación programática)
 

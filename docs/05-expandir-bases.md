@@ -15,6 +15,20 @@ En esta sección profundizamos en la arquitectura moderna de **Angular 19+**. Ap
 * **Novedades de Angular 19:** `input.required()`, `output()`, nuevo Control Flow (`@for`, `@if`), `effect()`, `linkedSignal()`, `inject()`, `HashLocationStrategy`.
 * **Repositorio de referencia final:** [GitHub - DevTalles Bases (fin-seccion-05)](https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-05)
 
+!!! tip "📦 Código de Inicio para Seguir la Sección (Starter Kit)"
+    Para realizar el seguimiento de esta sección puedes continuar directamente sobre tu proyecto de la sección anterior o descargar el código de partida limpio y verificado desde el repositorio oficial de GitHub:
+    
+    * 🔗 **Código de Inicio (Punto de partida - Fin de Sección 04):** [GitHub - DevTalles Bases (rama: `fin-seccion-04`)](https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-04)
+    * 🔗 **Código Final de Referencia (Meta - Fin de Sección 05):** [GitHub - DevTalles Bases (rama: `fin-seccion-05`)](https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-05)
+
+    *Instrucciones para iniciar con el código de partida:*
+    ```bash
+    git clone -b fin-seccion-04 https://github.com/DevTalles-corp/angular-bases.git bases-app
+    cd bases-app
+    npm install
+    ng serve
+    ```
+
 ``` mermaid
 flowchart TD
     subgraph Fase1 ["Fase 1 · Navegación y UI Declarativa"]
@@ -53,10 +67,51 @@ A medida que una aplicación crece, mantener toda la vista y la lógica en una s
 !!! info "📖 Para saber más: Manual de Referencia"
     Para dominar la configuración de enrutadores, directivas de navegación (`routerLink`, `routerLinkActive`) y rutas hijas, consulta el **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md)**.
 
-Para movernos entre las distintas pantallas sin recargar el navegador, creamos un componente de barra de navegación reutilizable.
+### 1. Estado Inicial de Rutas y Manejo de Rutas Desconocidas (Wildcard `**`)
 
-### Creación de `NavbarComponent`
-Creamos el directorio `src/app/components/shared/navbar/`:
+Al iniciar esta sección, nuestra aplicación cuenta con dos rutas registradas en el archivo de enrutamiento principal (`src/app/app.routes.ts`): la ruta raíz `''` vinculada a `CounterPageComponent` y la ruta `'hero'` vinculada a `HeroPageComponent`.
+
+Sin embargo, si un usuario introduce manualmente en la barra de direcciones una URL inexistente o comete una errata tipográfica (por ejemplo, `http://localhost:4200/cualquier-cosa` o `/heroes`), el motor de enrutamiento de Angular intentará hacer coincidir esa URL con las rutas configuradas. Al no encontrar correspondencia, Angular Router arroja una excepción en consola (`Error: Cannot match any routes`) y deja el `<router-outlet />` completamente en blanco, provocando una pantalla vacía sin retroalimentación visual para el usuario.
+
+Para blindar la aplicación ante rutas desconocidas y asegurar una experiencia resiliente, definimos una **ruta comodín** (*wildcard route*) mediante la sintaxis `'**'` con redirección a la raíz:
+
+=== "src/app/app.routes.ts"
+    ```typescript title="src/app/app.routes.ts"
+    import { Routes } from '@angular/router';
+    import { CounterPageComponent } from './pages/counter/counter-page.component';
+    import { HeroPageComponent } from './pages/hero/hero-page.component';
+
+    export const routes: Routes = [
+      {
+        path: '',
+        component: CounterPageComponent,
+      },
+      {
+        path: 'hero',
+        component: HeroPageComponent,
+      },
+      // Redirección por defecto ante cualquier ruta desconocida (Wildcard)
+      {
+        path: '**',
+        redirectTo: '',
+      },
+    ];
+    ```
+
+!!! warning "Arquitectura de Enrutamiento: El Algoritmo First-Match-Wins"
+    Angular Router evalúa el arreglo de rutas de forma estrictamente secuencial (**de arriba a abajo**). La primera coincidencia que satisfaga la URL solicitada será la que se aplique.
+    
+    Por este motivo, la ruta comodín (`path: '**'`) debe ubicarse **obligatoriamente al final** de la lista de rutas. Si se colocase al principio o antes de otras rutas, interceptaría cualquier petición antes de que Angular pudiera evaluar las rutas específicas declaradas debajo, haciendo que esas páginas fuesen completamente inaccesibles.
+
+Una vez asegurado el manejo de rutas desconocidas, el siguiente paso arquitectónico es evidente: los usuarios no deben depender de escribir URLs a mano en la barra del navegador. Es imprescindible construir un menú de navegación visual (`NavbarComponent`) reutilizable e integrarlo en la plantilla principal de la aplicación.
+
+---
+
+### 2. Creación e Integración de `NavbarComponent` en el Layout Global
+
+Para estructurar la navegación de la aplicación de forma limpia, centralizamos el menú en un componente compartido reutilizable dentro del directorio `src/app/components/shared/navbar/`.
+
+Creamos la clase del componente standalone:
 
 === "src/app/components/shared/navbar/navbar.component.ts"
     ```typescript title="src/app/components/shared/navbar/navbar.component.ts"
@@ -65,11 +120,137 @@ Creamos el directorio `src/app/components/shared/navbar/`:
 
     @Component({
       selector: 'app-navbar',
-      imports: [RouterLink, RouterLinkActive], // Importación obligatoria para directivas de enrutado
+      // Importamos las directivas de enrutado declarativo imprescindibles
+      imports: [RouterLink, RouterLinkActive],
       templateUrl: './navbar.component.html',
     })
     export class NavbarComponent {}
     ```
+
+Para que este menú esté presente de forma continua en todas las pantallas sin duplicar código, lo integramos de inmediato en el componente raíz `AppComponent`:
+
+=== "src/app/app.component.ts"
+    ```typescript title="src/app/app.component.ts"
+    import { Component } from '@angular/core';
+    import { RouterOutlet } from '@angular/router';
+    import { NavbarComponent } from './components/shared/navbar/navbar.component';
+
+    @Component({
+      selector: 'app-root',
+      imports: [RouterOutlet, NavbarComponent], // Registramos el Navbar en los imports
+      templateUrl: './app.component.html',
+    })
+    export class AppComponent {}
+    ```
+
+=== "src/app/app.component.html"
+    ```html title="src/app/app.component.html"
+    <app-navbar />
+
+    <section class="mx-5 mt-2">
+      <!-- Aquí se renderiza dinámicamente la página activa -->
+      <router-outlet />
+    </section>
+    ```
+
+---
+
+### 3. De `href` a `RouterLink`: Navegación Declarativa SPA
+
+Al diseñar un menú en HTML tradicional, el primer impulso suele ser utilizar etiquetas de enlace estándar con el atributo `href`:
+
+```html title="src/app/components/shared/navbar/navbar.component.html (Intento inicial con HTML clásico)"
+<nav>
+  <a href="/">Contador</a>
+  <a href="/hero">Hero</a>
+</nav>
+```
+
+#### El Problema Visible de `href` en una SPA:
+Si pruebas esta plantilla en el navegador y haces clic en "Hero":
+1. El icono de carga del navegador comienza a girar.
+2. Toda la página web parpadea en blanco y se descarga de nuevo desde el servidor.
+3. **Pérdida irreversible de estado reactivo:** Si el usuario había incrementado el contador a 15 en `CounterPageComponent`, al recargar la página **el contador vuelve a 10** (su valor inicial). Toda la memoria de JavaScript y las **Signals** se reinician por completo.
+
+#### La Solución Angular: Directiva `RouterLink`
+Sustituimos el atributo `href` por la directiva especializada **`RouterLink`**. Esta directiva intercepta el evento de clic, ejecuta internamente un `event.preventDefault()`, actualiza la URL en el historial del navegador con `history.pushState()` y reemplaza únicamente el componente activo dentro del `<router-outlet />` en microsegundos, **manteniendo intacta la memoria de la aplicación**.
+
+Angular admite dos sintaxis para `routerLink`:
+
+```html title="src/app/components/shared/navbar/navbar.component.html"
+<nav>
+  <!-- 1. Sintaxis literal simple: ideal para rutas fijas -->
+  <a routerLink="/">Contador</a>
+
+  <!-- 2. Sintaxis de arreglo (Property Binding): necesaria para segmentos dinámicos o argumentos -->
+  <a [routerLink]="['/hero']">Hero</a>
+</nav>
+```
+
+!!! tip "Sintaxis Literal vs. Sintaxis de Arreglo"
+    * **`routerLink="/ruta"`:** Se utiliza cuando la ruta es una cadena estática invariable.
+    * **`[routerLink]="['/ruta', parametro]"`:** Se utiliza la sintaxis de enlace de propiedad (*property binding*) con un arreglo. Angular evalúa cada elemento del arreglo como un segmento de la URL y se encarga de escapar caracteres especiales automáticamente mediante `encodeURIComponent`.
+
+!!! warning "Requisito Obligatorio en Componentes Standalone"
+    Para que `routerLink` funcione, es **estrictamente obligatorio** importar `RouterLink` en el array `imports` de `NavbarComponent`. Si lo omites, Angular no reconocerá la directiva y el enlace se comportará como un texto inerte que no reacciona al clic.
+
+---
+
+### 4. Resaltado Visual con `RouterLinkActive` y el Dilema de la Ruta Raíz
+
+Para proporcionar una experiencia de usuario clara, el menú debe indicar visualmente en qué página se encuentra el usuario en cada momento.
+
+#### A. Definición de Estilos Locales
+Agregamos los estilos visuales en la parte superior de `navbar.component.html`:
+
+```html title="src/app/components/shared/navbar/navbar.component.html"
+<style>
+  nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #212121;
+    color: white;
+    padding: 10px;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+  }
+  /* Estilo que se aplicará automáticamente al enlace activo */
+  nav a.active {
+    color: #f87171;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+</style>
+```
+
+#### B. Aplicación de `RouterLinkActive`
+La directiva **`RouterLinkActive`** monitoriza la URL activa del navegador y, cuando coincide con la ruta del enlace, le aplica automáticamente la clase CSS indicada (en este caso, `active`):
+
+```html
+<nav>
+  <!-- Asignación directa como string -->
+  <a routerLink="/" routerLinkActive="active">Contador</a>
+
+  <!-- Asignación equivalente mediante Property Binding -->
+  <a [routerLink]="['/hero']" [routerLinkActive]="'active'">Hero</a>
+</nav>
+```
+
+*(Ambas sintaxis son plenamente válidas: `routerLinkActive="active"` pasa el nombre de la clase como string literal, mientras que `[routerLinkActive]="'active'"` lo evalúa como expresión JavaScript).*
+
+#### C. El Problema en Directo: El "Efecto Raíz Permanente"
+Al guardar los cambios y probar la aplicación en el navegador, surge un comportamiento anómalo:
+* Si estás en la página del Contador (`/`), el enlace "Contador" se muestra en rojo. Hasta aquí, correcto.
+* Sin embargo, cuando haces clic en "Hero" (`/hero`), **¡ambos enlaces aparecen marcados en rojo simultáneamente!**
+
+##### ¿Por qué ocurre esto?
+Por defecto, `routerLinkActive` evalúa las rutas mediante una coincidencia por **prefijo** (*prefix match*): considera que un enlace está activo si la URL del navegador **comienza** por la ruta del enlace.
+Como la URL `/hero` comienza por el carácter `/`, Angular asume que la ruta raíz (`/`) también sigue activa.
+
+#### D. La Solución: `[routerLinkActiveOptions]="{ exact: true }"`
+Para solucionar este comportamiento y exigir que la coincidencia sea estricta, añadimos la directiva de configuración `[routerLinkActiveOptions]="{ exact: true }"` al enlace de la raíz:
 
 === "src/app/components/shared/navbar/navbar.component.html"
     ```html title="src/app/components/shared/navbar/navbar.component.html"
@@ -93,7 +274,7 @@ Creamos el directorio `src/app/components/shared/navbar/`:
     </style>
 
     <nav>
-      <!-- Coincidencia exacta para la ruta raíz -->
+      <!-- Coincidencia exacta estricta para la ruta raíz -->
       <a
         routerLink="/"
         routerLinkActive="active"
@@ -102,18 +283,14 @@ Creamos el directorio `src/app/components/shared/navbar/`:
         Contador
       </a>
 
-      <!-- Sintaxis de arreglo para rutas relativas o con argumentos -->
+      <!-- Navegación hacia la página Hero -->
       <a [routerLink]="['/hero']" [routerLinkActive]="'active'">Hero</a>
-      <a [routerLink]="['/dragonball']" [routerLinkActive]="'active'">Dragonball</a>
-      <a routerLink="/dragonball-super" routerLinkActive="active">Dragonball Super</a>
+
+      <!-- Los enlaces a Dragonball y Dragonball Super se incorporarán en las siguientes tareas -->
     </nav>
     ```
 
-### Conceptos Clave de Enrutamiento:
-
-* **`routerLink`:** Sustituye al atributo clásico `href`. Evita que el navegador recargue la página completa y delega el cambio de URL al enrutador de Angular en el cliente.
-* **`routerLinkActive="active"`:** Agrega automáticamente una clase CSS al enlace cuando la URL actual coincide con el `routerLink`.
-* **`[routerLinkActiveOptions]="{ exact: true }"`:** Crucial para la ruta raíz (`/`). Sin esta opción, como toda ruta comienza por `/`, el enlace inicial permanecería marcado como activo permanentemente.
+Ahora, al alternar entre "Contador" y "Hero", la clase `active` se transfiere limpiamente de un elemento a otro sin solapamientos, logrando un menú de navegación reactivo, accesible y profesional.
 
 ---
 
