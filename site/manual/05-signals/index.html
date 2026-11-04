@@ -466,7 +466,7 @@
   <span class="md-ellipsis">
     
   
-  03. Bases de TypeScript
+  03. Bases de TypeScript. Conceptos mínimos
 
     
   </span>
@@ -961,25 +961,14 @@
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#por-que-es-obligatorio-retornar-siempre-una-nueva-referencia" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        ¿Por qué es obligatorio retornar siempre una nueva referencia?
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="¿Por qué es obligatorio retornar siempre una nueva referencia?">
+    <nav class="md-nav" aria-label="El Principio de Inmutabilidad en Angular Signals">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#el-mecanismo-de-deteccion-de-cambios-defaultequals" class="md-nav__link">
+  <a href="#1-tipos-por-valor-primitivos-vs-tipos-por-referencia-objetos-y-arrays" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        El Mecanismo de Detección de Cambios (defaultEquals)
+        1. Tipos por Valor (Primitivos) vs Tipos por Referencia (Objetos y Arrays)
       </span>
     </span>
   </a>
@@ -987,10 +976,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#el-problema-de-la-mutacion-directa-bug-silencioso" class="md-nav__link">
+  <a href="#2-la-metafora-de-la-casa-y-la-direccion-postal" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        El problema de la mutación directa (Bug Silencioso)
+        2. La Metáfora de la Casa y la Dirección Postal
       </span>
     </span>
   </a>
@@ -998,10 +987,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#la-solucion-inmutable-nueva-direccion-de-memoria" class="md-nav__link">
+  <a href="#3-por-que-angular-no-mira-dentro-del-array-rendimiento-o1-vs-on" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        La Solución Inmutable (Nueva Dirección de Memoria)
+        3. ¿Por qué Angular no mira dentro del Array? (Rendimiento O(1) vs O(N))
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-desmitificando-el-operador-spread-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Desmitificando el Operador Spread (<code>...</code>) paso a paso
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-el-gran-mito-por-que-usar-update-no-lo-hace-automatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. El Gran Mito: "¿Por qué usar update() no lo hace automático?"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparativa-de-flujo-en-memoria-mutacion-vs-inmutabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comparativa de Flujo en Memoria: Mutación vs Inmutabilidad
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabla-de-patrones-metodos-prohibidos-vs-alternativas-inmutables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de Patrones: Métodos Prohibidos vs Alternativas Inmutables
       </span>
     </span>
   </a>
@@ -1025,13 +1058,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comparativa-con-variables-normales" class="md-nav__link">
+  <a href="#laboratorio-practico-variable-normal-vs-signal-el-experimento-del-setinterval" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Comparativa con variables normales
+        Laboratorio Práctico: Variable Normal vs Signal (El Experimento del <code>setInterval</code>)
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Laboratorio Práctico: Variable Normal vs Signal (El Experimento del setInterval)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-implementacion-del-componente-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Implementación del Componente de Prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-plantilla-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Plantilla Visual
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-que-ocurre-en-el-navegador-el-momento-eureka" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. ¿Qué ocurre en el Navegador? (El Momento "¡Eureka!")
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-analisis-arquitectonico-por-que-ocurre-esto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Análisis Arquitectónico: ¿Por qué ocurre esto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-nota-sobre-changedetectionstrategyonpush-vs-la-era-zoneless" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Nota sobre <code>ChangeDetectionStrategy.OnPush</code> vs la Era Zoneless
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2262,25 +2356,14 @@
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#por-que-es-obligatorio-retornar-siempre-una-nueva-referencia" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        ¿Por qué es obligatorio retornar siempre una nueva referencia?
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="¿Por qué es obligatorio retornar siempre una nueva referencia?">
+    <nav class="md-nav" aria-label="El Principio de Inmutabilidad en Angular Signals">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#el-mecanismo-de-deteccion-de-cambios-defaultequals" class="md-nav__link">
+  <a href="#1-tipos-por-valor-primitivos-vs-tipos-por-referencia-objetos-y-arrays" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        El Mecanismo de Detección de Cambios (defaultEquals)
+        1. Tipos por Valor (Primitivos) vs Tipos por Referencia (Objetos y Arrays)
       </span>
     </span>
   </a>
@@ -2288,10 +2371,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#el-problema-de-la-mutacion-directa-bug-silencioso" class="md-nav__link">
+  <a href="#2-la-metafora-de-la-casa-y-la-direccion-postal" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        El problema de la mutación directa (Bug Silencioso)
+        2. La Metáfora de la Casa y la Dirección Postal
       </span>
     </span>
   </a>
@@ -2299,10 +2382,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#la-solucion-inmutable-nueva-direccion-de-memoria" class="md-nav__link">
+  <a href="#3-por-que-angular-no-mira-dentro-del-array-rendimiento-o1-vs-on" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        La Solución Inmutable (Nueva Dirección de Memoria)
+        3. ¿Por qué Angular no mira dentro del Array? (Rendimiento O(1) vs O(N))
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-desmitificando-el-operador-spread-paso-a-paso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Desmitificando el Operador Spread (<code>...</code>) paso a paso
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-el-gran-mito-por-que-usar-update-no-lo-hace-automatico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. El Gran Mito: "¿Por qué usar update() no lo hace automático?"
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparativa-de-flujo-en-memoria-mutacion-vs-inmutabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comparativa de Flujo en Memoria: Mutación vs Inmutabilidad
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tabla-de-patrones-metodos-prohibidos-vs-alternativas-inmutables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de Patrones: Métodos Prohibidos vs Alternativas Inmutables
       </span>
     </span>
   </a>
@@ -2326,13 +2453,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comparativa-con-variables-normales" class="md-nav__link">
+  <a href="#laboratorio-practico-variable-normal-vs-signal-el-experimento-del-setinterval" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Comparativa con variables normales
+        Laboratorio Práctico: Variable Normal vs Signal (El Experimento del <code>setInterval</code>)
       </span>
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Laboratorio Práctico: Variable Normal vs Signal (El Experimento del setInterval)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-implementacion-del-componente-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Implementación del Componente de Prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-plantilla-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Plantilla Visual
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-que-ocurre-en-el-navegador-el-momento-eureka" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. ¿Qué ocurre en el Navegador? (El Momento "¡Eureka!")
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-analisis-arquitectonico-por-que-ocurre-esto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Análisis Arquitectónico: ¿Por qué ocurre esto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-nota-sobre-changedetectionstrategyonpush-vs-la-era-zoneless" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Nota sobre <code>ChangeDetectionStrategy.OnPush</code> vs la Era Zoneless
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3199,6 +3387,15 @@
 <p>En Angular Signals, nunca se leerán valores intermedios o desincronizados. Si dos valores <code>computed()</code> dependen de una misma señal raíz y ambos se muestran en la plantilla, Angular garantiza que se resuelven de forma atómica y consistente antes de pintar la vista.</p>
 </div>
 <p>Con Angular 19+, puedes ejecutar aplicaciones completamente sin Zone.js (Zoneless Angular), reduciendo el tamaño del bundle y mejorando el rendimiento general.</p>
+<div class="admonition tip">
+<p class="admonition-title">🎬 Recurso Didáctico Recomendado: ¿Qué son las Signals y por qué son tan importantes?</p>
+<p>Para afianzar estos conceptos con una explicación visual muy didáctica y paso a paso, recomendamos el siguiente vídeo complementario:</p>
+<ul>
+<li>📺 <strong>Canal:</strong> Carlos Codea</li>
+<li>🔗 <strong>Enlace:</strong> <a href="https://www.youtube.com/watch?v=fKp4VUKDyA4">¿Qué son las signals/señales en Angular y por qué son tan importantes?</a></li>
+<li>💡 <strong>Conceptos clave abordados:</strong> Reactividad granular (<em>fine-grained</em>), comparación intuitiva frente al ciclo de comprobación de Zone.js, sintaxis de lectura/escritura (<code>set</code>, <code>update</code>) y el salto cualitativo hacia la arquitectura <em>Zoneless</em>.</li>
+</ul>
+</div>
 <h3 id="signal">signal()<a class="headerlink" href="#signal" title="Permanent link">&para;</a></h3>
 <p>La función <code>signal()</code> crea una nueva Signal con un valor inicial. Es la primitiva más básica del sistema de reactividad.</p>
 <h4 id="creacion-y-tipado">Creación y tipado<a class="headerlink" href="#creacion-y-tipado" title="Permanent link">&para;</a></h4>
@@ -3261,100 +3458,144 @@
 </div>
 <hr />
 <h4 id="el-principio-de-inmutabilidad-en-angular-signals">El Principio de Inmutabilidad en Angular Signals<a class="headerlink" href="#el-principio-de-inmutabilidad-en-angular-signals" title="Permanent link">&para;</a></h4>
-<p>Para trabajar con Signals de forma profesional, es imprescindible comprender la diferencia entre <strong>mutabilidad</strong> e <strong>inmutabilidad</strong>:</p>
-<ul>
-<li><strong>Mutabilidad (Modificación destructiva):</strong> Modificar directamente los datos internos de un objeto o array existente en su misma dirección de memoria (por ejemplo, hacer <code>array.push(elemento)</code> o <code>usuario.nombre = 'Pedro'</code>).</li>
-<li><strong>Inmutabilidad (Creación no destructiva):</strong> Tratar los datos como <strong>"grabados en piedra"</strong> (de solo lectura). Si necesitas agregar, quitar o alterar información, <strong>nunca modificas el original</strong>, sino que generas un <strong>nuevo objeto o array independiente</strong> que contiene los cambios deseados.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Tipo de Operación</th>
-<th style="text-align: left;">Métodos Mutables (Prohibidos con Signals)</th>
-<th style="text-align: left;">Métodos Inmutables (Correctos con Signals)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>Añadir elementos</strong></td>
-<td style="text-align: left;"><code>arr.push(x)</code>, <code>arr.unshift(x)</code></td>
-<td style="text-align: left;"><code>[...arr, x]</code>, <code>arr.concat(x)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Eliminar elementos</strong></td>
-<td style="text-align: left;"><code>arr.splice(i, 1)</code>, <code>arr.pop()</code>, <code>arr.shift()</code></td>
-<td style="text-align: left;"><code>arr.filter(item =&gt; item.id !== id)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Modificar elementos</strong></td>
-<td style="text-align: left;"><code>arr[i] = nuevoValor</code></td>
-<td style="text-align: left;"><code>arr.map(item =&gt; item.id === id ? { ...item, ...cambios } : item)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Ordenar o invertir</strong></td>
-<td style="text-align: left;"><code>arr.sort()</code>, <code>arr.reverse()</code></td>
-<td style="text-align: left;"><code>[...arr].sort()</code>, <code>[...arr].reverse()</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Modificar propiedades de objeto</strong></td>
-<td style="text-align: left;"><code>obj.propiedad = valor</code></td>
-<td style="text-align: left;"><code>{ ...obj, propiedad: valor }</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h4 id="por-que-es-obligatorio-retornar-siempre-una-nueva-referencia">¿Por qué es obligatorio retornar siempre una nueva referencia?<a class="headerlink" href="#por-que-es-obligatorio-retornar-siempre-una-nueva-referencia" title="Permanent link">&para;</a></h4>
-<p>En JavaScript, los tipos complejos (arrays y objetos) <strong>se comparan por su dirección de memoria (referencia)</strong>, no por los valores que contienen dentro:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">];</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">a</span><span class="p">;</span><span class="w">       </span><span class="c1">// Ambas variables apuntan a la misma dirección física de memoria (ej: 0x001)</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nx">a</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span><span class="w">         </span><span class="c1">// Modificamos el array original</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// ¡Devuelve TRUE! Porque ambas apuntan a la dirección 0x001</span>
-</span></code></pre></div>
-<h5 id="el-mecanismo-de-deteccion-de-cambios-defaultequals">El Mecanismo de Detección de Cambios (defaultEquals)<a class="headerlink" href="#el-mecanismo-de-deteccion-de-cambios-defaultequals" title="Permanent link">&para;</a></h5>
-<p>Para que el motor de Signals sea extremadamente veloz, Angular <strong>no revisa propiedad por propiedad ni elemento por elemento</strong> dentro de listas grandes (una comparación profunda destruiría el rendimiento de la aplicación). En su lugar, utiliza la función interna <code>defaultEquals</code>:</p>
+<p>Para dominar Angular moderno, es imprescindible entender qué ocurre bajo el capó cuando modificamos datos. Muchos desarrolladores sufren el mismo desconcierto al comenzar:</p>
 <blockquote>
-<p><strong>Regla de detección de cambios en Signals:</strong><br />
-<code>¿Hay cambio a notificar? &lt;==&gt; (referenciaAnterior !== nuevaReferencia)</code></p>
+<p><em>"¿Por qué cuando actualizo un número con <code>contador.update(c =&gt; c + 1)</code> la pantalla se actualiza sola, pero si tengo una lista de usuarios y hago <code>lista.push(nuevoUsuario)</code> la pantalla no reacciona?"</em></p>
 </blockquote>
-<h5 id="el-problema-de-la-mutacion-directa-bug-silencioso">El problema de la mutación directa (Bug Silencioso)<a class="headerlink" href="#el-problema-de-la-mutacion-directa-bug-silencioso" title="Permanent link">&para;</a></h5>
-<p>Si mutas un array u objeto directamente dentro de <code>update()</code> y devuelves la misma instancia:</p>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// ERROR GRAVE: La vista NO se actualizará</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nx">usuarios</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">lista</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">lista</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="p">,</span><span class="w"> </span><span class="nx">nombre</span><span class="o">:</span><span class="w"> </span><span class="s1">'Carlos'</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Modifica el array original en 0x001</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">lista</span><span class="p">;</span><span class="w">                            </span><span class="c1">// Retorna la MISMA referencia 0x001</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">});</span>
+<p>La respuesta está en cómo JavaScript gestiona la memoria y cómo Angular detecta los cambios.</p>
+<hr />
+<h5 id="1-tipos-por-valor-primitivos-vs-tipos-por-referencia-objetos-y-arrays">1. Tipos por Valor (Primitivos) vs Tipos por Referencia (Objetos y Arrays)<a class="headerlink" href="#1-tipos-por-valor-primitivos-vs-tipos-por-referencia-objetos-y-arrays" title="Permanent link">&para;</a></h5>
+<p>En JavaScript existen dos grandes familias de datos:</p>
+<ul>
+<li><strong>Tipos Primitivos (números, strings, booleanos):</strong> Se guardan <strong>por valor</strong>. Si el contador pasa de <code>0</code> a <code>1</code>, los dos valores son físicamente distintos (<code>0 !== 1</code>). Angular lo detecta de forma inmediata.</li>
+<li><strong>Tipos Complejos (Arrays y Objetos):</strong> <strong>No se guardan directamente dentro de la variable.</strong> La variable solo almacena un <strong>puntero o dirección de memoria</strong> (una referencia que indica en qué ubicación física residen los datos dentro de la memoria del navegador).</li>
+</ul>
+<hr />
+<h5 id="2-la-metafora-de-la-casa-y-la-direccion-postal">2. La Metáfora de la Casa y la Dirección Postal<a class="headerlink" href="#2-la-metafora-de-la-casa-y-la-direccion-postal" title="Permanent link">&para;</a></h5>
+<p>Imagina que tu variable con un array de usuarios es un <strong>papelito con una dirección postal</strong>: <code>"Calle Gran Vía, 12"</code> (en memoria: <code>0x001</code>).</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Variable (Papelito)              Memoria Heap (La Casa física)
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>┌──────────────────────┐        ┌──────────────────────────────────┐
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│  usuarios = 0x001    ├───────►│  [ { id: 1, nombre: 'Goku' } ]   │
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>└──────────────────────┘        └──────────────────────────────────┘
 </span></code></pre></div>
-<p>Angular compara <code>0x001 === 0x001</code>, concluye que <strong>"no ha cambiado nada"</strong> y como consecuencia:</p>
+<ul>
+<li><strong>Mutación Directa (<code>lista.push()</code>):</strong><br />
+  Equivale a entrar en la casa y meter un mueble nuevo. La casa ha cambiado por dentro, pero <strong>el papelito sigue diciendo <code>"Calle Gran Vía, 12"</code> (<code>0x001</code>)</strong>.</li>
+<li><strong>El Inspector de Angular (<code>defaultEquals</code>):</strong><br />
+  Angular revisa la señal para saber si debe repintar la pantalla. Pero Angular no entra a registrar toda la casa habitación por habitación; <strong>solo mira el papelito de la dirección</strong>. Como el papelito sigue diciendo <code>0x001 === 0x001</code>, Angular concluye: <em>"La dirección no ha cambiado, no hago nada"</em> ➔ <strong>La pantalla no se repinta (Bug Silencioso)</strong>.</li>
+<li><strong>Inmutabilidad (<code>[...lista, nuevo]</code>):</strong><br />
+  En lugar de alterar la casa existente, construyes una <strong>casa nueva e independiente</strong> en <code>"Avenida Diagonal, 45"</code> (<code>0x002</code>) con todos los muebles anteriores más el nuevo. El papelito de la señal pasa a contener <code>0x002</code>.<br />
+  Cuando Angular mira el papelito, comprueba <code>0x001 !== 0x002</code>: <em>"¡Hay una dirección nueva!"</em> ➔ <strong>Sincroniza el DOM al instante</strong>.</li>
+</ul>
+<hr />
+<h5 id="3-por-que-angular-no-mira-dentro-del-array-rendimiento-o1-vs-on">3. ¿Por qué Angular no mira dentro del Array? (Rendimiento O(1) vs O(N))<a class="headerlink" href="#3-por-que-angular-no-mira-dentro-del-array-rendimiento-o1-vs-on" title="Permanent link">&para;</a></h5>
+<p>Muchos alumnos se preguntan: <em>"¿Por qué Angular no revisa elemento por elemento para ver si algo cambió?"</em></p>
+<p>No es una limitación de Angular; es una <strong>decisión de ingeniería para alcanzar el máximo rendimiento posible</strong>:</p>
+<ul>
+<li>Si Angular tuviera que comparar profundamente (<em>deep equality</em>) listas de 5.000 o 10.000 elementos cada vez que ocurre un evento, la aplicación se congelaría (complejidad <code>O(N)</code>).</li>
+<li>Comparar dos direcciones de memoria (<code>referenciaAnterior === nuevaReferencia</code>) es una única instrucción de procesador que tarda <strong>1 nanosegundo</strong> (complejidad constante <code>O(1)</code>).</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Regla de Oro de Reactividad en Signals</p>
+<p><strong><code>¿Hay cambio a notificar? &lt;==&gt; (referenciaAnterior !== nuevaReferencia)</code></strong><br />
+Si la dirección de memoria física no cambia, para Angular <strong>el cambio nunca ocurrió</strong>.</p>
+</div>
+<hr />
+<h5 id="4-desmitificando-el-operador-spread-paso-a-paso">4. Desmitificando el Operador Spread (<code>...</code>) paso a paso<a class="headerlink" href="#4-desmitificando-el-operador-spread-paso-a-paso" title="Permanent link">&para;</a></h5>
+<p>Cuando escribes <code>[...lista, nuevoItem]</code>, el motor de JavaScript realiza cuatro pasos físicos:</p>
 <ol>
-<li><strong>La pantalla NO se repinta.</strong></li>
-<li>Las señales derivadas <code>computed()</code> <strong>NO se recalculan.</strong></li>
-<li>Los efectos <code>effect()</code> <strong>NO se disparan.</strong></li>
+<li><strong><code>[</code> :</strong> Reserva un <strong>nuevo espacio físico en memoria</strong> (ej. dirección <code>0x002</code>).</li>
+<li><strong><code>...lista</code> :</strong> Extrae uno a uno los elementos del array anterior y los copia dentro del nuevo espacio.</li>
+<li><strong><code>, nuevoItem</code> :</strong> Añade el nuevo elemento al final del nuevo espacio.</li>
+<li><strong><code>]</code> :</strong> Cierra el array y retorna la <strong>nueva dirección de memoria</strong> (<code>0x002</code>).</li>
 </ol>
-<h5 id="la-solucion-inmutable-nueva-direccion-de-memoria">La Solución Inmutable (Nueva Dirección de Memoria)<a class="headerlink" href="#la-solucion-inmutable-nueva-direccion-de-memoria" title="Permanent link">&para;</a></h5>
-<p>Al utilizar el operador spread <code>[...lista, nuevo]</code>, JavaScript reserva un <strong>nuevo espacio físico en la memoria</strong> (por ejemplo, <code>0x002</code>). Angular compara <code>0x001 !== 0x002</code>, detecta inmediatamente el cambio de referencia y sincroniza la vista con precisión quirúrgica.</p>
+<hr />
+<h5 id="5-el-gran-mito-por-que-usar-update-no-lo-hace-automatico">5. El Gran Mito: "¿Por qué usar update() no lo hace automático?"<a class="headerlink" href="#5-el-gran-mito-por-que-usar-update-no-lo-hace-automatico" title="Permanent link">&para;</a></h5>
+<div class="admonition warning">
+<p class="admonition-title">Error Conceptual Muy Frecuente</p>
+<p>El método <code>update(fn)</code> <strong>NO clona tus datos automáticamente</strong>.<br />
+<code>update()</code> solo ejecuta tu función y asigna a la señal <strong>lo que tú decidas retornar</strong>:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// ❌ ERROR GRAVE: Usar .push() dentro de update() sigue rompiendo la reactividad</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nx">usuarios</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">lista</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">lista</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span><span class="w"> </span><span class="nx">nombre</span><span class="o">:</span><span class="w"> </span><span class="s1">'Vegeta'</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="c1">// Modifica el array original en 0x001</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">lista</span><span class="p">;</span><span class="w">                            </span><span class="c1">// Retorna la MISMA dirección 0x001 -&gt; NO repinta</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">});</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">// ✅ CORRECTO: Retornar siempre una nueva referencia creada con spread o métodos puros</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nx">usuarios</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">lista</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="p">...</span><span class="nx">lista</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span><span class="w"> </span><span class="nx">nombre</span><span class="o">:</span><span class="w"> </span><span class="s1">'Vegeta'</span><span class="w"> </span><span class="p">}</span><span class="w">              </span><span class="c1">// Genera y retorna 0x002 -&gt; ¡Repinta de inmediato!</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">]);</span>
+</span></code></pre></div>
+</div>
+<hr />
+<h5 id="comparativa-de-flujo-en-memoria-mutacion-vs-inmutabilidad">Comparativa de Flujo en Memoria: Mutación vs Inmutabilidad<a class="headerlink" href="#comparativa-de-flujo-en-memoria-mutacion-vs-inmutabilidad" title="Permanent link">&para;</a></h5>
 <pre class="mermaid"><code>flowchart TD
     subgraph MutacionDirecta ["Mutación Directa: Misma Referencia"]
-        A1["Memoria: 0x001&lt;br&gt;Array original con 2 items"] --&gt; Accion1["Operación mutable:&lt;br&gt;lista.push(nuevoItem)"]
-        Accion1 --&gt; A2["Memoria: 0x001&lt;br&gt;Misma dirección de memoria"]
-        A2 --&gt; Comp1["Angular defaultEquals:&lt;br&gt;0x001 === 0x001"]
-        Comp1 --&gt; Res1["Resultado: Sin cambios detectados&lt;br&gt;La vista NO se repinta"]
+        A1["&lt;b&gt;Memoria: 0x001&lt;/b&gt;&lt;br/&gt;Array original&lt;br/&gt;(2 elementos)"]
+        Accion1["&lt;b&gt;Operación mutable:&lt;/b&gt;&lt;br/&gt;&lt;code&gt;lista.push(nuevo)&lt;/code&gt;"]
+        A2["&lt;b&gt;Memoria: 0x001&lt;/b&gt;&lt;br/&gt;(Misma referencia)"]
+        Comp1["&lt;b&gt;defaultEquals:&lt;/b&gt;&lt;br/&gt;0x001 === 0x001&lt;br/&gt;&lt;i&gt;(Sin cambios)&lt;/i&gt;"]
+        Res1["❌ &lt;b&gt;Sin cambios&lt;/b&gt;&lt;br/&gt;La vista NO se repinta"]
+
+        A1 --&gt; Accion1 --&gt; A2 --&gt; Comp1 --&gt; Res1
     end
 
     subgraph Inmutabilidad ["Inmutabilidad: Nueva Referencia"]
-        B1["Memoria: 0x001&lt;br&gt;Array original con 2 items"] --&gt; Accion2["Operación inmutable:&lt;br&gt;update con spread (...lista)"]
-        Accion2 --&gt; B2["Memoria: 0x002&lt;br&gt;Nueva dirección de memoria"]
-        B2 --&gt; Comp2["Angular defaultEquals:&lt;br&gt;0x001 !== 0x002"]
-        Comp2 --&gt; Res2["Resultado: Cambio detectado&lt;br&gt;Repintado fino inmediato del DOM"]
+        B1["&lt;b&gt;Memoria: 0x001&lt;/b&gt;&lt;br/&gt;Array original&lt;br/&gt;(2 elementos)"]
+        Accion2["&lt;b&gt;Operación inmutable:&lt;/b&gt;&lt;br/&gt;&lt;code&gt;[...lista, nuevo]&lt;/code&gt;"]
+        B2["&lt;b&gt;Memoria: 0x002&lt;/b&gt;&lt;br/&gt;(Nueva referencia)"]
+        Comp2["&lt;b&gt;defaultEquals:&lt;/b&gt;&lt;br/&gt;0x001 !== 0x002&lt;br/&gt;&lt;i&gt;(Cambio detectado)&lt;/i&gt;"]
+        Res2["✅ &lt;b&gt;Cambio detectado&lt;/b&gt;&lt;br/&gt;Repintado del DOM"]
+
+        B1 --&gt; Accion2 --&gt; B2 --&gt; Comp2 --&gt; Res2
     end
 
     classDef bad fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
     classDef good fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
-    classDef step fill:#f5f5f5,stroke:#616161,stroke-width:1px;
+    classDef step fill:#f5f5f5,stroke:#616161,stroke-width:1px,color:#212121;
 
     class Res1,A2 bad;
     class Res2,B2 good;
-    class Accion1,Accion2,Comp1,Comp2 step;</code></pre>
+    class Accion1,Accion2,Comp1,Comp2,A1,B1 step;</code></pre>
+<hr />
+<h5 id="tabla-de-patrones-metodos-prohibidos-vs-alternativas-inmutables">Tabla de Patrones: Métodos Prohibidos vs Alternativas Inmutables<a class="headerlink" href="#tabla-de-patrones-metodos-prohibidos-vs-alternativas-inmutables" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Operación</th>
+<th style="text-align: left;">Método Mutable (❌ No usar en Signals)</th>
+<th style="text-align: left;">Alternativa Inmutable (✅ Usar siempre)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Añadir elemento</strong></td>
+<td style="text-align: left;"><code>arr.push(x)</code>, <code>arr.unshift(x)</code></td>
+<td style="text-align: left;"><code>[...arr, x]</code>, <code>[x, ...arr]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Eliminar elemento</strong></td>
+<td style="text-align: left;"><code>arr.splice(i, 1)</code>, <code>arr.pop()</code></td>
+<td style="text-align: left;"><code>arr.filter(item =&gt; item.id !== idEliminar)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Modificar elemento</strong></td>
+<td style="text-align: left;"><code>arr[i].nombre = 'Nuevo'</code></td>
+<td style="text-align: left;"><code>arr.map(item =&gt; item.id === id ? { ...item, nombre: 'Nuevo' } : item)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ordenar / Invertir</strong></td>
+<td style="text-align: left;"><code>arr.sort()</code>, <code>arr.reverse()</code></td>
+<td style="text-align: left;"><code>[...arr].sort()</code>, <code>[...arr].reverse()</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Actualizar objeto</strong></td>
+<td style="text-align: left;"><code>usuario.edad = 30</code></td>
+<td style="text-align: left;"><code>{ ...usuario, edad: 30 }</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h5 id="modificacion-inmutable-de-arrays-y-objetos-con-update-guia-de-patrones">Modificación inmutable de Arrays y Objetos con <code>update()</code> (Guía de Patrones)<a class="headerlink" href="#modificacion-inmutable-de-arrays-y-objetos-con-update-guia-de-patrones" title="Permanent link">&para;</a></h5>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 1. Arrays: añadir, eliminar o modificar elementos</span>
@@ -3431,36 +3672,130 @@
 </tr>
 </tbody>
 </table>
-<h4 id="comparativa-con-variables-normales">Comparativa con variables normales<a class="headerlink" href="#comparativa-con-variables-normales" title="Permanent link">&para;</a></h4>
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// ❌ VARIABLE NORMAL: los cambios NO se detectan automáticamente</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">ViejoComponente</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">contador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">incrementar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">contador</span><span class="o">++</span><span class="p">;</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="c1">// La plantilla se actualiza solo porque Zone.js detecta el click</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="c1">// Si cambiaras esto en un setTimeout con Zone.js desactivado, la vista no se actualizaría</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">// ✅ SIGNAL: los cambios siempre se reflejan, con o sin Zone.js</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">NuevoComponente</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="nx">contador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="nx">incrementar</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">contador</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="c1">// La plantilla se actualiza automáticamente porque depende de contador()</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span>
+<h4 id="laboratorio-practico-variable-normal-vs-signal-el-experimento-del-setinterval">Laboratorio Práctico: Variable Normal vs Signal (El Experimento del <code>setInterval</code>)<a class="headerlink" href="#laboratorio-practico-variable-normal-vs-signal-el-experimento-del-setinterval" title="Permanent link">&para;</a></h4>
+<p>Para comprender la diferencia fundamental entre una variable tradicional de JavaScript y una Signal en Angular moderno, analicemos qué ocurre cuando actualizamos datos de forma asíncrona mediante un temporizador (<code>setInterval</code>).</p>
+<p>Imagina un componente que mantiene dos contadores idénticos iniciados en <code>10</code>: uno almacenado en una <strong>propiedad normal de clase</strong> y otro custodiado por una <strong>Signal</strong>.</p>
+<h5 id="1-implementacion-del-componente-de-prueba">1. Implementación del Componente de Prueba<a class="headerlink" href="#1-implementacion-del-componente-de-prueba" title="Permanent link">&para;</a></h5>
+<div class="language-typescript highlight"><span class="filename">src/app/pages/counter/counter-page.component.ts</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Component</span><span class="p">,</span><span class="w"> </span><span class="nx">signal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@angular/core'</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">@Component</span><span class="p">({</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">selector</span><span class="o">:</span><span class="w"> </span><span class="s1">'app-counter-page'</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">templateUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">'./counter-page.component.html'</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">styles</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="sb">    button {</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="sb">      padding: 6px 12px;</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="sb">      margin: 4px;</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="sb">    }</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">})</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CounterPageComponent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// Variable normal de clase (valor pasivo en memoria)</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="c1">// Signal reactiva (contenedor inteligente auto-notificable)</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="nx">counterSignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">signal</span><span class="p">(</span><span class="mf">10</span><span class="p">);</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span><span class="c1">// Temporizador asíncrono ejecutado cada 2 segundos</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span><span class="nx">setInterval</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">counterSignal</span><span class="p">.</span><span class="nx">update</span><span class="p">((</span><span class="nx">current</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">({</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">        </span><span class="nx">variableNormal</span><span class="o">:</span><span class="w"> </span><span class="kt">this.counter</span><span class="p">,</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">        </span><span class="nx">signalReactiva</span><span class="o">:</span><span class="w"> </span><span class="kt">this.counterSignal</span><span class="p">(),</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">      </span><span class="p">});</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="mf">2000</span><span class="p">);</span>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">  </span><span class="nx">increaseBy</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counterSignal</span><span class="p">.</span><span class="nx">update</span><span class="p">((</span><span class="nx">current</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">value</span><span class="p">);</span>
+</span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>
+</span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">  </span><span class="nx">resetCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">counterSignal</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+</span><span id="__span-8-41"><a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-42"><a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="cm">&lt;!-- Plantilla con variable normal --&gt;</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Contador: {{ contador }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="cm">&lt;!-- Plantilla con Signal --&gt;</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Contador: {{ contador() }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="cm">&lt;!-- La diferencia clave: los () indican a Angular que esta plantilla</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="cm">     debe actualizarse cuando contador cambie --&gt;</span>
+<h5 id="2-plantilla-visual">2. Plantilla Visual<a class="headerlink" href="#2-plantilla-visual" title="Permanent link">&para;</a></h5>
+<div class="language-html highlight"><span class="filename">src/app/pages/counter/counter-page.component.html</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">&lt;</span><span class="nt">section</span> <span class="na">class</span><span class="o">=</span><span class="s">"p-4"</span><span class="p">&gt;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-xl font-bold"</span><span class="p">&gt;</span>Contador Tradicional: {{ counter }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="p">&lt;</span><span class="nt">h1</span> <span class="na">class</span><span class="o">=</span><span class="s">"text-xl font-bold text-blue-500"</span><span class="p">&gt;</span>Contador Signal: {{ counterSignal() }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  <span class="p">&lt;</span><span class="nt">hr</span> <span class="na">class</span><span class="o">=</span><span class="s">"my-4"</span> <span class="p">/&gt;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  <span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">1</span><span class="err">)"</span><span class="p">&gt;</span>+1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  <span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">increaseBy</span><span class="err">(</span><span class="na">-1</span><span class="err">)"</span><span class="p">&gt;</span>-1<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="p">&lt;</span><span class="nt">button</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">resetCounter</span><span class="err">()"</span><span class="p">&gt;</span>Reset<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">&lt;/</span><span class="nt">section</span><span class="p">&gt;</span>
 </span></code></pre></div>
+<hr />
+<h5 id="3-que-ocurre-en-el-navegador-el-momento-eureka">3. ¿Qué ocurre en el Navegador? (El Momento "¡Eureka!")<a class="headerlink" href="#3-que-ocurre-en-el-navegador-el-momento-eureka" title="Permanent link">&para;</a></h5>
+<p>Al ejecutar este componente y abrir la consola de desarrollo (F12), se comprueba de forma inmediata el comportamiento del nuevo motor reactivo:</p>
+<ol>
+<li>
+<p><strong>En la Consola de JavaScript:</strong><br />
+   Ambos contadores se incrementan a la vez en memoria cada 2 segundos:<br />
+<code>{ variableNormal: 11, signalReactiva: 11 }</code><br />
+<code>{ variableNormal: 12, signalReactiva: 12 }</code><br />
+<code>{ variableNormal: 13, signalReactiva: 13 }</code></p>
+</li>
+<li>
+<p><strong>En la Pantalla (DOM):</strong>  </p>
+</li>
+<li><strong>Contador Tradicional:</strong> Se queda <strong>completamente congelado en <code>10</code></strong>. No cambia nunca por sí solo dentro del temporizador.</li>
+<li>
+<p><strong>Contador Signal:</strong> Avanza fluidamente: <strong><code>11, 12, 13, 14...</code></strong> en tiempo real ante la vista del usuario.</p>
+</li>
+<li>
+<p><strong>La Paradoja del Clic:</strong><br />
+   Si el usuario pulsa el botón <code>+1</code>, de repente el contador tradicional da un salto gigante (por ejemplo, salta de golpe de <code>10</code> a <code>18</code>). ¿Por qué? Porque el evento <code>(click)</code> sí despierta la detección de cambios de Angular, forzando a pintar el valor acumulado que la variable normal guardaba en memoria.</p>
+</li>
+</ol>
+<hr />
+<h5 id="4-analisis-arquitectonico-por-que-ocurre-esto">4. Análisis Arquitectónico: ¿Por qué ocurre esto?<a class="headerlink" href="#4-analisis-arquitectonico-por-que-ocurre-esto" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Característica</th>
+<th style="text-align: left;">Variable Normal (<code>counter = 10</code>)</th>
+<th style="text-align: left;">Signal (<code>counterSignal = signal(10)</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Naturaleza</strong></td>
+<td style="text-align: left;"><strong>Dato Pasivo (Muerto):</strong> Solo existe en la memoria RAM de JavaScript.</td>
+<td style="text-align: left;"><strong>Dato Reactivo (Vivo):</strong> Conectado al grafo de dependencias de Angular.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Mecanismo de aviso</strong></td>
+<td style="text-align: left;">Ninguno. Angular no tiene "ojos" para vigilar variables primitivas dentro de un temporizador.</td>
+<td style="text-align: left;">Al ejecutar <code>.update()</code>, la Signal emite una notificación al scheduler de Angular.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Comportamiento en Zoneless</strong></td>
+<td style="text-align: left;">❌ <strong>Invisible:</strong> El DOM nunca se actualiza a menos que ocurra otro evento externo.</td>
+<td style="text-align: left;">✅ <strong>Quirúrgico:</strong> Angular actualiza únicamente el nodo del DOM donde se leyó <code>counterSignal()</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h5 id="5-nota-sobre-changedetectionstrategyonpush-vs-la-era-zoneless">5. Nota sobre <code>ChangeDetectionStrategy.OnPush</code> vs la Era Zoneless<a class="headerlink" href="#5-nota-sobre-changedetectionstrategyonpush-vs-la-era-zoneless" title="Permanent link">&para;</a></h5>
+<div class="admonition info">
+<p class="admonition-title">Evolución Arquitectónica: De OnPush a Zoneless</p>
+<ul>
+<li>
+<p><strong>En el pasado (Angular con Zone.js):</strong><br />
+  Históricamente, <code>Zone.js</code> interceptaba <code>setInterval</code> y revisaba todos los componentes de la app. Para evitar esa sobrecarga, los desarrolladores tenían que configurar manualmente <code>changeDetection: ChangeDetectionStrategy.OnPush</code> en el <code>@Component</code>, obligando a usar técnicas manuales como <code>ChangeDetectorRef.markForCheck()</code>.</p>
+</li>
+<li>
+<p><strong>En el presente y futuro (Angular 18+ a 22 Zoneless):</strong><br />
+<code>ChangeDetectionStrategy.OnPush</code> pasa a ser un concepto en transición. Al configurar Angular sin Zone.js (<code>provideZonelessChangeDetection()</code>), <strong>toda la aplicación es reactiva por defecto gracias a las Signals</strong>. Ya no necesitas configurar estrategias complejas en cada componente: si necesitas que un dato se refleje en la pantalla de forma predecible y eficiente, <strong>úsalo como una Signal</strong>.</p>
+</li>
+</ul>
+</div>
 <h3 id="computed">computed()<a class="headerlink" href="#computed" title="Permanent link">&para;</a></h3>
 <p><code>computed()</code> crea una Signal cuyo valor se <strong>deriva</strong> de otras Signals. Es el equivalente reactivo de una propiedad calculada.</p>
 <h4 id="valores-derivados">Valores derivados<a class="headerlink" href="#valores-derivados" title="Permanent link">&para;</a></h4>
@@ -5940,6 +6275,7 @@
 </ul>
 <h3 id="videos">Videos<a class="headerlink" href="#videos" title="Permanent link">&para;</a></h3>
 <ul>
+<li><strong>Carlos Codea - ¿Qué son las signals/señales en Angular y por qué son tan importantes?</strong>: <a href="https://www.youtube.com/watch?v=fKp4VUKDyA4">Ver en YouTube (fKp4VUKDyA4)</a> — Excelente recurso didáctico introductorio que ilustra de forma clara y visual la reactividad fina y la transición desde Zone.js.</li>
 <li><strong>Angular Team - Rethinking Reactivity with Signals</strong>: Canal oficial de Angular en YouTube</li>
 <li><strong>Decoded Frontend - Angular Signals Deep Dive</strong></li>
 </ul>

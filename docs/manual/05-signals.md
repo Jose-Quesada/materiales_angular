@@ -104,6 +104,13 @@ flowchart TD
 
 Con Angular 19+, puedes ejecutar aplicaciones completamente sin Zone.js (Zoneless Angular), reduciendo el tamaño del bundle y mejorando el rendimiento general.
 
+!!! tip "🎬 Recurso Didáctico Recomendado: ¿Qué son las Signals y por qué son tan importantes?"
+    Para afianzar estos conceptos con una explicación visual muy didáctica y paso a paso, recomendamos el siguiente vídeo complementario:
+    
+    * 📺 **Canal:** Carlos Codea
+    * 🔗 **Enlace:** [¿Qué son las signals/señales en Angular y por qué son tan importantes?](https://www.youtube.com/watch?v=fKp4VUKDyA4)
+    * 💡 **Conceptos clave abordados:** Reactividad granular (*fine-grained*), comparación intuitiva frente al ciclo de comprobación de Zone.js, sintaxis de lectura/escritura (`set`, `update`) y el salto cualitativo hacia la arquitectura *Zoneless*.
+
 ### signal()
 
 La función `signal()` crea una nueva Signal con un valor inicial. Es la primitiva más básica del sistema de reactividad.
@@ -183,85 +190,136 @@ puntuacion.update(p => Math.min(p + 50, 1000)); // Retorna 150 (tope en 1000)
 
 #### El Principio de Inmutabilidad en Angular Signals
 
-Para trabajar con Signals de forma profesional, es imprescindible comprender la diferencia entre **mutabilidad** e **inmutabilidad**:
+Para dominar Angular moderno, es imprescindible entender qué ocurre bajo el capó cuando modificamos datos. Muchos desarrolladores sufren el mismo desconcierto al comenzar:
 
-* **Mutabilidad (Modificación destructiva):** Modificar directamente los datos internos de un objeto o array existente en su misma dirección de memoria (por ejemplo, hacer `array.push(elemento)` o `usuario.nombre = 'Pedro'`).
-* **Inmutabilidad (Creación no destructiva):** Tratar los datos como **"grabados en piedra"** (de solo lectura). Si necesitas agregar, quitar o alterar información, **nunca modificas el original**, sino que generas un **nuevo objeto o array independiente** que contiene los cambios deseados.
+> *"¿Por qué cuando actualizo un número con `contador.update(c => c + 1)` la pantalla se actualiza sola, pero si tengo una lista de usuarios y hago `lista.push(nuevoUsuario)` la pantalla no reacciona?"*
 
-| Tipo de Operación | Métodos Mutables (Prohibidos con Signals) | Métodos Inmutables (Correctos con Signals) |
-| :--- | :--- | :--- |
-| **Añadir elementos** | `arr.push(x)`, `arr.unshift(x)` | `[...arr, x]`, `arr.concat(x)` |
-| **Eliminar elementos** | `arr.splice(i, 1)`, `arr.pop()`, `arr.shift()` | `arr.filter(item => item.id !== id)` |
-| **Modificar elementos** | `arr[i] = nuevoValor` | `arr.map(item => item.id === id ? { ...item, ...cambios } : item)` |
-| **Ordenar o invertir** | `arr.sort()`, `arr.reverse()` | `[...arr].sort()`, `[...arr].reverse()` |
-| **Modificar propiedades de objeto** | `obj.propiedad = valor` | `{ ...obj, propiedad: valor }` |
+La respuesta está en cómo JavaScript gestiona la memoria y cómo Angular detecta los cambios.
 
 ---
 
-#### ¿Por qué es obligatorio retornar siempre una nueva referencia?
+##### 1. Tipos por Valor (Primitivos) vs Tipos por Referencia (Objetos y Arrays)
 
-En JavaScript, los tipos complejos (arrays y objetos) **se comparan por su dirección de memoria (referencia)**, no por los valores que contienen dentro:
+En JavaScript existen dos grandes familias de datos:
 
-```javascript
-const a = [1, 2];
-const b = a;       // Ambas variables apuntan a la misma dirección física de memoria (ej: 0x001)
+* **Tipos Primitivos (números, strings, booleanos):** Se guardan **por valor**. Si el contador pasa de `0` a `1`, los dos valores son físicamente distintos (`0 !== 1`). Angular lo detecta de forma inmediata.
+* **Tipos Complejos (Arrays y Objetos):** **No se guardan directamente dentro de la variable.** La variable solo almacena un **puntero o dirección de memoria** (una referencia que indica en qué ubicación física residen los datos dentro de la memoria del navegador).
 
-a.push(3);         // Modificamos el array original
-console.log(a === b); // ¡Devuelve TRUE! Porque ambas apuntan a la dirección 0x001
+---
+
+##### 2. La Metáfora de la Casa y la Dirección Postal
+
+Imagina que tu variable con un array de usuarios es un **papelito con una dirección postal**: `"Calle Gran Vía, 12"` (en memoria: `0x001`).
+
+```
+Variable (Papelito)              Memoria Heap (La Casa física)
+┌──────────────────────┐        ┌──────────────────────────────────┐
+│  usuarios = 0x001    ├───────►│  [ { id: 1, nombre: 'Goku' } ]   │
+└──────────────────────┘        └──────────────────────────────────┘
 ```
 
-##### El Mecanismo de Detección de Cambios (defaultEquals)
+* **Mutación Directa (`lista.push()`):**  
+  Equivale a entrar en la casa y meter un mueble nuevo. La casa ha cambiado por dentro, pero **el papelito sigue diciendo `"Calle Gran Vía, 12"` (`0x001`)**.
+* **El Inspector de Angular (`defaultEquals`):**  
+  Angular revisa la señal para saber si debe repintar la pantalla. Pero Angular no entra a registrar toda la casa habitación por habitación; **solo mira el papelito de la dirección**. Como el papelito sigue diciendo `0x001 === 0x001`, Angular concluye: *"La dirección no ha cambiado, no hago nada"* ➔ **La pantalla no se repinta (Bug Silencioso)**.
+* **Inmutabilidad (`[...lista, nuevo]`):**  
+  En lugar de alterar la casa existente, construyes una **casa nueva e independiente** en `"Avenida Diagonal, 45"` (`0x002`) con todos los muebles anteriores más el nuevo. El papelito de la señal pasa a contener `0x002`.  
+  Cuando Angular mira el papelito, comprueba `0x001 !== 0x002`: *"¡Hay una dirección nueva!"* ➔ **Sincroniza el DOM al instante**.
 
-Para que el motor de Signals sea extremadamente veloz, Angular **no revisa propiedad por propiedad ni elemento por elemento** dentro de listas grandes (una comparación profunda destruiría el rendimiento de la aplicación). En su lugar, utiliza la función interna `defaultEquals`:
+---
 
-> **Regla de detección de cambios en Signals:**  
-> `¿Hay cambio a notificar? <==> (referenciaAnterior !== nuevaReferencia)`
+##### 3. ¿Por qué Angular no mira dentro del Array? (Rendimiento O(1) vs O(N))
 
-##### El problema de la mutación directa (Bug Silencioso)
+Muchos alumnos se preguntan: *"¿Por qué Angular no revisa elemento por elemento para ver si algo cambió?"*
 
-Si mutas un array u objeto directamente dentro de `update()` y devuelves la misma instancia:
+No es una limitación de Angular; es una **decisión de ingeniería para alcanzar el máximo rendimiento posible**:
 
-```typescript
-// ERROR GRAVE: La vista NO se actualizará
-usuarios.update(lista => {
-  lista.push({ id: 3, nombre: 'Carlos' }); // Modifica el array original en 0x001
-  return lista;                            // Retorna la MISMA referencia 0x001
-});
-```
+* Si Angular tuviera que comparar profundamente (*deep equality*) listas de 5.000 o 10.000 elementos cada vez que ocurre un evento, la aplicación se congelaría (complejidad `O(N)`).
+* Comparar dos direcciones de memoria (`referenciaAnterior === nuevaReferencia`) es una única instrucción de procesador que tarda **1 nanosegundo** (complejidad constante `O(1)`).
 
-Angular compara `0x001 === 0x001`, concluye que **"no ha cambiado nada"** y como consecuencia:
+!!! note "Regla de Oro de Reactividad en Signals"
+    **`¿Hay cambio a notificar? <==> (referenciaAnterior !== nuevaReferencia)`**  
+    Si la dirección de memoria física no cambia, para Angular **el cambio nunca ocurrió**.
 
-1. **La pantalla NO se repinta.**
-2. Las señales derivadas `computed()` **NO se recalculan.**
-3. Los efectos `effect()` **NO se disparan.**
+---
 
-##### La Solución Inmutable (Nueva Dirección de Memoria)
-Al utilizar el operador spread `[...lista, nuevo]`, JavaScript reserva un **nuevo espacio físico en la memoria** (por ejemplo, `0x002`). Angular compara `0x001 !== 0x002`, detecta inmediatamente el cambio de referencia y sincroniza la vista con precisión quirúrgica.
+##### 4. Desmitificando el Operador Spread (`...`) paso a paso
+
+Cuando escribes `[...lista, nuevoItem]`, el motor de JavaScript realiza cuatro pasos físicos:
+
+1. **`[` :** Reserva un **nuevo espacio físico en memoria** (ej. dirección `0x002`).
+2. **`...lista` :** Extrae uno a uno los elementos del array anterior y los copia dentro del nuevo espacio.
+3. **`, nuevoItem` :** Añade el nuevo elemento al final del nuevo espacio.
+4. **`]` :** Cierra el array y retorna la **nueva dirección de memoria** (`0x002`).
+
+---
+
+##### 5. El Gran Mito: "¿Por qué usar update() no lo hace automático?"
+
+!!! warning "Error Conceptual Muy Frecuente"
+    El método `update(fn)` **NO clona tus datos automáticamente**.  
+    `update()` solo ejecuta tu función y asigna a la señal **lo que tú decidas retornar**:
+
+    ```typescript
+    // ❌ ERROR GRAVE: Usar .push() dentro de update() sigue rompiendo la reactividad
+    usuarios.update(lista => {
+      lista.push({ id: 2, nombre: 'Vegeta' }); // Modifica el array original en 0x001
+      return lista;                            // Retorna la MISMA dirección 0x001 -> NO repinta
+    });
+
+    // ✅ CORRECTO: Retornar siempre una nueva referencia creada con spread o métodos puros
+    usuarios.update(lista => [
+      ...lista,
+      { id: 2, nombre: 'Vegeta' }              // Genera y retorna 0x002 -> ¡Repinta de inmediato!
+    ]);
+    ```
+
+---
+
+##### Comparativa de Flujo en Memoria: Mutación vs Inmutabilidad
 
 ```mermaid
 flowchart TD
     subgraph MutacionDirecta ["Mutación Directa: Misma Referencia"]
-        A1["Memoria: 0x001<br>Array original con 2 items"] --> Accion1["Operación mutable:<br>lista.push(nuevoItem)"]
-        Accion1 --> A2["Memoria: 0x001<br>Misma dirección de memoria"]
-        A2 --> Comp1["Angular defaultEquals:<br>0x001 === 0x001"]
-        Comp1 --> Res1["Resultado: Sin cambios detectados<br>La vista NO se repinta"]
+        A1["<b>Memoria: 0x001</b><br/>Array original<br/>(2 elementos)"]
+        Accion1["<b>Operación mutable:</b><br/><code>lista.push(nuevo)</code>"]
+        A2["<b>Memoria: 0x001</b><br/>(Misma referencia)"]
+        Comp1["<b>defaultEquals:</b><br/>0x001 === 0x001<br/><i>(Sin cambios)</i>"]
+        Res1["❌ <b>Sin cambios</b><br/>La vista NO se repinta"]
+
+        A1 --> Accion1 --> A2 --> Comp1 --> Res1
     end
 
     subgraph Inmutabilidad ["Inmutabilidad: Nueva Referencia"]
-        B1["Memoria: 0x001<br>Array original con 2 items"] --> Accion2["Operación inmutable:<br>update con spread (...lista)"]
-        Accion2 --> B2["Memoria: 0x002<br>Nueva dirección de memoria"]
-        B2 --> Comp2["Angular defaultEquals:<br>0x001 !== 0x002"]
-        Comp2 --> Res2["Resultado: Cambio detectado<br>Repintado fino inmediato del DOM"]
+        B1["<b>Memoria: 0x001</b><br/>Array original<br/>(2 elementos)"]
+        Accion2["<b>Operación inmutable:</b><br/><code>[...lista, nuevo]</code>"]
+        B2["<b>Memoria: 0x002</b><br/>(Nueva referencia)"]
+        Comp2["<b>defaultEquals:</b><br/>0x001 !== 0x002<br/><i>(Cambio detectado)</i>"]
+        Res2["✅ <b>Cambio detectado</b><br/>Repintado del DOM"]
+
+        B1 --> Accion2 --> B2 --> Comp2 --> Res2
     end
 
     classDef bad fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
     classDef good fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
-    classDef step fill:#f5f5f5,stroke:#616161,stroke-width:1px;
+    classDef step fill:#f5f5f5,stroke:#616161,stroke-width:1px,color:#212121;
 
     class Res1,A2 bad;
     class Res2,B2 good;
-    class Accion1,Accion2,Comp1,Comp2 step;
+    class Accion1,Accion2,Comp1,Comp2,A1,B1 step;
 ```
+
+---
+
+##### Tabla de Patrones: Métodos Prohibidos vs Alternativas Inmutables
+
+| Operación | Método Mutable (❌ No usar en Signals) | Alternativa Inmutable (✅ Usar siempre) |
+| :--- | :--- | :--- |
+| **Añadir elemento** | `arr.push(x)`, `arr.unshift(x)` | `[...arr, x]`, `[x, ...arr]` |
+| **Eliminar elemento** | `arr.splice(i, 1)`, `arr.pop()` | `arr.filter(item => item.id !== idEliminar)` |
+| **Modificar elemento** | `arr[i].nombre = 'Nuevo'` | `arr.map(item => item.id === id ? { ...item, nombre: 'Nuevo' } : item)` |
+| **Ordenar / Invertir** | `arr.sort()`, `arr.reverse()` | `[...arr].sort()`, `[...arr].reverse()` |
+| **Actualizar objeto** | `usuario.edad = 30` | `{ ...usuario, edad: 30 }` |
 
 ---
 
@@ -314,40 +372,112 @@ config.update(c => ({
 | Añadir o eliminar elementos de un array | `update()` | `items.update(arr => [...arr, nuevo])` |
 | Actualizar una o varias propiedades de un objeto | `update()` | `config.update(c => ({ ...c, activo: true }))` |
 
-#### Comparativa con variables normales
+#### Laboratorio Práctico: Variable Normal vs Signal (El Experimento del `setInterval`)
 
-```typescript
-// ❌ VARIABLE NORMAL: los cambios NO se detectan automáticamente
-export class ViejoComponente {
-  contador = 0;
+Para comprender la diferencia fundamental entre una variable tradicional de JavaScript y una Signal en Angular moderno, analicemos qué ocurre cuando actualizamos datos de forma asíncrona mediante un temporizador (`setInterval`).
 
-  incrementar(): void {
-    this.contador++;
-    // La plantilla se actualiza solo porque Zone.js detecta el click
-    // Si cambiaras esto en un setTimeout con Zone.js desactivado, la vista no se actualizaría
+Imagina un componente que mantiene dos contadores idénticos iniciados en `10`: uno almacenado en una **propiedad normal de clase** y otro custodiado por una **Signal**.
+
+##### 1. Implementación del Componente de Prueba
+
+```typescript title="src/app/pages/counter/counter-page.component.ts"
+import { Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-counter-page',
+  templateUrl: './counter-page.component.html',
+  styles: `
+    button {
+      padding: 6px 12px;
+      margin: 4px;
+    }
+  `,
+})
+export class CounterPageComponent {
+  // Variable normal de clase (valor pasivo en memoria)
+  counter = 10;
+
+  // Signal reactiva (contenedor inteligente auto-notificable)
+  counterSignal = signal(10);
+
+  constructor() {
+    // Temporizador asíncrono ejecutado cada 2 segundos
+    setInterval(() => {
+      this.counter += 1;
+      this.counterSignal.update((current) => current + 1);
+
+      console.log({
+        variableNormal: this.counter,
+        signalReactiva: this.counterSignal(),
+      });
+    }, 2000);
   }
-}
 
-// ✅ SIGNAL: los cambios siempre se reflejan, con o sin Zone.js
-export class NuevoComponente {
-  contador = signal(0);
+  increaseBy(value: number) {
+    this.counter += value;
+    this.counterSignal.update((current) => current + value);
+  }
 
-  incrementar(): void {
-    this.contador.update(c => c + 1);
-    // La plantilla se actualiza automáticamente porque depende de contador()
+  resetCounter() {
+    this.counter = 0;
+    this.counterSignal.set(0);
   }
 }
 ```
 
-```html
-<!-- Plantilla con variable normal -->
-<p>Contador: {{ contador }}</p>
+##### 2. Plantilla Visual
 
-<!-- Plantilla con Signal -->
-<p>Contador: {{ contador() }}</p>
-<!-- La diferencia clave: los () indican a Angular que esta plantilla
-     debe actualizarse cuando contador cambie -->
+```html title="src/app/pages/counter/counter-page.component.html"
+<section class="p-4">
+  <h1 class="text-xl font-bold">Contador Tradicional: {{ counter }}</h1>
+  <h1 class="text-xl font-bold text-blue-500">Contador Signal: {{ counterSignal() }}</h1>
+  <hr class="my-4" />
+
+  <button (click)="increaseBy(1)">+1</button>
+  <button (click)="increaseBy(-1)">-1</button>
+  <button (click)="resetCounter()">Reset</button>
+</section>
 ```
+
+---
+
+##### 3. ¿Qué ocurre en el Navegador? (El Momento "¡Eureka!")
+
+Al ejecutar este componente y abrir la consola de desarrollo (F12), se comprueba de forma inmediata el comportamiento del nuevo motor reactivo:
+
+1. **En la Consola de JavaScript:**  
+   Ambos contadores se incrementan a la vez en memoria cada 2 segundos:  
+   `{ variableNormal: 11, signalReactiva: 11 }`  
+   `{ variableNormal: 12, signalReactiva: 12 }`  
+   `{ variableNormal: 13, signalReactiva: 13 }`
+
+2. **En la Pantalla (DOM):**  
+   * **Contador Tradicional:** Se queda **completamente congelado en `10`**. No cambia nunca por sí solo dentro del temporizador.
+   * **Contador Signal:** Avanza fluidamente: **`11, 12, 13, 14...`** en tiempo real ante la vista del usuario.
+
+3. **La Paradoja del Clic:**  
+   Si el usuario pulsa el botón `+1`, de repente el contador tradicional da un salto gigante (por ejemplo, salta de golpe de `10` a `18`). ¿Por qué? Porque el evento `(click)` sí despierta la detección de cambios de Angular, forzando a pintar el valor acumulado que la variable normal guardaba en memoria.
+
+---
+
+##### 4. Análisis Arquitectónico: ¿Por qué ocurre esto?
+
+| Característica | Variable Normal (`counter = 10`) | Signal (`counterSignal = signal(10)`) |
+| :--- | :--- | :--- |
+| **Naturaleza** | **Dato Pasivo (Muerto):** Solo existe en la memoria RAM de JavaScript. | **Dato Reactivo (Vivo):** Conectado al grafo de dependencias de Angular. |
+| **Mecanismo de aviso** | Ninguno. Angular no tiene "ojos" para vigilar variables primitivas dentro de un temporizador. | Al ejecutar `.update()`, la Signal emite una notificación al scheduler de Angular. |
+| **Comportamiento en Zoneless** | ❌ **Invisible:** El DOM nunca se actualiza a menos que ocurra otro evento externo. | ✅ **Quirúrgico:** Angular actualiza únicamente el nodo del DOM donde se leyó `counterSignal()`. |
+
+---
+
+##### 5. Nota sobre `ChangeDetectionStrategy.OnPush` vs la Era Zoneless
+
+!!! info "Evolución Arquitectónica: De OnPush a Zoneless"
+    * **En el pasado (Angular con Zone.js):**  
+      Históricamente, `Zone.js` interceptaba `setInterval` y revisaba todos los componentes de la app. Para evitar esa sobrecarga, los desarrolladores tenían que configurar manualmente `changeDetection: ChangeDetectionStrategy.OnPush` en el `@Component`, obligando a usar técnicas manuales como `ChangeDetectorRef.markForCheck()`.
+    
+    * **En el presente y futuro (Angular 18+ a 22 Zoneless):**  
+      `ChangeDetectionStrategy.OnPush` pasa a ser un concepto en transición. Al configurar Angular sin Zone.js (`provideZonelessChangeDetection()`), **toda la aplicación es reactiva por defecto gracias a las Signals**. Ya no necesitas configurar estrategias complejas en cada componente: si necesitas que un dato se refleje en la pantalla de forma predecible y eficiente, **úsalo como una Signal**.
 
 ### computed()
 
@@ -2901,6 +3031,7 @@ La migración a Signals no es obligatoria (Angular sigue soportando Zone.js), pe
 
 ### Videos
 
+- **Carlos Codea - ¿Qué son las signals/señales en Angular y por qué son tan importantes?**: [Ver en YouTube (fKp4VUKDyA4)](https://www.youtube.com/watch?v=fKp4VUKDyA4) — Excelente recurso didáctico introductorio que ilustra de forma clara y visual la reactividad fina y la transición desde Zone.js.
 - **Angular Team - Rethinking Reactivity with Signals**: Canal oficial de Angular en YouTube
 - **Decoded Frontend - Angular Signals Deep Dive**
 

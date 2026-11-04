@@ -589,60 +589,170 @@ Disparo de Evento ──> Señal mutada ──> Repinta ÚNICAMENTE el nodo susc
 
 ---
 
-## Tarea de Refuerzo y Solución: `HeroPageComponent`
+## 🎯 Tarea Práctica: Creación de `HeroPageComponent` y Refuerzo de Señales
 
-Para afianzar el uso de señales, enrutamiento y enlace de eventos, planteamos la siguiente práctica guiada.
+!!! info "📖 Para saber más: Manual de Referencia"
+    Para repasar la declaración de señales escribibles (`signal()`), el método `.set()` y el enlace de eventos, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)**.
 
-### 📋 Enunciado de la Tarea
-
-1. Crear el componente `HeroPageComponent` en `src/app/pages/hero/`.
-2. Registrar la ruta `/hero` en `src/app/app.routes.ts`.
-3. Definir dos señales en la clase:
-   * `name`: señal con valor inicial `'Ironman'`.
-   * `age`: señal con valor inicial `45`.
-4. Implementar los siguientes métodos:
-   * `changeHero()`: Cambia `name` a `'Spiderman'` y `age` a `22`.
-   * `changeAge()`: Cambia `age` a `60`.
-   * `resetForm()`: Restablece `name` a `'Ironman'` y `age` a `45`.
-5. Estructurar la plantilla con una lista descriptiva `<dl>` y botones de acción.
+Para afianzar de forma autónoma el uso de señales, enrutamiento, métodos y enlace de eventos (*Event Binding*), realizaremos la siguiente práctica de consolidación construyendo la página de héroes de nuestra aplicación.
 
 ---
 
-### Solución Paso a Paso
+### 📋 Enunciado del Reto para el Alumno
 
-#### Archivo TypeScript
-Creamos `src/app/pages/hero/hero-page.component.ts`:
+Antes de consultar la solución detallada, sigue paso a paso las siguientes instrucciones en tu proyecto:
 
-```typescript title="src/app/pages/hero/hero-page.component.ts"
+1. **Configurar estilos globales con Bootstrap:**  
+   Abre el archivo `src/index.html` y añade en la sección `<head>` la hoja de estilos de Bootstrap 5 mediante CDN:
+   ```html
+   <link
+     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+     rel="stylesheet"
+     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+     crossorigin="anonymous"
+   />
+   ```
+
+2. **Crear la plantilla HTML base:**  
+   Crea la carpeta `src/app/pages/hero/` y dentro de ella el archivo `hero-page.component.html` con la siguiente estructura base de trabajo:
+   ```html title="src/app/pages/hero/hero-page.component.html"
+   <h1>{{ name() }}</h1>
+
+   <dl>
+     <td>Nombre:</td>
+     <dd>{{ name() }}</dd>
+
+     <td>Edad:</td>
+     <dd>{{ age() }}</dd>
+
+     <td>Método:</td>
+     <dd>{{ getHeroDescription() }}</dd>
+
+     <td>Capitalizado:</td>
+     <!-- ! Reto Extra: Mostrar el nombre TODO EN MAYÚSCULAS sin crear una nueva señal -->
+     <dd>{{ 'TODO EN MAYÚSCULAS' }}</dd>
+   </dl>
+
+   <button (click)="changeHero()" class="btn btn-primary mx-2">
+     Cambiar nombre
+   </button>
+
+   <button class="btn btn-primary">Cambiar edad</button>
+
+   <button (click)="resetForm()" class="btn btn-primary mx-2">Reset</button>
+   ```
+
+3. **Crear el controlador del componente:**  
+   Crea el archivo `src/app/pages/hero/hero-page.component.ts` declarando el componente standalone `HeroPageComponent` vinculado a la plantilla anterior.
+
+4. **Declaración de Señales:**  
+   Define dos señales reactivas en la clase:
+
+    * `name`: señal de tipo string con valor inicial `'Ironman'`.
+    * `age`: señal de tipo number con valor inicial `45`.
+
+5. **Implementar el método descriptivo `getHeroDescription()`:**  
+   Debe retornar un string concatenando el nombre y la edad: ``${this.name()} - ${this.age()}``.
+
+6. **Implementar métodos de actualización:**  
+
+    * `changeHero()`: No recibe argumentos; actualiza `name` a `'Spiderman'` y `age` a `22`.
+    * `changeAge()`: No recibe argumentos; actualiza `age` a `60`. Enlaza este método al evento `(click)` del botón correspondiente en el HTML.
+    * `resetForm()`: Restablece `name` a `'Ironman'` y `age` a `45`.
+
+7. **Configuración de Enrutamiento:**  
+   En `src/app/app.routes.ts`, registra la ruta `'hero'` asociada a `HeroPageComponent`.
+
+8. **⭐ Reto Extra:**  
+   Muestra en la etiqueta `<dd>` de "Capitalizado" el valor de la señal `name` transformado en mayúsculas (ej. `IRONMAN` o `SPIDERMAN`), **sin crear una nueva señal**.
+
+---
+
+### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+
+!!! exercise "Pausa de Trabajo Autónomo"
+    Configura el enrutamiento, las señales y los métodos en tu editor antes de verificar la solución técnica.
+
+    **Criterios de éxito:**
+
+    * Al acceder a `http://localhost:4200/hero`, se muestra "Ironman", edad 45 y la descripción "Ironman - 45".
+    * Al pulsar "Cambiar nombre", la vista actualiza el título y datos a "Spiderman" y edad 22.
+    * Al pulsar "Cambiar edad", la edad pasa a 60.
+    * Al pulsar "Reset", todo vuelve a los valores iniciales.
+
+---
+
+### 🛠️ Solución Paso a Paso y Explicación Técnica
+
+#### Paso 1: Importar Bootstrap en `src/index.html`
+
+Editamos `src/index.html` e incorporamos el enlace CDN en el bloque `<head>`:
+
+```html title="src/index.html" hl_lines="6-11"
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bases</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>
+```
+
+#### Paso 2: Crear el Controlador `HeroPageComponent`
+
+En `src/app/pages/hero/hero-page.component.ts`:
+
+```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="9-10 12-14 16-29"
 import { Component, signal } from '@angular/core';
 
 @Component({
   templateUrl: './hero-page.component.html',
 })
 export class HeroPageComponent {
+  // 1. Señales reactivas
   name = signal('Ironman');
   age = signal(45);
 
-  changeHero() {
+  // 2. Método descriptivo que concatena valores reactivos
+  getHeroDescription(): string {
+    return `${this.name()} - ${this.age()}`;
+  }
+
+  // 3. Métodos para mutar las señales con .set()
+  changeHero(): void {
     this.name.set('Spiderman');
     this.age.set(22);
   }
 
-  changeAge() {
+  changeAge(): void {
     this.age.set(60);
   }
 
-  resetForm() {
+  resetForm(): void {
     this.name.set('Ironman');
     this.age.set(45);
   }
 }
 ```
 
-#### Archivo HTML
-Creamos `src/app/pages/hero/hero-page.component.html`:
+#### Paso 3: Completar la Plantilla `hero-page.component.html`
 
-```html title="src/app/pages/hero/hero-page.component.html"
+Completamos la plantilla conectando el evento `(click)="changeAge()"` y resolviendo el reto extra de mayúsculas mediante `name().toUpperCase()`:
+
+```html title="src/app/pages/hero/hero-page.component.html" hl_lines="13 16 23"
 <h1>{{ name() }}</h1>
 
 <dl>
@@ -653,25 +763,31 @@ Creamos `src/app/pages/hero/hero-page.component.html`:
   <dd>{{ age() }}</dd>
 
   <td>Método:</td>
-  <dd>{{ name() }} - {{ age() }}</dd>
+  <dd>{{ getHeroDescription() }}</dd>
 
   <td>Capitalizado:</td>
-  <dd>{{ name() }}</dd>
+  <!-- Reto Extra resuelto: invocamos toUpperCase() sobre el valor de la señal -->
+  <dd>{{ name().toUpperCase() }}</dd>
 </dl>
 
 <button (click)="changeHero()" class="btn btn-primary mx-2">
   Cambiar nombre
 </button>
 
-<button (click)="changeAge()" class="btn btn-primary">Cambiar edad</button>
+<button (click)="changeAge()" class="btn btn-primary">
+  Cambiar edad
+</button>
 
-<button (click)="resetForm()" class="btn btn-primary mx-2">Reset</button>
+<button (click)="resetForm()" class="btn btn-primary mx-2">
+  Reset
+</button>
 ```
 
-#### Registro de la Ruta en `src/app/app.routes.ts`
-Agregamos la ruta `{ path: 'hero', component: HeroPageComponent }`:
+#### Paso 4: Registrar la Ruta en `src/app/app.routes.ts`
 
-```typescript title="src/app/app.routes.ts" hl_lines="3 12-15"
+Importamos `HeroPageComponent` y añadimos la ruta `'hero'`:
+
+```typescript title="src/app/app.routes.ts" hl_lines="3 10-13"
 import { Routes } from '@angular/router';
 import { CounterPageComponent } from './pages/counter/counter-page.component';
 import { HeroPageComponent } from './pages/hero/hero-page.component';
@@ -685,10 +801,42 @@ export const routes: Routes = [
     path: 'hero',
     component: HeroPageComponent,
   },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
 ```
 
-Prueba en el navegador navegando a `http://localhost:4200/hero`.
+---
+
+### 🔍 Análisis de la Solución y Conceptos Clave
+
+1. **Lectura de señales con paréntesis `()`:**
+   * Tanto en la plantilla (`{{ name() }}`) como dentro de la clase (`this.name()`), las señales son funciones. Omitir los paréntesis retorna la definición del objeto Signal en vez del dato primitivo.
+2. **Método en Plantilla (`getHeroDescription()`):**
+   * Funciona correctamente y resuelve la tarea. Sin embargo, invocar funciones directamente en la plantilla HTML puede recalcularse en cada ciclo de renderizado. En la siguiente sección veremos cómo **optimizar este patrón mediante `computed()`**, el cual añade memorización automática (*memoization*).
+3. **El Reto Extra (Transformación en plantilla):**
+   * Al ejecutar `{{ name().toUpperCase() }}`, JavaScript transforma la cadena en tiempo de interpolación. Aunque es una solución válida para operaciones sencillas, más adelante aprenderemos que Angular ofrece una alternativa declarativa aún más limpia: **Pipes** (`{{ name() | uppercase }}`).
+
+---
+
+### ⚠️ Errores Típicos del Alumno en esta Tarea
+
+| Error Común | Síntoma en el Navegador | Causa y Solución |
+| :--- | :--- | :--- |
+| Olvidar `(click)` en el botón "Cambiar edad" | Al hacer clic en "Cambiar edad", el número 45 no cambia. | **Causa:** El botón original del Gist no tenía el enlace de evento. <br/>**Solución:** Añadir `(click)="changeAge()"`. |
+| Escribir `path: '/hero'` con barra inicial en `app.routes.ts` | Error de navegación o no coincide la ruta al entrar a `localhost:4200/hero`. | **Causa:** En Angular Router los paths no llevan barra inicial. <br/>**Solución:** Escribir `{ path: 'hero', component: HeroPageComponent }`. |
+| Omitir `()` al invocar el método: `{{ getHeroDescription }}` | En pantalla se imprime la definición del código de la función en texto plano. | **Causa:** Falta invocar la función con `()`. <br/>**Solución:** Escribir `{{ getHeroDescription() }}`. |
+| Olvidar incluir la hoja de estilos de Bootstrap | Los botones aparecen grises y sin espaciado ni estilos modernos. | **Causa:** No haberse añadido el `<link>` de Bootstrap en `src/index.html`. |
+
+---
+
+### 🧑‍🏫 Guía Didáctica para el Docente en el Aula
+
+!!! tip "Estrategia para Guiar esta Práctica en Clase"
+    1. **Fomentar el trabajo autónomo:** Entregue a los alumnos únicamente el enunciado y la plantilla HTML inicial del Gist, animándoles a deducir qué métodos y señales faltan por programar.
+    2. **El gancho hacia la siguiente lección (`computed` y `Pipes`):** Cuando todos hayan completado el reto extra con `name().toUpperCase()` y la llamada a `getHeroDescription()`, abra el debate: *"¿Qué pasaría si `getHeroDescription()` hiciera un cálculo pesado con 10.000 datos en vez de una simple concatenación?"*. Esta pregunta sirve de introducción perfecta para el siguiente tema: **Señales Computadas (`computed`) y Pipes**.
 
 ---
 
