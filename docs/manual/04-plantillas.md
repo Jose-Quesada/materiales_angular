@@ -65,7 +65,7 @@ flowchart TD
     state ==>|"Interpolación"| domText
     state ==>|"Property Binding"| domProp
     domEvent ==>|"Event Binding"| methods
-    state <==>|"Two-Way Binding"| domModel
+    state <-->|"Two-Way Binding"| domModel
 
     classDef comp fill:#f8f9fa,stroke:#d32f2f,stroke-width:2px;
     classDef view fill:#e3f2fd,stroke:#1976d2,stroke-width:2px;
@@ -642,12 +642,12 @@ Tanto `model()` como `[(ngModel)]` utilizan en la plantilla la sintaxis de *"ban
 
 ```mermaid
 flowchart TD
-    subgraph NgModelFlow ["1. Ámbito de [(ngModel)] (Formularios y DOM)"]
-        TS1["<b>Componente TS</b><br/><code>termino = ''</code>"] <==>|[(ngModel)]<br/>Requiere FormsModule| DOM1["<b>Control HTML Nativo</b><br/><code>&lt;input type='text'&gt;</code><br/><i>Rastrea estados dirty, touched, valid</i>"]
+    subgraph NgModelFlow ["1. Ámbito de [(ngModel)] — Formularios y DOM"]
+        TS1["<b>Componente TS</b><br/><code>termino = ''</code>"] <-->|"[(ngModel)]<br/>Requiere FormsModule"| DOM1["<b>Control HTML Nativo</b><br/><code>&lt;input type='text'&gt;</code><br/><i>Rastrea estados: dirty, touched, valid</i>"]
     end
 
-    subgraph ModelFlow ["2. Ámbito de model() (Jerarquía de Componentes)"]
-        Padre["<b>Componente Padre</b><br/><code>total = signal(5)</code>"] <==>|[(cantidad)]<br/>Reactividad con Signals| Hijo["<b>Componente Hijo Custom</b><br/><code>cantidad = model(0)</code><br/><i>Sintetiza Input + Output implícito</i>"]
+    subgraph ModelFlow ["2. Ámbito de model() — Jerarquía de Componentes"]
+        Padre["<b>Componente Padre</b><br/><code>total = signal(5)</code>"] <-->|"[(cantidad)]<br/>Reactividad con Signals"| Hijo["<b>Componente Hijo Custom</b><br/><code>cantidad = model(0)</code><br/><i>Sintetiza Input + Output implícito</i>"]
     end
 ```
 
@@ -905,6 +905,411 @@ get usuariosFiltrados(): Usuario[] {
 <span>{{ producto.precio | currency:'EUR' }}</span>
 <!-- Los pipes puros solo se evalúan cuando cambia la entrada -->
 ```
+
+### Control Flow Nativo (@if, @for, @switch)
+
+A partir de **Angular 17 y consolidado en Angular 18-22**, Angular introdujo una sintaxis de control de flujo declarativa integrada directamente en el compilador. Esta arquitectura reemplaza a las antiguas directivas estructurales (`*ngIf`, `*ngFor`, `*ngSwitch`), ofreciendo mayor rendimiento, chequeo estricto de tipos y una experiencia de desarrollo (*DX*) mucho más limpia y cercana a JavaScript/TypeScript estándar.
+
+!!! tip "Comando oficial de migración a Control Flow"
+    Puedes migrar automáticamente proyectos legacy con directivas estructurales clásicas (`*ngIf`, `*ngFor`, `*ngSwitch`) a la nueva sintaxis nativa ejecutando en el CLI:
+    ```bash
+    ng generate @angular/core:control-flow
+    ```
+
+#### Diferencias con las directivas estructurales antiguas
+
+Las directivas estructurales clásicas (`*ngIf`, `*ngFor`, `*ngSwitch`) presentaban limitaciones arquitectónicas significativas:
+
+- **Sintaxis compleja con asterisco (`*`):** El asterisco era azúcar sintáctico que ocultaba la creación implícita de contenedores `<ng-template>`, dificultando la comprensión del DOM resultante.
+- **Necesidad de importar `CommonModule`:** Obligaba a importar `CommonModule` o `BrowserModule` en cada componente standalone para poder usar directivas básicas.
+- **Dificultad con condicionales múltiples:** Implementar estructuras `if / else if / else` requería múltiples etiquetas `<ng-template>` auxiliares referenciadas con identificadores locales.
+- **Sobrecarga de rendimiento:** Cada directiva estructural clásica implicaba instanciar *EmbeddedViews* y ejecutar comprobaciones adicionales en el ciclo de detección de cambios.
+
+El nuevo **Control Flow nativo** resuelve estos problemas:
+
+- **Sintaxis declarativa integrada:** Bloques `@if`, `@for`, `@switch` procesados en tiempo de compilación.
+- **Cero imports adicionales:** Al estar integrado en el motor de plantillas del core, no requiere importar `CommonModule`.
+- **Rendimiento óptimo:** El compilador genera instrucciones atómicas directas sobre el DOM sin capas intermedias.
+- **Soporte nativo para ramas complejas:** Soporta `@else`, `@else if`, `@empty` y variables contextuales sin boilerplate.
+
+**Tabla comparativa:**
+
+| Característica | Directivas clásicas (Legacy) | Control Flow Nativo (`@`) |
+|---|---|---|
+| Renderizado condicional | `<div *ngIf="condicion">` | `@if (condicion) { <div></div> }` |
+| Iteración de colecciones | `<div *ngFor="let item of items">` | `@for (item of items; track item.id) { <div></div> }` |
+| Selección por casos | `[ngSwitch]="valor"` + `*ngSwitchCase` | `@switch (valor) { @case ('a') { <div></div> } }` |
+| Rama alternativa (Else) | `*ngIf="cond; else templateRef"` | `@else { <div></div> }` |
+| Rama condicional intermedia | Múltiples `<ng-template>` manuales | `@else if (cond2) { <div></div> }` |
+| Estado de colección vacía | `*ngIf="items.length === 0"` | `@empty { <div>Sin datos</div> }` |
+| Rendimiento de listas | `trackBy` opcional (propensión a fugas) | `track` obligatorio por compilador |
+
+---
+
+#### @if: Renderizado condicional
+
+El bloque `@if` evalúa una expresión booleana y renderiza su contenido únicamente si dicha expresión es verídica (*truthy*). Soporta bifurcaciones `@else if` y `@else` de forma nativa sin necesidad de crear etiquetas `<ng-template>` manuales:
+
+##### Ejemplo Funcional: Gestión de Calificación y Sesión
+
+Para que el alumno pueda probar la reactividad completa de `@if`, a continuación se proporciona el controlador TypeScript con sus señales reactivas y su plantilla asociada:
+
+=== "src/app/components/control-if/control-if.component.ts"
+    ```typescript title="src/app/components/control-if/control-if.component.ts"
+    import { Component, signal } from '@angular/core';
+
+    export interface Usuario {
+      id: number;
+      nombre: string;
+      email: string;
+      rol: 'admin' | 'alumno';
+    }
+
+    @Component({
+      selector: 'app-control-if',
+      templateUrl: './control-if.component.html',
+    })
+    export class ControlIfComponent {
+      // Señales reactivas para probar las bifurcaciones condicionales
+      puntuacion = signal<number>(85);
+      cargando = signal<boolean>(false);
+      usuarioActivo = signal<Usuario | null>({
+        id: 1,
+        nombre: 'Laura Morales',
+        email: 'laura@example.com',
+        rol: 'alumno',
+      });
+
+      actualizarPuntuacion(nuevoValor: number): void {
+        this.puntuacion.set(nuevoValor);
+      }
+
+      alternarCarga(): void {
+        this.cargando.update((estado) => !estado);
+      }
+
+      cerrarSesion(): void {
+        this.usuarioActivo.set(null);
+      }
+
+      iniciarSesion(): void {
+        this.usuarioActivo.set({
+          id: 1,
+          nombre: 'Laura Morales',
+          email: 'laura@example.com',
+          rol: 'alumno',
+        });
+      }
+    }
+    ```
+
+=== "src/app/components/control-if/control-if.component.html"
+    ```html title="src/app/components/control-if/control-if.component.html"
+    <!-- 1. Bifurcaciones @if, @else if y @else -->
+    <div class="card p-3 mb-3 shadow-sm">
+      <h5>Calificación del Alumno: {{ puntuacion() }}</h5>
+
+      <div class="btn-group mb-3" role="group">
+        <button class="btn btn-outline-success btn-sm" (click)="actualizarPuntuacion(95)">Sobresaliente (95)</button>
+        <button class="btn btn-outline-primary btn-sm" (click)="actualizarPuntuacion(75)">Notable (75)</button>
+        <button class="btn btn-outline-warning btn-sm" (click)="actualizarPuntuacion(55)">Aprobado (55)</button>
+        <button class="btn btn-outline-danger btn-sm" (click)="actualizarPuntuacion(35)">Suspenso (35)</button>
+      </div>
+
+      @if (puntuacion() >= 90) {
+        <p class="badge text-bg-success fs-6">Sobresaliente: Excelente dominio técnico.</p>
+      } @else if (puntuacion() >= 70) {
+        <p class="badge text-bg-primary fs-6">Notable: Buen nivel de comprensión.</p>
+      } @else if (puntuacion() >= 50) {
+        <p class="badge text-bg-warning fs-6">Aprobado: Cumple los requisitos mínimos.</p>
+      } @else {
+        <p class="badge text-bg-danger fs-6">Suspenso: Requiere refuerzo de conceptos.</p>
+      }
+    </div>
+
+    <!-- 2. Expresiones condicionales con alias 'as' y control de sesión -->
+    <div class="card p-3 shadow-sm">
+      <h5>Estado de la Sesión</h5>
+
+      @if (usuarioActivo(); as user) {
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+          <div>
+            <strong>Sesión activa:</strong> {{ user.nombre }} ({{ user.email }})
+            <span class="badge text-bg-dark ms-2">{{ user.rol }}</span>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" (click)="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+      } @else {
+        <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+          <span>No hay ninguna sesión activa en el sistema.</span>
+          <button class="btn btn-sm btn-primary" (click)="iniciarSesion()">Iniciar Sesión</button>
+        </div>
+      }
+    </div>
+    ```
+
+---
+
+#### @for: Iteración de colecciones y tracking obligatorio
+
+El bloque `@for` itera sobre arrays u objetos iterables con una sintaxis limpia, eficiente y declarativa. A diferencia del antiguo `*ngFor`, el compilador de Angular exige la presencia de la cláusula **`track`** para optimizar el renderizado del DOM.
+
+##### La cláusula `track` obligatoria: ¿Por qué es crucial?
+
+En Angular clásico, cuando un array cambiaba sin una función `trackBy`, Angular destruía y recreaba todos los elementos del DOM asociados desde cero, provocando parpadeos visibles, pérdida del foco del teclado y degradación del rendimiento.
+
+En el nuevo `@for`, **`track` es estrictamente obligatorio por compilador**:
+
+1. **Reutilización quirúrgica de nodos del DOM:** Angular asocia cada nodo visual a la clave única indicada (`alumno.id`). Si se inserta, reordena o elimina un elemento, solo se muta ese nodo específico en el DOM.
+2. **¿Qué valor usar como `track`?**
+    * **Propiedad identificadora única (Recomendado):** `track alumno.id` o `track alumno.codigo`.
+    * **El propio objeto (si es inmutable):** `track alumno`.
+    * **El índice `$index` (Último recurso):** `track $index` (únicamente aconsejable en listas 100% estáticas que nunca se reordenan, filtran ni mutan).
+
+##### Variables de contexto integradas
+
+Dentro de la cabecera de `@for` podemos exponer variables contextuales calculadas automáticamente por el motor:
+
+| Variable | Tipo | Descripción |
+|---|---|---|
+| `$index` | `number` | Índice del elemento actual en la iteración (inicia en `0`). |
+| `$count` | `number` | Cantidad total de elementos contenidos en el array. |
+| `$first` | `boolean` | `true` si es el primer elemento de la colección. |
+| `$last` | `boolean` | `true` si es el último elemento de la colección. |
+| `$even` | `boolean` | `true` si el índice actual es par (`0, 2, 4...`). |
+| `$odd` | `boolean` | `true` si el índice actual es impar (`1, 3, 5...`). |
+
+##### Laboratorio Completo: Tabla Reactiva de Alumnos con Reordenación y `@empty`
+
+A continuación dispones del código TypeScript y la plantilla HTML totalmente funcionales. Este ejemplo ilustra:
+
+1. El uso de **Signals** para custodiar el array en memoria.
+2. Los métodos `moverArriba(index)` y `moverAbajo(index)` implementados con el **Principio de Inmutabilidad** (`.update()`).
+3. El uso de las variables de contexto (`$index`, `$count`, `$first`, `$last`, `$even`, `$odd`).
+4. El bloque defensivo **`@empty`**, que se activa automáticamente al pulsar *"Vaciar Lista"*.
+
+=== "src/app/components/tabla-alumnos/tabla-alumnos.component.ts"
+    ```typescript title="src/app/components/tabla-alumnos/tabla-alumnos.component.ts"
+    import { Component, signal } from '@angular/core';
+
+    export interface Alumno {
+      id: number;
+      nombre: string;
+      curso: string;
+    }
+
+    @Component({
+      selector: 'app-tabla-alumnos',
+      templateUrl: './tabla-alumnos.component.html',
+    })
+    export class TablaAlumnosComponent {
+      // Señal reactiva con el listado inicial de alumnos
+      alumnos = signal<Alumno[]>([
+        { id: 1, nombre: 'Ana García', curso: 'Angular 22' },
+        { id: 2, nombre: 'Carlos Ruiz', curso: 'TypeScript Avanzado' },
+        { id: 3, nombre: 'Elena Beltrán', curso: 'Signals & Zoneless' },
+        { id: 4, nombre: 'David Morales', curso: 'Clean Architecture' },
+      ]);
+
+      // Reordenación ascendente respetando el Principio de Inmutabilidad
+      moverArriba(index: number): void {
+        if (index <= 0) return; // Early Return defensivo
+
+        this.alumnos.update((alumnosActuales) => {
+          const nuevoArray = [...alumnosActuales];
+          const temp = nuevoArray[index];
+          nuevoArray[index] = nuevoArray[index - 1];
+          nuevoArray[index - 1] = temp;
+          return nuevoArray;
+        });
+      }
+
+      // Reordenación descendente respetando el Principio de Inmutabilidad
+      moverAbajo(index: number): void {
+        if (index >= this.alumnos().length - 1) return; // Early Return defensivo
+
+        this.alumnos.update((alumnosActuales) => {
+          const nuevoArray = [...alumnosActuales];
+          const temp = nuevoArray[index];
+          nuevoArray[index] = nuevoArray[index + 1];
+          nuevoArray[index + 1] = temp;
+          return nuevoArray;
+        });
+      }
+
+      // Métodos auxiliares para probar en vivo el bloque @empty
+      vaciarLista(): void {
+        this.alumnos.set([]);
+      }
+
+      restablecerLista(): void {
+        this.alumnos.set([
+          { id: 1, nombre: 'Ana García', curso: 'Angular 22' },
+          { id: 2, nombre: 'Carlos Ruiz', curso: 'TypeScript Avanzado' },
+          { id: 3, nombre: 'Elena Beltrán', curso: 'Signals & Zoneless' },
+          { id: 4, nombre: 'David Morales', curso: 'Clean Architecture' },
+        ]);
+      }
+    }
+    ```
+
+=== "src/app/components/tabla-alumnos/tabla-alumnos.component.html"
+    ```html title="src/app/components/tabla-alumnos/tabla-alumnos.component.html"
+    <div class="card p-3 shadow-sm">
+      <!-- Barra de control para verificar la reactividad y el bloque @empty -->
+      <div class="mb-3 d-flex gap-2">
+        <button class="btn btn-outline-danger btn-sm" (click)="vaciarLista()">
+          Vaciar Lista (Probar bloque @empty)
+        </button>
+        <button class="btn btn-outline-primary btn-sm" (click)="restablecerLista()">
+          Restablecer Lista
+        </button>
+      </div>
+
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Curso</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (alumno of alumnos(); track alumno.id; let idx = $index; let primero = $first; let ultimo = $last) {
+            <tr [class.table-primary]="$even" [class.table-light]="$odd">
+              <td><strong>#{{ idx + 1 }}</strong> de {{ $count }}</td>
+              <td>{{ alumno.nombre }}</td>
+              <td><span class="badge text-bg-secondary">{{ alumno.curso }}</span></td>
+              <td class="text-center">
+                @if (!primero) {
+                  <button
+                    class="btn btn-sm btn-outline-secondary me-1"
+                    (click)="moverArriba(idx)"
+                    title="Mover arriba"
+                  >
+                    ▲
+                  </button>
+                }
+                @if (!ultimo) {
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    (click)="moverAbajo(idx)"
+                    title="Mover abajo"
+                  >
+                    ▼
+                  </button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <!-- Bloque ejecutado cuando alumnos() está vacío -->
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">
+                <p class="mb-1 fw-bold">No hay alumnos registrados en la lista.</p>
+                <small>Haz clic en "Restablecer Lista" para volver a cargar la señal reactiva.</small>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    ```
+
+---
+
+#### @switch: Selección entre múltiples casos
+
+El bloque `@switch` reemplaza las directivas clásicas `[ngSwitch]` y `*ngSwitchCase` por una estructura equivalente a la sentencia `switch` de JavaScript, garantizando legibilidad, chequeo estricto de tipos en tiempo de compilación y ausencia de dependencias externas.
+
+##### Ejemplo Funcional: Gestor de Estado de Pedido
+
+=== "src/app/components/estado-pedido/estado-pedido.component.ts"
+    ```typescript title="src/app/components/estado-pedido/estado-pedido.component.ts"
+    import { Component, signal } from '@angular/core';
+
+    export type EstadoPedido = 'pendiente' | 'enviado' | 'entregado' | 'cancelado';
+
+    @Component({
+      selector: 'app-estado-pedido',
+      templateUrl: './estado-pedido.component.html',
+    })
+    export class EstadoPedidoComponent {
+      // Señal tipada con un tipo unión discriminado
+      estadoPedido = signal<EstadoPedido>('pendiente');
+
+      cambiarEstado(nuevoEstado: EstadoPedido): void {
+        this.estadoPedido.set(nuevoEstado);
+      }
+    }
+    ```
+
+=== "src/app/components/estado-pedido/estado-pedido.component.html"
+    ```html title="src/app/components/estado-pedido/estado-pedido.component.html"
+    <div class="card p-3 shadow-sm">
+      <h5>Seguimiento de Pedido</h5>
+
+      <!-- Selector interactivo de estado -->
+      <div class="btn-group mb-3" role="group">
+        <button class="btn btn-sm btn-outline-warning" (click)="cambiarEstado('pendiente')">Pendiente</button>
+        <button class="btn btn-sm btn-outline-info" (click)="cambiarEstado('enviado')">Enviado</button>
+        <button class="btn btn-sm btn-outline-success" (click)="cambiarEstado('entregado')">Entregado</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="cambiarEstado('cancelado')">Cancelado</button>
+      </div>
+
+      <!-- Evaluación con Control Flow @switch -->
+      @switch (estadoPedido()) {
+        @case ('pendiente') {
+          <div class="alert alert-warning mb-0">
+            <strong>Estado:</strong> Tu pedido está pendiente de confirmación en el almacén central.
+          </div>
+        }
+        @case ('enviado') {
+          <div class="alert alert-info mb-0">
+            <strong>Estado:</strong> El paquete ha sido enviado y llegará en 2-3 días hábiles.
+          </div>
+        }
+        @case ('entregado') {
+          <div class="alert alert-success mb-0">
+            <strong>Estado:</strong> ¡Paquete entregado correctamente en la dirección indicada!
+          </div>
+        }
+        @case ('cancelado') {
+          <div class="alert alert-danger mb-0">
+            <strong>Estado:</strong> El pedido ha sido cancelado. Contacta con soporte para devoluciones.
+          </div>
+        }
+        @default {
+          <div class="alert alert-secondary mb-0">
+            <strong>Estado:</strong> Estado de pedido no identificado en el sistema.
+          </div>
+        }
+      }
+    </div>
+    ```
+
+##### Múltiples coincidencias en un solo `@case`
+
+Se pueden agrupar varios valores separándolos por comas, evitando duplicar bloques de plantilla:
+
+```html
+@switch (diaSemana()) {
+  @case ('sabado', 'domingo') {
+    <p class="text-success">¡Fin de semana! Tiempo de descanso.</p>
+  }
+  @case ('lunes') {
+    <p class="text-primary">Comienzo de semana laboral.</p>
+  }
+  @case ('viernes') {
+    <p class="text-info">Último día laboral de la semana.</p>
+  }
+  @default {
+    <p class="text-muted">Jornada habitual.</p>
+  }
+}
+```
+
+---
 
 ### Variables Declarativas de Plantilla con `@let`
 
@@ -1168,7 +1573,7 @@ Anteriormente, Angular prohibía el uso de funciones flecha directamente dentro 
 
 #### 2. Sintaxis Spread (`...`) en Bindings
 
-El operador de propagación (*spread*) de JavaScript ahora está completamente soportado por el analizador de plantillas, permitiendo fusionar objetos de clases CSS y arreglos de propiedades:
+El operador de propagación (*spread*) de JavaScript ahora está completamente soportado por el analizador de plantillas, permitiendo fusionar objetos de clases CSS y arrays de propiedades:
 
 ```angular-html
 <!-- Fusión de clases CSS dinámicas -->

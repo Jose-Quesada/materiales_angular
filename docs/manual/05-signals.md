@@ -372,112 +372,177 @@ config.update(c => ({
 | Añadir o eliminar elementos de un array | `update()` | `items.update(arr => [...arr, nuevo])` |
 | Actualizar una o varias propiedades de un objeto | `update()` | `config.update(c => ({ ...c, activo: true }))` |
 
-#### Laboratorio Práctico: Variable Normal vs Signal (El Experimento del `setInterval`)
+#### Laboratorio Práctico: Variable Tradicional vs Signal (El Efecto Cascada con `computed`)
 
-Para comprender la diferencia fundamental entre una variable tradicional de JavaScript y una Signal en Angular moderno, analicemos qué ocurre cuando actualizamos datos de forma asíncrona mediante un temporizador (`setInterval`).
+Para comprender con claridad meridiana por qué las **Signals** revolucionan el desarrollo en Angular frente a las variables clásicas de JavaScript, analicemos el problema de los **valores derivados** o dependientes.
 
-Imagina un componente que mantiene dos contadores idénticos iniciados en `10`: uno almacenado en una **propiedad normal de clase** y otro custodiado por una **Signal**.
+En cualquier aplicación real, muchos datos dependen de otros (por ejemplo: el total de una compra depende del precio y del descuento aplicado). A continuación, implementamos un componente de prueba con **ambos enfoques conviviendo en paralelo** para que el alumno pueda copiar, pegar y comprobar el comportamiento de inmediato en su navegador.
 
-##### 1. Implementación del Componente de Prueba
+##### 1. Código del Controlador TypeScript
+
+Copia y pega este código en `src/app/pages/counter/counter-page.component.ts`:
 
 ```typescript title="src/app/pages/counter/counter-page.component.ts"
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 
 @Component({
   selector: 'app-counter-page',
   templateUrl: './counter-page.component.html',
   styles: `
     button {
-      padding: 6px 12px;
-      margin: 4px;
+      padding: 8px 16px;
+      margin-right: 8px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
     }
   `,
 })
 export class CounterPageComponent {
-  // Variable normal de clase (valor pasivo en memoria)
-  counter = 10;
+  // ==========================================
+  // 1. ENFOQUE TRADICIONAL (Variables Pasivas)
+  // ==========================================
+  precio = 100;
+  descuento = 10;
+  // Se evalúa una sola vez al instanciar la clase en memoria (vale 90)
+  total = this.precio - this.descuento;
 
-  // Signal reactiva (contenedor inteligente auto-notificable)
-  counterSignal = signal(10);
-
-  constructor() {
-    // Temporizador asíncrono ejecutado cada 2 segundos
-    setInterval(() => {
-      this.counter += 1;
-      this.counterSignal.update((current) => current + 1);
-
-      console.log({
-        variableNormal: this.counter,
-        signalReactiva: this.counterSignal(),
-      });
-    }, 2000);
+  aplicarRebajaTradicional(): void {
+    this.precio = 50;
+    // 💥 ¡EL PROBLEMA!: 'total' NO se entera de que 'precio' ha cambiado.
+    // En memoria y en pantalla sigue valiendo 90, provocando inconsistencia.
+    // Para solucionarlo a la vieja usanza, el desarrollador tendría que
+    // recordar escribir manualmente en cada método:
+    // this.total = this.precio - this.descuento;
   }
 
-  increaseBy(value: number) {
-    this.counter += value;
-    this.counterSignal.update((current) => current + value);
+  restablecerTradicional(): void {
+    this.precio = 100;
+    this.total = this.precio - this.descuento;
   }
 
-  resetCounter() {
-    this.counter = 0;
-    this.counterSignal.set(0);
+  // ==========================================
+  // 2. ENFOQUE MODERNO (Signals + computed)
+  // ==========================================
+  precioSignal = signal(100);
+  descuentoSignal = signal(10);
+
+  // computed() establece un grafo de dependencia reactivo automático.
+  // Angular vigila 'precioSignal()' y recalcula 'totalSignal()' por sí solo.
+  totalSignal = computed(() => this.precioSignal() - this.descuentoSignal());
+
+  aplicarRebajaSignal(): void {
+    this.precioSignal.set(50);
+    // ✨ ¡MAGIA REACTIVA!: No hace falta sincronizar nada a mano.
+    // Al mutar precioSignal, totalSignal se actualiza solo a 40 en la vista.
+  }
+
+  restablecerSignal(): void {
+    this.precioSignal.set(100);
   }
 }
 ```
 
-##### 2. Plantilla Visual
+##### 2. Plantilla Visual HTML Lista para Probar
+
+Copia y pega esta plantilla en `src/app/pages/counter/counter-page.component.html`:
 
 ```html title="src/app/pages/counter/counter-page.component.html"
-<section class="p-4">
-  <h1 class="text-xl font-bold">Contador Tradicional: {{ counter }}</h1>
-  <h1 class="text-xl font-bold text-blue-500">Contador Signal: {{ counterSignal() }}</h1>
-  <hr class="my-4" />
+<section style="padding: 24px; max-width: 800px; font-family: system-ui, sans-serif;">
+  <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #111827;">
+    Laboratorio: Variable Tradicional vs Signal con computed()
+  </h2>
 
-  <button (click)="increaseBy(1)">+1</button>
-  <button (click)="increaseBy(-1)">-1</button>
-  <button (click)="resetCounter()">Reset</button>
+  <!-- BLOQUE 1: ENFOQUE TRADICIONAL -->
+  <div style="border: 2px solid #ef4444; border-radius: 8px; padding: 20px; margin-bottom: 24px; background-color: #fef2f2;">
+    <h3 style="color: #b91c1c; font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 12px;">
+      ❌ Enfoque Tradicional (Variables Pasivas sin Reactividad)
+    </h3>
+    <p style="margin: 6px 0; font-size: 16px;"><strong>Precio actual:</strong> {{ precio }} €</p>
+    <p style="margin: 6px 0; font-size: 16px;"><strong>Descuento fijo:</strong> {{ descuento }} €</p>
+    <p style="margin: 12px 0; font-size: 20px; font-weight: 800; color: #b91c1c;">
+      Total a pagar: {{ total }} €
+    </p>
+
+    <div style="margin-top: 16px;">
+      <button
+        type="button"
+        (click)="aplicarRebajaTradicional()"
+        style="background-color: #ef4444; color: white;"
+      >
+        Aplicar Rebaja (Precio a 50 €)
+      </button>
+
+      <button
+        type="button"
+        (click)="restablecerTradicional()"
+        style="background-color: #6b7280; color: white;"
+      >
+        Restablecer
+      </button>
+    </div>
+
+    <div style="margin-top: 14px; padding: 10px; background-color: #fee2e2; border-left: 4px solid #ef4444; border-radius: 4px;">
+      <small style="color: #991b1b; display: block; font-size: 13px;">
+        ⚠️ <strong>Comprueba el fallo:</strong> Al pulsar "Aplicar Rebaja", el precio cambia a 50 €, pero el total <strong>permanece congelado en 90 €</strong>. Las variables normales no tienen reactividad interna para notificar sus cambios a los valores derivados.
+      </small>
+    </div>
+  </div>
+
+  <!-- BLOQUE 2: ENFOQUE MODERNO SIGNALS -->
+  <div style="border: 2px solid #10b981; border-radius: 8px; padding: 20px; background-color: #ecfdf5;">
+    <h3 style="color: #047857; font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 12px;">
+      ✅ Enfoque Moderno (Signals + computed() Declarativo)
+    </h3>
+    <p style="margin: 6px 0; font-size: 16px;"><strong>Precio actual:</strong> {{ precioSignal() }} €</p>
+    <p style="margin: 6px 0; font-size: 16px;"><strong>Descuento fijo:</strong> {{ descuentoSignal() }} €</p>
+    <p style="margin: 12px 0; font-size: 20px; font-weight: 800; color: #047857;">
+      Total a pagar: {{ totalSignal() }} €
+    </p>
+
+    <div style="margin-top: 16px;">
+      <button
+        type="button"
+        (click)="aplicarRebajaSignal()"
+        style="background-color: #10b981; color: white;"
+      >
+        Aplicar Rebaja (Precio a 50 €)
+      </button>
+
+      <button
+        type="button"
+        (click)="restablecerSignal()"
+        style="background-color: #6b7280; color: white;"
+      >
+        Restablecer
+      </button>
+    </div>
+
+    <div style="margin-top: 14px; padding: 10px; background-color: #d1fae5; border-left: 4px solid #10b981; border-radius: 4px;">
+      <small style="color: #065f46; display: block; font-size: 13px;">
+        ✨ <strong>Comprueba la reactividad:</strong> Al pulsar "Aplicar Rebaja", Angular detecta que <code>precioSignal</code> cambió y recalcula <code>totalSignal()</code> de forma instantánea y automática a <strong>40 €</strong>.
+      </small>
+    </div>
+  </div>
 </section>
 ```
 
 ---
 
-##### 3. ¿Qué ocurre en el Navegador? (El Momento "¡Eureka!")
+##### 3. Análisis Técnico: ¿Por qué este ejemplo es universal y garantizado?
 
-Al ejecutar este componente y abrir la consola de desarrollo (F12), se comprueba de forma inmediata el comportamiento del nuevo motor reactivo:
+A diferencia de los experimentos con temporizadores asíncronos (`setInterval`), cuya detección en pantalla puede verse afectada por la presencia de `Zone.js` y el barrido global por defecto:
 
-1. **En la Consola de JavaScript:**  
-   Ambos contadores se incrementan a la vez en memoria cada 2 segundos:  
-   `{ variableNormal: 11, signalReactiva: 11 }`  
-   `{ variableNormal: 12, signalReactiva: 12 }`  
-   `{ variableNormal: 13, signalReactiva: 13 }`
-
-2. **En la Pantalla (DOM):**  
-   * **Contador Tradicional:** Se queda **completamente congelado en `10`**. No cambia nunca por sí solo dentro del temporizador.
-   * **Contador Signal:** Avanza fluidamente: **`11, 12, 13, 14...`** en tiempo real ante la vista del usuario.
-
-3. **La Paradoja del Clic:**  
-   Si el usuario pulsa el botón `+1`, de repente el contador tradicional da un salto gigante (por ejemplo, salta de golpe de `10` a `18`). ¿Por qué? Porque el evento `(click)` sí despierta la detección de cambios de Angular, forzando a pintar el valor acumulado que la variable normal guardaba en memoria.
+1. **Las variables normales son "datos mudos":**  
+   Una variable en JavaScript solo almacena un dato pasivo en la memoria. Cuando declaras `total = this.precio - this.descuento;`, el cálculo se ejecuta una única vez en el constructor. No existe ningún enlace reactivo entre `precio` y `total`. Si cambias `precio`, `total` ni se entera ni se recalcula por sí solo.
+2. **`computed()` construye un Grafo de Dependencias:**  
+   Cuando defines `totalSignal = computed(...)`, Angular registra dinámicamente que `totalSignal` **depende** de `precioSignal()` y `descuentoSignal()`. Cuando cualquiera de esas dos señales cambia:
+   * Angular marca `totalSignal` como desactualizada.
+   * Solo vuelve a ejecutar la función de cálculo cuando la vista o algún consumidor necesita leer su nuevo valor (evaluación perezosa o *lazy evaluation*).
+   * **Memorización (*memoization*):** Si las señales de origen no cambian, `totalSignal()` retorna instantáneamente el último resultado en caché sin repetir el cálculo, optimizando drásticamente el rendimiento del navegador.
 
 ---
-
-##### 4. Análisis Arquitectónico: ¿Por qué ocurre esto?
-
-| Característica | Variable Normal (`counter = 10`) | Signal (`counterSignal = signal(10)`) |
-| :--- | :--- | :--- |
-| **Naturaleza** | **Dato Pasivo (Muerto):** Solo existe en la memoria RAM de JavaScript. | **Dato Reactivo (Vivo):** Conectado al grafo de dependencias de Angular. |
-| **Mecanismo de aviso** | Ninguno. Angular no tiene "ojos" para vigilar variables primitivas dentro de un temporizador. | Al ejecutar `.update()`, la Signal emite una notificación al scheduler de Angular. |
-| **Comportamiento en Zoneless** | ❌ **Invisible:** El DOM nunca se actualiza a menos que ocurra otro evento externo. | ✅ **Quirúrgico:** Angular actualiza únicamente el nodo del DOM donde se leyó `counterSignal()`. |
-
----
-
-##### 5. Nota sobre `ChangeDetectionStrategy.OnPush` vs la Era Zoneless
-
-!!! info "Evolución Arquitectónica: De OnPush a Zoneless"
-    * **En el pasado (Angular con Zone.js):**  
-      Históricamente, `Zone.js` interceptaba `setInterval` y revisaba todos los componentes de la app. Para evitar esa sobrecarga, los desarrolladores tenían que configurar manualmente `changeDetection: ChangeDetectionStrategy.OnPush` en el `@Component`, obligando a usar técnicas manuales como `ChangeDetectorRef.markForCheck()`.
-    
-    * **En el presente y futuro (Angular 18+ a 22 Zoneless):**  
-      `ChangeDetectionStrategy.OnPush` pasa a ser un concepto en transición. Al configurar Angular sin Zone.js (`provideZonelessChangeDetection()`), **toda la aplicación es reactiva por defecto gracias a las Signals**. Ya no necesitas configurar estrategias complejas en cada componente: si necesitas que un dato se refleje en la pantalla de forma predecible y eficiente, **úsalo como una Signal**.
 
 ### computed()
 

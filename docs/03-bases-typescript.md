@@ -48,7 +48,7 @@ flowchart TD
 1. **Tipos Primitivos y Unión de Tipos:** `string`, `number`, `boolean`, `any`, unión con `|` y tipos literales.
 2. **Interfaces y Contratos:** Definición formal de modelos de datos y propiedades opcionales (`?`).
 3. **Funciones Robustas:** Tipado estricto de parámetros, valores por defecto, retornos y tipo `void`.
-4. **Desestructuración Eficiente:** Simplificación de objetos, arreglos y firmas de funciones con retornos de tuplas `[number, number]`.
+4. **Desestructuración Eficiente:** Simplificación de objetos, arrays y firmas de funciones con retornos de tuplas `[number, number]`.
 5. **POO y la Tríada de Tipado:** Clases compactas, modificadores, composición sobre herencia y comparativa definitiva: **`interface` vs `type` vs `class`** (criterios de decisión en Angular y antipatrones comunes).
 6. **Genéricos (`<T>`):** Escribir código flexible y reutilizable sin renunciar a la seguridad de tipos.
 7. **Decoradores y Operadores Modernos:** El mecanismo interno tras `@Component` y la seguridad de `?.` frente al operador `!`.
@@ -160,7 +160,7 @@ export {}; // Convierte el archivo en un módulo aislado para evitar colisiones 
 
 ---
 
-## Objetos, Arreglos e Interfaces
+## Objetos, Arrays e Interfaces
 
 !!! info "📖 Para saber más: Manual de Referencia"
     En Angular, las interfaces son el mecanismo estándar para tipar modelos de datos y respuestas de APIs. Consulta el **[Manual de Referencia: 03. Componentes Standalone](manual/03-componentes.md)** y el **[Manual de Referencia: 10. Cliente HTTP](manual/10-http.md)**.
@@ -170,7 +170,7 @@ En JavaScript, los objetos son estructuras dinámicas a las que se les puede agr
 ### Archivo: `src/topics/02-object-interface.ts`
 
 ```typescript title="src/topics/02-object-interface.ts"
-// Arreglo tipado: solo admite strings
+// Array tipado: solo admite strings
 const skills: string[] = ['Bash', 'Counter', 'Healing'];
 
 // Definición de una Interfaz (Contrato de Objeto)
@@ -347,7 +347,7 @@ export {};
 
 ---
 
-## Desestructuración de Objetos y Arreglos
+## Desestructuración de Objetos y Arrays
 
 La desestructuración (*Destructuring*) es una característica de TypeScript/ES6 que permite extraer valores de objetos o listas y asignarlos directamente a variables individuales de forma limpia y legible.
 
@@ -387,8 +387,8 @@ console.log('Canción:', anotherSong);
 console.log('Duración:', duration);
 console.log('Autor:', author);
 
-// 2. DESESTRUCTURACIÓN DE ARREGLOS
-// En los arreglos la posición determina la asignación.
+// 2. DESESTRUCTURACIÓN DE ARRAYS
+// En los arrays la posición determina la asignación.
 const dbz: string[] = ['Goku', 'Vegeta', 'Trunks'];
 
 // Si solo nos interesa el tercer personaje, dejamos espacios vacíos con comas:
@@ -401,7 +401,7 @@ export {};
 
 ### Tabla Comparativa de Desestructuración
 
-| Característica | Desestructuración de Objetos `{ a, b }` | Desestructuración de Arreglos `[ x, y ]` |
+| Característica | Desestructuración de Objetos `{ a, b }` | Desestructuración de Arrays `[ x, y ]` |
 | :--- | :--- | :--- |
 | **Criterio de enlace** | Por **nombre de propiedad** (el orden no importa). | Por **posición o índice** (el orden es determinante). |
 | **Renombrado** | Se usa dos puntos: `{ name: heroName }`. | Basta con elegir el nombre de la variable: `[ primero, segundo ]`. |
@@ -664,7 +664,7 @@ type EstadoPeticion = 'idle' | 'cargando' | 'exito' | 'error';
 type RolUsuario = 'admin' | 'editor' | 'lector';
 type TamanoBoton = 'sm' | 'md' | 'lg';
 
-// 3. Tuplas (Arreglos con longitud fija y tipos posicionales)
+// 3. Tuplas (Arrays con longitud fija y tipos posicionales)
 type CoordenadaGPS = [latitud: number, longitud: number];
 const madrid: CoordenadaGPS = [40.4168, -3.7038];
 

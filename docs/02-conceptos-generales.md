@@ -210,7 +210,7 @@ A lo largo de los años se han acumulado ideas preconcebidas sobre Angular. A co
 
 | Término | Definición Técnica | Analogía Cotidiana |
 | :--- | :--- | :--- |
-| **Transpilación** | Traducir código fuente de un lenguaje a otro del mismo nivel de abstracción (TS $\rightarrow$ JS). | Traducir un libro de inglés a español para que lo lea quien no sabe inglés. |
+| **Transpilación** | Traducir código fuente de un lenguaje a otro del mismo nivel de abstracción (TS → JS). | Traducir un libro de inglés a español para que lo lea quien no sabe inglés. |
 | **Inferencia de Tipos** | Capacidad del compilador para deducir el tipo de dato sin que el programador lo escriba. | Si ves un animal con pico, plumas y que dice *cuac*, deduces que es un pato sin que lleve un cartel. |
 | **Compile-Time** | Momento en el que el código se escribe y analiza en el editor / compilador. | La revisión ortográfica y gramatical antes de imprimir un periódico. |
 | **Run-Time** | Momento en el que el usuario final interactúa con la aplicación en el navegador. | El lector leyendo el periódico impreso y encontrando una errata en directo. |

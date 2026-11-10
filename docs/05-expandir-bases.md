@@ -99,7 +99,7 @@ Para blindar la aplicación ante rutas desconocidas y asegurar una experiencia r
     ```
 
 !!! warning "Arquitectura de Enrutamiento: El Algoritmo First-Match-Wins"
-    Angular Router evalúa el arreglo de rutas de forma estrictamente secuencial (**de arriba a abajo**). La primera coincidencia que satisfaga la URL solicitada será la que se aplique.
+    Angular Router evalúa el array de rutas de forma estrictamente secuencial (**de arriba a abajo**). La primera coincidencia que satisfaga la URL solicitada será la que se aplique.
     
     Por este motivo, la ruta comodín (`path: '**'`) debe ubicarse **obligatoriamente al final** de la lista de rutas. Si se colocase al principio o antes de otras rutas, interceptaría cualquier petición antes de que Angular pudiera evaluar las rutas específicas declaradas debajo, haciendo que esas páginas fuesen completamente inaccesibles.
 
@@ -167,9 +167,11 @@ Al diseñar un menú en HTML tradicional, el primer impulso suele ser utilizar e
 ```
 
 #### El Problema Visible de `href` en una SPA:
+
 Si pruebas esta plantilla en el navegador y haces clic en "Hero":
-1. El icono de carga del navegador comienza a girar.
-2. Toda la página web parpadea en blanco y se descarga de nuevo desde el servidor.
+
+1. **El icono de carga del navegador comienza a girar.**
+2. **Toda la página web parpadea en blanco y se descarga de nuevo desde el servidor.**
 3. **Pérdida irreversible de estado reactivo:** Si el usuario había incrementado el contador a 15 en `CounterPageComponent`, al recargar la página **el contador vuelve a 10** (su valor inicial). Toda la memoria de JavaScript y las **Signals** se reinician por completo.
 
 #### La Solución Angular: Directiva `RouterLink`
@@ -182,14 +184,14 @@ Angular admite dos sintaxis para `routerLink`:
   <!-- 1. Sintaxis literal simple: ideal para rutas fijas -->
   <a routerLink="/">Contador</a>
 
-  <!-- 2. Sintaxis de arreglo (Property Binding): necesaria para segmentos dinámicos o argumentos -->
+  <!-- 2. Sintaxis de array (Property Binding): necesaria para segmentos dinámicos o argumentos -->
   <a [routerLink]="['/hero']">Hero</a>
 </nav>
 ```
 
-!!! tip "Sintaxis Literal vs. Sintaxis de Arreglo"
+!!! tip "Sintaxis Literal vs. Sintaxis de Array"
     * **`routerLink="/ruta"`:** Se utiliza cuando la ruta es una cadena estática invariable.
-    * **`[routerLink]="['/ruta', parametro]"`:** Se utiliza la sintaxis de enlace de propiedad (*property binding*) con un arreglo. Angular evalúa cada elemento del arreglo como un segmento de la URL y se encarga de escapar caracteres especiales automáticamente mediante `encodeURIComponent`.
+    * **`[routerLink]="['/ruta', parametro]"`:** Se utiliza la sintaxis de enlace de propiedad (*property binding*) con un array. Angular evalúa cada elemento del array como un segmento de la URL y se encarga de escapar caracteres especiales automáticamente mediante `encodeURIComponent`.
 
 !!! warning "Requisito Obligatorio en Componentes Standalone"
     Para que `routerLink` funcione, es **estrictamente obligatorio** importar `RouterLink` en el array `imports` de `NavbarComponent`. Si lo omites, Angular no reconocerá la directiva y el enlace se comportará como un texto inerte que no reacciona al clic.
@@ -241,12 +243,16 @@ La directiva **`RouterLinkActive`** monitoriza la URL activa del navegador y, cu
 *(Ambas sintaxis son plenamente válidas: `routerLinkActive="active"` pasa el nombre de la clase como string literal, mientras que `[routerLinkActive]="'active'"` lo evalúa como expresión JavaScript).*
 
 #### C. El Problema en Directo: El "Efecto Raíz Permanente"
+
 Al guardar los cambios y probar la aplicación en el navegador, surge un comportamiento anómalo:
+
 * Si estás en la página del Contador (`/`), el enlace "Contador" se muestra en rojo. Hasta aquí, correcto.
 * Sin embargo, cuando haces clic en "Hero" (`/hero`), **¡ambos enlaces aparecen marcados en rojo simultáneamente!**
 
 ##### ¿Por qué ocurre esto?
+
 Por defecto, `routerLinkActive` evalúa las rutas mediante una coincidencia por **prefijo** (*prefix match*): considera que un enlace está activo si la URL del navegador **comienza** por la ruta del enlace.
+
 Como la URL `/hero` comienza por el carácter `/`, Angular asume que la ruta raíz (`/`) también sigue activa.
 
 #### D. La Solución: `[routerLinkActiveOptions]="{ exact: true }"`
@@ -308,17 +314,17 @@ Una vez configurado nuestro menú de navegación global con `NavbarComponent`, e
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
 1. **Creación de la carpeta y archivos de la página:** Dentro del directorio `src/app/pages/`, crea una subcarpeta llamada `dragonball/`. Dentro de ella, añade dos archivos:
-   - `dragonball-page.component.ts`: el controlador TypeScript del componente standalone.
-   - `dragonball-page.component.html`: la plantilla visual asociada.
+    - `dragonball-page.component.ts`: el controlador TypeScript del componente standalone.
+    - `dragonball-page.component.html`: la plantilla visual asociada.
 2. **Definición del componente standalone:** En `dragonball-page.component.ts`, declara el componente con el decorador `@Component`. Debe especificar su selector (o prescindir de él si solo se usará mediante el enrutador) y vincular el archivo de plantilla mediante `templateUrl: './dragonball-page.component.html'`.
 3. **Estructura básica de la vista:** En `dragonball-page.component.html`, añade un título descriptivo `<h1>DragonBall Page</h1>` y un separador horizontal `<hr />`.
 4. **Registro de la ruta en `app.routes.ts`:** Abre `src/app/app.routes.ts` y añade la definición de ruta para el path `'dragonball'`, asociándola a `DragonballPageComponent`.
 5. **Actualización de la barra de navegación:** Abre `src/app/components/shared/navbar/navbar.component.html` y añade un nuevo elemento `<a>` con la directiva `[routerLink]="['/dragonball']"` (o `routerLink="/dragonball"`) y `routerLinkActive="active"`.
 6. **Criterio de éxito y verificación:**
-   - Abre el navegador en `http://localhost:4200`.
-   - Haz clic en el nuevo enlace "Dragonball" del Navbar: la URL debe cambiar de inmediato a `http://localhost:4200/dragonball` sin que la página parpadee ni se recargue el navegador.
-   - El texto `DragonBall Page` debe renderizarse dentro del `<router-outlet />`.
-   - El enlace de "Dragonball" en la barra de navegación debe cambiar su aspecto visual al color rojo destacado definido en la clase `.active`.
+    - Abre el navegador en `http://localhost:4200`.
+    - Haz clic en el nuevo enlace "Dragonball" del Navbar: la URL debe cambiar de inmediato a `http://localhost:4200/dragonball` sin que la página parpadee ni se recargue el navegador.
+    - El texto `DragonBall Page` debe renderizarse dentro del `<router-outlet />`.
+    - El enlace de "Dragonball" en la barra de navegación debe cambiar su aspecto visual al color rojo destacado definido en la clase `.active`.
 
 ---
 
@@ -357,9 +363,9 @@ Creamos `src/app/pages/dragonball/dragonball-page.component.html` con el encabez
 
 #### Paso 3: Configurar la ruta en el enrutador principal
 
-Editamos `src/app/app.routes.ts` e incorporamos la ruta al arreglo `routes`:
+Editamos `src/app/app.routes.ts` e incorporamos la ruta al array `routes`:
 
-```typescript title="src/app/app.routes.ts" hl_lines="10-13"
+```typescript title="src/app/app.routes.ts" hl_lines="9-12"
 import { Routes } from '@angular/router';
 import { CounterPageComponent } from './pages/counter/counter-page.component';
 import { HeroPageComponent } from './pages/hero/hero-page.component';
@@ -395,11 +401,11 @@ Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **SPA (Single Page Application) vs Navegación Tradicional:**
-   * Al utilizar `routerLink` en lugar de `href`, Angular intercepta el evento de clic del usuario, evita la petición GET al servidor web y manipula directamente la API de historial del navegador (`pushState`). Esto preserva el estado en memoria de la aplicación y produce una experiencia de navegación instantánea.
+    * Al utilizar `routerLink` en lugar de `href`, Angular intercepta el evento de clic del usuario, evita la petición GET al servidor web y manipula directamente la API de historial del navegador (`pushState`). Esto preserva el estado en memoria de la aplicación y produce una experiencia de navegación instantánea.
 2. **Sincronización del estado de UI con `routerLinkActive`:**
-   * Angular supervisa internamente los eventos de navegación (`NavigationEnd`). Cuando la URL en la barra de direcciones coincide con la ruta especificada en `routerLink`, añade automáticamente la clase CSS `'active'`, eliminándola en cuanto el usuario navega a otra pantalla.
+    * Angular supervisa internamente los eventos de navegación (`NavigationEnd`). Cuando la URL en la barra de direcciones coincide con la ruta especificada en `routerLink`, añade automáticamente la clase CSS `'active'`, eliminándola en cuanto el usuario navega a otra pantalla.
 3. **Ruta comodín (`**`):**
-   * Configurar `{ path: '**', redirectTo: '' }` al final del arreglo de rutas garantiza que cualquier URL no reconocida redirija al usuario a la página por defecto sin generar pantallas en blanco.
+    * Configurar `{ path: '**', redirectTo: '' }` al final del array de rutas garantiza que cualquier URL no reconocida redirija al usuario a la página por defecto sin generar pantallas en blanco.
 
 ---
 
@@ -408,7 +414,7 @@ Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
 | Usar `<a href="/dragonball">` en lugar de `routerLink` | La pantalla parpadea en blanco y se recarga completamente el navegador; se pierde todo el estado de la aplicación. | **Causa:** El atributo nativo `href` ejecuta una recarga HTTP completa. <br/>**Solución:** Usar siempre la directiva `routerLink="/dragonball"`. |
-| Olvidar importar `RouterLink` y `RouterLinkActive` en `NavbarComponent` | Advertencia en consola de compilación: *Can't bind to 'routerLink' since it isn't a known property of 'a'*. | **Causa:** En componentes standalone, las directivas del router deben figurar explícitamente en el arreglo `imports: [RouterLink, RouterLinkActive]`. |
+| Olvidar importar `RouterLink` y `RouterLinkActive` en `NavbarComponent` | Advertencia en consola de compilación: *Can't bind to 'routerLink' since it isn't a known property of 'a'*. | **Causa:** En componentes standalone, las directivas del router deben figurar explícitamente en el array `imports: [RouterLink, RouterLinkActive]`. |
 | Escribir `path: '/dragonball'` con barra inicial en `app.routes.ts` | Error de configuración de rutas o fallo de coincidencia al navegar. | **Causa:** En la definición de rutas de Angular, los paths no llevan barra inicial (`/`). Solo se usa `'dragonball'`. |
 | El enlace activo permanece encendido en todas las rutas | El enlace de inicio siempre aparece resaltado, sin importar en qué página estemos. | **Causa:** Toda ruta comienza con `/`. <br/>**Solución:** Añadir `[routerLinkActiveOptions]="{ exact: true }"` al enlace de la ruta raíz. |
 
@@ -425,12 +431,27 @@ Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo
 ## El Nuevo Control Flow: `@for`, `@if` y Estilos Dinámicos
 
 !!! info "📖 Para saber más: Manual de Referencia"
-    Aprende más sobre las ventajas de `@for`, `@if`, `@switch` y la carga diferida con `@defer` en el **[Manual de Referencia: 04. Plantillas y Control Flow](manual/04-plantillas.md)**.
+    Domina a fondo el nuevo sistema de renderizado condicional, bucles reactivos y gestión de listas vacías en el **[Manual de Referencia: 04. Plantillas y Control Flow (Control Flow Nativo)](manual/04-plantillas.md#control-flow-nativo-if-for-switch)**. Si deseas profundizar en la comparativa histórica con las directivas estructurales clásicas (`*ngIf`, `*ngFor`), consulta también el **[Manual de Referencia: 08. Directivas](manual/08-directivas.md#parte-1-control-flow-moderno-if-for-switch)**.
 
 En versiones anteriores, Angular requería importar `CommonModule` y usar directivas como `*ngFor` y `*ngIf`. Angular 17+ introdujo una **sintaxis declarativa integrada en el compilador**, inspirada en la sintaxis de lenguajes modernos.
 
 ### Modelo de Datos: `src/app/interfaces/character.interface.ts`
-Definimos el contrato estricto de los personajes:
+
+!!! info "📖 Para saber más: Interfaces y Tipado Estricto"
+    Si deseas profundizar en la teoría de interfaces, propiedades opcionales y la comparativa entre `interface`, `type` y `class`, consulta la guía **[03. Bases de TypeScript: Objetos, Arrays e Interfaces](03-bases-typescript.md#objetos-arrays-e-interfaces)** y su sección **[La Tríada de Tipado: interface vs type vs class](03-bases-typescript.md#la-triada-de-tipado-interface-vs-type-vs-class)**.
+
+#### ¿Qué es una `interface` en TypeScript y por qué la usamos?
+
+En JavaScript tradicional, los objetos son dinámicos y carecen de restricciones: es fácil cometer errores de tipeo al acceder a una propiedad o intentar leer un campo inexistente, lo que genera fallos en ejecución (`undefined is not an object`).
+
+En TypeScript y Angular, una **`interface`** es un **contrato de diseño** o molde estricto que describe la estructura exacta (*shape*) que debe cumplir un objeto:
+
+1. **Seguridad y Validación en Compilación:** Define qué propiedades son obligatorias (`id`, `name`, `power`) y qué tipo de dato debe tener cada una. Si intentas crear un personaje olvidando un campo o asignando un string a `power`, TypeScript marcará el error al instante.
+2. **Autocompletado e IntelliSense:** Al declarar señales o arrays tipados con la interfaz (por ejemplo, `characters = signal<Character[]>([...])`), el editor de código proporciona autocompletado asistido de todas las propiedades del objeto.
+3. **Cero Impacto en Producción (*Zero-Cost Abstraction*):** Las interfaces existen **exclusivamente en tiempo de desarrollo y compilación**. Al transcompilar a JavaScript para el navegador, las interfaces desaparecen por completo, por lo que **no añaden ni un solo byte de peso al bundle final**.
+
+#### Creación del archivo de interfaz:
+Creamos la carpeta `src/app/interfaces/` y definimos el contrato de los personajes:
 
 ```typescript title="src/app/interfaces/character.interface.ts"
 export interface Character {
@@ -442,18 +463,209 @@ export interface Character {
 
 ### Implementación Inicial de la Vista y Estructura
 
-Antes de modularizar en componentes especializados, construimos la funcionalidad en una sola página contenedora (`DragonballPageComponent`) para dominar el nuevo Control Flow de Angular (`@for`, `@if`, `@empty`).
+Antes de modularizar en componentes especializados, construimos la funcionalidad completa en una sola página contenedora (`DragonballPageComponent`). Esta arquitectura nos permite dominar dos fundamentos clave de Angular moderno:
 
-A continuación abordamos el reto práctico de dotar a este componente de interactividad, validaciones robustas y reactividad inmutable.
+1. El nuevo **Control Flow** (`@for`, `@if`, `@empty`).
+2. La sincronización de entradas de usuario (**Formularios con Signals**) sin necesidad de librerías externas ni `ngModel`.
 
 ---
 
-## 🎯 Tarea Práctica 2: Formulario Reactivo y Mutación Inmutable de Estado
+#### 1. Controlador Inicial: Datos y Señales Locales
+
+En `src/app/pages/dragonball/dragonball-page.component.ts`:
+
+* Importamos la interfaz `Character` para garantizar el tipado estricto.
+* Definimos la señal maestra `characters` con el listado inicial de guerreros.
+* Creamos dos señales locales (`name` y `power`) que custodiarán en tiempo real los valores de las cajas de texto del formulario:
+
+=== "src/app/pages/dragonball/dragonball-page.component.ts"
+    ```typescript title="src/app/pages/dragonball/dragonball-page.component.ts"
+    import { Component, signal } from '@angular/core';
+    import { Character } from '../../interfaces/character.interface';
+
+    @Component({
+      templateUrl: './dragonball-page.component.html',
+    })
+    export class DragonballPageComponent {
+      // Señales para el estado del formulario de agregar personaje
+      name = signal('');
+      power = signal(0);
+
+      // Señal con el listado inicial de personajes
+      characters = signal<Character[]>([
+        { id: 1, name: 'Goku', power: 9001 },
+        { id: 2, name: 'Vegeta', power: 8000 },
+        { id: 3, name: 'Piccolo', power: 3000 },
+        { id: 4, name: 'Yamcha', power: 500 },
+      ]);
+    }
+    ```
+
+---
+
+#### 2. Maquetación Base HTML (Estructura Estática con Bootstrap)
+
+Antes de incorporar la lógica de Angular, definimos la estructura visual limpia en `src/app/pages/dragonball/dragonball-page.component.html`. Utilizando las clases de rejilla de Bootstrap (`row` y `col-12 col-sm-6`), dividimos la pantalla en dos columnas para que el alumno comprenda primero la maquetación visual antes de añadir la reactividad:
+
+* **Columna Izquierda:** El formulario de entrada (cajas de texto y botón en estado estático).
+* **Columna Derecha:** El listado con elementos de ejemplo para previsualizar el diseño en el navegador.
+
+=== "src/app/pages/dragonball/dragonball-page.component.html"
+    ```html title="src/app/pages/dragonball/dragonball-page.component.html (Paso 1: Estructura HTML Base)"
+    <h1>DragonBall Page</h1>
+    <hr />
+
+    <section class="row">
+      <!-- 1. Columna del Formulario (Estructura estática inicial) -->
+      <div class="col-12 col-sm-6">
+        <h3>Agregar:</h3>
+        <input type="text" class="form-control" placeholder="Nombre" />
+        <input type="number" class="form-control mt-2" placeholder="Poder" />
+        <button class="mt-2 btn btn-primary">Agregar</button>
+      </div>
+
+      <!-- 2. Columna del Listado (Datos de muestra estáticos) -->
+      <div class="col-12 col-sm-6">
+        <h3>Listado de Personajes</h3>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div><strong>#1</strong> - Goku</div>
+            <span class="badge text-bg-danger">9001</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div><strong>#2</strong> - Vegeta</div>
+            <span class="badge text-bg-primary">8000</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    ```
+
+---
+
+#### 3. Dinamizar la Plantilla: Control Flow y Reactividad con Signals
+
+Una vez verificado el aspecto visual en el navegador, sustituimos los elementos cableados (*hardcoded*) por las características reactivas y directivas de Angular:
+
+1. **Columna Derecha (Listado Dinámico):** Reemplazamos los `<li>` fijos por la directiva `@for (character of characters(); track character.id; let idx = $index)` junto con su bloque `@empty` y clases condicionales dinámicas (`[class.text-bg-danger]="character.power > 9000"`).
+2. **Columna Izquierda (Formulario Reactivo):** Conectamos los `<input>` con las señales reactivas mediante `[value]` y `(input)` apoyándonos en variables de referencia de plantilla (`#txtName`, `#txtPower`), y añadimos la previsualización en vivo en el encabezado `<h3>Agregar: {{ name() }}</h3>`.
+
+=== "src/app/pages/dragonball/dragonball-page.component.html"
+    ```html title="src/app/pages/dragonball/dragonball-page.component.html (Paso 2: Plantilla Dinamizada con Angular)"
+    <h1>DragonBall Page</h1>
+    <hr />
+
+    <section class="row">
+      <!-- 1. Columna del Formulario Reactivo -->
+      <div class="col-12 col-sm-6">
+        <!-- Previsualización reactiva inmediata -->
+        <h3>Agregar: {{ name() }}</h3>
+
+        <!-- Input de texto enlazado a la señal 'name' -->
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Nombre"
+          [value]="name()"
+          (input)="name.set(txtName.value)"
+          #txtName
+        />
+
+        <!-- Input numérico enlazado a la señal 'power' -->
+        <input
+          type="number"
+          class="form-control mt-2"
+          placeholder="Poder"
+          [value]="power()"
+          (input)="power.set(+txtPower.value)"
+          #txtPower
+        />
+
+        <!-- Botón para procesar la inserción -->
+        <button class="mt-2 btn btn-primary">
+          Agregar
+        </button>
+      </div>
+
+      <!-- 2. Columna del Listado Dinámico con Control Flow -->
+      <div class="col-12 col-sm-6">
+        <h3>Listado de Personajes</h3>
+        <ul class="list-group">
+          @for (character of characters(); track character.id; let idx = $index) {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>#{{ idx + 1 }}</strong> - {{ character.name }}
+              </div>
+              <span
+                class="badge"
+                [class.text-bg-danger]="character.power > 9000"
+                [class.text-bg-primary]="character.power <= 9000"
+              >
+                {{ character.power }}
+              </span>
+            </li>
+          } @empty {
+            <li class="list-group-item list-group-item-secondary">
+              No hay personajes registrados en la lista.
+            </li>
+          }
+        </ul>
+      </div>
+    </section>
+    ```
+
+---
+
+#### 4. Conceptos Clave Explicados: Formulario Reactivo y Estilos Dinámicos
+
+En Angular clásico se utilizaban directivas como `[(ngModel)]` (que requiere importar `FormsModule`). En Angular moderno con **Signals**, podemos crear formularios ligeros y reactivos utilizando únicamente enlaces nativos de plantilla:
+
+1. **De la Signal al Input (Property Binding `[value]="name()"`):**  
+   Refleja en el atributo `value` del input el valor actual de la señal.
+2. **Variables de Referencia de Plantilla (`#txtName`, `#txtPower`):**  
+   La almohadilla `#` crea una referencia directa al elemento `<input>` del DOM en la plantilla. Nos permite acceder a sus propiedades nativas (como `.value`) sin necesidad de inyectar nada en el archivo TypeScript.
+3. **Del Input a la Signal (Event Binding `(input)="name.set(txtName.value)"`):**  
+   El evento nativo `(input)` se dispara con cada pulsación de tecla. En ese instante leemos `txtName.value` y actualizamos la señal con `.set()`.
+4. **Conversión Numérica con el Operador Unario `+`:**  
+   Los elementos `<input type="number">` del navegador retornan siempre una cadena de texto (*string*) a través de su propiedad `.value`. Anteponer el operador `+` (`+txtPower.value`) fuerza la conversión instantánea a tipo `number` en JavaScript, evitando bugs donde los números se concatenen como texto.
+5. **Previsualización Reactiva:**  
+   Observa cómo en el encabezado `<h3>Agregar: {{ name() }}</h3>` el texto escrito se actualiza al milisegundo mientras el usuario teclea, demostrando la reactividad atómica de las Signals.
+6. **Estilos Dinámicos con Class Binding (`[class.nombre-clase]="condición"`):**  
+   En lugar de manipular clases imperativamente con JavaScript (`classList.add/remove`), Angular permite conmutar clases CSS de forma puramente declarativa:
+
+   ```html
+   <span
+     class="badge"
+     [class.text-bg-danger]="character.power > 9000"
+     [class.text-bg-primary]="character.power <= 9000"
+   >
+     {{ character.power }}
+   </span>
+   ```
+
+   * **Mecanismo:** Angular evalúa la expresión booleana a la derecha. Si es `true`, inyecta la clase CSS en el nodo del DOM; si es `false`, la retira de inmediato.
+   * **Preservación de clases estáticas:** Las clases fijas declaradas en el atributo estándar (`class="badge"`) se conservan intactas; el binding solo conmuta las clases condicionales específicas.
+
+##### Comparativa Técnica: `[class.nombre]` vs Directiva `[ngClass]`
+
+| Criterio | Enlace Nativo `[class.nombreClase]="condicion"` | Directiva `[ngClass]="{ ... }"` |
+| :--- | :--- | :--- |
+| **Tipo de enlace** | **Nativo del compilador** (Property Binding directo). | **Directiva de atributo** externa. |
+| **Imports necesarios** | **Ninguno**. Disponible directamente en cualquier componente standalone. | Requiere importar `NgClass` (o `CommonModule`) desde `@angular/common`. |
+| **Rendimiento** | **Óptimo**. Mutación atómica y directa sobre el nodo del DOM. | Implica la instanciación de la directiva y evaluación del objeto de clases. |
+| **Caso de uso recomendado** | **Alternar 1, 2 o pocas clases condicionales** (ej: badges de peligro/éxito, estados `activo`/`desactivado`). | Manejar un **diccionario dinámico complejo** de muchas clases simultáneas calculadas en el TypeScript. |
+
+!!! info "📖 Para saber más: Manipulación de Clases y Estilos"
+    Aprende más sobre las distintas variantes de sintaxis de estilos en el **[Manual de Referencia: 04. Plantillas (Class Binding)](manual/04-plantillas.md#class-binding)** y consulta el análisis detallado frente a directivas en el **[Manual de Referencia: 08. Directivas ([class] vs NgClass)](manual/08-directivas.md#23-class-y-style-vs-ngclass-y-ngstyle)**.
+
+---
+
+## 🎯 Tarea Práctica 2: Procesamiento del Formulario y Mutación Inmutable de Estado
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para comprender a fondo la inmutabilidad en JavaScript/TypeScript, el ciclo de detección de cambios de Angular y el método `.update()` en Signals, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)**.
 
-En esta práctica construiremos la interactividad de nuestra página `DragonballPageComponent`. El objetivo es conectar cajas de texto mediante señales reactivas, procesar la inserción de nuevos guerreros mediante validaciones defensivas y garantizar la reactividad del DOM respetando de manera estricta el **Principio de Inmutabilidad**.
+Ahora que ya tenemos el formulario maquetado y los campos de entrada sincronizados reactivamente con las señales locales `name` y `power`, el reto consiste en dotar de funcionalidad al botón **"Agregar"** para registrar nuevos personajes en la lista de forma robusta e inmutable.
 
 ---
 
@@ -461,25 +673,21 @@ En esta práctica construiremos la interactividad de nuestra página `Dragonball
 
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
-1. **Declaración de señales del formulario:** En `DragonballPageComponent` (`src/app/pages/dragonball/dragonball-page.component.ts`), crea dos señales locales para controlar el estado del formulario:
-   - `name`: señal de tipo string con valor inicial `''`.
-   - `power`: señal de tipo number con valor inicial `0`.
-2. **Enlace bidireccional manual en la vista:** En `dragonball-page.component.html`, asocia los elementos `<input>` a las señales anteriores sin usar `ngModel`:
-   - Utiliza property binding `[value]="name()"` y event binding `(input)="name.set(txtName.value)"` con una variable de referencia `#txtName`.
-   - Para el poder, utiliza `[value]="power()"` y `(input)="power.set(+txtPower.value)"` asegurando la conversión a número con el operador unario `+`.
-3. **Implementación de `addCharacter()` con validación defensiva:**
-   - Aplica el **Early Return Pattern**: si el nombre está vacío (tras aplicar `.trim()`), o si el poder es menor o igual a cero (`power <= 0`), aborta la función inmediatamente sin realizar ninguna mutación.
-   - Crea un nuevo objeto de tipo `Character` asignándole un identificador único (por ejemplo, `this.characters().length + 1`), el nombre y el poder ingresados.
-4. **Mutación Inmutable del arreglo reactivo:**
-   - Actualiza la señal `characters` empleando el método `.update()` y el operador spread (`...`): `this.characters.update(list => [...list, newCharacter])`.
-   - **Regla estricta:** Queda terminantemente prohibido usar `this.characters().push(newCharacter)` directamente sobre la señal, ya que mutaría el arreglo original en la misma dirección de memoria impidiendo que Angular detecte el cambio.
-5. **Limpieza del formulario:**
-   - Crea un método auxiliar `resetFields()` que restablezca `name` a `''` y `power` a `0`, y ejecútalo al finalizar con éxito la inserción.
-6. **Criterios de éxito y verificación:**
-   - Al introducir "Krillin" con poder `1500` y pulsar "Agregar", el guerrero debe aparecer de inmediato al final de la lista renderizada por `@for`.
-   - Si dejas el nombre en blanco (o solo espacios) y pulsas "Agregar", la lista debe permanecer intacta sin errores en consola.
-   - Si colocas un poder negativo o cero (ej: `-50`), no debe añadirse ningún personaje.
-   - Tras cada inserción exitosa, las cajas de texto deben limpiarse automáticamente.
+1. **Enlace del evento en el botón:** En `dragonball-page.component.html`, añade el enlace de evento `(click)="addCharacter()"` al botón "Agregar".
+2. **Implementación de `addCharacter()` con validación defensiva:** En `src/app/pages/dragonball/dragonball-page.component.ts`:
+    - Aplica el **Early Return Pattern**: si el nombre está vacío (tras aplicar `.trim()`), o si el poder es menor o igual a cero (`power <= 0`), aborta la función inmediatamente con `return` sin realizar ninguna mutación.
+    - Crea un nuevo objeto de tipo `Character` asignándole un identificador numérico único (por ejemplo, `this.characters().length + 1`), el nombre y el poder ingresados.
+3. **Mutación Inmutable del array reactivo:**
+    - Actualiza la señal `characters` empleando el método `.update()` y el operador spread (`...`):  
+      `this.characters.update(list => [...list, newCharacter]);`
+    - **Regla estricta:** Queda terminantemente prohibido usar `this.characters().push(newCharacter)` directamente sobre la señal, ya que mutaría el array original en la misma dirección de memoria impidiendo que Angular detecte el cambio.
+4. **Limpieza del formulario:**
+    - Crea un método auxiliar `resetFields()` que restablezca `name` a `''` y `power` a `0`, y ejecútalo al finalizar con éxito la inserción para limpiar las cajas de texto.
+5. **Criterios de éxito y verificación:**
+    - Al introducir "Krillin" con poder `1500` y pulsar "Agregar", el guerrero debe aparecer de inmediato al final de la lista renderizada por `@for`.
+    - Si dejas el nombre en blanco (o solo espacios) y pulsas "Agregar", la lista debe permanecer intacta sin errores en consola.
+    - Si colocas un poder negativo o cero (ej: `-50`), no debe añadirse ningún personaje.
+    - Tras cada inserción exitosa, las cajas de texto deben limpiarse automáticamente.
 
 ---
 
@@ -613,13 +821,13 @@ En `src/app/pages/dragonball/dragonball-page.component.html`, vinculamos las se�
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **¿Por qué `this.characters.update()` y no `this.characters().push()`?**
-   * Angular Signals utiliza una función de comparación de igualdad por defecto (`defaultEquals`), la cual evalúa si `referenciaAnterior === nuevaReferencia`.
-   * Si ejecutas `this.characters().push(newCharacter)`, estás mutando el contenido interno del arreglo pero la **dirección física en memoria heap** sigue siendo exactamente la misma (`0x001 === 0x001`). Como resultado, Angular asume que el dato no cambió y **no actualiza el DOM**.
-   * Al utilizar el operador spread `[...list, newCharacter]`, JavaScript crea un **nuevo arreglo en una dirección de memoria diferente** (`0x002`). La comparación de referencia resulta falsa (`0x001 !== 0x002`), lo que desencadena de inmediato el renderizado del nuevo elemento en la interfaz.
+    * Angular Signals utiliza una función de comparación de igualdad por defecto (`defaultEquals`), la cual evalúa si `referenciaAnterior === nuevaReferencia`.
+    * Si ejecutas `this.characters().push(newCharacter)`, estás mutando el contenido interno del array pero la **dirección física en memoria heap** sigue siendo exactamente la misma (`0x001 === 0x001`). Como resultado, Angular asume que el dato no cambió y **no actualiza el DOM**.
+    * Al utilizar el operador spread `[...list, newCharacter]`, JavaScript crea un **nuevo array en una dirección de memoria diferente** (`0x002`). La comparación de referencia resulta falsa (`0x001 !== 0x002`), lo que desencadena de inmediato el renderizado del nuevo elemento en la interfaz.
 2. **Early Return Pattern (Código Plano vs Código Flecha):**
-   * Validar las condiciones negativas al inicio de la función y salir inmediatamente con `return` previene anidamientos excesivos de bloques `if/else`, mejorando drásticamente la legibilidad y mantenibilidad del código.
+    * Validar las condiciones negativas al inicio de la función y salir inmediatamente con `return` previene anidamientos excesivos de bloques `if/else`, mejorando drásticamente la legibilidad y mantenibilidad del código.
 3. **Conversión con operador unario `+`:**
-   * Los elementos `<input type="number">` del DOM retornan siempre su valor como `string` a través de la propiedad `.value`. Anteponer el operador `+` (`+txtPower.value`) fuerza la conversión a tipo numérico primitivo en JavaScript.
+    * Los elementos `<input type="number">` del DOM retornan siempre su valor como `string` a través de la propiedad `.value`. Anteponer el operador `+` (`+txtPower.value`) fuerza la conversión a tipo numérico primitivo en JavaScript.
 
 ---
 
@@ -627,7 +835,7 @@ En `src/app/pages/dragonball/dragonball-page.component.html`, vinculamos las se�
 
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
-| Usar `this.characters().push(...)` | Al hacer clic en "Agregar", la lista en pantalla no cambia absolutamente nada. | **Causa:** Mutación directa del arreglo existente. Angular no detecta cambio de referencia. <br/>**Solución:** Usar `this.characters.update(list => [...list, nuevo])`. |
+| Usar `this.characters().push(...)` | Al hacer clic en "Agregar", la lista en pantalla no cambia absolutamente nada. | **Causa:** Mutación directa del array existente. Angular no detecta cambio de referencia. <br/>**Solución:** Usar `this.characters.update(list => [...list, nuevo])`. |
 | Olvidar el operador unario `+` en el input de poder | El valor del poder se concatena como texto o genera advertencias de tipado TypeScript. | **Causa:** `txtPower.value` es siempre de tipo `string`. <br/>**Solución:** Convertir a número con `+txtPower.value` o `Number(txtPower.value)`. |
 | Omitir `.trim()` en la validación | El usuario puede insertar personajes cuyo nombre consta únicamente de espacios vacíos (`"   "`). | **Causa:** Un string de espacios evalúa a `true` en JavaScript. <br/>**Solución:** Validar con `!this.name().trim()`. |
 | No resetear las señales tras guardar | Los campos de entrada conservan los valores anteriores tras pulsar "Agregar". | **Causa:** No invocar `this.resetFields()` al terminar `addCharacter()`. |
@@ -659,18 +867,26 @@ Cuando una vista contiene un formulario y una lista, mezclar ambos en un solo ar
 * `CharacterListComponent`: Componente tonto (*Dumb*) que solo muestra datos recibidos.
 * `CharacterAddComponent`: Componente que gestiona el formulario y emite eventos hacia el padre.
 
-``` mermaid
+```mermaid
 flowchart TD
-    subgraph Smart ["Capa Contenedora: Componente Padre"]
-        Padre["<b>DragonballSuperPageComponent (Smart)</b><br/>Custodia el estado reactivo maestro y orquesta la comunicación"]
+    subgraph Padre ["DragonballSuperPageComponent (Componente Contenedor Padre / Smart)"]
+        Estado["<b>Estado Reactivo Maestro y Lógica</b><br/><code>characters = signal(Character[])</code><br/><code>addCharacter(character)</code>"]
+
+        subgraph Plantilla ["Plantilla HTML del Padre: Componentes Hijos Anidados (Dumb)"]
+            Add["<b>CharacterAddComponent</b><br/><i>(Formulario de Entrada)</i><br/><code>newCharacter = output()</code>"]
+            Lista["<b>CharacterListComponent</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code>"]
+            Add ~~~ Lista
+        end
+
+        Add -->|"<b>2. Flujo Ascendente (Output Event)</b><br/><code>(newCharacter)='addCharacter($event)'</code>"| Estado
+        Estado -->|"<b>1. Flujo Descendente (Input Binding)</b><br/><code>[characters]='characters()'</code>"| Lista
     end
 
-    subgraph Dumb ["Capa Presentacional: Componentes Hijos Atómicos"]
-        Lista["<b>CharacterListComponent (Dumb)</b><br/>Recibe datos: <code>characters = input.required()</code>"] --> Add["<b>CharacterAddComponent (Dumb)</b><br/>Emite eventos: <code>newCharacter = output()</code>"]
-    end
-
-    Padre ==>|"1. Flujo descendente de datos [characters]"| Lista
-    Add ==>|"2. Flujo ascendente de eventos (newCharacter)"| Padre
+    style Padre fill:#f8f9fa,stroke:#1976d2,stroke-width:2px
+    style Estado fill:#e3f2fd,stroke:#1976d2,stroke-width:1.5px
+    style Plantilla fill:#ffffff,stroke:#7b1fa2,stroke-width:1.5px,stroke-dasharray: 4 4
+    style Add fill:#fff3e0,stroke:#f57c00,stroke-width:1.5px
+    style Lista fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
 ```
 
 ### El Componente Hijo: `CharacterListComponent`
@@ -736,24 +952,24 @@ En este reto aplicaremos el principio de **Separación de Responsabilidades (SoC
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
 1. **Creación del componente hijo presentacional:** Dentro de `src/app/components/dragonball/`, crea la carpeta `character-add/` con sus dos archivos:
-   - `character-add.component.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
-   - `character-add.component.html`: plantilla con el formulario extraído.
+    - `character-add.component.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
+    - `character-add.component.html`: plantilla con el formulario extraído.
 2. **Definición del evento de salida con `output()`:**
-   - En `CharacterAddComponent`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
+    - En `CharacterAddComponent`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
 3. **Manejo del estado local y emisión del evento:**
-   - Mueve las señales locales `name` y `power`, así como el método `resetFields()`, al componente hijo.
-   - En el método `addCharacter()` del hijo, valida los campos, genera el nuevo objeto `Character` (usando `Math.floor(Math.random() * 1000)` o similar para el id) y emítelo al padre mediante `this.newCharacter.emit(character)`.
-   - Tras emitir, limpia los inputs locales llamando a `this.resetFields()`.
+    - Mueve las señales locales `name` y `power`, así como el método `resetFields()`, al componente hijo.
+    - En el método `addCharacter()` del hijo, valida los campos, genera el nuevo objeto `Character` (usando `Math.floor(Math.random() * 1000)` o similar para el id) y emítelo al padre mediante `this.newCharacter.emit(character)`.
+    - Tras emitir, limpia los inputs locales llamando a `this.resetFields()`.
 4. **Integración en el componente padre:**
-   - Abre la página contenedora (`DragonballSuperPageComponent` o `DragonballPageComponent`).
-   - Importa `CharacterAddComponent` en el arreglo `imports` del decorador `@Component`.
-   - En la plantilla del padre, sustituye el bloque HTML del formulario por la etiqueta del componente hijo:
+    - Abre la página contenedora (`DragonballSuperPageComponent` o `DragonballPageComponent`).
+    - Importa `CharacterAddComponent` en el array `imports` del decorador `@Component`.
+    - En la plantilla del padre, sustituye el bloque HTML del formulario por la etiqueta del componente hijo:
      `<dragonball-character-add (newCharacter)="addCharacter($event)" />`
-   - En el TypeScript del padre, implementa el método `addCharacter(newChar: Character)` que recibe el evento (`$event`) y actualiza su señal maestra mediante `this.characters.update(list => [...list, newChar])`.
+    - En el TypeScript del padre, implementa el método `addCharacter(newChar: Character)` que recibe el evento (`$event`) y actualiza su señal maestra mediante `this.characters.update(list => [...list, newChar])`.
 5. **Criterios de éxito y verificación:**
-   - La página debe compilar sin advertencias.
-   - Al introducir un personaje en el formulario hijo y hacer clic en "Agregar", el componente padre debe recibir el objeto y la lista debe actualizarse de forma instantánea.
-   - El componente hijo debe quedar completamente aislado: no debe conocer cómo almacena los personajes el padre ni depender de ningún servicio externo.
+    - La página debe compilar sin advertencias.
+    - Al introducir un personaje en el formulario hijo y hacer clic en "Agregar", el componente padre debe recibir el objeto y la lista debe actualizarse de forma instantánea.
+    - El componente hijo debe quedar completamente aislado: no debe conocer cómo almacena los personajes el padre ni depender de ningún servicio externo.
 
 ---
 
@@ -896,13 +1112,13 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **Patrón Smart & Dumb (Contenedor vs Presentacional):**
-   * **Componente Dumb (`CharacterAddComponent`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
-   * **Componente Smart (`DragonballSuperPageComponent`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
+    * **Componente Dumb (`CharacterAddComponent`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
+    * **Componente Smart (`DragonballSuperPageComponent`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
 2. **La función moderna `output()` frente a `@Output() EventEmitter`:**
-   * En versiones anteriores, se requería importar `@Output()` y crear una instancia `new EventEmitter<T>()` de RxJS.
-   * La función **`output<T>()`** de Angular 19+ es una primitiva más liviana, que no depende de RxJS para la emisión de eventos simples entre componentes, reduciendo el tamaño del bundle y simplificando la sintaxis.
+    * En versiones anteriores, se requería importar `@Output()` y crear una instancia `new EventEmitter<T>()` de RxJS.
+    * La función **`output<T>()`** de Angular 19+ es una primitiva más liviana, que no depende de RxJS para la emisión de eventos simples entre componentes, reduciendo el tamaño del bundle y simplificando la sintaxis.
 3. **El argumento mágico `$event`:**
-   * En el enlace de eventos `(newCharacter)="addCharacter($event)"`, Angular inyecta automáticamente el valor emitido por `this.newCharacter.emit(...)` en la variable implícita `$event`, preservando el tipado estricto `Character`.
+    * En el enlace de eventos `(newCharacter)="addCharacter($event)"`, Angular inyecta automáticamente el valor emitido por `this.newCharacter.emit(...)` en la variable implícita `$event`, preservando el tipado estricto `Character`.
 
 ---
 
@@ -911,7 +1127,7 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
 | Olvidar `$event`: `(newCharacter)="addCharacter()"` | En la lista se agrega un elemento con valores `undefined` o se produce un error en tiempo de ejecución. | **Causa:** Sin `$event`, el argumento recibido en el método del padre es `undefined`. <br/>**Solución:** Escribir siempre `(newCharacter)="addCharacter($event)"`. |
-| Olvidar importar `CharacterAddComponent` en el padre | Error de compilación: *'dragonball-character-add' is not a known element*. | **Causa:** En componentes standalone, todo componente hijo debe listarse en el arreglo `imports: [...]` del padre. |
+| Olvidar importar `CharacterAddComponent` en el padre | Error de compilación: *'dragonball-character-add' is not a known element*. | **Causa:** En componentes standalone, todo componente hijo debe listarse en el array `imports: [...]` del padre. |
 | Intentar importar y modificar la señal `characters` directamente en el hijo | Fuerte acoplamiento entre componentes; se rompe el principio de componente Dumb reutilizable. | **Causa:** Manipulación directa del estado ajeno. <br/>**Solución:** El hijo solo debe emitir eventos mediante `output()`; el padre es quien actualiza su estado. |
 | Usar decorador antiguo `@Output()` mezclado con `output()` | Error de sintaxis o confusión de API. | **Causa:** Mezcla de estilos legados y modernos. <br/>**Solución:** Usar exclusivamente la función moderna `newCharacter = output<Character>()`. |
 
@@ -986,6 +1202,116 @@ export class DragonballService {
     }
     ```
     *(Ambas formas conviven y son 100% compatibles en Angular 22, pero `@Service()` es el nuevo estándar recomendado por su concisión).*
+
+### Anatomía de la Persistencia: ¿Qué hace `loadFromLocalStorage` y cuándo se ejecuta?
+
+En el servicio anterior destaca una función declarada fuera de la clase: `loadFromLocalStorage()`. Comprender esta función permite asimilar cómo Angular orquesta la inicialización del estado persistido en memoria.
+
+#### 1. ¿Qué hace `loadFromLocalStorage`? (Lectura Defensiva con Fallback)
+
+Su objetivo exclusivo es recuperar la lista de personajes guardada en sesiones anteriores del navegador:
+
+1. **Lectura de la API nativa:** Ejecuta `localStorage.getItem('characters')`. Esta instrucción accede al almacenamiento del navegador y devuelve una cadena de texto (JSON) si la clave existe, o `null` si no se ha guardado nada previamente.
+2. **Operador Ternario Defensivo (`characters ? JSON.parse(characters) : [...]`):**
+    * **Si existen datos previos (`truthy`):** Invoca `JSON.parse(characters)` para deserializar la cadena de texto y convertirla de inmediato en un array de objetos JavaScript tipados con la interfaz `Character[]`.
+    * **Si es la primera visita o memoria limpia (`null`):** Proporciona un conjunto de datos iniciales por defecto (*seed data / fallback*): el array inicial con Goku y Vegeta. Esto asegura que la aplicación nunca arranque con un valor `undefined` o roto.
+
+#### 2. ¿Cuándo se ejecuta exactamente? (Ciclo de Vida del Singleton)
+
+* **Se ejecuta una única vez:** En el instante en que el servicio `DragonballService` se **instancia por primera vez** en la aplicación.
+* **Fase de Inicialización de Propiedades:** Al declarar la propiedad:
+  ```typescript
+  characters = signal<Character[]>(loadFromLocalStorage());
+  ```
+  JavaScript ejecuta la llamada a `loadFromLocalStorage()` de forma síncrona para resolver el valor inicial con el que se inicializará la señal reactiva.
+* **Ámbito Singleton (`providedIn: 'root'` o `@Service()`):** Angular mantiene una única instancia compartida del servicio para toda la aplicación. Esa lectura inicial se produce al arrancar y los personajes se conservan vivos en la memoria reactiva del servicio durante toda la sesión.
+
+#### 3. ¿Por qué está FUERA de la clase `DragonballService`?
+
+Muchos desarrolladores se preguntan por qué no se implementa como un método interno de la clase (`this.loadFromLocalStorage()`). Esta decisión responde a tres principios arquitectónicos de **Clean Code**:
+
+1. **Función Pura sin Dependencia de `this`:** La función es completamente agnóstica a la instancia del servicio: solo lee de `localStorage` y devuelve un array limpio. No necesita acceder a `this` ni a ninguna otra propiedad.
+2. **Encapsulamiento a Nivel de Módulo:** Al ser una constante no exportada (`const loadFromLocalStorage`), queda totalmente oculta y privada dentro del archivo `dragonball.service.ts`. Ningún componente exterior puede invocarla ni corromperla por error, exponiendo únicamente la API pública que nos interesa (`characters` y `addCharacter`).
+3. **Disponibilidad Síncrona Inmediata:** En la especificación estándar de clases de TypeScript, llamar a una función del ámbito del módulo para inicializar una propiedad de clase evita conflictos de contexto antes de la ejecución del constructor.
+
+#### 4. Circuito de Persistencia: Lectura Síncrona vs Escritura Reactiva (`effect`)
+
+Ambos mecanismos colaboran de forma simbiótica para garantizar la persistencia del estado:
+
+```mermaid
+flowchart TD
+    subgraph Inicio ["1. Al Arrancar (Instanciación única)"]
+        direction LR
+        LS1["<b>LocalStorage</b><br/><code>getItem('characters')</code>"] -->|"loadFromLocalStorage()"| SIG["<b>Señal: characters()</b><br/>Hidratación inicial en memoria"]
+    end
+
+    subgraph Vida ["2. Durante la Sesión (Reactividad continua)"]
+        direction LR
+        UI["<b>Interacción de Usuario</b><br/><code>addCharacter(nuevo)</code>"] -->|"characters.update()"| SIG2["<b>Señal: characters()</b><br/>Nuevo array reactivo emitido"]
+        SIG2 -.->|"effect() detecta el cambio"| LS2["<b>LocalStorage</b><br/><code>setItem('characters', ...)</code>"]
+    end
+
+    Inicio ~~~ Vida
+
+    style Inicio fill:#e3f2fd,stroke:#1976d2,stroke-width:1.5px
+    style Vida fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
+```
+
+* **Al nacer el servicio:** `loadFromLocalStorage()` lee del disco del navegador para hidratar la señal en memoria.
+* **Al mutar el estado:** `addCharacter()` actualiza la señal con `.update()`.
+* **En segundo plano:** El efecto reactivo `saveToLocalStorage = effect(() => { ... })` detecta automáticamente que la señal leída en su cuerpo (`this.characters()`) ha emitido un nuevo valor y serializa el estado en `localStorage.setItem(...)`. El alumno puede recargar la página (F5) o cerrar el navegador con la total certeza de que sus datos persisten intactos.
+
+!!! tip "Arquitectura Pro: Consideración para Server-Side Rendering (SSR)"
+    El objeto global `localStorage` es una API exclusiva de los navegadores web. Si en el futuro despliegas tu aplicación con **Server-Side Rendering (SSR)** en Node.js, acceder directamente a `localStorage` durante la instanciación de un servicio lanzará una excepción (`ReferenceError: localStorage is not defined`). En entornos con SSR se utilizan comprobaciones como `isPlatformBrowser(this.platformId)` o la primitiva `afterNextRender()` para asegurar que la lectura solo ocurra en el cliente. En aplicaciones SPA tradicionales cliente (como la desarrollada en este curso), este patrón es 100% seguro y directo.
+
+---
+
+### Efectos Reactivos con `effect()`: Sincronización Automática
+
+En la declaración de `DragonballService` destaca una función del núcleo de Angular que los alumnos utilizan aquí por primera vez:
+
+```typescript
+saveToLocalStorage = effect(() => {
+  localStorage.setItem('characters', JSON.stringify(this.characters()));
+});
+```
+
+#### 1. ¿Qué es `effect()` y cómo opera?
+
+`effect()` es la tercera primitiva reactiva fundamental del sistema de **Signals** de Angular (junto con `signal()` y `computed()`). Su misión específica es ejecutar una función secundaria (*side-effect*) cada vez que las señales que se leen en su interior cambian de valor.
+
+* **Rastreo Automático de Dependencias (*Auto-dependency Tracking*):**  
+  A diferencia de bibliotecas como React (donde se requiere declarar un array de dependencias manual en `useEffect`), Angular registra las dependencias automáticamente en tiempo de ejecución. Al llamar a `this.characters()` dentro de la función flecha, el motor reactivo de Angular añade dinámicamente esa señal a la lista de suscripciones del efecto. Cuando `addCharacter()` actualiza la señal con `.update()`, Angular notifica al efecto y lo ejecuta en el siguiente ciclo de microtareas.
+* **Ejecución inicial:** Un efecto siempre se ejecuta al menos una vez al crearse para evaluar su cuerpo y registrar las señales dependientes.
+
+#### 2. La Regla de Oro: El Contexto de Inyección (*Injection Context*)
+
+`effect()` no puede invocarse libremente en cualquier parte del código: **debe crearse estrictamente dentro de un contexto de inyección**:
+
+* **Ubicaciones válidas:**
+    1. Como inicializador directo de una propiedad de clase:  
+       `saveToLocalStorage = effect(() => { ... });`
+    2. Dentro del cuerpo del `constructor()` de la clase.
+* **Ubicaciones prohibidas:** Si un desarrollador intenta llamar a `effect()` dentro de un método normal (por ejemplo, dentro de `addCharacter()`), Angular detendrá la ejecución con un error en consola:
+    ```text
+    NG0203: effect() can only be used within an injection context
+    ```
+
+#### 3. Diferencia Arquitectónica: `computed()` frente a `effect()`
+
+Es muy común que los estudiantes duden sobre cuándo usar cada primitiva:
+
+| Criterio | Primitiva `computed()` | Primitiva `effect()` |
+| :--- | :--- | :--- |
+| **Propósito principal** | **Derivar datos puros** en memoria sin provocar efectos secundarios. | **Sincronizar el estado** con sistemas y APIs externas (*side-effects*). |
+| **Valor de retorno** | Retorna una **Signal de solo lectura** (`Signal<T>`). | No retorna datos; devuelve una referencia `EffectRef` para control manual. |
+| **Cuándo se evalúa** | **Perezosa (*Lazy*):** Solo se calcula si alguien lee su valor o la plantilla lo renderiza. | **Proactiva (*Eager*):** Se programa y ejecuta automáticamente ante cualquier mutación. |
+| **Ejemplos típicos** | Calcular el total con IVA, filtrar un array, concatenar un nombre completo. | Escribir en `localStorage`, enviar métricas a Google Analytics, manipular APIs de Canvas o DOM nativo. |
+
+!!! info "📖 Para saber más: Primitivas Reactivas en el Manual"
+    Profundiza en el ciclo de vida de los efectos, funciones de limpieza (*onCleanup*) y control manual de ejecución en el **[Manual de Referencia: 05. Signals y Reactividad (effect)](manual/05-signals.md#effect)**.
+
+---
 
 ### Consumo en la Página: `DragonballSuperPageComponent`
 Inyectamos el servicio mediante la función **`inject()`**:
@@ -1125,11 +1451,20 @@ Esto instruye a Netlify a redirigir internamente todas las peticiones a `index.h
 
 ---
 
+## 🚀 Práctica Global Integradora (Unidades 04 y 05)
+
+!!! tip "🎯 Práctica Autónoma para Casa: Tracker Reactivo SPA"
+    Para afianzar y poner a prueba todos los conceptos arquitectónicos adquiridos en las **Unidades 04 y 05** (Signals, Componentes Smart/Dumb, Inmutabilidad, Servicios Singleton, `effect()` y Enrutamiento SPA), dispones del enunciado completo, especificaciones técnicas, arquetipos temáticos y rúbrica de evaluación en la sección de prácticas:
+    
+    👉 **[Ir a la Práctica 01: Tracker Reactivo SPA](practicas/01-tracker-spa.md)**
+
+---
+
 ## 🧪 Evaluación y Preguntas para el Aula
 
 !!! question "Pregunta 1: ¿Por qué en `@for` es obligatorio el parámetro `track`?"
     ??? success "Respuesta"
-        Porque le permite al motor de detección de cambios de Angular identificar de forma unívoca cada elemento del arreglo. Si un elemento se modifica, inserta o elimina, Angular solo altera ese nodo del DOM en lugar de repintar la lista entera.
+        Porque le permite al motor de detección de cambios de Angular identificar de forma unívoca cada elemento del array. Si un elemento se modifica, inserta o elimina, Angular solo altera ese nodo del DOM en lugar de repintar la lista entera.
 
 !!! question "Pregunta 2: ¿Qué diferencia existe entre `input()` y `@Input()` tradicional?"
     ??? success "Respuesta"

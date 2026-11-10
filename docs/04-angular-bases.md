@@ -325,8 +325,8 @@ Antes de consultar la solución, realiza de forma autónoma los siguientes pasos
 3. **Vincular el template externo:** En `counter-page.component.ts`, sustituye la propiedad `template` por la propiedad de metadatos `templateUrl`, asignándole la ruta relativa al archivo HTML recién creado.
 4. **Decisión sobre los estilos:** Mantén los estilos de los botones en el archivo `.ts` mediante la propiedad `styles` (o de forma opcional, sepáralos en un archivo `counter-page.component.css` usando `styleUrl`).
 5. **Verificación interactiva:** Abre el navegador en `http://localhost:4200` y comprueba que:
-   - El título y el valor del contador se rendericen sin advertencias ni errores en la consola de desarrollo (F12).
-   - Los botones `+1`, `-1` y `Reset` mantengan intacta su funcionalidad y reactividad ante los clics.
+    - El título y el valor del contador se rendericen sin advertencias ni errores en la consola de desarrollo (F12).
+    - Los botones `+1`, `-1` y `Reset` mantengan intacta su funcionalidad y reactividad ante los clics.
 
 ---
 
@@ -387,8 +387,8 @@ export class CounterPageComponent {
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **`template` frente a `templateUrl`:**
-   * **`template`:** Espera una cadena de texto (*string*) con el código HTML incrustado directamente en el archivo TypeScript. Es útil para componentes diminutos o prototipos rápidos.
-   * **`templateUrl`:** Espera una ruta relativa (*string*) hacia un archivo físico `.html`. Es el estándar recomendado para componentes de mediana o gran complejidad en proyectos reales.
+    * **`template`:** Espera una cadena de texto (*string*) con el código HTML incrustado directamente en el archivo TypeScript. Es útil para componentes diminutos o prototipos rápidos.
+    * **`templateUrl`:** Espera una ruta relativa (*string*) hacia un archivo físico `.html`. Es el estándar recomendado para componentes de mediana o gran complejidad en proyectos reales.
 2. **El prefijo obligatorio `./`:** En Angular moderno, la ruta asignada a `templateUrl` debe ser **relativa al directorio del propio componente**. Omitir el `./` puede generar fallos de resolución durante el empaquetado con Vite / esbuild.
 3. **Manejo flexible de estilos (`styles` vs `styleUrl`):**
    Angular ofrece total flexibilidad: cuando un componente solo requiere 2 o 3 reglas CSS sencillas (como el espaciado y ancho de los botones), mantenerlas en `styles: `...`` dentro del archivo `.ts` ahorra archivos adicionales. Si las reglas visuales crecen, se extraen a un archivo `.css` independiente vinculado con `styleUrl: './counter-page.component.css'`.
@@ -460,7 +460,7 @@ Limpiamos el archivo `app.component.html` original y dejamos únicamente el `<ro
     ```
 
 !!! warning "Error Típico de los Alumnos"
-    Si los alumnos olvidan agregar `RouterOutlet` al arreglo `imports: [RouterOutlet]` de `app.component.ts`, la etiqueta `<router-outlet />` no funcionará y la página quedará en blanco.
+    Si los alumnos olvidan agregar `RouterOutlet` al array `imports: [RouterOutlet]` de `app.component.ts`, la etiqueta `<router-outlet />` no funcionará y la página quedará en blanco.
 
 ---
 
@@ -619,16 +619,16 @@ Antes de consultar la solución detallada, sigue paso a paso las siguientes inst
    <h1>{{ name() }}</h1>
 
    <dl>
-     <td>Nombre:</td>
+     <dt>Nombre:</dt>
      <dd>{{ name() }}</dd>
 
-     <td>Edad:</td>
+     <dt>Edad:</dt>
      <dd>{{ age() }}</dd>
 
-     <td>Método:</td>
+     <dt>Método:</dt>
      <dd>{{ getHeroDescription() }}</dd>
 
-     <td>Capitalizado:</td>
+     <dt>Capitalizado:</dt>
      <!-- ! Reto Extra: Mostrar el nombre TODO EN MAYÚSCULAS sin crear una nueva señal -->
      <dd>{{ 'TODO EN MAYÚSCULAS' }}</dd>
    </dl>
@@ -688,7 +688,7 @@ Antes de consultar la solución detallada, sigue paso a paso las siguientes inst
 
 Editamos `src/index.html` e incorporamos el enlace CDN en el bloque `<head>`:
 
-```html title="src/index.html" hl_lines="6-11"
+```html title="src/index.html" hl_lines="9-15"
 <!doctype html>
 <html lang="es">
   <head>
@@ -715,7 +715,7 @@ Editamos `src/index.html` e incorporamos el enlace CDN en el bloque `<head>`:
 
 En `src/app/pages/hero/hero-page.component.ts`:
 
-```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="9-10 12-14 16-29"
+```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="8-9 12-14 17-30"
 import { Component, signal } from '@angular/core';
 
 @Component({
@@ -752,20 +752,20 @@ export class HeroPageComponent {
 
 Completamos la plantilla conectando el evento `(click)="changeAge()"` y resolviendo el reto extra de mayúsculas mediante `name().toUpperCase()`:
 
-```html title="src/app/pages/hero/hero-page.component.html" hl_lines="13 16 23"
+```html title="src/app/pages/hero/hero-page.component.html" hl_lines="15 22"
 <h1>{{ name() }}</h1>
 
 <dl>
-  <td>Nombre:</td>
+  <dt>Nombre:</dt>
   <dd>{{ name() }}</dd>
 
-  <td>Edad:</td>
+  <dt>Edad:</dt>
   <dd>{{ age() }}</dd>
 
-  <td>Método:</td>
+  <dt>Método:</dt>
   <dd>{{ getHeroDescription() }}</dd>
 
-  <td>Capitalizado:</td>
+  <dt>Capitalizado:</dt>
   <!-- Reto Extra resuelto: invocamos toUpperCase() sobre el valor de la señal -->
   <dd>{{ name().toUpperCase() }}</dd>
 </dl>
@@ -813,11 +813,11 @@ export const routes: Routes = [
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **Lectura de señales con paréntesis `()`:**
-   * Tanto en la plantilla (`{{ name() }}`) como dentro de la clase (`this.name()`), las señales son funciones. Omitir los paréntesis retorna la definición del objeto Signal en vez del dato primitivo.
+    * Tanto en la plantilla (`{{ name() }}`) como dentro de la clase (`this.name()`), las señales son funciones. Omitir los paréntesis retorna la definición del objeto Signal en vez del dato primitivo.
 2. **Método en Plantilla (`getHeroDescription()`):**
-   * Funciona correctamente y resuelve la tarea. Sin embargo, invocar funciones directamente en la plantilla HTML puede recalcularse en cada ciclo de renderizado. En la siguiente sección veremos cómo **optimizar este patrón mediante `computed()`**, el cual añade memorización automática (*memoization*).
+    * Funciona correctamente y resuelve la tarea. Sin embargo, invocar funciones directamente en la plantilla HTML puede recalcularse en cada ciclo de renderizado. En la siguiente sección veremos cómo **optimizar este patrón mediante `computed()`**, el cual añade memorización automática (*memoization*).
 3. **El Reto Extra (Transformación en plantilla):**
-   * Al ejecutar `{{ name().toUpperCase() }}`, JavaScript transforma la cadena en tiempo de interpolación. Aunque es una solución válida para operaciones sencillas, más adelante aprenderemos que Angular ofrece una alternativa declarativa aún más limpia: **Pipes** (`{{ name() | uppercase }}`).
+    * Al ejecutar `{{ name().toUpperCase() }}`, JavaScript transforma la cadena en tiempo de interpolación. Aunque es una solución válida para operaciones sencillas, más adelante aprenderemos que Angular ofrece una alternativa declarativa aún más limpia: **Pipes** (`{{ name() | uppercase }}`).
 
 ---
 
@@ -860,14 +860,14 @@ const resultado = computed(() => señalA() + señalB());
     3. **Evaluación perezosa (Lazy):** Solo se evalúa cuando es leída por la vista o por otra señal.
 
 ### Alternativa: Pipes (`UpperCasePipe`)
-Para transformar valores exclusivamente visuales en la plantilla, Angular proporciona **Pipes**. En componentes standalone, los pipes deben importarse explícitamente en el arreglo `imports` del decorador `@Component`.
+Para transformar valores exclusivamente visuales en la plantilla, Angular proporciona **Pipes**. En componentes standalone, los pipes deben importarse explícitamente en el array `imports` del decorador `@Component`.
 
 ---
 
 ### Código Final de `HeroPageComponent` con `computed` y `Pipe`
 
 === "src/app/pages/hero/hero-page.component.ts"
-    ```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="1 2 6 12-17"
+    ```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="1 2 6 12-18"
     import { Component, computed, signal } from '@angular/core';
     import { UpperCasePipe } from '@angular/common';
 
@@ -908,17 +908,17 @@ Para transformar valores exclusivamente visuales en la plantilla, Angular propor
     <h1>{{ name() }}</h1>
 
     <dl>
-      <td>Nombre:</td>
+      <dt>Nombre:</dt>
       <dd>{{ name() }}</dd>
 
-      <td>Edad:</td>
+      <dt>Edad:</dt>
       <dd>{{ age() }}</dd>
 
-      <td>Método:</td>
+      <dt>Método:</dt>
       <!-- Invocación de señal computada -->
       <dd>{{ heroDescription() }}</dd>
 
-      <td>Capitalizado:</td>
+      <dt>Capitalizado:</dt>
       <!-- Opción A: Señal computada -->
       <!-- <dd>{{ capitalizedName() }}</dd> -->
       <!-- Opción B: Pipe de Angular -->

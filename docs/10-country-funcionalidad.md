@@ -140,7 +140,7 @@ export class CountryMapper {
     };
   }
 
-  // Transforma un arreglo completo mediante programación funcional pura
+  // Transforma un array completo mediante programación funcional pura
   static mapRestCountryArrayToCountryArray(restCountries: RESTCountry[]): Country[] {
     return restCountries.map(this.mapRestCountryToCountry);
   }
@@ -474,7 +474,7 @@ export default class CountryPageComponent {
     3. Evita fugas de memoria al encargarse Angular de la desuscripción cuando el componente se destruye.
 
 ??? question "¿Para qué sirve el pipe `number` (`DecimalPipe`) en la plantilla de países?"
-    **Respuesta:** Para formatear cantidades numéricas grandes con separadores de miles según la configuración regional (`47420000` $\rightarrow$ `47,420,000` o `47.420.000`), mejorando drásticamente la legibilidad de la población para el usuario final.
+    **Respuesta:** Para formatear cantidades numéricas grandes con separadores de miles según la configuración regional (`47420000` → `47,420,000` o `47.420.000`), mejorando drásticamente la legibilidad de la población para el usuario final.
 
 ---
 

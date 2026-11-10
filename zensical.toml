@@ -38,6 +38,10 @@ nav = [
       { "18. Pruebas Unitarias y de Integración con Vitest" = "manual/18-testing-vitest.md" },
    #   { "Auditoría Curricular" = "manual/propuesta-mejora-plan-angular.md" },
   ]},
+  { "Prácticas" = [
+      { "Catálogo de Prácticas" = "practicas/index.md" },
+      { "01. Tracker Reactivo SPA (U04 y U05)" = "practicas/01-tracker-spa.md" },
+  ]},
 ]
 
 [project.theme]

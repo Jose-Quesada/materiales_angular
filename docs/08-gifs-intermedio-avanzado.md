@@ -158,7 +158,7 @@ onScroll(event: Event) {
 
 ## Paginación y Acumulación en `GifService`
 
-Al hacer scroll infinito, **no debemos reemplazar** la lista de gifs, sino concatenar los nuevos elementos al final del arreglo existente.
+Al hacer scroll infinito, **no debemos reemplazar** la lista de gifs, sino concatenar los nuevos elementos al final del array existente.
 
 En `src/app/gifs/services/gifs.service.ts`:
 

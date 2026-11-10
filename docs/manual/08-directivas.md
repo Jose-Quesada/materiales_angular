@@ -64,6 +64,11 @@ flowchart TD
 
 ### PARTE 1 - Control Flow moderno (@if, @for, @switch)
 
+
+!!! info "📖 Guía Canónica de Control Flow en Plantillas"
+    El Control Flow (`@if`, `@for`, `@switch`) es sintaxis declarativa integrada directamente en el compilador de plantillas de Angular (ya no son directivas). Para dominar su uso en el diseño de vistas reactivas, consulta el **[Manual de Referencia: 04. Plantillas y Control Flow](04-plantillas.md#control-flow-nativo-if-for-switch)**. A continuación analizamos su comparativa frente a las directivas estructurales históricas.
+
+
 !!! tip "Comando oficial de migración a Control Flow"
     Puedes migrar automáticamente proyectos legacy con directivas estructurales (`*ngIf`, `*ngFor`, `*ngSwitch`) a la nueva sintaxis nativa ejecutando en el CLI:
     ```bash
@@ -616,52 +621,109 @@ export class PanelConfigurableComponent {
 
 #### 2.3. `[class]` y `[style]` vs `NgClass` y `NgStyle`
 
-Angular también permite manipular clases y estilos mediante bindings individuales, que son más eficientes cuando solo se necesita cambiar una propiedad:
+Angular permite manipular clases y estilos dinámicos mediante dos mecanismos: el **enlace de propiedad nativo** (`[class]` / `[style]`) y las **directivas de atributo clásicas** (`NgClass` / `NgStyle`). 
 
-**Binding de clase individual:**
+Para que los alumnos puedan contrastar la evolución sintáctica y arquitectónica, a continuación se muestra la implementación exacta de los mismos casos de uso utilizando ambos enfoques:
 
-```html
-<!-- Aplicar una clase condicionalmente -->
-<div [class.activo]="estaActivo">Elemento</div>
+---
 
-<!-- Aplicar múltiples bindings de clase -->
-<div
-  [class.tema-oscuro]="tema === 'oscuro'"
-  [class.tema-claro]="tema === 'claro'"
-  [class.destacado]="esDestacado"
->
-  Contenido
-</div>
-```
+##### 1. Comparativa: Clases Condicionales (`[class]` vs `NgClass`)
 
-**Binding de estilo individual:**
+=== "Enlace Nativo [class.nombre] (Recomendado en Angular Moderno)"
+    ```html
+    <!-- Caso 1: Clase única condicional -->
+    <div [class.activo]="estaActivo">Elemento</div>
 
-```html
-<!-- Un estilo individual -->
-<div [style.background-color]="colorFondo">Elemento</div>
+    <!-- Caso 2: Múltiples clases condicionales independientes -->
+    <div
+      [class.tema-oscuro]="tema === 'oscuro'"
+      [class.tema-claro]="tema === 'claro'"
+      [class.destacado]="esDestacado"
+    >
+      Contenido
+    </div>
 
-<!-- Con unidad -->
-<div [style.font-size.px]="tamanoFuente">Texto</div>
+    <!-- Caso 3: Asignación masiva de clases desde string -->
+    <div [class]="'btn btn-primary shadow-sm'">Botón</div>
+    ```
 
-<!-- Múltiples bindings de estilo -->
-<div
-  [style.color]="colorTexto"
-  [style.background-color]="colorFondo"
-  [style.padding.px]="padding"
->
-  Contenido con estilos
-</div>
-```
+    > **Ventajas:** Cero dependencias (no requiere importar nada en el componente standalone) y mutación quirúrgica y directa sobre el nodo del DOM.
 
-**Cuándo usar cada opción:**
+=== "Directiva [ngClass] (Angular Clásico)"
+    ```html
+    <!-- Caso 1: Clase única condicional -->
+    <div [ngClass]="{ 'activo': estaActivo }">Elemento</div>
 
-| Situación | Recomendación |
-|---|---|
-| Una o dos clases/estilos condicionales | `[class.nombre]` / `[style.propiedad]` |
-| Múltiples clases condicionales | `[ngClass]="{ ... }"` |
-| Conjunto de clases fijas desde variable | `[ngClass]="variable"` |
-| Múltiples estilos dinámicos | `[ngStyle]="{ ... }"` |
-| Cálculos complejos de estilos | `[ngStyle]="metodoQueCalculaEstilos()"` |
+    <!-- Caso 2: Múltiples clases condicionales mediante diccionario de objetos -->
+    <div [ngClass]="{
+      'tema-oscuro': tema === 'oscuro',
+      'tema-claro': tema === 'claro',
+      'destacado': esDestacado
+    }">
+      Contenido
+    </div>
+
+    <!-- Caso 3: Asignación masiva desde array o string -->
+    <div [ngClass]="['btn', 'btn-primary', 'shadow-sm']">Botón</div>
+    ```
+
+    > **Requisito obligatorio:** Requiere importar `NgClass` (o `CommonModule`) en el array `imports: [NgClass]` del componente standalone.
+
+---
+
+##### 2. Comparativa: Estilos Inline Dinámicos (`[style]` vs `NgStyle`)
+
+=== "Enlace Nativo [style.propiedad] (Recomendado en Angular Moderno)"
+    ```html
+    <!-- Caso 1: Estilo individual simple -->
+    <div [style.background-color]="colorFondo">Elemento</div>
+
+    <!-- Caso 2: Estilo con unidad de medida automática (.px, .rem, .%) -->
+    <div [style.font-size.px]="tamanoFuente">Texto dinámico</div>
+
+    <!-- Caso 3: Múltiples estilos simultáneos -->
+    <div
+      [style.color]="colorTexto"
+      [style.background-color]="colorFondo"
+      [style.padding.px]="padding"
+    >
+      Contenido con estilos nativos
+    </div>
+    ```
+
+    > **Ventajas:** Sintaxis limpia, soporte directo de unidades de medida y ejecución sin sobrecarga de directivas intermedias.
+
+=== "Directiva [ngStyle] (Angular Clásico)"
+    ```html
+    <!-- Caso 1: Estilo individual simple -->
+    <div [ngStyle]="{ 'background-color': colorFondo }">Elemento</div>
+
+    <!-- Caso 2: Estilo con unidad de medida en la clave o valor -->
+    <div [ngStyle]="{ 'font-size.px': tamanoFuente }">Texto dinámico</div>
+
+    <!-- Caso 3: Múltiples estilos simultáneos mediante objeto de configuración -->
+    <div [ngStyle]="{
+      'color': colorTexto,
+      'background-color': colorFondo,
+      'padding.px': padding
+    }">
+      Contenido con directiva NgStyle
+    </div>
+    ```
+
+    > **Requisito obligatorio:** Requiere importar `NgStyle` (o `CommonModule`) en el array `imports: [NgStyle]` del componente standalone.
+
+---
+
+##### 3. Criterio de Selección Arquitectónica: ¿Cuándo usar cada opción?
+
+| Criterio | Enlace Nativo `[class.nombre]` / `[style.propiedad]` | Directivas `[ngClass]` / `[ngStyle]` |
+| :--- | :--- | :--- |
+| **Naturaleza técnica** | **Nativo del compilador de plantillas** (Property Binding directo). | **Directivas de atributo** del paquete `@angular/common`. |
+| **Imports en Standalone** | **Ninguno**. Disponible *out-of-the-box* en cualquier componente. | Obligatorio importar `NgClass` / `NgStyle` en `imports: [...]`. |
+| **Rendimiento de renderizado** | **Óptimo**. Angular actualiza exclusivamente la propiedad o clase alterada. | Evalúa el objeto de claves en cada comprobación del ciclo de vida. |
+| **Sintaxis de unidades** | Soporta sufijos tipados directos: `[style.width.px]`, `[style.opacity]`. | Requiere incluir sufijo en la clave (`'font-size.px'`) o concatenar cadenas (`tamano + 'px'`). |
+| **Recomendación actual** | **Elección por defecto en el 95% de los casos cotidianos**. | Reservado para objetos o diccionarios complejos calculados dinámicamente en TypeScript. |
 
 ### PARTE 3 - Directivas personalizadas
 

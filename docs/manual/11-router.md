@@ -295,7 +295,7 @@ Se utiliza cuando la ruta se construye dinámicamente incorporando variables, va
 ```
 
 !!! tip "¿Por qué Angular utiliza un Array en `[routerLink]`?"
-    Cada elemento del arreglo representa un **segmento lógico** de la URL. Angular se encarga automáticamente de normalizar las barras separadoras (`/`) y de codificar de forma segura cualquier carácter conflictivo (espacios, caracteres especiales, acentos) mediante `encodeURIComponent`, evitando errores comunes de concatenación manual de cadenas.
+    Cada elemento del array representa un **segmento lógico** de la URL. Angular se encarga automáticamente de normalizar las barras separadoras (`/`) y de codificar de forma segura cualquier carácter conflictivo (espacios, caracteres especiales, acentos) mediante `encodeURIComponent`, evitando errores comunes de concatenación manual de cadenas.
 
 **C. Rutas Absolutas vs. Rutas Relativas:**  
 La presencia o ausencia de la barra inclinada inicial (`/`) determina cómo calcula Angular la URL final:
@@ -494,7 +494,7 @@ Podemos exportar la instancia de la directiva `routerLinkActive` como una variab
 ##### 5. Guía de Errores Comunes y Checklist Standalone
 
 !!! danger "El Problema del 'Enlace Mudo' en Componentes Standalone"
-    En aplicaciones modernas con componentes standalone, si olvidas importar **`RouterLink`** o **`RouterLinkActive`** en el arreglo `imports: [...]` del componente:
+    En aplicaciones modernas con componentes standalone, si olvidas importar **`RouterLink`** o **`RouterLinkActive`** en el array `imports: [...]` del componente:
     
     1. La plantilla compilará sin arrojar errores bloqueantes evidentes.
     2. El navegador interpretará `routerLink="/..."` como un atributo HTML desconocido e inerte.

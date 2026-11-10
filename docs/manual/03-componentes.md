@@ -1227,7 +1227,7 @@ flowchart TD
     end
 
     Padre ==>|"[propiedad]='valor'"| I
-    Padre <==>|"[(valor)]='estado'"| M
+    Padre <-->|"[(valor)]='estado'"| M
     O ==>|"(evento)='manejador($event)'"| Padre
 ```
 
