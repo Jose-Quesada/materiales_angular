@@ -23,7 +23,7 @@ flowchart TD
     end
 
     subgraph Orquestacion ["Fase 2 · Control de Concurrencia y Paginación (GifService)"]
-        Lock["<b>Bloqueo Concurrente (trendingLoading)</b><br/>Evita múltiples llamadas HTTP simultáneas mientras carga"] --> Fetch["<b>Paginación y Acumulación</b><br/>Petición con offset incremental y mutación inmutable del array"]
+        Lock["<b>Bloqueo Concurrente (trendingLoading)</b><br/>Evita múltiples llamadas HTTP simultáneas mientras carga"] --> Fetch["<b>Paginación y Acumulación</b><br/>Petición con offset incremental y actualización inmutable del array"]
     end
 
     subgraph Presentacion ["Fase 3 · Layout Masonry y Persistencia de Scroll"]

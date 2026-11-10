@@ -660,7 +660,7 @@ En Angular clásico se utilizaban directivas como `[(ngModel)]` (que requiere im
 
 ---
 
-## 🎯 Tarea Práctica 2: Procesamiento del Formulario y Mutación Inmutable de Estado
+## 🎯 Tarea Práctica 2: Procesamiento del Formulario y Actualización Inmutable de Estado
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para comprender a fondo la inmutabilidad en JavaScript/TypeScript, el ciclo de detección de cambios de Angular y el método `.update()` en Signals, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)**.
@@ -677,7 +677,7 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 2. **Implementación de `addCharacter()` con validación defensiva:** En `src/app/pages/dragonball/dragonball-page.component.ts`:
     - Aplica el **Early Return Pattern**: si el nombre está vacío (tras aplicar `.trim()`), o si el poder es menor o igual a cero (`power <= 0`), aborta la función inmediatamente con `return` sin realizar ninguna mutación.
     - Crea un nuevo objeto de tipo `Character` asignándole un identificador numérico único (por ejemplo, `this.characters().length + 1`), el nombre y el poder ingresados.
-3. **Mutación Inmutable del array reactivo:**
+3. **Actualización Inmutable del array reactivo:**
     - Actualiza la señal `characters` empleando el método `.update()` y el operador spread (`...`):  
       `this.characters.update(list => [...list, newCharacter]);`
     - **Regla estricta:** Queda terminantemente prohibido usar `this.characters().push(newCharacter)` directamente sobre la señal, ya que mutaría el array original en la misma dirección de memoria impidiendo que Angular detecte el cambio.
@@ -704,9 +704,9 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 
 #### Paso 1: Actualizar el controlador TypeScript
 
-En `src/app/pages/dragonball/dragonball-page.component.ts`, implementamos las señales y los métodos con validación y mutación inmutable:
+En `src/app/pages/dragonball/dragonball-page.component.ts`, implementamos las señales y los métodos con validación y actualización inmutable:
 
-```typescript title="src/app/pages/dragonball/dragonball-page.component.ts" hl_lines="10-11 22-38 40-43"
+```typescript title="src/app/pages/dragonball/dragonball-page.component.ts" hl_lines="20-43"
 import { Component, signal } from '@angular/core';
 import { Character } from '../../interfaces/character.interface';
 
@@ -739,7 +739,7 @@ export class DragonballPageComponent {
       power: this.power(),
     };
 
-    // 3. Mutación inmutable con .update() y operador spread
+    // 3. Actualización inmutable con .update() y operador spread
     this.characters.update((list) => [...list, newCharacter]);
 
     // 4. Limpieza del formulario
@@ -755,9 +755,9 @@ export class DragonballPageComponent {
 
 #### Paso 2: Conectar la plantilla HTML
 
-En `src/app/pages/dragonball/dragonball-page.component.html`, vinculamos las señales a los campos de entrada mediante variables locales de plantilla:
+En `src/app/pages/dragonball/dragonball-page.component.html`, enlazamos el evento `(click)` del botón "Agregar" con el método `addCharacter()` recién implementado en el controlador:
 
-```html title="src/app/pages/dragonball/dragonball-page.component.html" hl_lines="10-12 17-19 22"
+```html title="src/app/pages/dragonball/dragonball-page.component.html" hl_lines="27-29"
 <h1>DragonBall Page</h1>
 <hr />
 
@@ -988,7 +988,7 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 
 Creamos `src/app/components/dragonball/character-add/character-add.component.ts`. Declaramos la salida mediante la función `output<Character>()`:
 
-```typescript title="src/app/components/dragonball/character-add/character-add.component.ts" hl_lines="11 14-29"
+```typescript title="src/app/components/dragonball/character-add/character-add.component.ts" hl_lines="12-13 15-31"
 import { Component, output, signal } from '@angular/core';
 import { Character } from '../../../interfaces/character.interface';
 
@@ -1062,7 +1062,7 @@ Creamos `src/app/components/dragonball/character-add/character-add.component.htm
 
 En el controlador del componente padre (por ejemplo, `DragonballSuperPageComponent` o la página contenedora), importamos el nuevo componente hijo y escuchamos su evento:
 
-```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts" hl_lines="6 12 25-27"
+```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts" hl_lines="4 8 16-18"
 import { Component, signal } from '@angular/core';
 import { Character } from '../../interfaces/character.interface';
 import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
@@ -1088,7 +1088,7 @@ export class DragonballSuperPageComponent {
 
 En la plantilla HTML del padre, consumimos el componente hijo y capturamos el evento mediante la variable especial `$event`:
 
-```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html" hl_lines="6"
+```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html" hl_lines="4-6"
 <section class="row">
   <!-- Columna Formulario: Componente Hijo de Adición -->
   <div class="col-12 col-sm-6">
@@ -1421,7 +1421,7 @@ Al subir una aplicación SPA a un hosting estático (como Netlify, Vercel o GitH
 ### Solución 1: HashLocationStrategy en `src/app/app.config.ts`
 Agregamos la estrategia de hash para que las rutas viajen tras el símbolo `#` (`misitio.com/#/dragonball`), lo que garantiza que el servidor siempre sirva el `index.html` raíz:
 
-```typescript title="src/app/app.config.ts" hl_lines="6 14-17"
+```typescript title="src/app/app.config.ts" hl_lines="4 12-15"
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';

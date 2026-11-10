@@ -111,6 +111,7 @@ La interpolación acepta **expresiones TypeScript** que cumplan estas caracterí
 - **Operadores ternarios**: `{{ isLoggedIn ? nombre : 'Invitado' }}`
 - **Operadores lógicos**: `{{ isActive && hasPermission }}`
 - **Pipes**: `{{ fecha | date:'dd/MM/yyyy' }}`, `{{ precio | currency:'EUR' }}`
+- **Funciones flecha en línea** *(Novedad Angular 21.2+ / Angular 22)*: `{{ heroes().find(h => h.id === selectedId())?.nombre }}`, `{{ usuarios().filter(u => u.activo).length }}`
 
 **Expresiones NO permitidas**:
 
@@ -138,6 +139,24 @@ La interpolación acepta **expresiones TypeScript** que cumplan estas caracterí
 ```
 
 La razón de estas restricciones es doble: seguridad (evitar ejecución de código arbitrario) y rendimiento (las expresiones deben ser rápidas e idempotentes).
+
+!!! tip "💡 Novedad Angular 21.2+ / Angular 22: Funciones Flecha en Interpolación y Plantillas"
+    A partir de **Angular 21.2** y consolidado en **Angular 22**, el compilador de plantillas admite **funciones flecha en línea (*arrow functions*)** dentro de la interpolación (`{{ }}`), enlace de propiedades (`[ ]`) y eventos (`( )`):
+
+    ```html
+    <!-- 1. En Interpolación: búsquedas y filtrados rápidos sobre colecciones -->
+    <p>Seleccionado: {{ productos().find(p => p.id === idActivo())?.titulo }}</p>
+    <p>Disponibles: {{ productos().filter(p => p.stock > 0).length }}</p>
+
+    <!-- 2. En Event Binding: actualización concisa de Signals sin boilerplate en el TS -->
+    <button (click)="contador.update(c => c + 1)">Incrementar</button>
+    ```
+
+    **Restricciones sintácticas y buenas prácticas:**
+
+    * **Solo retorno implícito:** Debe ser una expresión directa (`x => x.prop`). No se permiten bloques multilínea con llaves `{ ... }` ni la sentencia `return`.
+    * **Ubicación de Pipes:** No es posible colocar pipes *dentro* del cuerpo de la función flecha; los pipes deben aplicarse al resultado exterior completo de la expresión (ej: `{{ (heroes().find(h => h.id === 1)?.nombre) | uppercase }}`).
+    * **Criterio de Arquitectura:** Utiliza funciones flecha en `{{ }}` únicamente para operaciones de vista sencillas. Para filtrados complejos o transformaciones costosas sobre colecciones voluminosas, la mejor práctica sigue siendo encapsular la lógica en una señal computada (`computed()`), evitando recalcular el array en cada ciclo de detección.
 
 #### Seguridad XSS (Cross-Site Scripting)
 
@@ -2314,209 +2333,216 @@ Adelantado para su estabilización progresiva, Angular introduce una sintaxis de
 
 ### Ejercicio 1: Crear un componente de tarjeta de producto interactivo
 
-**Enunciado**: Crea un componente `ProductCardComponent` que muestre información de un producto y permita al usuario interactuar con él mediante diversos tipos de binding. El componente debe mostrar imagen, nombre, precio, descripción y valoración con estrellas. Debe permitir marcar como favorito, seleccionar cantidad antes de añadir al carrito, y cambiar el color del producto.
+**Enunciado**: Crea un componente `ProductCardComponent` que muestre información de un producto y permita al usuario interactuar con él mediante diversos tipos de binding. El componente debe estructurarse según los estándares modernos de **Angular (v19 - 22)** utilizando **Signal Inputs (`input()`)**, **Outputs (`output()`)** y estado reactivo local con **Signals (`signal()`)** y **`computed()`**. Debe mostrar imagen, nombre, precio, descripción y valoración con estrellas, y permitir marcar como favorito, seleccionar cantidad antes de añadir al carrito, y cambiar el color del producto.
 
 **Solución**:
 
-```typescript
-// product-card.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
+=== "TypeScript (`product-card.component.ts`)"
 
-interface ProductColor {
-  nombre: string;
-  codigo: string;
-}
+    ```typescript title="product-card.component.ts"
+    import { Component, computed, input, output, signal } from '@angular/core';
+    import { CurrencyPipe, SlicePipe } from '@angular/common';
 
-@Component({
-  selector: 'app-product-card',
-  imports: [FormsModule, CurrencyPipe],
-  templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.css']
-})
-export class ProductCardComponent {
-  @Input({ required: true }) id!: number;
-  @Input({ required: true }) nombre!: string;
-  @Input() descripcion: string = '';
-  @Input({ transform: (v: number) => Math.max(0, Number(v.toFixed(2))) })
-  precio: number = 0;
-  @Input() imagenUrl: string = 'assets/placeholder.png';
-  @Input() rating: number = 0;
-  @Input() colores: ProductColor[] = [];
-  @Input() stock: number = 10;
-
-  @Output() agregarAlCarrito = new EventEmitter<{
-    id: number;
-    cantidad: number;
-    color: string;
-  }>();
-  @Output() toggleFavorito = new EventEmitter<number>();
-
-  // Estado local
-  cantidad = 1;
-  colorSeleccionado = '';
-  esFavorito = false;
-
-  // Computed properties
-  get estrellas(): number[] {
-    // Redondea el rating al 0.5 más cercano y genera array para mostrar estrellas
-    const redondeado = Math.round(this.rating * 2) / 2;
-    return Array(5).fill(0).map((_, i) => {
-      if (i < Math.floor(redondeado)) return 1;       // Estrella llena
-      if (i < redondeado) return 0.5;                   // Media estrella
-      return 0;                                         // Estrella vacía
-    });
-  }
-
-  get stockClass(): string {
-    if (this.stock === 0) return 'sin-stock';
-    if (this.stock <= 3) return 'poco-stock';
-    return 'con-stock';
-  }
-
-  get stockMensaje(): string {
-    if (this.stock === 0) return 'Agotado';
-    if (this.stock <= 3) return `¡Solo quedan ${this.stock}!`;
-    return `${this.stock} disponibles`;
-  }
-
-  get cantidadInvalida(): boolean {
-    return this.cantidad < 1 || this.cantidad > this.stock;
-  }
-
-  onFavoritoClick(): void {
-    this.esFavorito = !this.esFavorito;
-    this.toggleFavorito.emit(this.id);
-  }
-
-  onAgregarAlCarrito(): void {
-    if (this.cantidadInvalida || this.stock === 0) return;
-
-    this.agregarAlCarrito.emit({
-      id: this.id,
-      cantidad: this.cantidad,
-      color: this.colorSeleccionado
-    });
-  }
-
-  seleccionarColor(color: ProductColor): void {
-    this.colorSeleccionado = color.codigo;
-  }
-
-  incrementarCantidad(): void {
-    if (this.cantidad < this.stock) {
-      this.cantidad++;
+    interface ProductColor {
+      nombre: string;
+      codigo: string;
     }
-  }
 
-  decrementarCantidad(): void {
-    if (this.cantidad > 1) {
-      this.cantidad--;
-    }
-  }
-}
-```
+    @Component({
+      selector: 'app-product-card',
+      imports: [CurrencyPipe, SlicePipe],
+      templateUrl: './product-card.component.html',
+      styleUrls: ['./product-card.component.css']
+    })
+    export class ProductCardComponent {
+      // 1. Signal Inputs modernos (Angular 19 - 22)
+      id = input.required<number>();
+      nombre = input.required<string>();
+      descripcion = input('');
+      precio = input(0, {
+        transform: (v: number) => Math.max(0, Number(v.toFixed(2)))
+      });
+      imagenUrl = input('assets/placeholder.png');
+      rating = input(0);
+      colores = input<ProductColor[]>([]);
+      stock = input(10);
 
-```html
-<!-- product-card.component.html -->
-<div class="tarjeta-producto" [class.agotado]="stock === 0">
-  <!-- IMAGEN Y FAVORITO -->
-  <div class="imagen-container">
-    <img [src]="imagenUrl" [alt]="nombre" class="imagen-producto" />
-    <button
-      class="btn-favorito"
-      [class.activo]="esFavorito"
-      (click)="onFavoritoClick()"
-      [attr.aria-label]="esFavorito ? 'Quitar de favoritos' : 'Añadir a favoritos'"
-    >
-      {{ esFavorito ? '❤️' : '🤍' }}
-    </button>
-    @if (stock <= 3 && stock > 0) {
-      <span class="badge-oferta">¡Oferta!</span>
-    }
-  </div>
+      // 2. Signal Outputs modernos (emisión de eventos fuertemente tipados)
+      agregarAlCarrito = output<{
+        id: number;
+        cantidad: number;
+        color: string;
+      }>();
+      toggleFavorito = output<number>();
 
-  <!-- INFORMACIÓN DEL PRODUCTO -->
-  <div class="info-producto">
-    <h3>{{ nombre }}</h3>
-    <p class="descripcion">{{ descripcion | slice:0:100 }}{{ descripcion.length > 100 ? '...' : '' }}</p>
+      // 3. Estado local reactivo mediante Signals
+      cantidad = signal(1);
+      colorSeleccionado = signal('');
+      esFavorito = signal(false);
 
-    <!-- ESTRELLAS -->
-    <div class="rating">
-      @for (estrella of estrellas; track $index) {
-        <span class="estrella">
-          @if (estrella === 1) { ⭐ }
-          @else if (estrella === 0.5) { ✨ }
-          @else { ☆ }
-        </span>
+      // 4. Estado derivado reactivo con computed()
+      estrellas = computed(() => {
+        // Redondea el rating al 0.5 más cercano y genera array para mostrar estrellas
+        const redondeado = Math.round(this.rating() * 2) / 2;
+        return Array(5).fill(0).map((_, i) => {
+          if (i < Math.floor(redondeado)) return 1;       // Estrella llena
+          if (i < redondeado) return 0.5;                 // Media estrella
+          return 0;                                       // Estrella vacía
+        });
+      });
+
+      stockClass = computed(() => {
+        if (this.stock() === 0) return 'sin-stock';
+        if (this.stock() <= 3) return 'poco-stock';
+        return 'con-stock';
+      });
+
+      stockMensaje = computed(() => {
+        if (this.stock() === 0) return 'Agotado';
+        if (this.stock() <= 3) return `¡Solo quedan ${this.stock()}!`;
+        return `${this.stock()} disponibles`;
+      });
+
+      cantidadInvalida = computed(() => {
+        return this.cantidad() < 1 || this.cantidad() > this.stock();
+      });
+
+      // 5. Métodos de interacción del usuario
+      onFavoritoClick(): void {
+        this.esFavorito.update(f => !f);
+        this.toggleFavorito.emit(this.id());
       }
-      <span class="rating-numero">({{ rating }})</span>
-    </div>
 
-    <!-- PRECIO -->
-    <div class="precio">
-      <span class="valor">{{ precio | currency:'EUR':'symbol':'1.2-2' }}</span>
-    </div>
+      onAgregarAlCarrito(): void {
+        if (this.cantidadInvalida() || this.stock() === 0) return;
 
-    <!-- STOCK -->
-    <div class="stock">
-      <span class="indicador" [class]="stockClass"></span>
-      <span>{{ stockMensaje }}</span>
-    </div>
+        this.agregarAlCarrito.emit({
+          id: this.id(),
+          cantidad: this.cantidad(),
+          color: this.colorSeleccionado()
+        });
+      }
 
-    <!-- COLORES -->
-    @if (colores.length > 0) {
-      <div class="colores">
-        <span class="label-color">Color:</span>
-        <div class="opciones-color">
-          @for (color of colores; track color.codigo) {
-            <button
-              class="color-option"
-              [style.background-color]="color.codigo"
-              [class.seleccionado]="colorSeleccionado === color.codigo"
-              [attr.aria-label]="'Seleccionar color ' + color.nombre"
-              (click)="seleccionarColor(color)"
-            ></button>
+      seleccionarColor(color: ProductColor): void {
+        this.colorSeleccionado.set(color.codigo);
+      }
+
+      incrementarCantidad(): void {
+        if (this.cantidad() < this.stock()) {
+          this.cantidad.update(c => c + 1);
+        }
+      }
+
+      decrementarCantidad(): void {
+        if (this.cantidad() > 1) {
+          this.cantidad.update(c => c - 1);
+        }
+      }
+    }
+    ```
+
+=== "HTML (`product-card.component.html`)"
+
+    ```html title="product-card.component.html"
+    <div class="tarjeta-producto" [class.agotado]="stock() === 0">
+      <!-- IMAGEN Y FAVORITO -->
+      <div class="imagen-container">
+        <img [src]="imagenUrl()" [alt]="nombre()" class="imagen-producto" />
+        <button
+          class="btn-favorito"
+          [class.activo]="esFavorito()"
+          (click)="onFavoritoClick()"
+          [attr.aria-label]="esFavorito() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+        >
+          {{ esFavorito() ? '❤️' : '🤍' }}
+        </button>
+        @if (stock() <= 3 && stock() > 0) {
+          <span class="badge-oferta">¡Oferta!</span>
+        }
+      </div>
+
+      <!-- INFORMACIÓN DEL PRODUCTO -->
+      <div class="info-producto">
+        <h3>{{ nombre() }}</h3>
+        <p class="descripcion">{{ descripcion() | slice:0:100 }}{{ descripcion().length > 100 ? '...' : '' }}</p>
+
+        <!-- ESTRELLAS -->
+        <div class="rating">
+          @for (estrella of estrellas(); track $index) {
+            <span class="estrella">
+              @if (estrella === 1) { ⭐ }
+              @else if (estrella === 0.5) { ✨ }
+              @else { ☆ }
+            </span>
           }
+          <span class="rating-numero">({{ rating() }})</span>
+        </div>
+
+        <!-- PRECIO -->
+        <div class="precio">
+          <span class="valor">{{ precio() | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+
+        <!-- STOCK -->
+        <div class="stock">
+          <span class="indicador" [class]="stockClass()"></span>
+          <span>{{ stockMensaje() }}</span>
+        </div>
+
+        <!-- COLORES -->
+        @if (colores().length > 0) {
+          <div class="colores">
+            <span class="label-color">Color:</span>
+            <div class="opciones-color">
+              @for (color of colores(); track color.codigo) {
+                <button
+                  class="color-option"
+                  [style.background-color]="color.codigo"
+                  [class.seleccionado]="colorSeleccionado() === color.codigo"
+                  [attr.aria-label]="'Seleccionar color ' + color.nombre"
+                  (click)="seleccionarColor(color)"
+                ></button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- CANTIDAD Y BOTÓN DE COMPRA -->
+        <div class="acciones-compra">
+          <div class="selector-cantidad">
+            <button
+              (click)="decrementarCantidad()"
+              [disabled]="cantidad() <= 1"
+              aria-label="Reducir cantidad"
+            >−</button>
+            <input
+              type="number"
+              [value]="cantidad()"
+              (input)="cantidad.set(+qty.value)"
+              #qty
+              [min]="1"
+              [max]="stock()"
+              class="input-cantidad"
+            />
+            <button
+              (click)="incrementarCantidad()"
+              [disabled]="cantidad() >= stock()"
+              aria-label="Aumentar cantidad"
+            >+</button>
+          </div>
+
+          <button
+            class="btn-agregar"
+            [disabled]="cantidadInvalida() || stock() === 0"
+            [class.deshabilitado]="cantidadInvalida() || stock() === 0"
+            (click)="onAgregarAlCarrito()"
+          >
+            {{ stock() === 0 ? 'Agotado' : '🛒 Añadir al carrito' }}
+          </button>
         </div>
       </div>
-    }
-
-    <!-- CANTIDAD Y BOTÓN DE COMPRA -->
-    <div class="acciones-compra">
-      <div class="selector-cantidad">
-        <button
-          (click)="decrementarCantidad()"
-          [disabled]="cantidad <= 1"
-          aria-label="Reducir cantidad"
-        >−</button>
-        <input
-          type="number"
-          [(ngModel)]="cantidad"
-          [min]="1"
-          [max]="stock"
-          class="input-cantidad"
-        />
-        <button
-          (click)="incrementarCantidad()"
-          [disabled]="cantidad >= stock"
-          aria-label="Aumentar cantidad"
-        >+</button>
-      </div>
-
-      <button
-        class="btn-agregar"
-        [disabled]="cantidadInvalida || stock === 0"
-        [class.deshabilitado]="cantidadInvalida || stock === 0"
-        (click)="onAgregarAlCarrito()"
-      >
-        {{ stock === 0 ? 'Agotado' : '🛒 Añadir al carrito' }}
-      </button>
     </div>
-  </div>
-</div>
-```
+    ```
 
 ```css
 // product-card.component.css

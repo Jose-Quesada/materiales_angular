@@ -1516,7 +1516,7 @@
     end
 
     subgraph Orquestacion ["Fase 2 · Control de Concurrencia y Paginación (GifService)"]
-        Lock["&lt;b&gt;Bloqueo Concurrente (trendingLoading)&lt;/b&gt;&lt;br/&gt;Evita múltiples llamadas HTTP simultáneas mientras carga"] --&gt; Fetch["&lt;b&gt;Paginación y Acumulación&lt;/b&gt;&lt;br/&gt;Petición con offset incremental y mutación inmutable del array"]
+        Lock["&lt;b&gt;Bloqueo Concurrente (trendingLoading)&lt;/b&gt;&lt;br/&gt;Evita múltiples llamadas HTTP simultáneas mientras carga"] --&gt; Fetch["&lt;b&gt;Paginación y Acumulación&lt;/b&gt;&lt;br/&gt;Petición con offset incremental y actualización inmutable del array"]
     end
 
     subgraph Presentacion ["Fase 3 · Layout Masonry y Persistencia de Scroll"]

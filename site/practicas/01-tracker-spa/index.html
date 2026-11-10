@@ -1410,10 +1410,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-mutaciones-estrictamente-inmutables" class="md-nav__link">
+  <a href="#4-actualizaciones-estrictamente-inmutables" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Mutaciones Estrictamente Inmutables
+        4. Actualizaciones Estrictamente Inmutables
       </span>
     </span>
   </a>
@@ -1700,10 +1700,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-mutaciones-estrictamente-inmutables" class="md-nav__link">
+  <a href="#4-actualizaciones-estrictamente-inmutables" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Mutaciones Estrictamente Inmutables
+        4. Actualizaciones Estrictamente Inmutables
       </span>
     </span>
   </a>
@@ -1947,7 +1947,7 @@
 <h2 id="enfoque-pedagogico-modelo-hibrido">🎯 Enfoque Pedagógico: Modelo Híbrido<a class="headerlink" href="#enfoque-pedagogico-modelo-hibrido" title="Permanent link">&para;</a></h2>
 <p>Para que puedas desarrollar un proyecto atractivo para tu portfolio sin comprometer el rigor formativo:</p>
 <ol>
-<li><strong>El Contrato Técnico es Innegociable:</strong> Estructura de carpetas, interfaces tipadas, mutación inmutable del estado, patrón Smart/Dumb con <code>input.required()</code> y <code>output()</code>, y sincronización continua con <code>effect()</code>.</li>
+<li><strong>El Contrato Técnico es Innegociable:</strong> Estructura de carpetas, interfaces tipadas, actualización inmutable del estado, patrón Smart/Dumb con <code>input.required()</code> y <code>output()</code>, y sincronización continua con <code>effect()</code>.</li>
 <li><strong>La Temática es Libre y Guiada:</strong> Puedes elegir uno de los arquetipos del catálogo sugerido o inventar tu propia temática adaptándola al contrato de datos.</li>
 </ol>
 <hr />
@@ -2063,7 +2063,7 @@
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">'tracker_items'</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">()));</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">});</span>
 </span></code></pre></div></p>
-<h4 id="4-mutaciones-estrictamente-inmutables">4. Mutaciones Estrictamente Inmutables<a class="headerlink" href="#4-mutaciones-estrictamente-inmutables" title="Permanent link">&para;</a></h4>
+<h4 id="4-actualizaciones-estrictamente-inmutables">4. Actualizaciones Estrictamente Inmutables<a class="headerlink" href="#4-actualizaciones-estrictamente-inmutables" title="Permanent link">&para;</a></h4>
 <p>Implementa métodos para modificar el estado asegurando no mutar nunca el array original:</p>
 <ul>
 <li><strong><code>addItem(item: Item): void</code>:</strong> Inserta usando <code>.update(prev =&gt; [...prev, item])</code>.</li>
@@ -2174,7 +2174,7 @@
 <tr>
 <td style="text-align: left;"><strong>Servicio de Estado y Signals</strong></td>
 <td style="text-align: center;"><strong>2.5 pts</strong></td>
-<td style="text-align: left;">Declaración moderna con <code>@Service()</code> (o <code>@Injectable</code>), mutación inmutable con <code>.update()</code> y métricas con <code>computed()</code>.</td>
+<td style="text-align: left;">Declaración moderna con <code>@Service()</code> (o <code>@Injectable</code>), actualización inmutable con <code>.update()</code> y métricas con <code>computed()</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Persistencia y <code>effect()</code></strong></td>

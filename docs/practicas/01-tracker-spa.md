@@ -51,7 +51,7 @@ flowchart TD
 
 Para que puedas desarrollar un proyecto atractivo para tu portfolio sin comprometer el rigor formativo:
 
-1. **El Contrato Técnico es Innegociable:** Estructura de carpetas, interfaces tipadas, mutación inmutable del estado, patrón Smart/Dumb con `input.required()` y `output()`, y sincronización continua con `effect()`.
+1. **El Contrato Técnico es Innegociable:** Estructura de carpetas, interfaces tipadas, actualización inmutable del estado, patrón Smart/Dumb con `input.required()` y `output()`, y sincronización continua con `effect()`.
 2. **La Temática es Libre y Guiada:** Puedes elegir uno de los arquetipos del catálogo sugerido o inventar tu propia temática adaptándola al contrato de datos.
 
 ---
@@ -146,7 +146,7 @@ private saveToLocalStorage = effect(() => {
 });
 ```
 
-#### 4. Mutaciones Estrictamente Inmutables
+#### 4. Actualizaciones Estrictamente Inmutables
 Implementa métodos para modificar el estado asegurando no mutar nunca el array original:
 
 * **`addItem(item: Item): void`:** Inserta usando `.update(prev => [...prev, item])`.
@@ -233,6 +233,6 @@ Antes de entregar tu proyecto, verifica en el navegador el cumplimiento de estas
 | **Enrutamiento y Layout SPA** | **1.5 pts** | Navegación con `routerLink`, `routerLinkActiveOptions: { exact: true }` y comodín `**`. |
 | **Arquitectura Smart / Dumb** | **2.5 pts** | Desacoplamiento estricto: hijos tontos gobernados por `input.required()` y `output()`. |
 | **Control Flow y Directivas** | **1.5 pts** | Uso nativo de `@for` con `track`, bloque `@empty`, variables de contexto y `[class]`. |
-| **Servicio de Estado y Signals** | **2.5 pts** | Declaración moderna con `@Service()` (o `@Injectable`), mutación inmutable con `.update()` y métricas con `computed()`. |
+| **Servicio de Estado y Signals** | **2.5 pts** | Declaración moderna con `@Service()` (o `@Injectable`), actualización inmutable con `.update()` y métricas con `computed()`. |
 | **Persistencia y `effect()`** | **1.0 pts** | Lectura defensiva con fallback inicial y sincronización automática en `localStorage`. |
 | **Calidad de Código y Bonus** | **1.0 pts** | Tipado riguroso, consola limpia de errores y uso opcional de `linkedSignal()`. |
