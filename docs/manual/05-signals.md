@@ -105,7 +105,7 @@ flowchart TD
 Con Angular 19+, puedes ejecutar aplicaciones completamente sin Zone.js (Zoneless Angular), reduciendo el tamaño del bundle y mejorando el rendimiento general.
 
 !!! tip "🎬 Recurso Didáctico Recomendado: ¿Qué son las Signals y por qué son tan importantes?"
-    Para afianzar estos conceptos con una explicación visual muy didáctica y paso a paso, recomendamos el siguiente vídeo complementario:
+    Para afianzar estos conceptos con una explicación visual muy didáctica y paso a paso, recomendamos el siguiente recurso interactivo complementario:
     
     * 📺 **Canal:** Carlos Codea
     * 🔗 **Enlace:** [¿Qué son las signals/señales en Angular y por qué son tan importantes?](https://www.youtube.com/watch?v=fKp4VUKDyA4)
@@ -3094,7 +3094,7 @@ La migración a Signals no es obligatoria (Angular sigue soportando Zone.js), pe
 - **Angular University - Angular Signals Guide**: https://blog.angular-university.io/angular-signals
 - **Angular Zoneless**: https://angular.dev/guide/experimental/zoneless
 
-### Videos
+### Recursos Multimedia
 
 - **Carlos Codea - ¿Qué son las signals/señales en Angular y por qué son tan importantes?**: [Ver en YouTube (fKp4VUKDyA4)](https://www.youtube.com/watch?v=fKp4VUKDyA4) — Excelente recurso didáctico introductorio que ilustra de forma clara y visual la reactividad fina y la transición desde Zone.js.
 - **Angular Team - Rethinking Reactivity with Signals**: Canal oficial de Angular en YouTube

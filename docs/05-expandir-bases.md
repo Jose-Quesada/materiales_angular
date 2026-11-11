@@ -40,10 +40,14 @@ flowchart TD
     end
 
     subgraph Fase3 ["Fase 3 · Estado Centralizado y Persistencia"]
-        E["<b>5. DragonballService (Singleton)</b><br/>Inyección limpia y estado reactivo gestionado mediante Signals"] --> F["<b>6. Persistencia y Rutas Hash</b><br/>Sincronización con LocalStorage vía effect() y HashLocationStrategy"]
+        E["<b>5. DragonballService (Singleton)</b><br/>Inyección limpia y estado reactivo gestionado mediante Signals"] --> F["<b>6. Persistencia y LocalStorage</b><br/>Sincronización automática de estado vía effect()"]
     end
 
-    Fase1 ==> Fase2 ==> Fase3
+    subgraph Fase4 ["Fase 4 · Estado Derivado y Producción"]
+        G["<b>7. Primitiva linkedSignal</b><br/>Ficha interactiva con CharacterDetailComponent y estado mutable"] --> H["<b>8. HashLocationStrategy</b><br/>Despliegues en servidores estáticos sin errores 404"]
+    end
+
+    Fase1 ==> Fase2 ==> Fase3 ==> Fase4
 ```
 
 ---
@@ -400,12 +404,14 @@ Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo
 
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
-1. **SPA (Single Page Application) vs Navegación Tradicional:**
-    * Al utilizar `routerLink` en lugar de `href`, Angular intercepta el evento de clic del usuario, evita la petición GET al servidor web y manipula directamente la API de historial del navegador (`pushState`). Esto preserva el estado en memoria de la aplicación y produce una experiencia de navegación instantánea.
-2. **Sincronización del estado de UI con `routerLinkActive`:**
-    * Angular supervisa internamente los eventos de navegación (`NavigationEnd`). Cuando la URL en la barra de direcciones coincide con la ruta especificada en `routerLink`, añade automáticamente la clase CSS `'active'`, eliminándola en cuanto el usuario navega a otra pantalla.
-3. **Ruta comodín (`**`):**
-    * Configurar `{ path: '**', redirectTo: '' }` al final del array de rutas garantiza que cualquier URL no reconocida redirija al usuario a la página por defecto sin generar pantallas en blanco.
+1. **SPA (Single Page Application) vs Navegación Tradicional:**  
+   Al utilizar `routerLink` en lugar de `href`, Angular intercepta el evento de clic del usuario, evita la petición GET al servidor web y manipula directamente la API de historial del navegador (`pushState`). Esto preserva el estado en memoria de la aplicación y produce una experiencia de navegación instantánea.
+
+2. **Sincronización del estado de UI con `routerLinkActive`:**  
+   Angular supervisa internamente los eventos de navegación (`NavigationEnd`). Cuando la URL en la barra de direcciones coincide con la ruta especificada en `routerLink`, añade automáticamente la clase CSS `'active'`, eliminándola en cuanto el usuario navega a otra pantalla.
+
+3. **Ruta comodín (`**`):**  
+   Configurar `{ path: '**', redirectTo: '' }` al final del array de rutas garantiza que cualquier URL no reconocida redirija al usuario a la página por defecto sin generar pantallas en blanco.
 
 ---
 
@@ -820,14 +826,16 @@ En `src/app/pages/dragonball/dragonball-page.component.html`, enlazamos el event
 
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
-1. **¿Por qué `this.characters.update()` y no `this.characters().push()`?**
-    * Angular Signals utiliza una función de comparación de igualdad por defecto (`defaultEquals`), la cual evalúa si `referenciaAnterior === nuevaReferencia`.
-    * Si ejecutas `this.characters().push(newCharacter)`, estás mutando el contenido interno del array pero la **dirección física en memoria heap** sigue siendo exactamente la misma (`0x001 === 0x001`). Como resultado, Angular asume que el dato no cambió y **no actualiza el DOM**.
-    * Al utilizar el operador spread `[...list, newCharacter]`, JavaScript crea un **nuevo array en una dirección de memoria diferente** (`0x002`). La comparación de referencia resulta falsa (`0x001 !== 0x002`), lo que desencadena de inmediato el renderizado del nuevo elemento en la interfaz.
-2. **Early Return Pattern (Código Plano vs Código Flecha):**
-    * Validar las condiciones negativas al inicio de la función y salir inmediatamente con `return` previene anidamientos excesivos de bloques `if/else`, mejorando drásticamente la legibilidad y mantenibilidad del código.
-3. **Conversión con operador unario `+`:**
-    * Los elementos `<input type="number">` del DOM retornan siempre su valor como `string` a través de la propiedad `.value`. Anteponer el operador `+` (`+txtPower.value`) fuerza la conversión a tipo numérico primitivo en JavaScript.
+1. **¿Por qué `this.characters.update()` y no `this.characters().push()`?**  
+   Angular Signals utiliza una función de comparación de igualdad por defecto (`defaultEquals`), la cual evalúa si `referenciaAnterior === nuevaReferencia`.  
+   Si ejecutas `this.characters().push(newCharacter)`, estás mutando el contenido interno del array pero la **dirección física en memoria heap** sigue siendo exactamente la misma (`0x001 === 0x001`). Como resultado, Angular asume que el dato no cambió y **no actualiza el DOM**.  
+   Al utilizar el operador spread `[...list, newCharacter]`, JavaScript crea un **nuevo array en una dirección de memoria diferente** (`0x002`). La comparación de referencia resulta falsa (`0x001 !== 0x002`), lo que desencadena de inmediato el renderizado del nuevo elemento en la interfaz.
+
+2. **Early Return Pattern (Código Plano vs Código Flecha):**  
+   Validar las condiciones negativas al inicio de la función y salir inmediatamente con `return` previene anidamientos excesivos de bloques `if/else`, mejorando drásticamente la legibilidad y mantenibilidad del código.
+
+3. **Conversión con operador unario `+`:**  
+   Los elementos `<input type="number">` del DOM retornan siempre su valor como `string` a través de la propiedad `.value`. Anteponer el operador `+` (`+txtPower.value`) fuerza la conversión a tipo numérico primitivo en JavaScript.
 
 ---
 
@@ -952,24 +960,26 @@ En este reto aplicaremos el principio de **Separación de Responsabilidades (SoC
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
 1. **Creación del componente hijo presentacional:** Dentro de `src/app/components/dragonball/`, crea la carpeta `character-add/` con sus dos archivos:
-    - `character-add.component.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
-    - `character-add.component.html`: plantilla con el formulario extraído.
+    * `character-add.component.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
+    * `character-add.component.html`: plantilla con el formulario extraído.
 2. **Definición del evento de salida con `output()`:**
-    - En `CharacterAddComponent`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
+    * En `CharacterAddComponent`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
 3. **Manejo del estado local y emisión del evento:**
-    - Mueve las señales locales `name` y `power`, así como el método `resetFields()`, al componente hijo.
-    - En el método `addCharacter()` del hijo, valida los campos, genera el nuevo objeto `Character` (usando `Math.floor(Math.random() * 1000)` o similar para el id) y emítelo al padre mediante `this.newCharacter.emit(character)`.
-    - Tras emitir, limpia los inputs locales llamando a `this.resetFields()`.
+    * Mueve las señales locales `name` y `power`, así como el método `resetFields()`, al componente hijo.
+    * En el método `addCharacter()` del hijo, valida los campos, genera el nuevo objeto `Character` (usando `Math.floor(Math.random() * 1000)` o similar para el id) y emítelo al padre mediante `this.newCharacter.emit(character)`.
+    * Tras emitir, limpia los inputs locales llamando a `this.resetFields()`.
 4. **Integración en el componente padre:**
-    - Abre la página contenedora (`DragonballSuperPageComponent` o `DragonballPageComponent`).
-    - Importa `CharacterAddComponent` en el array `imports` del decorador `@Component`.
-    - En la plantilla del padre, sustituye el bloque HTML del formulario por la etiqueta del componente hijo:
-     `<dragonball-character-add (newCharacter)="addCharacter($event)" />`
-    - En el TypeScript del padre, implementa el método `addCharacter(newChar: Character)` que recibe el evento (`$event`) y actualiza su señal maestra mediante `this.characters.update(list => [...list, newChar])`.
+    * Abre la página contenedora (`DragonballSuperPageComponent` o `DragonballPageComponent`).
+    * Importa `CharacterAddComponent` en el array `imports` del decorador `@Component`.
+    * En la plantilla del padre, sustituye el bloque HTML del formulario por la etiqueta del componente hijo:
+      ```html
+      <dragonball-character-add (newCharacter)="addCharacter($event)" />
+      ```
+    * En el TypeScript del padre, implementa el método `addCharacter(newChar: Character)` que recibe el evento (`$event`) y actualiza su señal maestra mediante `this.characters.update(list => [...list, newChar])`.
 5. **Criterios de éxito y verificación:**
-    - La página debe compilar sin advertencias.
-    - Al introducir un personaje en el formulario hijo y hacer clic en "Agregar", el componente padre debe recibir el objeto y la lista debe actualizarse de forma instantánea.
-    - El componente hijo debe quedar completamente aislado: no debe conocer cómo almacena los personajes el padre ni depender de ningún servicio externo.
+    * La página debe compilar sin advertencias.
+    * Al introducir un personaje en el formulario hijo y hacer clic en "Agregar", el componente padre debe recibir el objeto y la lista debe actualizarse de forma instantánea.
+    * El componente hijo debe quedar completamente aislado: no debe conocer cómo almacena los personajes el padre ni depender de ningún servicio externo.
 
 ---
 
@@ -1111,14 +1121,15 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
-1. **Patrón Smart & Dumb (Contenedor vs Presentacional):**
-    * **Componente Dumb (`CharacterAddComponent`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
-    * **Componente Smart (`DragonballSuperPageComponent`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
-2. **La función moderna `output()` frente a `@Output() EventEmitter`:**
-    * En versiones anteriores, se requería importar `@Output()` y crear una instancia `new EventEmitter<T>()` de RxJS.
-    * La función **`output<T>()`** de Angular 19+ es una primitiva más liviana, que no depende de RxJS para la emisión de eventos simples entre componentes, reduciendo el tamaño del bundle y simplificando la sintaxis.
-3. **El argumento mágico `$event`:**
-    * En el enlace de eventos `(newCharacter)="addCharacter($event)"`, Angular inyecta automáticamente el valor emitido por `this.newCharacter.emit(...)` en la variable implícita `$event`, preservando el tipado estricto `Character`.
+1. **Patrón Smart & Dumb (Contenedor vs Presentacional):**  
+   * **Componente Dumb (`CharacterAddComponent`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
+   * **Componente Smart (`DragonballSuperPageComponent`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
+
+2. **La función moderna `output()` frente a `@Output() EventEmitter`:**  
+   En versiones anteriores, se requería importar `@Output()` y crear una instancia `new EventEmitter<T>()` de RxJS. La función **`output<T>()`** de Angular 19+ es una primitiva más liviana, que no depende de RxJS para la emisión de eventos simples entre componentes, reduciendo el tamaño del bundle y simplificando la sintaxis.
+
+3. **El argumento mágico `$event`:**  
+   En el enlace de eventos `(newCharacter)="addCharacter($event)"`, Angular inyecta automáticamente el valor emitido por `this.newCharacter.emit(...)` en la variable implícita `$event`, preservando el tipado estricto `Character`.
 
 ---
 
@@ -1146,33 +1157,38 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 !!! info "📖 Para saber más: Manual de Referencia"
     Consulta el sistema de inyección de dependencias, la función `inject()` y la gestión de estado reactivo en el **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md)**.
 
-Aunque la comunicación padre-hijo mediante `input` y `output` es excelente para componentes cercanos, compartir estado entre pantallas distantes mediante eventos causa acoplamiento. La solución arquitectónica es un **Servicio Singleton de Angular**.
+Hasta este punto, nuestra aplicación funciona correctamente, pero presenta una limitación arquitectónica fundamental: **el estado reactivo de los personajes (`characters`) y la lógica para agregarlos (`addCharacter`) están acoplados directamente dentro del componente de página (`DragonballSuperPageComponent`)**.
 
-### El Servicio Centralizado: `DragonballService`
-Creamos `src/app/services/dragonball.service.ts`:
+Si en el futuro creamos un menú de navegación que muestre el total de héroes registrados, un panel de estadísticas secundario o una pantalla de batalla, no podríamos acceder a esos datos sin duplicar la señal o recurrir a pasar propiedades innecesarias a través de múltiples niveles (*prop drilling*).
+
+Para resolver esta limitación desacoplando la lógica de negocio de la capa de presentación, estructuraremos la solución en dos fases didácticas:
+
+1. **Fase 1: Extracción del estado a un Servicio Singleton (`DragonballService`):** Movemos la señal de personajes y la función de adición fuera del componente y conectamos la vista mediante `inject()`.
+2. **Fase 2: Persistencia con `localStorage` y reactividad con `effect()`:** Resolvemos la volatilidad de la memoria RAM para que los personajes no se borren al recargar la página.
+
+---
+
+### Fase 1: Extracción del Estado a un Servicio Centralizado (`DragonballService`)
+
+#### 1. ¿Qué es un Servicio en Angular?
+Un **Servicio** es una clase TypeScript que encapsula datos y operaciones de negocio para ser compartidos por cualquier componente de la aplicación. Al decorarlo con `@Injectable({ providedIn: 'root' })`, Angular lo gestiona como un **Singleton**: crea una única instancia viva a nivel global que se comparte en toda la aplicación.
+
+#### 2. Paso 1: Mover la señal y la lógica al Servicio
+Creamos el archivo `src/app/services/dragonball.service.ts`. Trasladamos la señal `characters` y el método `addCharacter()` que antes estaban en `DragonballSuperPageComponent`:
 
 ```typescript title="src/app/services/dragonball.service.ts"
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Character } from '../interfaces/character.interface';
-
-const loadFromLocalStorage = (): Character[] => {
-  const characters = localStorage.getItem('characters');
-  return characters ? JSON.parse(characters) : [
-    { id: 1, name: 'Goku', power: 9001 },
-    { id: 2, name: 'Vegeta', power: 8000 },
-  ];
-};
 
 @Injectable({ providedIn: 'root' })
 export class DragonballService {
-  // Estado centralizado basado en señales
-  characters = signal<Character[]>(loadFromLocalStorage());
+  // Estado centralizado en memoria (movido desde el componente padre)
+  characters = signal<Character[]>([
+    { id: 1, name: 'Goku', power: 9001 },
+    { id: 2, name: 'Vegeta', power: 8000 },
+  ]);
 
-  // Efecto reactivo: se ejecuta automáticamente cada vez que la señal characters cambia
-  saveToLocalStorage = effect(() => {
-    localStorage.setItem('characters', JSON.stringify(this.characters()));
-  });
-
+  // Método de negocio para actualizar la colección inmutablemente
   addCharacter(character: Character) {
     this.characters.update((list) => [...list, character]);
   }
@@ -1180,67 +1196,147 @@ export class DragonballService {
 ```
 
 !!! tip "💡 Evolución Angular 22: El nuevo decorador `@Service()`"
-    En la implementación de Angular 19 se utiliza la sintaxis clásica `@Injectable({ providedIn: 'root' })`.
+    En la sintaxis habitual de Angular 19 se utiliza `@Injectable({ providedIn: 'root' })`.
     
-    A partir de **Angular 22**, el framework introduce el nuevo decorador oficial **`@Service()`**. Este decorador es autónomo (*standalone*), asume por defecto el ámbito singleton a nivel raíz (*root* y *tree-shakeable*) y elimina la necesidad de pasar el objeto de configuración `{ providedIn: 'root' }`:
+    A partir de **Angular 22**, el framework introduce el decorador oficial **`@Service()`**. Es autónomo (*standalone*), asume por defecto el ámbito singleton a nivel raíz (*root* y *tree-shakeable*) y elimina la necesidad de pasar el objeto de configuración `{ providedIn: 'root' }`:
     ```typescript
-    // En Angular 22 (más limpio y directo):
-    import { effect, Service, signal } from '@angular/core';
+    import { Service, signal } from '@angular/core';
     import { Character } from '../interfaces/character.interface';
 
     @Service()
     export class DragonballService {
-      characters = signal<Character[]>(loadFromLocalStorage());
-
-      saveToLocalStorage = effect(() => {
-        localStorage.setItem('characters', JSON.stringify(this.characters()));
-      });
-
-      addCharacter(character: Character) {
-        this.characters.update((list) => [...list, character]);
-      }
+      characters = signal<Character[]>([ ... ]);
+      addCharacter(character: Character) { ... }
     }
     ```
     *(Ambas formas conviven y son 100% compatibles en Angular 22, pero `@Service()` es el nuevo estándar recomendado por su concisión).*
 
-### Anatomía de la Persistencia: ¿Qué hace `loadFromLocalStorage` y cuándo se ejecuta?
+#### 3. Paso 2: Inyectar y Consumir el Servicio en el Componente Padre
 
-En el servicio anterior destaca una función declarada fuera de la clase: `loadFromLocalStorage()`. Comprender esta función permite asimilar cómo Angular orquesta la inicialización del estado persistido en memoria.
+Ahora que el estado no le pertenece a la página, refactorizamos `DragonballSuperPageComponent`:
 
-#### 1. ¿Qué hace `loadFromLocalStorage`? (Lectura Defensiva con Fallback)
+* Eliminamos la señal local `characters` y el método `addCharacter()`.
+* Inyectamos el servicio mediante la función moderna **`inject()`** de Angular Core (sin necesidad de declarar constructores tradicionales).
 
-Su objetivo exclusivo es recuperar la lista de personajes guardada en sesiones anteriores del navegador:
+=== "src/app/pages/dragonball-super/dragonball-super-page.component.ts"
+    ```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts"
+    import { Component, inject } from '@angular/core';
+    import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
+    import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
+    import { DragonballService } from '../../services/dragonball.service';
 
-1. **Lectura de la API nativa:** Ejecuta `localStorage.getItem('characters')`. Esta instrucción accede al almacenamiento del navegador y devuelve una cadena de texto (JSON) si la clave existe, o `null` si no se ha guardado nada previamente.
-2. **Operador Ternario Defensivo (`characters ? JSON.parse(characters) : [...]`):**
-    * **Si existen datos previos (`truthy`):** Invoca `JSON.parse(characters)` para deserializar la cadena de texto y convertirla de inmediato en un array de objetos JavaScript tipados con la interfaz `Character[]`.
-    * **Si es la primera visita o memoria limpia (`null`):** Proporciona un conjunto de datos iniciales por defecto (*seed data / fallback*): el array inicial con Goku y Vegeta. Esto asegura que la aplicación nunca arranque con un valor `undefined` o roto.
+    @Component({
+      selector: 'dragonball-super',
+      imports: [CharacterListComponent, CharacterAddComponent],
+      templateUrl: './dragonball-super-page.component.html',
+    })
+    export class DragonballSuperPageComponent {
+      // Inyección moderna de dependencias limpia y directa sin constructor
+      public dragonballService = inject(DragonballService);
+    }
+    ```
 
-#### 2. ¿Cuándo se ejecuta exactamente? (Ciclo de Vida del Singleton)
+=== "src/app/pages/dragonball-super/dragonball-super-page.component.html"
+    ```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html"
+    <h1>DragonBall Super (Con Servicio Centralizado)</h1>
+    <hr />
 
-* **Se ejecuta una única vez:** En el instante en que el servicio `DragonballService` se **instancia por primera vez** en la aplicación.
-* **Fase de Inicialización de Propiedades:** Al declarar la propiedad:
-  ```typescript
-  characters = signal<Character[]>(loadFromLocalStorage());
-  ```
-  JavaScript ejecuta la llamada a `loadFromLocalStorage()` de forma síncrona para resolver el valor inicial con el que se inicializará la señal reactiva.
-* **Ámbito Singleton (`providedIn: 'root'` o `@Service()`):** Angular mantiene una única instancia compartida del servicio para toda la aplicación. Esa lectura inicial se produce al arrancar y los personajes se conservan vivos en la memoria reactiva del servicio durante toda la sesión.
+    <section class="row">
+      <div class="col-12 col-sm-6">
+        <!-- Conecta directamente el evento emitido al método del servicio inyectado -->
+        <dragonball-character-add
+          (newCharacter)="dragonballService.addCharacter($event)"
+        />
+      </div>
 
-#### 3. ¿Por qué está FUERA de la clase `DragonballService`?
+      <div class="col-12 col-sm-6">
+        <!-- Pasa la señal del servicio al componente hijo presentacional -->
+        <dragonball-character-list
+          listName="Guerreros Z"
+          [characters]="dragonballService.characters()"
+        />
+      </div>
+    </section>
+    ```
 
-Muchos desarrolladores se preguntan por qué no se implementa como un método interno de la clase (`this.loadFromLocalStorage()`). Esta decisión responde a tres principios arquitectónicos de **Clean Code**:
+> 🧪 **Verificación de la Fase 1:** Guarda los cambios y pruébalo en el navegador. La aplicación responde exactamente igual que antes: puedes añadir personajes y la lista se actualiza. Sin embargo, la arquitectura ha dado un salto cualitativo: **la página es ahora un mero orquestador visual y el estado reside en una fuente de verdad única desacoplada**.
 
-1. **Función Pura sin Dependencia de `this`:** La función es completamente agnóstica a la instancia del servicio: solo lee de `localStorage` y devuelve un array limpio. No necesita acceder a `this` ni a ninguna otra propiedad.
-2. **Encapsulamiento a Nivel de Módulo:** Al ser una constante no exportada (`const loadFromLocalStorage`), queda totalmente oculta y privada dentro del archivo `dragonball.service.ts`. Ningún componente exterior puede invocarla ni corromperla por error, exponiendo únicamente la API pública que nos interesa (`characters` y `addCharacter`).
-3. **Disponibilidad Síncrona Inmediata:** En la especificación estándar de clases de TypeScript, llamar a una función del ámbito del módulo para inicializar una propiedad de clase evita conflictos de contexto antes de la ejecución del constructor.
+---
 
-#### 4. Circuito de Persistencia: Lectura Síncrona vs Escritura Reactiva (`effect`)
+### Fase 2: Persistencia con `localStorage` y Sincronización con `effect()`
 
-Ambos mecanismos colaboran de forma simbiótica para garantizar la persistencia del estado:
+#### El Problema de la Volatilidad de la Memoria RAM
+Pide a los alumnos que agreguen un nuevo personaje (por ejemplo, *"Krillin"*, poder `1500`) y pulsen la tecla **`F5`** para recargar la página.
+
+*¿Qué sucede?* **El nuevo personaje desaparece y la lista regresa a los dos personajes iniciales (Goku y Vegeta).**  
+Esto ocurre porque las señales del servicio residen exclusivamente en la memoria RAM del navegador. Al recargar la página o cerrar la pestaña, el contexto de JavaScript se destruye y la aplicación vuelve a inicializarse desde cero.
+
+Para solucionar este comportamiento y conservar los datos entre sesiones, utilizaremos la API nativa de **`localStorage`** del navegador combinada con la reactividad automática de **`effect()`**.
+
+#### 1. ¿Cómo funciona la API `localStorage`?
+
+`localStorage` es un mecanismo de almacenamiento persistente en el navegador web que conserva la información incluso después de reiniciar el equipo:
+
+* **Almacenamiento Clave-Valor:** Guarda datos bajo una clave de texto: `localStorage.setItem('clave', 'valor')`.
+* **Limitación estricta a texto (*strings*):** No puede almacenar objetos o arrays de JavaScript directamente:
+    * Para **guardar** un array: debemos serializarlo a string con `JSON.stringify(this.characters())`.
+    * Para **recuperar** un array: debemos parsear el string con `JSON.parse(datosString)`.
+
+#### 2. Escritura Reactiva Automática con `effect()`
+
+En lugar de tener que recordar invocar `localStorage.setItem()` manualmente dentro de cada método que modifique personajes, aprovechamos la primitiva reactiva **`effect()`** de Angular:
+
+```typescript
+// Efecto reactivo: se ejecuta automáticamente cada vez que la señal characters cambia
+saveToLocalStorage = effect(() => {
+  localStorage.setItem('characters', JSON.stringify(this.characters()));
+});
+```
+
+* **Rastreo Automático de Dependencias:** Al llamar a `this.characters()` dentro del cuerpo del efecto, Angular registra automáticamente que este efecto depende de esa señal.
+* **Ejecución en segundo plano:** Cada vez que `addCharacter()` actualiza la señal con `.update()`, Angular notifica al efecto y escribe el nuevo array en el disco del navegador en el siguiente ciclo de microtareas.
+* **La Regla de Oro del Contexto de Inyección (*Injection Context*):** `effect()` debe definirse como propiedad directa de la clase o dentro del `constructor()`. No puede invocarse dentro de métodos ordinarios.
+
+| Criterio | Primitiva `computed()` | Primitiva `effect()` |
+| :--- | :--- | :--- |
+| **Propósito principal** | **Derivar datos puros** en memoria sin provocar efectos secundarios. | **Sincronizar el estado** con sistemas y APIs externas (*side-effects*). |
+| **Valor de retorno** | Retorna una **Signal de solo lectura** (`Signal<T>`). | No retorna datos; devuelve una referencia `EffectRef` para control manual. |
+| **Cuándo se evalúa** | **Perezosa (*Lazy*):** Solo se calcula si alguien lee su valor o la plantilla lo renderiza. | **Proactiva (*Eager*):** Se programa y ejecuta automáticamente ante cualquier mutación. |
+| **Ejemplos típicos** | Calcular el total con IVA, filtrar un array, concatenar un nombre completo. | Escribir en `localStorage`, enviar métricas a Google Analytics, manipular APIs de Canvas o DOM nativo. |
+
+#### 3. Lectura Defensiva Inicial: `loadFromLocalStorage()`
+
+Para que los personajes guardados se restauren al volver a entrar a la aplicación, necesitamos hidratar la señal `characters` en el momento en que el servicio se crea.
+
+Implementamos una función pura auxiliar situada fuera de la clase:
+
+```typescript
+const loadFromLocalStorage = (): Character[] => {
+  const characters = localStorage.getItem('characters');
+  return characters ? JSON.parse(characters) : [
+    { id: 1, name: 'Goku', power: 9001 },
+    { id: 2, name: 'Vegeta', power: 8000 },
+  ];
+};
+```
+
+##### ¿Por qué está FUERA de la clase `DragonballService`?
+
+1. **Función Pura sin `this`:** No necesita acceder a la instancia del servicio; solo lee de `localStorage` y devuelve un array limpio.
+2. **Encapsulamiento privado de módulo:** Al ser una constante no exportada, queda oculta dentro del archivo `dragonball.service.ts`, impidiendo que ningún componente exterior la invoque o corrompa por error.
+3. **Disponibilidad síncrona inmediata:** Permite inicializar la propiedad `characters = signal<Character[]>(loadFromLocalStorage());` de forma síncrona antes de que se ejecute el constructor de la clase.
+
+##### Operador Ternario Defensivo con Fallback
+
+* **Si existen datos previos en el navegador (`characters` no es `null`):** Los deserializa con `JSON.parse()`.
+* **Si es la primera visita del usuario o el almacenamiento está vacío (`null`):** Entrega el array inicial por defecto (*seed data* con Goku y Vegeta) para evitar que la aplicación arranque vacía o rota.
+
+#### 4. Circuito Completo de Persistencia
+Ambos mecanismos colaboran de forma simbiótica en el ciclo de vida de la aplicación:
 
 ```mermaid
 flowchart TD
-    subgraph Inicio ["1. Al Arrancar (Instanciación única)"]
+    subgraph Inicio ["1. Al Arrancar (Instanciación única del Servicio)"]
         direction LR
         LS1["<b>LocalStorage</b><br/><code>getItem('characters')</code>"] -->|"loadFromLocalStorage()"| SIG["<b>Señal: characters()</b><br/>Hidratación inicial en memoria"]
     end
@@ -1257,130 +1353,157 @@ flowchart TD
     style Vida fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
 ```
 
-* **Al nacer el servicio:** `loadFromLocalStorage()` lee del disco del navegador para hidratar la señal en memoria.
-* **Al mutar el estado:** `addCharacter()` actualiza la señal con `.update()`.
-* **En segundo plano:** El efecto reactivo `saveToLocalStorage = effect(() => { ... })` detecta automáticamente que la señal leída en su cuerpo (`this.characters()`) ha emitido un nuevo valor y serializa el estado en `localStorage.setItem(...)`. El alumno puede recargar la página (F5) o cerrar el navegador con la total certeza de que sus datos persisten intactos.
+#### 5. Código Final del Servicio con Persistencia
+Con todos los componentes integrados, el archivo `src/app/services/dragonball.service.ts` definitivo queda así:
+
+```typescript title="src/app/services/dragonball.service.ts"
+import { effect, Injectable, signal } from '@angular/core';
+import { Character } from '../interfaces/character.interface';
+
+// 1. Función pura auxiliar para inicializar la señal con datos persistidos
+const loadFromLocalStorage = (): Character[] => {
+  const characters = localStorage.getItem('characters');
+  return characters ? JSON.parse(characters) : [
+    { id: 1, name: 'Goku', power: 9001 },
+    { id: 2, name: 'Vegeta', power: 8000 },
+  ];
+};
+
+@Injectable({ providedIn: 'root' })
+export class DragonballService {
+  // 2. Señal hidratada al arrancar con los datos de localStorage
+  characters = signal<Character[]>(loadFromLocalStorage());
+
+  // 3. Efecto reactivo: guarda automáticamente cada vez que la señal cambie
+  saveToLocalStorage = effect(() => {
+    localStorage.setItem('characters', JSON.stringify(this.characters()));
+  });
+
+  // 4. Método público de actualización
+  addCharacter(character: Character) {
+    this.characters.update((list) => [...list, character]);
+  }
+}
+```
 
 !!! tip "Arquitectura Pro: Consideración para Server-Side Rendering (SSR)"
-    El objeto global `localStorage` es una API exclusiva de los navegadores web. Si en el futuro despliegas tu aplicación con **Server-Side Rendering (SSR)** en Node.js, acceder directamente a `localStorage` durante la instanciación de un servicio lanzará una excepción (`ReferenceError: localStorage is not defined`). En entornos con SSR se utilizan comprobaciones como `isPlatformBrowser(this.platformId)` o la primitiva `afterNextRender()` para asegurar que la lectura solo ocurra en el cliente. En aplicaciones SPA tradicionales cliente (como la desarrollada en este curso), este patrón es 100% seguro y directo.
+    El objeto global `localStorage` es una API exclusiva de los navegadores web. Si en el futuro despliegas tu aplicación con **Server-Side Rendering (SSR)** en Node.js, acceder directamente a `localStorage` durante la instanciación de un servicio lanzará una excepción (`ReferenceError: localStorage is not defined`). En entornos con SSR se utilizan comprobaciones como `isPlatformBrowser(this.platformId)` o la primitiva `afterNextRender()` para asegurar que la lectura solo ocurra en el cliente. En aplicaciones cliente tradicionales como la desarrollada aquí, este patrón es 100% directo y seguro.
 
 ---
 
-### Efectos Reactivos con `effect()`: Sincronización Automática
+## Estado Derivado y Mutable: La Primitiva `linkedSignal` (Angular 19 - 22)
 
-En la declaración de `DragonballService` destaca una función del núcleo de Angular que los alumnos utilizan aquí por primera vez:
+En los temas iniciales de esta sección aparecía listado el concepto **`linkedSignal`**. Aunque en la lección de persistencia resolvimos la carga inicial de datos mediante `signal(loadFromLocalStorage())`, en aplicaciones Angular modernas surge con frecuencia un dilema arquitectónico cuando un componente hijo necesita **derivar un estado a partir de un `input()`, pero además permitir que el usuario lo modifique localmente** (por ejemplo, en un formulario de edición rápida o un panel de detalle interactivo).
 
+Para dar respuesta a esta necesidad y comprender en profundidad por qué Angular introdujo esta primitiva, vamos a incorporar una nueva funcionalidad a nuestra aplicación: el componente **`CharacterDetailComponent`**.
+
+---
+
+### 1. Justificación Didáctica: ¿Por qué creamos `CharacterDetailComponent`?
+
+Hasta este momento, nuestra pantalla de DragonBall Super cuenta con dos componentes principales:
+
+1. **`CharacterAddComponent`**: Formulario para introducir nuevos guerreros.
+2. **`CharacterListComponent`**: Listado reactivo para mostrar los personajes registrados.
+
+Ahora planteamos el siguiente requerimiento funcional en clase:
+
+> 🎯 **Nuevo Requerimiento Didáctico:**  
+> Queremos que al hacer clic sobre cualquier guerrero de la lista, se muestre en pantalla una **tarjeta de detalle (`CharacterDetailComponent`)** con su ficha técnica. Además, el usuario dispondrá de un botón para **"Entrenar (+100 de poder)"** que aumentará temporalmente su fuerza en pantalla antes de confirmar los cambios o para simular combates.
+
+``` mermaid
+flowchart TD
+    subgraph Smart ["<b>DragonballSuperPageComponent</b> (Componente Smart / Orquestador)"]
+        direction TB
+
+        subgraph EstadoPadre ["Lógica y Estado Gestionado por la Página Padre"]
+            direction LR
+            Service[("<b>DragonballService</b><br/><i>Estado global inyectado</i>")]
+            SelectedSignal(["<b>selectedCharacter</b><br/><code>signal&lt;Character | null&gt;</code>"])
+        end
+
+        subgraph Dumb ["Componentes Hijos Presentacionales (Dumb)"]
+            direction LR
+            AddComp["<b>CharacterAddComponent</b><br/><i>Formulario de alta</i>"]
+            ListComp["<b>CharacterListComponent</b><br/><i>Listado de personajes</i>"]
+            DetailComp["<b>CharacterDetailComponent</b><br/><i>Ficha con linkedSignal</i>"]
+        end
+
+        %% 1. Alta de personaje
+        AddComp -- "1. Emite (newCharacter)" --> Service
+
+        %% 2. Suministro de datos a la lista
+        Service -- "2. Pasa [characters]='service.characters()'" --> ListComp
+
+        %% 3. Selección de personaje
+        ListComp -- "3. Emite (selectCharacter)" --> SelectedSignal
+
+        %% 4. Paso del personaje seleccionado al detalle
+        SelectedSignal -. "4. Pasa [character]='selectedCharacter()'" .-> DetailComp
+    end
+
+    style Smart fill:#f8f9fa,stroke:#0d6efd,stroke-width:2px
+    style EstadoPadre fill:#e9ecef,stroke:#6c757d,stroke-dasharray: 4 4
+    style Dumb fill:#ffffff,stroke:#495057,stroke-width:1.5px
+    style Service fill:#cfe2ff,stroke:#0d6efd,stroke-width:1.5px
+    style SelectedSignal fill:#d1e7dd,stroke:#198754,stroke-width:1.5px
+    style AddComp fill:#ffffff,stroke:#6c757d
+    style ListComp fill:#ffffff,stroke:#6c757d
+    style DetailComp fill:#ffffff,stroke:#6c757d
+```
+
+#### El Conflicto Técnico con las Primitivas Tradicionales
+
+El componente de detalle recibe el personaje como entrada:
 ```typescript
-saveToLocalStorage = effect(() => {
-  localStorage.setItem('characters', JSON.stringify(this.characters()));
-});
+character = input.required<Character>();
 ```
 
-#### 1. ¿Qué es `effect()` y cómo opera?
+Necesitamos una variable para gestionar su poder actual (`currentPower`), que empieza con el poder del personaje pero debe poder incrementarse con el botón. Analicemos por qué las herramientas tradicionales fallan:
 
-`effect()` es la tercera primitiva reactiva fundamental del sistema de **Signals** de Angular (junto con `signal()` y `computed()`). Su misión específica es ejecutar una función secundaria (*side-effect*) cada vez que las señales que se leen en su interior cambian de valor.
+1. **¿Podemos usar una señal computada `computed()`?**
+   ```typescript
+   // ❌ ERROR: computed es estrictamente de SOLO LECTURA
+   currentPower = computed(() => this.character().power);
+   // Si intentas hacer: this.currentPower.update(p => p + 100); -> Error de compilación en TypeScript.
+   ```
+   Las señales computadas no disponen de métodos `.set()` ni `.update()`.
 
-* **Rastreo Automático de Dependencias (*Auto-dependency Tracking*):**  
-  A diferencia de bibliotecas como React (donde se requiere declarar un array de dependencias manual en `useEffect`), Angular registra las dependencias automáticamente en tiempo de ejecución. Al llamar a `this.characters()` dentro de la función flecha, el motor reactivo de Angular añade dinámicamente esa señal a la lista de suscripciones del efecto. Cuando `addCharacter()` actualiza la señal con `.update()`, Angular notifica al efecto y lo ejecuta en el siguiente ciclo de microtareas.
-* **Ejecución inicial:** Un efecto siempre se ejecuta al menos una vez al crearse para evaluar su cuerpo y registrar las señales dependientes.
+2. **¿Podemos usar una señal normal `signal()`?**
+   ```typescript
+   // ⚠️ PROBLEMA: Se desconecta de la fuente tras crearse
+   currentPower = signal(this.character().power);
+   ```
+   Aunque `signal()` sí permite `.update()`, **solo se inicializa una vez**. Si el usuario hace clic en Goku (poder 9001) y luego hace clic en Vegeta (poder 8000), `this.currentPower` seguirá mostrando el poder de Goku porque la señal normal no se entera de que el `input` padre ha cambiado.
 
-#### 2. La Regla de Oro: El Contexto de Inyección (*Injection Context*)
+3. **¿Podemos usar un `effect()` para sincronizarlos?**
+   En versiones anteriores de Angular (16-18) se recurría a efectos con `allowSignalWrites: true` para escuchar cambios en el input y sobreescribir la señal manual. Esto se consideraba un antipatrón propenso a bucles infinitos, parpadeos (*glitches*) y código innecesariamente engorroso.
 
-`effect()` no puede invocarse libremente en cualquier parte del código: **debe crearse estrictamente dentro de un contexto de inyección**:
+#### La Solución Maestra: `linkedSignal()`
 
-* **Ubicaciones válidas:**
-    1. Como inicializador directo de una propiedad de clase:  
-       `saveToLocalStorage = effect(() => { ... });`
-    2. Dentro del cuerpo del `constructor()` de la clase.
-* **Ubicaciones prohibidas:** Si un desarrollador intenta llamar a `effect()` dentro de un método normal (por ejemplo, dentro de `addCharacter()`), Angular detendrá la ejecución con un error en consola:
-    ```text
-    NG0203: effect() can only be used within an injection context
-    ```
+Angular 19 resolvió este problema de raíz creando **`linkedSignal()`**:
 
-#### 3. Diferencia Arquitectónica: `computed()` frente a `effect()`
+* Es **mutable** (permite `.set()` y `.update()` igual que un `signal` tradicional).
+* Pero está **enlazada a una señal fuente**. En cuanto la fuente (`this.character()`) cambia de valor, `linkedSignal` desecha el valor anterior y se recalcula automáticamente con el nuevo dato de entrada.
 
-Es muy común que los estudiantes duden sobre cuándo usar cada primitiva:
+``` mermaid
+flowchart LR
+    Source["<b>1. Fuente Reactiva</b><br/><code>character = input.required()</code>"]
+    Linked["<b>2. linkedSignal()</b><br/><code>() => character().power</code>"]
+    LocalState["<b>3. Estado Mutable Local</b><br/><code>currentPower()</code>"]
+    Action["<b>⚡ Entrenar (+100)</b><br/><code>.update(p => p + 100)</code>"]
 
-| Criterio | Primitiva `computed()` | Primitiva `effect()` |
-| :--- | :--- | :--- |
-| **Propósito principal** | **Derivar datos puros** en memoria sin provocar efectos secundarios. | **Sincronizar el estado** con sistemas y APIs externas (*side-effects*). |
-| **Valor de retorno** | Retorna una **Signal de solo lectura** (`Signal<T>`). | No retorna datos; devuelve una referencia `EffectRef` para control manual. |
-| **Cuándo se evalúa** | **Perezosa (*Lazy*):** Solo se calcula si alguien lee su valor o la plantilla lo renderiza. | **Proactiva (*Eager*):** Se programa y ejecuta automáticamente ante cualquier mutación. |
-| **Ejemplos típicos** | Calcular el total con IVA, filtrar un array, concatenar un nombre completo. | Escribir en `localStorage`, enviar métricas a Google Analytics, manipular APIs de Canvas o DOM nativo. |
-
-!!! info "📖 Para saber más: Primitivas Reactivas en el Manual"
-    Profundiza en el ciclo de vida de los efectos, funciones de limpieza (*onCleanup*) y control manual de ejecución en el **[Manual de Referencia: 05. Signals y Reactividad (effect)](manual/05-signals.md#effect)**.
+    Source -->|"Deriva valor base"| Linked
+    Linked -->|"Inicializa valor"| LocalState
+    Action -->|"Muta localmente"| LocalState
+    Source -.->|"Al seleccionar otro personaje<br/><b>REINICIO AUTOMÁTICO</b>"| LocalState
+```
 
 ---
 
-### Consumo en la Página: `DragonballSuperPageComponent`
-Inyectamos el servicio mediante la función **`inject()`**:
+### 2. Paso 1: Crear el Componente `CharacterDetailComponent`
 
-=== "src/app/pages/dragonball-super/dragonball-super-page.component.ts"
-    ```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts"
-    import { Component, inject } from '@angular/core';
-    import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
-    import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
-    import { DragonballService } from '../../services/dragonball.service';
-
-    @Component({
-      selector: 'dragonball-super',
-      imports: [CharacterListComponent, CharacterAddComponent],
-      templateUrl: './dragonball-super-page.component.html',
-    })
-    export class DragonballSuperPageComponent {
-      // Inyección moderna de dependencias sin constructor
-      public dragonballService = inject(DragonballService);
-    }
-    ```
-
-=== "src/app/pages/dragonball-super/dragonball-super-page.component.html"
-    ```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html"
-    <h1>DragonBall Super (Con Servicio Centralizado)</h1>
-    <hr />
-
-    <section class="row">
-      <div class="col-12 col-sm-6">
-        <!-- Conecta directamente el evento emitido al método del servicio -->
-        <dragonball-character-add
-          (newCharacter)="dragonballService.addCharacter($event)"
-        />
-      </div>
-
-      <div class="col-12 col-sm-6">
-        <!-- Pasa los datos del servicio como señal al componente hijo -->
-        <dragonball-character-list
-          listName="Guerreros Z"
-          [characters]="dragonballService.characters()"
-        />
-      </div>
-    </section>
-    ```
-
----
-
-## La Primitiva `linkedSignal`: De Angular 19 a Angular 22
-
-En Angular 19 se introdujo **`linkedSignal`**, una primitiva diseñada para resolver el problema de las **señales que derivan de otra señal o entrada pero que a la vez necesitan ser mutables localmente**.
-
-!!! note "Evolución de la API: De Developer Preview a Estable"
-    En **Angular 19**, `linkedSignal` se lanzó en fase experimental (*Developer Preview*). En **Angular 22**, la API se ha consolidado como **100% estable y parte del núcleo oficial de Angular**, convirtiéndose en la mejor solución arquitectónica para formularios dinámicos y estados derivados mutables.
-
-```
-[Fuente Reactiva (ej: input / service)] ──> linkedSignal() ──> [Valor Mutable Local]
-                    │                                                  ▲
-                    │                                                  │
-                    └─────────── (Cuando la fuente cambia) ────────────┘
-                                  Resetea o recalcula el valor local
-```
-
-### ¿Cuándo usar `linkedSignal`?
-
-* Si usas `computed()`, la señal es **estrictamente de solo lectura** (no tiene `.set()` ni `.update()`).
-* Si usas `signal()`, el valor es mutable, pero **se desvincula de la fuente** si la fuente cambia.
-* **`linkedSignal()` ofrece lo mejor de ambos mundos:** es mutable con `.set()` y `.update()`, pero si su señal origen cambia, se reinicia automáticamente al nuevo valor derivado.
-
-### Ejemplo Práctico: Selección de Personaje con `linkedSignal`
+Creamos el archivo `src/app/components/dragonball/character-detail/character-detail.component.ts`. Diseñamos una tarjeta con Bootstrap que muestra el estado derivado y los controles para interactuar con él:
 
 ```typescript title="src/app/components/dragonball/character-detail/character-detail.component.ts"
 import { Component, input, linkedSignal } from '@angular/core';
@@ -1388,38 +1511,395 @@ import { Character } from '../../../interfaces/character.interface';
 
 @Component({
   selector: 'dragonball-character-detail',
+  imports: [],
   template: `
-    <div>
-      <h4>Detalle de: {{ character().name }}</h4>
-      <p>Poder actual: {{ currentPower() }}</p>
-      
-      <!-- Podemos mutar currentPower localmente sin romper el input del padre -->
-      <button (click)="boostPower()">Entrenar (+100)</button>
+    <div class="card border-primary shadow-sm">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Ficha de: {{ character().name }}</h4>
+        <span class="badge bg-light text-primary">ID: #{{ character().id }}</span>
+      </div>
+
+      <div class="card-body">
+        <p class="card-text mb-1">
+          <strong>Poder Base Original:</strong> 
+          <span class="badge bg-secondary">{{ character().power }}</span>
+        </p>
+
+        <p class="card-text fs-5">
+          <strong>Poder Actual (Con Entrenamiento):</strong> 
+          <span 
+            class="badge"
+            [class.text-bg-success]="currentPower() > character().power"
+            [class.text-bg-primary]="currentPower() === character().power"
+          >
+            {{ currentPower() }}
+          </span>
+        </p>
+
+        <!-- Acciones reactivas sobre el linkedSignal -->
+        <div class="d-flex gap-2 mt-3">
+          <button 
+            type="button" 
+            class="btn btn-success" 
+            (click)="boostPower()"
+          >
+            ⚡ Entrenar (+100)
+          </button>
+
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary" 
+            (click)="resetPower()"
+            [disabled]="currentPower() === character().power"
+          >
+            ↺ Restablecer
+          </button>
+        </div>
+      </div>
     </div>
   `,
 })
 export class CharacterDetailComponent {
-  // Entrada obligatoria que viene del componente padre
+  // 1. Entrada requerida: el personaje seleccionado por el componente padre
   character = input.required<Character>();
 
-  // linkedSignal: su valor inicial es el poder del personaje,
-  // pero si el padre cambia el personaje seleccionado, currentPower se sincroniza automáticamente
+  // 2. linkedSignal: nace con el poder del personaje, pero permite mutación local (.update / .set)
+  // Si 'character' cambia en el padre, 'currentPower' se sincroniza automáticamente con el nuevo valor
   currentPower = linkedSignal(() => this.character().power);
 
-  boostPower() {
-    this.currentPower.update((p) => p + 100);
+  // 3. Muta el valor localmente sin alterar el array original del servicio
+  boostPower(): void {
+    this.currentPower.update((power) => power + 100);
+  }
+
+  // 4. Restablece el valor local al poder base de la fuente
+  resetPower(): void {
+    this.currentPower.set(this.character().power);
   }
 }
 ```
 
 ---
 
-## Despliegues y `HashLocationStrategy`
+### 3. Paso 2: Permitir la Selección desde `CharacterListComponent`
 
-Al subir una aplicación SPA a un hosting estático (como Netlify, Vercel o GitHub Pages), si el usuario navega a `misitio.com/dragonball` y refresca el navegador (++f5++), el servidor busca un archivo físico llamado `dragonball/index.html` que no existe, arrojando un **Error 404 Not Found**.
+Para que el usuario pueda seleccionar qué guerrero consultar en detalle, modificamos **ambos archivos** de `CharacterListComponent` (el TypeScript y su plantilla HTML) para emitir un evento mediante **`output<Character>()`** al pulsar el botón **"Detalles"**:
 
-### Solución 1: HashLocationStrategy en `src/app/app.config.ts`
-Agregamos la estrategia de hash para que las rutas viajen tras el símbolo `#` (`misitio.com/#/dragonball`), lo que garantiza que el servidor siempre sirva el `index.html` raíz:
+#### A. Controlador TypeScript (`character-list.component.ts`)
+
+```typescript title="src/app/components/dragonball/character-list/character-list.component.ts" hl_lines="1 13"
+import { Component, input, output } from '@angular/core';
+import { Character } from '../../../interfaces/character.interface';
+
+@Component({
+  selector: 'dragonball-character-list',
+  templateUrl: './character-list.component.html',
+})
+export class CharacterListComponent {
+  // Entradas requeridas y opcionales con signals
+  characters = input.required<Character[]>();
+  listName = input<string>('Listado de Personajes');
+
+  // Nuevo Output para emitir el personaje seleccionado al padre
+  selectCharacter = output<Character>();
+}
+```
+
+#### B. Plantilla HTML (`character-list.component.html`)
+
+```html title="src/app/components/dragonball/character-list/character-list.component.html" hl_lines="18-24"
+<h3>{{ listName() }}</h3>
+
+<ul class="list-group">
+  @for (character of characters(); track character.id; let idx = $index) {
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>#{{ idx + 1 }}</strong> - {{ character.name }}
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <span
+          class="badge"
+          [class.text-bg-danger]="character.power > 9000"
+          [class.text-bg-primary]="character.power <= 9000"
+        >
+          {{ character.power }}
+        </span>
+
+        <!-- Botón interactivo que emite el personaje seleccionado -->
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-primary"
+          (click)="selectCharacter.emit(character)"
+        >
+          Detalles
+        </button>
+      </div>
+    </li>
+  } @empty {
+    <li class="list-group-item list-group-item-secondary">
+      No hay personajes registrados en la lista.
+    </li>
+  }
+</ul>
+```
+
+!!! info "💡 Concepto de Eventos en el DOM: ¿Por qué ya no necesitamos `$event.stopPropagation()`?"
+    En el DOM de los navegadores web rige el mecanismo de **Propagación o Burbujeo de Eventos (*Event Bubbling*)**: cuando se produce un evento sobre un elemento hijo (como un `<button>`), este asciende en cascada activando los manejadores de eventos de sus contenedores ancestros (`<li>`, `<ul>`, etc.).
+    
+    Si hubiésemos colocado un `(click)` sobre la fila `<li>` entera y además otro `(click)` en el botón, hacer clic en el botón dispararía ambos eventos en cascada; en ese caso se usa `$event.stopPropagation()` para cortar el ascenso. Sin embargo, **la regla de diseño limpio es evitar listeners duplicados**: al colocar el evento `(click)` de forma exclusiva y limpia sobre el botón **"Detalles"**, la propagación no genera ningún conflicto secundario y no hace falta invocar `stopPropagation()`.
+
+---
+
+### 4. Paso 3: Integrar y Visualizar en la Página Orquestadora
+
+Por último, integramos `CharacterDetailComponent` en nuestra página padre (`DragonballSuperPageComponent`), editando **tanto su archivo TypeScript como su HTML** para guardar el personaje seleccionado y mostrar su ficha en pantalla.
+
+!!! tip "📌 Nota sobre nombres de archivos (Angular 19 vs Angular 20+)"
+    Si estás trabajando en la página `DragonballPage` (`dragonball-page.ts` / `dragonball-page.html`) o usas la convención moderna de Angular 20+ sin sufijos `.component` en los nombres de archivos (por ejemplo, `character-detail.ts` o `dragonball.ts`), aplica **exactamente estos mismos cambios** en tu página activa donde estás renderizando `<dragonball-character-list>`.
+
+#### A. Controlador TypeScript de la Página (`dragonball-super-page.component.ts`)
+
+Asegúrate de:
+
+1. Importar `signal`, `Character` y `CharacterDetailComponent`.
+2. Añadir `CharacterDetailComponent` dentro del array `imports` de `@Component`.
+3. Declarar la propiedad `public selectedCharacter = signal<Character | null>(null);` dentro de la clase.
+
+```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts" hl_lines="1 4 6 10 17"
+import { Component, inject, signal } from '@angular/core';
+import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
+import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
+import { CharacterDetailComponent } from '../../components/dragonball/character-detail/character-detail.component';
+import { DragonballService } from '../../services/dragonball.service';
+import { Character } from '../../interfaces/character.interface';
+
+@Component({
+  selector: 'dragonball-super',
+  imports: [CharacterListComponent, CharacterAddComponent, CharacterDetailComponent],
+  templateUrl: './dragonball-super-page.component.html',
+})
+export class DragonballSuperPageComponent {
+  // Inyección del servicio de datos
+  public dragonballService = inject(DragonballService);
+
+  // 👉 IMPRESCINDIBLE: Señal para almacenar el personaje que el usuario decida ver en detalle
+  public selectedCharacter = signal<Character | null>(null);
+}
+```
+
+#### B. Plantilla HTML de la Página (`dragonball-super-page.component.html`)
+
+Realiza dos acciones en tu archivo HTML:
+
+1. En `<dragonball-character-list>`, conecta el evento de salida: `(selectCharacter)="selectedCharacter.set($event)"`.
+2. Añade debajo del `</section>` principal el bloque `@if (selectedCharacter(); as character)` con la etiqueta `<dragonball-character-detail [character]="character" />`.
+
+```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html" hl_lines="17 23-33"
+<h1>DragonBall Super (Con Servicio y Detalle Reactivo)</h1>
+<hr />
+
+<section class="row">
+  <!-- Columna 1: Formulario de Alta -->
+  <div class="col-12 col-sm-6">
+    <dragonball-character-add
+      (newCharacter)="dragonballService.addCharacter($event)"
+    />
+  </div>
+
+  <!-- Columna 2: Listado con Emisión de Selección -->
+  <div class="col-12 col-sm-6">
+    <dragonball-character-list
+      listName="Guerreros Z"
+      [characters]="dragonballService.characters()"
+      (selectCharacter)="selectedCharacter.set($event)"
+    />
+  </div>
+</section>
+
+<!-- Fila Inferior: Panel de Detalle con linkedSignal -->
+<section class="row mt-4">
+  <div class="col-12">
+    @if (selectedCharacter(); as character) {
+      <dragonball-character-detail [character]="character" />
+    } @else {
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <span class="fs-4 me-2">💡</span>
+        <div>
+          <strong>Panel de Detalle:</strong> Haz clic en el botón <em>"Detalles"</em> de cualquier guerrero de la lista para ver su tarjeta interactiva y experimentar el comportamiento de <code>linkedSignal()</code>.
+        </div>
+      </div>
+    }
+  </div>
+</section>
+```
+
+!!! warning "🔍 Guía Rápida de Resolución de Problemas y Errores Comunes"
+    Si tienes algún error de compilación o al pulsar **"Detalles"** no aparece nada, revisa esta lista de verificación:
+
+    1. **Error rojo en el HTML: `Property 'selectedCharacter' does not exist on type '...'`**  
+       **Causa:** En el archivo `.ts` de la página olvidaste declarar la señal dentro de la clase.  
+       **Solución:** Añade `public selectedCharacter = signal<Character | null>(null);` en tu clase TypeScript (asegurándote de tener importados `signal` de `@angular/core` y la interfaz `Character`).
+
+    2. **Aviso amarillo en `@Component({ imports: [..., CharacterDetailComponent] })` (`is not used within the template`)**  
+       **Causa:** Importaste `CharacterDetailComponent` en el TypeScript, pero todavía no añadiste la etiqueta `<dragonball-character-detail [character]="character" />` dentro del HTML.  
+       **Solución:** Añade la `<section class="row mt-4">` inferior con el bloque `@if (selectedCharacter(); as character)` en tu plantilla HTML y verifica que el selector en `CharacterDetailComponent` sea `'dragonball-character-detail'`.
+
+    3. **Compila sin errores, pero al pulsar "Detalles" no ocurre nada:**  
+       * **Verifica la ruta del navegador:** Asegúrate de estar en la ruta donde integraste estos cambios (por ejemplo, `http://localhost:4200/dragonball-super` o `/dragonball` según dónde hayas editado).
+       * **Verifica el enlace de evento:** Comprueba que `<dragonball-character-list>` tiene `(selectCharacter)="selectedCharacter.set($event)"` en el HTML del padre y que `selectCharacter = output<Character>();` está declarado en el `.ts` del hijo.
+
+---
+
+### 5. Verificación Visual en el Navegador (El "Momento Eureka")
+
+Guarda todos los archivos y abre la aplicación en el navegador (`http://localhost:4200/dragonball-super` o tu ruta activa):
+
+1. **Estado Inicial:** Verás la alerta azul en la parte inferior indicando que todavía no hay ningún guerrero seleccionado.
+2. **Selección del Primer Personaje:** Haz clic en el botón **"Detalles"** de **Goku** (Poder base: `9001`). Aparecerá la tarjeta inferior mostrando *Goku* y *Poder Actual: 9001*.
+3. **Mutación Local del `linkedSignal`:** Pulsa **3 veces** el botón verde **"⚡ Entrenar (+100)"**. Observa cómo el poder en la tarjeta sube a `9101`, luego a `9201` y finalmente a `9301`.  
+   *(Esto demuestra que `currentPower` es mutable localmente sin alterar los datos originales de la lista).*
+4. **La Magia de la Sincronización al Cambiar desde el Padre:** Ahora haz clic en **"Detalles"** en otro personaje, por ejemplo **Vegeta** (Poder base: `8000`).  
+   *¿Qué ocurre por dentro?* Aunque veas cambiar los datos, Angular **NO destruye ni vuelve a crear** `CharacterDetailComponent` (el `@if` sigue siendo verdadero); simplemente **actualiza la entrada `[character]` desde el padre**. En ese instante, `linkedSignal` detecta el cambio en la señal fuente y **reinicia automáticamente `currentPower` a `8000`**, descartando los 300 puntos de Goku sin escribir ningún `ngOnChanges` ni `effect()`.
+
+---
+
+### 6. Experimento Avanzado (Opcional): Ver cómo cambia el *mismo* personaje desde el Padre
+
+¿Y si quieres probar explícitamente en clase qué sucede si el **mismo personaje** que estás viendo sufre un cambio de poder desde el componente padre mientras su ficha sigue abierta?
+
+Podemos añadir un botón de prueba en la página padre para mutar su señal `selectedCharacter` directamente:
+
+#### A. Añade el método de prueba en el TypeScript de la página padre:
+
+```typescript
+// Método didáctico para simular que el componente padre actualiza el poder del personaje actual
+boostSelectedFromParent(): void {
+  const current = this.selectedCharacter();
+  if (!current) return;
+
+  // Actualización inmutable: generamos una nueva referencia de objeto para que la señal detecte el cambio
+  this.selectedCharacter.set({
+    ...current,
+    power: current.power + 500,
+  });
+}
+```
+
+#### B. Añade el botón justo encima de `<dragonball-character-detail>` en el HTML del padre:
+
+```html
+@if (selectedCharacter(); as character) {
+  <!-- Botón de prueba para demostrar el cambio desde el padre hacia el hijo -->
+  <button 
+    type="button" 
+    class="btn btn-warning mb-3" 
+    (click)="boostSelectedFromParent()"
+  >
+    🔥 Modificar poder desde el Padre (+500)
+  </button>
+
+  <dragonball-character-detail [character]="character" />
+}
+```
+
+#### C. Qué observarás en el navegador:
+
+1. Pulsa **"Detalles"** en cualquier personaje (por ejemplo, uno con poder base `1234`).
+2. Muta el valor local dentro del hijo pulsando dos veces **"⚡ Entrenar (+100)"** (el *Poder Actual* sube a `1434`, mientras que el *Poder Base Original* sigue en `1234`).
+3. Ahora pulsa el botón amarillo del padre **"🔥 Modificar poder desde el Padre (+500)"**.
+4. **Resultado inmediato:** El *Poder Base Original* (que proviene del input del padre) cambia de `1234` a **`1734`**, y el *Poder Actual* (`linkedSignal`) **descarta la mutación local (`1434`) y se resincroniza al instante a `1734`**.
+
+!!! note "💡 Nota de Arquitectura sobre el Experimento"
+    Este botón modifica únicamente la señal `selectedCharacter` del padre como laboratorio visual para demostrar el enlace `input() ➔ linkedSignal()`. Por eso, la lista de la derecha conserva su valor original salvo que también actualices el array dentro de `DragonballService`. Además, fíjate en que si usáramos una señal normal `signal()` en lugar de `linkedSignal()`, al pulsar el botón amarillo el *Poder Base Original* cambiaría a `1734`, pero el *Poder Actual* se quedaría congelado y desincronizado en `1434`.
+
+#### Cuadro Comparativo Definitivo
+
+| Característica | `signal()` | `computed()` | `linkedSignal()` |
+| :--- | :---: | :---: | :---: |
+| **¿Es mutable localmente (`.set()` / `.update()`)?** | ✅ Sí | ❌ No (solo lectura) | **✅ Sí** |
+| **¿Deriva su valor inicial de otra señal o `input()`?** | ⚠️ Solo una vez al crearse | ✅ Sí, siempre | **✅ Sí, siempre** |
+| **¿Se reinicia si la señal fuente cambia?** | ❌ No (queda desvinculada) | ✅ Sí | **✅ Sí (reseteo automático)** |
+| **Caso de uso idóneo** | Estado local puro de un componente | Cálculos matemáticos o formateo de solo lectura | **Formularios, paneles de edición y estado derivado mutable** |
+
+---
+
+## Despliegues a Producción y `HashLocationStrategy`
+
+Hasta ahora hemos ejecutado nuestra aplicación usando `ng serve` en modo desarrollo (`http://localhost:4200`), donde Angular compila el código en memoria RAM al instante y lo sirve con herramientas de depuración incluidas. Sin embargo, los servidores web en producción (como Netlify, Vercel, GitHub Pages, Apache o Nginx) **no entienden archivos `.ts` ni ejecutan `ng serve`**: únicamente sirven archivos estáticos optimizados (`HTML`, `CSS` y `JavaScript` compilado).
+
+Para publicar nuestra aplicación en Internet seguiremos un flujo en **3 fases claras**:
+
+``` mermaid
+flowchart LR
+    A["<b>1. Compilación (Build)</b><br/><code>ng build</code><br/>Genera <code>dist/&lt;proyecto&gt;/browser/</code>"] --> B["<b>2. Estrategia de Rutas</b><br/><code>HashLocationStrategy</code><br/>o redirecciones <code>_redirects</code>"] --> C["<b>3. Publicación</b><br/>Subir carpeta <code>browser/</code><br/>a Netlify / Vercel / GitHub"]
+```
+
+---
+
+### Paso 1: Generar el Build de Producción (`ng build`)
+
+Antes de subir nada a ningún servidor, debemos pedirle a Angular CLI que compile, optimice, minifique y empaquete nuestra aplicación para producción.
+
+1. Detén el servidor de desarrollo si lo tienes abierto (++ctrl+c++ en la terminal) o abre una nueva pestaña de terminal en la raíz de tu proyecto.
+2. Ejecuta el comando de compilación:
+
+```bash
+ng build
+```
+*(Alternativamente: `npm run build`)*
+
+**¿Qué hace exactamente este comando?**
+
+* Convierte todo tu código TypeScript a JavaScript estándar compatible con los navegadores.
+* Elimina código muerto (*Tree Shaking*) y comprime los archivos (`main-*.js`, `styles-*.css`) para que la web cargue en milisegundos.
+* Genera una nueva carpeta **`dist/`** en la raíz de tu proyecto.
+
+!!! danger "⚠️ ¡Cuidado Crítico! ¿Qué carpeta exacta se sube a producción?"
+    En versiones modernas de Angular (Angular 17+), la compilación genera una estructura anidada:
+
+    ```text
+    dist/
+    └── bases/                  <-- ❌ NO subas esta carpeta padre
+        ├── prerendered-routes.json
+        └── browser/            <-- ✅ ESTA ES LA CARPETA QUE DEBES SUBIR
+            ├── index.html
+            ├── favicon.ico
+            ├── main-XXXXXX.js
+            ├── polyfills-XXXXXX.js
+            └── styles-XXXXXX.css
+    ```
+
+    * Nota: El nombre `bases` corresponde al nombre de tu proyecto definido en `angular.json`.
+    * **Regla de Oro:** El archivo `index.html` **debe quedar en la raíz del servidor**. Si subes la carpeta padre `dist/bases/`, el hosting mostrará un error 404 porque `index.html` estaría un nivel por debajo dentro de `browser/`.
+
+#### Prueba Local del Build antes de subirlo (Opcional pero Recomendado)
+
+Si quieres comprobar cómo se comporta la aplicación compilada tal cual la verá el servidor en producción antes de subirla a Internet:
+
+```bash
+npx http-server -o dist/bases/browser
+```
+*(Sustituye `bases` por el nombre de tu carpeta dentro de `dist/`)*.
+
+---
+
+### Paso 2: Resolver el Error `404 Not Found` al Recargar (`F5`)
+
+#### El Problema Real en Producción
+Cuando pruebas tu web publicada, entras a `https://mi-web.netlify.app/`, navegas a `/dragonball-super` haciendo clic en el menú y todo funciona bien (porque Angular intercepta el clic internamente).  
+**Pero si en ese momento pulsas ++f5++ (recargar navegador) o compartes esa URL directamente:**
+
+* El navegador pide al servidor el archivo físico `/dragonball-super/index.html`.
+* Como en una **SPA** (*Single Page Application*) **solo existe un único `index.html` raíz**, el servidor responde con un **Error 404 (Page Not Found)**.
+
+Para evitar este error fatal, disponemos de **dos soluciones arquitectónicas**:
+
+#### Solución A: `HashLocationStrategy` (Universal — Funciona en cualquier hosting)
+
+Consiste en añadir un `#` (almohadilla) tras el dominio raíz en todas las rutas (`misitio.com/#/dragonball-super`). Todo lo que va detrás del `#` es gestionado exclusivamente por el navegador; el servidor web recibe únicamente la petición de la raíz `/` y devuelve siempre el `index.html` correcto, incluso al pulsar ++f5++.
+
+Configúralo en `src/app/app.config.ts`:
 
 ```typescript title="src/app/app.config.ts" hl_lines="4 12-15"
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
@@ -1441,13 +1921,80 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-### Solución 2: Archivo de Redirección para Netlify (`_redirects`)
-Si prefieres mantener URLs limpias sin `#` (`misitio.com/dragonball`), crea un archivo `public/_redirects` con el siguiente contenido:
+> 🔄 **Importante tras cambiar `app.config.ts`:** Cada vez que modifiques cualquier archivo de tu aplicación (como activar `HashLocationStrategy`), debes **volver a ejecutar `ng build`** en tu terminal antes de subir los archivos de nuevo, para que los cambios pasen a la carpeta `dist/.../browser/`.
 
-```text
-/*    /index.html   200
-```
-Esto instruye a Netlify a redirigir internamente todas las peticiones a `index.html` devolviendo código HTTP 200, delegando el enrutamiento a Angular.
+#### Solución B: Reglas de Redirección del Servidor (URLs limpias sin `#`)
+
+Si prefieres mantener URLs limpias como `misitio.com/dragonball-super`, debes indicar al hosting que redirija cualquier ruta desconocida hacia `index.html`:
+
+* **En Netlify:** Crea un archivo llamado `_redirects` (sin extensión) dentro de la carpeta **`public/`** de tu proyecto Angular (`public/_redirects`):
+
+  ```text title="public/_redirects"
+  /*    /index.html   200
+  ```
+  *(En Angular 18+, todo archivo dentro de `public/` se copia automáticamente a la raíz de `dist/.../browser/` al ejecutar `ng build`)*.
+
+* **En Vercel:** Crea un archivo `vercel.json` en la raíz de tu proyecto:
+
+  ```json title="vercel.json"
+  {
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
+  }
+  ```
+
+---
+
+### Paso 3: Guía Paso a Paso por Plataforma de Despliegue
+
+Elige la plataforma gratuita que prefieras para publicar tu proyecto:
+
+#### Opción 1: Netlify (Despliegue Manual *Drag & Drop* — La más rápida para clase)
+
+Ideal si quieres desplegar en 30 segundos sin necesidad de configurar repositorios remotos:
+
+1. Ejecuta `ng build` en tu proyecto y verifica que se ha generado `dist/<tu-proyecto>/browser/`.
+2. Entra en [app.netlify.com](https://app.netlify.com/) e inicia sesión (puedes usar tu cuenta de GitHub).
+3. En el panel principal (**Sites**), haz clic en el botón **"Add new site"** y selecciona **"Deploy manually"**.
+4. Abre el explorador de archivos de tu sistema operativo, navega hasta `dist/<tu-proyecto>/` y **arrastra la carpeta `browser` completa** dentro del área punteada de Netlify.
+5. En unos segundos Netlify procesará los archivos y te dará una URL pública aleatoria (ej: `https://peppy-custard-3041ac.netlify.app`).
+6. *(Opcional)* Para personalizar la URL: ve a **Site configuration → General → Site details → Change site name** y elige tu propio subdominio.
+7. **Para actualizar tu web más adelante:** Tras editar tu código, ejecuta de nuevo `ng build`, entra en la pestaña **Deploys** de tu sitio en Netlify y vuelve a arrastrar la carpeta `browser` actualizada.
+
+#### Opción 2: Vercel (Despliegue Automático desde GitHub o CLI)
+
+Ideal para flujos profesionales conectados a Git (*CI/CD*):
+
+**Vía Web (con GitHub):**
+
+1. Sube tu proyecto a un repositorio en GitHub.
+2. Inicia sesión en [vercel.com](https://vercel.com/) con GitHub y pulsa **"Add New... → Project"**.
+3. Importa tu repositorio de Angular. Vercel detectará el framework automáticamente:
+    * **Build Command:** `npm run build` (o `ng build`)
+    * **Output Directory:** `dist/<tu-proyecto>/browser` *(revisa o sustituye `<tu-proyecto>` según el nombre en tu `angular.json`)*.
+4. Pulsa **Deploy**. A partir de ese momento, cada `git push` actualizará tu web automáticamente.
+
+**Vía Terminal (Vercel CLI):**
+
+1. Ejecuta `npx vercel` en la raíz de tu proyecto (la primera vez te pedirá iniciar sesión).
+2. Cuando pregunte el directorio donde reside el código compilado, indica `dist/<tu-proyecto>/browser`.
+3. Para publicar la URL final de producción: `npx vercel --prod`.
+
+#### Opción 3: GitHub Pages (Hosting gratuito directo desde tu repositorio)
+
+Ten en cuenta que GitHub Pages suele publicar el proyecto dentro de una subruta con el nombre de tu repositorio (`https://tu-usuario.github.io/nombre-repo/`), por lo que requiere indicar el parámetro `--base-href`:
+
+1. Asegúrate de tener activada **`HashLocationStrategy`** en `app.config.ts` (GitHub Pages no soporta archivos `_redirects` de servidor de forma nativa).
+2. Compila indicando el nombre exacto de tu repositorio en GitHub (conservando las barras `/` al principio y al final):
+   ```bash
+   ng build --base-href "/nombre-de-tu-repositorio/"
+   ```
+3. Despliega la carpeta compilada a la rama `gh-pages` automáticamente con la herramienta oficial:
+   ```bash
+   npx angular-cli-ghpages --dir=dist/<tu-proyecto>/browser
+   ```
+4. En tu repositorio de GitHub, ve a **Settings → Pages**, comprueba que la fuente (*Source*) apunta a la rama **`gh-pages`** (carpeta `/ (root)`), y en un minuto tu aplicación estará publicada online.
 
 ---
 
@@ -1486,7 +2033,7 @@ Para afianzar y ampliar los conceptos arquitectónicos desarrollados en esta sec
 
 * **[Manual de Referencia: 04. Plantillas y Control Flow](manual/04-plantillas.md):** Comparativa detallada entre directivas estructurales antiguas (`*ngIf`, `*ngFor`) y el nuevo Control Flow (`@if`, `@for`, `@switch`) y vistas diferidas (`@defer`).
 * **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md):** Guía exhaustiva de Signals, WritableSignal, computed, effect y `linkedSignal()`.
-* **[Recurso Multimedia Didáctico] Carlos Codea — ¿Qué son las signals en Angular y por qué son tan importantes?:** [Ver en YouTube](https://www.youtube.com/watch?v=fKp4VUKDyA4) (Vídeo recomendado para consolidar de forma gráfica la reactividad granular y el modelo de ejecución moderno).
+* **[Recurso Multimedia Didáctico] Carlos Codea — ¿Qué son las signals en Angular y por qué son tan importantes?:** [Ver en YouTube](https://www.youtube.com/watch?v=fKp4VUKDyA4) (Recurso didáctico recomendado para consolidar de forma gráfica la reactividad granular y el modelo de ejecución moderno).
 * **[Manual de Referencia: 07. Comunicación entre Componentes](manual/07-anidar-componentes.md):** Patrón contenedor/presentador (Smart vs Dumb), Signal Inputs (`input()`), Signal Outputs (`output()`) y enlace bidireccional (`model()`).
 * **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md):** Arquitectura de estado singleton, funciones `inject()` y efectos reactivos con `effect()`.
 * **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md):** Configuración de rutas, directivas de navegación (`routerLink`, `routerLinkActive`) y estrategias de localización de URLs.

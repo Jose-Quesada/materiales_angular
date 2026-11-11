@@ -426,7 +426,7 @@ export default class CountryPageComponent {
 ## 💡 Evolución Angular 22: Declaración Limpia y Asincronía Estable
 
 !!! tip "1. Declaración Directa con `@Service()`"
-    En el vídeo de Angular 19 se declara `CountryService` usando `@Injectable({ providedIn: 'root' })`.
+    En la declaración convencional de Angular 19 se define `CountryService` usando `@Injectable({ providedIn: 'root' })`.
     
     En **Angular 22**, puedes escribir directamente:
     ```typescript

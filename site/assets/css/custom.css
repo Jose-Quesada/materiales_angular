@@ -506,3 +506,123 @@
 .mermaid .node foreignObject div {
   text-align: left !important;
 }
+
+/* ==========================================================================
+   13. Tabla de Contenidos Desplegable (Acordeón en barra lateral derecha)
+   ========================================================================== */
+
+/* Estado comprimido por defecto para todos los subniveles (H3, H4...) */
+.toc-collapsible-enabled li.toc-has-children > nav.md-nav {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  margin-top: 0;
+  border-left: 1px solid var(--md-default-fg-color--lightest, #e2e8f0);
+  margin-left: 0.65rem;
+  padding-left: 0.2rem;
+  transition: grid-template-rows 0.22s ease, opacity 0.18s ease, visibility 0.22s;
+}
+
+.toc-collapsible-enabled li.toc-has-children > nav.md-nav > ul.md-nav__list {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.toc-collapsible-enabled li.toc-has-children:not(.toc-expanded) > nav.md-nav > ul.md-nav__list {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Estado desplegado cuando el usuario abre el nivel */
+.toc-collapsible-enabled li.toc-has-children.toc-expanded > nav.md-nav {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  margin-top: 0.15rem;
+}
+
+/* Fila alineada: texto del enlace a la izquierda + botón chevron a la derecha */
+.toc-collapsible-enabled .toc-item-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.2rem;
+}
+
+.toc-collapsible-enabled .toc-item-row > a.md-nav__link {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 0 !important;
+}
+
+/* Botón chevron sutil e interactivo */
+.toc-collapsible-enabled .toc-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  margin-top: 0.12rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.3rem;
+  background: transparent;
+  color: var(--md-default-fg-color--light, #64748b);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.toc-collapsible-enabled .toc-toggle:hover {
+  background-color: rgba(221, 0, 49, 0.08);
+  color: var(--md-primary-fg-color, #dd0031);
+}
+
+.toc-collapsible-enabled li.toc-expanded > .toc-item-row > .toc-toggle {
+  transform: rotate(90deg);
+  color: var(--md-primary-fg-color, #dd0031);
+}
+
+/* Cabecera "Tabla de contenidos" con botón rápido Expandir / Comprimir */
+.toc-collapsible-enabled .md-nav__title[for="__toc"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.toc-collapsible-enabled .toc-global-toggle {
+  margin-left: auto;
+  padding: 0.14rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--md-default-fg-color--lightest, #cbd5e1);
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--md-default-fg-color--light, #64748b);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toc-collapsible-enabled .toc-global-toggle:hover {
+  border-color: var(--md-primary-fg-color, #dd0031);
+  color: var(--md-primary-fg-color, #dd0031);
+  background: rgba(221, 0, 49, 0.06);
+}
+
+/* Adaptación a modo oscuro (Slate) */
+[data-md-color-scheme="slate"] .toc-collapsible-enabled li.toc-has-children > nav.md-nav {
+  border-left-color: #334155;
+}
+
+[data-md-color-scheme="slate"] .toc-collapsible-enabled .toc-toggle:hover {
+  background-color: rgba(255, 77, 115, 0.14);
+}
+
+[data-md-color-scheme="slate"] .toc-collapsible-enabled .toc-global-toggle {
+  border-color: #475569;
+  color: #94a3b8;
+}

@@ -10,7 +10,7 @@
 ## Objetivos de aprendizaje
 
 1. Comprender la arquitectura jerárquica de componentes en Angular y el concepto de árbol de componentes.
-2. Dominar la comunicación entre componentes padre e hijo mediante `@Input`, `@Output` y Model Inputs.
+2. Dominar la comunicación entre componentes padre e hijo mediante la función `input()`, la función `output()` y Model Inputs (junto a la migración desde `@Input` y `@Output` clásicos).
 3. Aplicar el patrón de diseño Smart/Dumb (Container/Presentational) para organizar la lógica de negocio y la presentación.
 4. Resolver la comunicación entre componentes hermanos mediante el patrón de elevación de estado y servicios compartidos.
 5. Identificar y evitar problemas comunes como el prop drilling en jerarquías profundas.
@@ -21,8 +21,8 @@
 Al finalizar esta unidad, el alumnado será capaz de:
 
 - Construir jerarquías de componentes que reflejen correctamente la estructura de la interfaz de usuario.
-- Transferir datos desde componentes padres a hijos utilizando `@Input` con tipado estricto.
-- Emitir eventos desde componentes hijos hacia padres mediante `@Output` y `EventEmitter`.
+- Transferir datos desde componentes padres a hijos utilizando Signal Inputs (`input()`, `input.required()`) con tipado estricto.
+- Emitir eventos desde componentes hijos hacia padres mediante la función moderna `output()` de Angular Core.
 - Implementar two-way binding entre componentes utilizando Model Inputs.
 - Clasificar componentes según el patrón Smart/Dumb y aplicarlo en aplicaciones reales.
 - Resolver problemas de comunicación entre hermanos elevando el estado al padre o mediante servicios compartidos.
@@ -93,19 +93,21 @@ En Angular moderno (versiones 17 a 22), existen dos formas de definir esta inter
 1. **API Basada en Signals (Estándar Moderno Angular 17+ a 22):** Mediante `input()`, `output()` y `model()`. Es la recomendada para nuevas aplicaciones y proyectos Zoneless.
 2. **API Basada en Decoradores (Clásica / Mantenimiento):** Mediante decoradores `@Input()` y `@Output()` con `EventEmitter`.
 
-#### 2.1. @Input: datos de padre a hijo
+#### 2.1. Entradas: datos de padre a hijo (función input())
 
-##### Enfoque Moderno: Signal Inputs (`input()` / `input.required()`)
+Los **Signal Inputs** (`input()` e `input.required()`), disponibles desde Angular 17.1 como estándar de la industria, convierten los datos de entrada en señales reactivas de solo lectura (`InputSignal<T>`). Proporcionan integración nativa con el sistema reactivo de Angular, tipado estricto en tiempo de compilación y transformaciones automáticas seguras sin sobrecoste de ciclo de vida.
 
-Los **Signal Inputs** convierten los datos de entrada en señales de solo lectura (`Signal<T>`). Proporcionan integración nativa con el sistema reactivo de Angular, tipado estricto en tiempo de compilación y transformaciones automáticas seguras.
+##### Declaración en el componente hijo
+
+A continuación, creamos una tarjeta de producto reutilizable tipada estrictamente mediante `input.required()` e `input()` opcionales:
 
 ```typescript
-// product-card.component.ts (Enfoque Moderno con Signals)
+// product-card.component.ts (Componente Hijo con Signal Inputs)
 import { Component, input, numberAttribute, booleanAttribute } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 
-// Interfaz para tipar los datos de entrada
-interface Producto {
+// Interfaz para tipar con rigor los datos de entrada
+export interface Producto {
   id: number;
   nombre: string;
   precio: number;
@@ -129,7 +131,7 @@ interface Producto {
         <div class="precio">
           <span class="valor">{{ producto().precio | currency:'EUR' }}</span>
           @if (producto().enOferta) {
-            <span class="etiqueta-oferta">Oferta!</span>
+            <span class="etiqueta-oferta">¡Oferta!</span>
           }
         </div>
         <p class="stock" [class.bajo]="producto().stock < 5">
@@ -171,7 +173,7 @@ interface Producto {
   `]
 })
 export class ProductCardComponent {
-  // Signal Input requerido: el compilador marcará error si el padre no lo pasa
+  // Signal Input obligatorio: el compilador marcará error si el padre no lo suministra
   producto = input.required<Producto>();
 
   // Signal Input opcional con valor por defecto
@@ -185,28 +187,14 @@ export class ProductCardComponent {
 }
 ```
 
-##### Enfoque Clásico: Decorador `@Input()`
+##### Uso e integración en el componente padre
 
-En aplicaciones heredadas o que aún no han migrado completamente a Signals, se utiliza el decorador `@Input`:
-
-```typescript
-// product-card.component.ts (Enfoque Clásico con Decoradores)
-import { Component, Input, numberAttribute, booleanAttribute } from '@angular/core';
-
-export class ProductCardComponent {
-  @Input({ required: true }) producto!: Producto;
-  @Input() mostrarStock: boolean = true;
-  @Input({ transform: booleanAttribute }) destacado: boolean = false;
-  @Input({ transform: numberAttribute }) indice: number = 0;
-}
-```
-
-**Uso en el componente padre:**
+El componente padre suministra los datos al hijo mediante property binding `[propiedad]="valor"`:
 
 ```html
-<!-- product-list.component.html -->
+<!-- product-list.component.html (Plantilla Padre) -->
 <div class="products-grid">
-  @for (producto of productos; track producto.id; let i = $index) {
+  @for (producto of productos(); track producto.id; let i = $index) {
     <app-product-card
       [producto]="producto"
       [mostrarStock]="true"
@@ -219,24 +207,90 @@ export class ProductCardComponent {
 </div>
 ```
 
-**Buenas prácticas con @Input:**
+```typescript
+// product-list.component.ts (Componente Padre con Signals)
+import { Component, signal } from '@angular/core';
+import { ProductCardComponent, Producto } from './product-card.component';
 
-1. Usar `required: true` cuando el componente no puede funcionar sin ese dato.
-2. Usar `transform` para convertir tipos automáticamente (string a number, string a boolean, etc.).
-3. Definir interfaces TypeScript para inputs complejos en lugar de usar `any`.
-4. Mantener los inputs como propiedades de solo lectura desde fuera del componente (el componente no debe modificar sus inputs).
-5. Documentar cada input con JSDoc para facilitar el uso del componente.
+@Component({
+  selector: 'app-product-list',
+  imports: [ProductCardComponent],
+  templateUrl: './product-list.component.html'
+})
+export class ProductListComponent {
+  // Estado reactivo en el padre gestionado mediante una señal
+  productos = signal<Producto[]>([
+    {
+      id: 1,
+      nombre: 'Teclado Mecánico RGB',
+      precio: 89.99,
+      imagen: 'assets/teclado.jpg',
+      descripcion: 'Switches táctiles silenciosos y chasis de aluminio.',
+      categoria: 'Periféricos',
+      stock: 12,
+      enOferta: true
+    },
+    {
+      id: 2,
+      nombre: 'Ratón Ergonómico Inalámbrico',
+      precio: 49.50,
+      imagen: 'assets/raton.jpg',
+      descripcion: 'Sensor óptico de alta precisión con batería recargable.',
+      categoria: 'Periféricos',
+      stock: 3,
+      enOferta: false
+    }
+  ]);
+}
+```
 
-#### 2.2. @Output: eventos de hijo a padre
+**Buenas prácticas con Signal Inputs:**
 
-Los eventos son el canal por el cual los componentes hijos notifican cambios o acciones al componente padre. El padre se suscribe mediante la sintaxis de eventos `(evento)="manejador($event)"` aprendida en el [Capítulo 04](04-plantillas.md#event-binding), recibiendo los datos emitidos dentro de la variable especial `$event`.
+1. **Priorizar `input.required<T>()`:** Si el componente hijo no puede funcionar correctamente sin ese dato, decláralo obligatorio para que el compilador garantice el contrato en tiempo de compilación.
+2. **Utilizar `transform` estándar:** Emplea transformadores integrados (`booleanAttribute`, `numberAttribute`) para convertir atributos HTML sin código redundante.
+3. **Inmutabilidad estricta:** Las señales de entrada son de solo lectura dentro del hijo (`InputSignal<T>`). El componente hijo jamás debe intentar mutar o reasignar sus inputs.
+4. **Cálculos derivados con `computed()`:** Si necesitas transformar o filtrar el input dentro del hijo, utiliza una señal computada en lugar de hooks de ciclo de vida (`ngOnChanges`).
 
-##### Enfoque Moderno: Función `output()` (Angular 17.3 - 22)
+??? info "🏛️ Referencia Histórica y Migración: Enfoque Clásico con Decorador @Input() (Angular < 17.1)"
+    En aplicaciones heredadas desarrolladas antes de Angular 17.1 o proyectos en fase de modernización, la entrada de datos se declaraba mediante el decorador `@Input()`:
 
-La función `output<T>()` sustituye a los decoradores `@Output()` y elimina la necesidad de instanciar manualmente la clase `EventEmitter`. Genera una referencia `OutputEmitterRef<T>` optimizada:
+    ```typescript
+    // product-card.component.ts (Código Clásico Legacy con Decoradores)
+    import { Component, Input, numberAttribute, booleanAttribute } from '@angular/core';
+    import { Producto } from './product-card.component';
+
+    export class ProductCardComponent {
+      @Input({ required: true }) producto!: Producto;
+      @Input() mostrarStock: boolean = true;
+      @Input({ transform: booleanAttribute }) destacado: boolean = false;
+      @Input({ transform: numberAttribute }) indice: number = 0;
+    }
+    ```
+
+    **Tabla comparativa: `@Input()` clásico vs. `input()` moderno:**
+
+    | Característica | Decorador Clásico `@Input()` | Signal Input `input()` |
+    | :--- | :--- | :--- |
+    | **Tipo devuelto** | Propiedad plana (`T` o `undefined`) | `InputSignal<T>` (reactiva) |
+    | **Acceso en plantilla** | `{{ producto.nombre }}` | `{{ producto().nombre }}` *(lectura de señal)* |
+    | **Obligatoriedad** | `@Input({ required: true })` | `input.required<T>()` *(verificación estricta en compilador)* |
+    | **Transformación** | `@Input({ transform: ... })` | `input(..., { transform: ... })` |
+    | **Zoneless** | Requiere `ChangeDetectorRef.markForCheck()` | Reactividad y detección de cambios automática |
+
+#### 2.2. Salidas: eventos de hijo a padre (función output())
+
+Los eventos constituyen el canal por el cual los componentes hijos notifican acciones del usuario, cambios de estado o solicitudes al componente padre. El padre se suscribe en su plantilla mediante la sintaxis de eventos `(evento)="manejador($event)"` aprendida en el [Capítulo 04](04-plantillas.md#event-binding), recibiendo los datos emitidos dentro de la variable especial `$event`.
+
+##### Enfoque Moderno: Función `output()` (Estándar Angular 17.3 - 22)
+
+La función `output<T>()` sustituye al decorador clásico `@Output()` y elimina por completo la necesidad de importar e instanciar la clase `EventEmitter`. Devuelve una referencia `OutputEmitterRef<T>` ligera, con tipado estricto en tiempo de compilación y optimizada de forma nativa para arquitecturas con o sin Zone.js (Zoneless).
+
+##### Declaración en el componente hijo
+
+A continuación, implementamos un selector de cantidad (`QuantitySelectorComponent`) que expone entradas reactivas mediante `input()` y emite el nuevo valor mediante `output<number>()`:
 
 ```typescript
-// quantity-selector.component.ts (Enfoque Moderno con Signals y output())
+// quantity-selector.component.ts (Componente Hijo con Signals y output())
 import { Component, input, output } from '@angular/core';
 
 @Component({
@@ -289,12 +343,12 @@ import { Component, input, output } from '@angular/core';
   `]
 })
 export class QuantitySelectorComponent {
-  // Inputs basados en signals
+  // Entradas reactivas basadas en signals
   cantidad = input<number>(1);
   min = input<number>(1);
   max = input<number>(99);
 
-  // Función output moderna de Angular Core
+  // Función output moderna de Angular Core: tipada como número
   cantidadCambiada = output<number>();
 
   aumentar(): void {
@@ -311,60 +365,39 @@ export class QuantitySelectorComponent {
 }
 ```
 
-##### Enfoque Clásico: Decorador `@Output()` con `EventEmitter`
+##### Uso e integración en el componente padre
 
-```typescript
-// quantity-selector.component.ts (Enfoque Clásico con Decoradores)
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+Para recibir los eventos del hijo, el componente padre realiza dos pasos sencillos:
 
-export class QuantitySelectorComponent {
-  @Input() cantidad: number = 1;
-  @Input() min: number = 1;
-  @Input() max: number = 99;
-
-  @Output() cantidadCambiada = new EventEmitter<number>();
-
-  aumentar(): void {
-    if (this.cantidad < this.max) {
-      this.cantidadCambiada.emit(this.cantidad + 1);
-    }
-  }
-
-  disminuir(): void {
-    if (this.cantidad > this.min) {
-      this.cantidadCambiada.emit(this.cantidad - 1);
-    }
-  }
-}
-```
-
-**Uso en el componente padre:**
+1. **En la plantilla:** enlaza el nombre del output entre paréntesis `(cantidadCambiada)="actualizarCantidad(producto().id, $event)"`. La variable `$event` adquiere automáticamente el tipo tipado en el output (`number`).
+2. **En la clase:** define el método correspondiente para reaccionar a la emisión o propagarla hacia niveles superiores.
 
 ```html
-<!-- cart-item.component.html -->
+<!-- cart-item.component.html (Plantilla Padre) -->
 <div class="cart-item">
-  <span class="product-name">{{ producto.nombre }}</span>
+  <span class="product-name">{{ producto().nombre }}</span>
 
+  <!-- Escucha reactiva del output() del hijo mediante (cantidadCambiada) -->
   <app-quantity-selector
-    [cantidad]="producto.cantidad"
+    [cantidad]="producto().cantidad"
     [min]="1"
-    [max]="producto.stock"
-    (cantidadCambiada)="actualizarCantidad(producto.id, $event)"
+    [max]="producto().stock"
+    (cantidadCambiada)="actualizarCantidad(producto().id, $event)"
   />
 
   <span class="subtotal">
-    {{ producto.precio * producto.cantidad | currency:'EUR' }}
+    {{ producto().precio * producto().cantidad | currency:'EUR' }}
   </span>
 </div>
 ```
 
 ```typescript
-// cart-item.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { QuantitySelectorComponent } from './quantity-selector.component';
+// cart-item.component.ts (Componente Padre con Signals y output())
+import { Component, input, output } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { QuantitySelectorComponent } from './quantity-selector.component';
 
-interface CartProduct {
+export interface CartProduct {
   id: number;
   nombre: string;
   precio: number;
@@ -378,9 +411,11 @@ interface CartProduct {
   templateUrl: './cart-item.component.html'
 })
 export class CartItemComponent {
-  @Input({ required: true }) producto!: CartProduct;
+  // Signal Input obligatorio recibido del listado o carrito superior
+  producto = input.required<CartProduct>();
 
-  @Output() cantidadActualizada = new EventEmitter<{ id: number; cantidad: number }>();
+  // Signal Output moderno que notifica al contenedor superior
+  cantidadActualizada = output<{ id: number; cantidad: number }>();
 
   actualizarCantidad(id: number, cantidad: number): void {
     this.cantidadActualizada.emit({ id, cantidad });
@@ -388,9 +423,98 @@ export class CartItemComponent {
 }
 ```
 
-**Tipos de datos emitidos por EventEmitter:**
+##### Características clave de la función `output()`
 
-El `EventEmitter<T>` es genérico. El tipo `T` especifica el tipo de dato que se emite, lo que proporciona seguridad de tipos tanto en el hijo (al emitir) como en el padre (al recibir `$event`).
+1. **Seguridad de tipos estricta (`OutputEmitterRef<T>`):**
+   El tipo genérico `T` en `output<T>()` valida en tiempo de compilación tanto el valor entregado a `.emit(valor)` como el tipo que el padre recibe en `$event`. Si el hijo emite un `number`, TypeScript impedirá pasar datos incongruentes.
+
+2. **Sin dependencia de RxJS ni sobrecoste de memoria:**
+   A diferencia del antiguo `EventEmitter` (que extendía `Subject` de RxJS), `output()` es una primitiva nativa de `@angular/core` ultraligera. No instancia flujos observables innecesarios para comunicaciones hijo-padre estándar, reduciendo el peso final del bundle.
+
+3. **Compatibilidad nativa con Zoneless:**
+   Las emisiones de `output()` se coordinan directamente con el planificador de reactividad de Angular, permitiendo que las aplicaciones sin Zone.js actualicen la vista de inmediato y sin trucos manuales.
+
+4. **Suscripción programática opcional:**
+   Si necesitas escuchar un output mediante código TypeScript (por ejemplo, en tests unitarios o al instanciar componentes dinámicamente con `ViewContainerRef`), la referencia `OutputEmitterRef` ofrece el método `.subscribe()`:
+   ```typescript
+   const sub = selectorComponent.cantidadCambiada.subscribe((nuevaCantidad) => {
+     console.log('Cantidad actualizada:', nuevaCantidad);
+   });
+   // Para cancelar la suscripción cuando ya no sea necesaria:
+   sub.destroy();
+   ```
+
+??? info "🏛️ Referencia Histórica y Migración: Enfoque Clásico con Decorador @Output() y EventEmitter (Angular < 17.3)"
+    En aplicaciones heredadas desarrolladas con versiones previas a Angular 17.3 o proyectos en fase de mantenimiento, la emisión de eventos hacia el padre se implementaba combinando el decorador `@Output()` con la clase `EventEmitter` de `@angular/core`:
+
+    ```typescript
+    // quantity-selector.component.ts (Código Clásico Legacy con Decoradores)
+    import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+    export class QuantitySelectorComponent {
+      @Input() cantidad: number = 1;
+      @Input() min: number = 1;
+      @Input() max: number = 99;
+
+      // Enfoque clásico: requiere instanciar EventEmitter manualmente
+      @Output() cantidadCambiada = new EventEmitter<number>();
+
+      aumentar(): void {
+        if (this.cantidad < this.max) {
+          this.cantidadCambiada.emit(this.cantidad + 1);
+        }
+      }
+
+      disminuir(): void {
+        if (this.cantidad > this.min) {
+          this.cantidadCambiada.emit(this.cantidad - 1);
+        }
+      }
+    }
+    ```
+
+    ```typescript
+    // cart-item.component.ts (Padre Clásico con Decoradores)
+    import { Component, Input, Output, EventEmitter } from '@angular/core';
+    import { CurrencyPipe } from '@angular/common';
+    import { QuantitySelectorComponent } from './quantity-selector.component';
+    interface CartProduct {
+      id: number;
+      nombre: string;
+      precio: number;
+      cantidad: number;
+      stock: number;
+    }
+
+    @Component({
+      selector: 'app-cart-item',
+      imports: [QuantitySelectorComponent, CurrencyPipe],
+      templateUrl: './cart-item.component.html'
+    })
+    export class CartItemComponent {
+      @Input({ required: true }) producto!: CartProduct;
+      @Output() cantidadActualizada = new EventEmitter<{ id: number; cantidad: number }>();
+
+      actualizarCantidad(id: number, cantidad: number): void {
+        this.cantidadActualizada.emit({ id, cantidad });
+      }
+    }
+    ```
+
+    **Tabla comparativa: Decorador `@Output()` vs. Función `output()`:**
+
+    | Característica | Enfoque Clásico (`@Output()` + `EventEmitter`) | Enfoque Moderno (`output()`) |
+    | :--- | :--- | :--- |
+    | **Sintaxis de declaración** | `@Output() cambio = new EventEmitter<T>();` | `cambio = output<T>();` |
+    | **Tipo devuelto** | `EventEmitter<T>` (RxJS `Subject`) | `OutputEmitterRef<T>` (nativo `@angular/core`) |
+    | **Dependencia RxJS** | Sí (requiere importar `EventEmitter`) | No (independiente de RxJS) |
+    | **Emisión del evento** | `this.cambio.emit(valor);` | `this.cambio.emit(valor);` *(API 100% idéntica)* |
+    | **Enlace en plantilla** | `(cambio)="onCambio($event)"` | `(cambio)="onCambio($event)"` *(100% compatible)* |
+    | **Arquitectura Zoneless** | Puede requerir intervención manual | Listo para Zoneless por diseño |
+
+    > [!TIP]
+    > **Migración sin impacto en el componente padre:**  
+    > Puedes refactorizar cualquier componente hijo sustituyendo `@Output() nombre = new EventEmitter<T>()` por `nombre = output<T>()` sin modificar una sola línea del componente padre ni de sus plantillas HTML. La sintaxis `(nombre)="manejador($event)"` es 100% idéntica en ambos enfoques.
 
 #### 2.3. Model Inputs: two-way binding entre componentes
 
@@ -601,16 +725,16 @@ export class ProductListContainerComponent implements OnInit {
 
 Los Presentational Components o Dumb Components:
 
-- Reciben datos exclusivamente mediante `@Input`.
-- Emiten eventos exclusivamente mediante `@Output`.
-- No se comunican directamente con servicios.
-- Son altamente reutilizables porque no dependen del contexto de la aplicacion.
-- Contienen principalmente HTML y estilos.
-- Pueden contener logica, pero solo logica de presentacion (ej. formatear una fecha para mostrarla).
+- Reciben datos exclusivamente mediante entradas reactivas (`input()` o `@Input` clásico).
+- Emiten eventos exclusivamente mediante salidas (`output()` o `@Output` clásico).
+- No se comunican directamente con servicios de datos ni dependencias externas.
+- Son altamente reutilizables porque no dependen del contexto global de la aplicación.
+- Contienen principalmente HTML y estilos visuales.
+- Pueden contener lógica auxiliar, pero exclusivamente de presentación (ej. formatear fechas o alternar estados de vista locales).
 
 ```typescript
-// product-list.component.ts (Dumb)
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+// product-list.component.ts (Presentational / Dumb Component con Signals y output())
+import { Component, input, output } from '@angular/core';
 import { ProductCardComponent } from './product-card.component';
 import { Producto } from '../../models/producto.model';
 import { CurrencyPipe } from '@angular/common';
@@ -620,7 +744,7 @@ import { CurrencyPipe } from '@angular/common';
   imports: [ProductCardComponent, CurrencyPipe],
   template: `
     <div class="product-grid">
-      @for (producto of productos; track producto.id) {
+      @for (producto of productos(); track producto.id) {
         <app-product-card
           [producto]="producto"
           (click)="seleccionarProducto(producto)"
@@ -629,7 +753,7 @@ import { CurrencyPipe } from '@angular/common';
       } @empty {
         <div class="empty-state">
           <p>No se encontraron productos.</p>
-          <p>Intenta cambiar los filtros de busqueda.</p>
+          <p>Intenta cambiar los filtros de búsqueda.</p>
         </div>
       }
     </div>
@@ -650,9 +774,11 @@ import { CurrencyPipe } from '@angular/common';
   `]
 })
 export class ProductListComponent {
-  @Input({ required: true }) productos: Producto[] = [];
+  // Signal Input obligatorio: no muta ni almacena estado privado
+  productos = input.required<Producto[]>();
 
-  @Output() productoSeleccionado = new EventEmitter<Producto>();
+  // Signal Output moderno: comunica la acción del usuario al Smart Component superior
+  productoSeleccionado = output<Producto>();
 
   seleccionarProducto(producto: Producto): void {
     this.productoSeleccionado.emit(producto);
@@ -2372,18 +2498,18 @@ export class ShopContainerComponent {}
 
 2. **Nombrado consistente y descriptivo:** Usar nombres que describan la función: `UserListComponent`, `ProductCardComponent`. Evitar nombres genéricos como `DataComponent` o `ItemComponent`. Para distinguir Smart/Dumb, se pueden usar sufijos: `ShoppingCartContainerComponent` vs `ShoppingCartViewComponent`.
 
-3. **Inmutabilidad de inputs:** Los componentes no deben modificar los objetos/arrays recibidos como `@Input`. Si necesitan datos derivados, deben crearlos internamente o usar `computed()`.
+3. **Inmutabilidad de inputs:** Los componentes jamás deben mutar los objetos o arrays recibidos como entradas (`input()` o `@Input`). Si se requiere una lista ordenada o filtrada, se debe generar una derivación inmutable mediante `computed()`:
 
    ```typescript
-   // Mal: modifica el input
-   @Input() items: Item[] = [];
+   // Mal: mutar la referencia interna del array recibido
+   items = input<Item[]>([]);
    ordenarItems(): void {
-     this.items.sort((a, b) => a.nombre.localeCompare(b.nombre));
+     this.items().sort((a, b) => a.nombre.localeCompare(b.nombre)); // ¡Muta el array del padre!
    }
 
-   // Bien: crea datos derivados sin modificar el input
+   // Bien: derivación reactiva inmutable con computed()
    itemsOrdenados = computed(() =>
-     [...this.items].sort((a, b) => a.nombre.localeCompare(b.nombre))
+     [...this.items()].sort((a, b) => a.nombre.localeCompare(b.nombre))
    );
    ```
 
@@ -2402,23 +2528,26 @@ export class ShopContainerComponent {}
    </div>
    ```
 
-7. **Eventos con nombres de verbo en infinitivo:** Los `@Output` deben nombrarse con verbos que describan la acción: `seleccionCambiada`, `itemEliminado`, `formularioEnviado`. Evitar nombres como `click` o `change` que no aportan contexto.
+7. **Eventos con nombres de acción o estado en pasado:** Las salidas (`output()` o `@Output`) deben nombrarse de forma semántica describiendo el suceso: `seleccionCambiada`, `itemEliminado`, `formularioEnviado`. Evita nombres genéricos como `click` o `change` que duplican o confunden los eventos nativos del DOM.
 
 8. **Evitar lógica de negocio en Dumb Components:** Los componentes presentacionales no deben importar servicios, hacer llamadas HTTP ni contener reglas de negocio complejas. Su lógica debe limitarse a la presentación (formateo, cálculos visuales, estados de UI locales como hover/active).
 
 ## Errores frecuentes
 
-1. **Modificar los inputs directamente desde el hijo:** Este es uno de los errores más comunes y peligrosos porque rompe el flujo unidireccional de datos y puede causar comportamientos impredecibles.
+1. **Modificar los inputs directamente desde el hijo:** Este es uno de los errores más comunes y peligrosos porque rompe el flujo unidireccional de datos y puede causar efectos colaterales impredecibles en el resto de la aplicación.
 
    ```typescript
-   // Error: modificar el input
-   @Input() usuario: Usuario;
-   ngOnInit() {
-     this.usuario.nombre = this.usuario.nombre.toUpperCase();
+   // Error: modificar la propiedad del input directamente en el hijo
+   usuario = input.required<Usuario>();
+   actualizar() {
+     this.usuario().nombre = this.usuario().nombre.toUpperCase(); // Anti-patrón: mutación lateral
    }
 
-   // Correcto: emitir un evento para que el padre actualice
-   @Output() nombreCambiado = new EventEmitter<string>();
+   // Correcto: emitir un evento con output() para que el padre realice la actualización inmutable
+   nombreCambiado = output<string>();
+   actualizar() {
+     this.nombreCambiado.emit(this.usuario().nombre.toUpperCase());
+   }
    ```
 
 2. **No configurar `changeDetection: ChangeDetectionStrategy.OnPush`:** Por defecto, Angular usa `ChangeDetectionStrategy.Default` que verifica cambios en cada evento. En aplicaciones con muchos componentes, esto degrada el rendimiento. Usar `OnPush` con signals y inputs inmutables reduce drásticamente las comprobaciones innecesarias.
@@ -2431,7 +2560,7 @@ export class ShopContainerComponent {}
 
 6. **No usar `track` en `@for`:** En componentes que renderizan listas (usando `@for`), es obligatorio usar `track` para que Angular pueda identificar eficientemente qué elementos cambian. No hacerlo resulta en recreaciones innecesarias del DOM.
 
-7. **Exceso de EventEmitters:** Si un componente tiene más de 3-4 `@Output`, quizás tiene demasiadas responsabilidades. Considerar si el componente debería dividirse o si parte de la interacción debería manejarse con servicios.
+7. **Exceso de salidas (`output()`):** Si un componente declara más de 3-4 salidas de eventos, suele indicar una violación del Principio de Responsabilidad Única. Considera si el componente debe dividirse en piezas más pequeñas o si parte de la interacción debe gestionarse a través de un servicio inyectable mediador.
 
 8. **No aprovechar `computed()` y `effect()`:** Con la API de Signals, muchos casos que antes requerían ngOnChanges para reaccionar a cambios de inputs ahora se pueden resolver más limpiamente con `computed()` para valores derivados y `effect()` para efectos secundarios controlados.
 
@@ -2439,7 +2568,7 @@ export class ShopContainerComponent {}
 
 La anidación de componentes es la base sobre la que se construye cualquier aplicación Angular. La correcta organización jerárquica del árbol de componentes determina la mantenibilidad, escalabilidad y rendimiento de la aplicación.
 
-La comunicación padre-hijo mediante `@Input` y `@Output` (y sus variantes modernas como Model Inputs y `model()`) establece un flujo de datos unidireccional claro y predecible. La aplicación del patrón Smart/Dumb separa las responsabilidades de gestión de estado (Smart/Container) y de presentación (Dumb/Presentational), produciendo código más limpio, reutilizable y fácil de probar.
+La comunicación padre-hijo mediante las funciones reactivas modernas `input()` y `output()` (así como la reactividad bidireccional con `model()` y la interoperabilidad con decoradores `@Input` y `@Output` clásicos) establece un flujo de datos unidireccional claro, tipado y predecible. La aplicación del patrón Smart/Dumb separa las responsabilidades de gestión de estado (Smart/Container) y de presentación (Dumb/Presentational), produciendo código más limpio, reutilizable y fácil de probar.
 
 Cuando los componentes hermanos necesitan compartir estado, el patrón de elevación de estado (lifting state up) y el uso de servicios compartidos con signals ofrecen soluciones elegantes sin comprometer la arquitectura. La clave está en elegir la estrategia adecuada según la cercanía de los componentes en el árbol y la complejidad del estado compartido.
 

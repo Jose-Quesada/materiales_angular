@@ -2712,7 +2712,7 @@ Con estos conocimientos, el alumnado está preparado para crear componentes robu
 - **Model Inputs en Angular**: https://blog.angular.dev/model-inputs-in-angular-17-2-58cbc1004bc1
 - **Understanding ViewEncapsulation**: https://angular.dev/guide/components/styling#view-encapsulation
 
-### Videos
+### Recursos Multimedia
 
 - **Angular Team - Standalone Components**: (canal oficial de Angular en YouTube)
 - **Decoded Frontend - Angular Lifecycle Hooks Deep Dive**: (YouTube)

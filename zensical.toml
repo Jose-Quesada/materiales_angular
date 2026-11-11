@@ -2,6 +2,7 @@
 site_name = "F3 Martos | Angular "
 site_description = "Guía docente, código paso a paso y manual de referencia para el aula - Angular"
 extra_css = ["assets/css/custom.css"]
+extra_javascript = ["assets/js/toc-collapsible.js"]
 
 nav = [
   { "Inicio" = "index.md" },

@@ -43,7 +43,7 @@ flowchart TD
 
 ---
 
-## 📹 Guías de Clase (Seguimiento de Vídeos)
+## 📘 Guías de Clase (Paso a Paso)
 
 Diseñadas para el proyector del aula y el seguimiento continuo de cada sesión de laboratorio:
 
@@ -94,7 +94,7 @@ Guía técnica completa y detallada de cada concepto del framework para consulta
     * ⚠️ **Atención / Errores Típicos:** Advertencias sobre los errores sintácticos o conceptuales más comunes.
     * 💻 **Código Incremental:** Bloques de código con tabs comparativos (`TypeScript`, `HTML`, `Styles`) para seguir la construcción en vivo sin saltos bruscos.
     * 🧪 **Retos de Aula:** Micro-ejercicios prácticos con solución desplegable para evaluar el aprendizaje en tiempo real.
-    * 📖 **Conexión con el Manual:** Enlaces contextuales en cada guía de vídeo para abrir directamente el capítulo de referencia correspondiente.
+    * 📖 **Conexión con el Manual:** Enlaces contextuales en cada guía de clase para abrir directamente el capítulo de referencia correspondiente.
 
 !!! note "Para el Alumno"
-    Puedes seguir la guía de vídeo paso a paso desde tu portátil. Cuando tengas dudas teóricas o quieras ver ejemplos avanzados, pulsa sobre los enlaces del **Manual de Referencia** para consultar la explicación técnica completa de cada concepto.
+    Puedes seguir la guía de clase paso a paso desde tu portátil. Cuando tengas dudas teóricas o quieras ver ejemplos avanzados, pulsa sobre los enlaces del **Manual de Referencia** para consultar la explicación técnica completa de cada concepto.

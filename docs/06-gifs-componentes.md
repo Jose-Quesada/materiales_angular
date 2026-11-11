@@ -84,9 +84,9 @@ html, body {
 }
 ```
 
-!!! tip "Arquitectura Pro: De Tailwind v3 (Vídeos) a Tailwind v4 (Estándar Actual)"
+!!! tip "Arquitectura Pro: De Tailwind v3 (Legacy) a Tailwind v4 (Estándar Actual)"
     **¿Por qué ya no creamos `tailwind.config.js` ni escribimos `@tailwind`?**  
-    En los vídeos de clase verás que el profesor ejecuta `npx tailwindcss init`, edita `tailwind.config.js` con las rutas de las plantillas y usa tres directivas `@tailwind base; ...`. Ese era el procedimiento de **Tailwind CSS v3**.  
+    En proyectos o tutoriales anteriores basados en versiones previas se solía ejecutar `npx tailwindcss init`, editar `tailwind.config.js` con las rutas de las plantillas y usar tres directivas `@tailwind base; ...`. Ese era el procedimiento de **Tailwind CSS v3**.  
     
     En **Tailwind CSS v4** (con el que trabajamos en esta guía), el framework evoluciona a una arquitectura **CSS-first**:
     
