@@ -32,7 +32,7 @@ En esta sección profundizamos en la arquitectura moderna de **Angular 19+**. Ap
 ``` mermaid
 flowchart TD
     subgraph Fase1 ["Fase 1 · Navegación y UI Declarativa"]
-        A["<b>1. NavbarComponent y Enrutamiento</b><br/>Menú de navegación global con RouterLink y RouterLinkActive"] --> B["<b>2. Control Flow Nativo</b><br/>Sintaxis moderna @for (con track) y @if / @else condicional"]
+        A["<b>1. Navbar y Enrutamiento</b><br/>Menú de navegación global con RouterLink y RouterLinkActive"] --> B["<b>2. Control Flow Nativo</b><br/>Sintaxis moderna @for (con track) y @if / @else condicional"]
     end
 
     subgraph Fase2 ["Fase 2 · Comunicación Atómica entre Componentes"]
@@ -44,7 +44,7 @@ flowchart TD
     end
 
     subgraph Fase4 ["Fase 4 · Estado Derivado y Producción"]
-        G["<b>7. Primitiva linkedSignal</b><br/>Ficha interactiva con CharacterDetailComponent y estado mutable"] --> H["<b>8. HashLocationStrategy</b><br/>Despliegues en servidores estáticos sin errores 404"]
+        G["<b>7. Primitiva linkedSignal</b><br/>Ficha interactiva con CharacterDetail y estado mutable"] --> H["<b>8. HashLocationStrategy</b><br/>Despliegues en servidores estáticos sin errores 404"]
     end
 
     Fase1 ==> Fase2 ==> Fase3 ==> Fase4
@@ -73,7 +73,7 @@ A medida que una aplicación crece, mantener toda la vista y la lógica en una s
 
 ### 1. Estado Inicial de Rutas y Manejo de Rutas Desconocidas (Wildcard `**`)
 
-Al iniciar esta sección, nuestra aplicación cuenta con dos rutas registradas en el archivo de enrutamiento principal (`src/app/app.routes.ts`): la ruta raíz `''` vinculada a `CounterPageComponent` y la ruta `'hero'` vinculada a `HeroPageComponent`.
+Al iniciar esta sección, nuestra aplicación cuenta con dos rutas registradas en el archivo de enrutamiento principal (`src/app/app.routes.ts`): la ruta raíz `''` vinculada a `CounterPage` y la ruta `'hero'` vinculada a `HeroPage`.
 
 Sin embargo, si un usuario introduce manualmente en la barra de direcciones una URL inexistente o comete una errata tipográfica (por ejemplo, `http://localhost:4200/cualquier-cosa` o `/heroes`), el motor de enrutamiento de Angular intentará hacer coincidir esa URL con las rutas configuradas. Al no encontrar correspondencia, Angular Router arroja una excepción en consola (`Error: Cannot match any routes`) y deja el `<router-outlet />` completamente en blanco, provocando una pantalla vacía sin retroalimentación visual para el usuario.
 
@@ -82,17 +82,17 @@ Para blindar la aplicación ante rutas desconocidas y asegurar una experiencia r
 === "src/app/app.routes.ts"
     ```typescript title="src/app/app.routes.ts"
     import { Routes } from '@angular/router';
-    import { CounterPageComponent } from './pages/counter/counter-page.component';
-    import { HeroPageComponent } from './pages/hero/hero-page.component';
+    import { CounterPage } from './pages/counter/counter-page';
+    import { HeroPage } from './pages/hero/hero-page';
 
     export const routes: Routes = [
       {
         path: '',
-        component: CounterPageComponent,
+        component: CounterPage,
       },
       {
         path: 'hero',
-        component: HeroPageComponent,
+        component: HeroPage,
       },
       // Redirección por defecto ante cualquier ruta desconocida (Wildcard)
       {
@@ -107,18 +107,18 @@ Para blindar la aplicación ante rutas desconocidas y asegurar una experiencia r
     
     Por este motivo, la ruta comodín (`path: '**'`) debe ubicarse **obligatoriamente al final** de la lista de rutas. Si se colocase al principio o antes de otras rutas, interceptaría cualquier petición antes de que Angular pudiera evaluar las rutas específicas declaradas debajo, haciendo que esas páginas fuesen completamente inaccesibles.
 
-Una vez asegurado el manejo de rutas desconocidas, el siguiente paso arquitectónico es evidente: los usuarios no deben depender de escribir URLs a mano en la barra del navegador. Es imprescindible construir un menú de navegación visual (`NavbarComponent`) reutilizable e integrarlo en la plantilla principal de la aplicación.
+Una vez asegurado el manejo de rutas desconocidas, el siguiente paso arquitectónico es evidente: los usuarios no deben depender de escribir URLs a mano en la barra del navegador. Es imprescindible construir un menú de navegación visual (`Navbar`) reutilizable e integrarlo en la plantilla principal de la aplicación.
 
 ---
 
-### 2. Creación e Integración de `NavbarComponent` en el Layout Global
+### 2. Creación e Integración de `Navbar` en el Layout Global
 
 Para estructurar la navegación de la aplicación de forma limpia, centralizamos el menú en un componente compartido reutilizable dentro del directorio `src/app/components/shared/navbar/`.
 
 Creamos la clase del componente standalone:
 
-=== "src/app/components/shared/navbar/navbar.component.ts"
-    ```typescript title="src/app/components/shared/navbar/navbar.component.ts"
+=== "src/app/components/shared/navbar/navbar.ts"
+    ```typescript title="src/app/components/shared/navbar/navbar.ts"
     import { Component } from '@angular/core';
     import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -126,29 +126,29 @@ Creamos la clase del componente standalone:
       selector: 'app-navbar',
       // Importamos las directivas de enrutado declarativo imprescindibles
       imports: [RouterLink, RouterLinkActive],
-      templateUrl: './navbar.component.html',
+      templateUrl: './navbar.html',
     })
-    export class NavbarComponent {}
+    export class Navbar {}
     ```
 
-Para que este menú esté presente de forma continua en todas las pantallas sin duplicar código, lo integramos de inmediato en el componente raíz `AppComponent`:
+Para que este menú esté presente de forma continua en todas las pantallas sin duplicar código, lo integramos de inmediato en el componente raíz `App`:
 
-=== "src/app/app.component.ts"
-    ```typescript title="src/app/app.component.ts"
+=== "src/app/app.ts"
+    ```typescript title="src/app/app.ts"
     import { Component } from '@angular/core';
     import { RouterOutlet } from '@angular/router';
-    import { NavbarComponent } from './components/shared/navbar/navbar.component';
+    import { Navbar } from './components/shared/navbar/navbar';
 
     @Component({
       selector: 'app-root',
-      imports: [RouterOutlet, NavbarComponent], // Registramos el Navbar en los imports
-      templateUrl: './app.component.html',
+      imports: [RouterOutlet, Navbar], // Registramos el Navbar en los imports
+      templateUrl: './app.html',
     })
-    export class AppComponent {}
+    export class App {}
     ```
 
-=== "src/app/app.component.html"
-    ```html title="src/app/app.component.html"
+=== "src/app/app.html"
+    ```html title="src/app/app.html"
     <app-navbar />
 
     <section class="mx-5 mt-2">
@@ -163,7 +163,7 @@ Para que este menú esté presente de forma continua en todas las pantallas sin 
 
 Al diseñar un menú en HTML tradicional, el primer impulso suele ser utilizar etiquetas de enlace estándar con el atributo `href`:
 
-```html title="src/app/components/shared/navbar/navbar.component.html (Intento inicial con HTML clásico)"
+```html title="src/app/components/shared/navbar/navbar.html (Intento inicial con HTML clásico)"
 <nav>
   <a href="/">Contador</a>
   <a href="/hero">Hero</a>
@@ -176,14 +176,14 @@ Si pruebas esta plantilla en el navegador y haces clic en "Hero":
 
 1. **El icono de carga del navegador comienza a girar.**
 2. **Toda la página web parpadea en blanco y se descarga de nuevo desde el servidor.**
-3. **Pérdida irreversible de estado reactivo:** Si el usuario había incrementado el contador a 15 en `CounterPageComponent`, al recargar la página **el contador vuelve a 10** (su valor inicial). Toda la memoria de JavaScript y las **Signals** se reinician por completo.
+3. **Pérdida irreversible de estado reactivo:** Si el usuario había incrementado el contador a 15 en `CounterPage`, al recargar la página **el contador vuelve a 10** (su valor inicial). Toda la memoria de JavaScript y las **Signals** se reinician por completo.
 
 #### La Solución Angular: Directiva `RouterLink`
 Sustituimos el atributo `href` por la directiva especializada **`RouterLink`**. Esta directiva intercepta el evento de clic, ejecuta internamente un `event.preventDefault()`, actualiza la URL en el historial del navegador con `history.pushState()` y reemplaza únicamente el componente activo dentro del `<router-outlet />` en microsegundos, **manteniendo intacta la memoria de la aplicación**.
 
 Angular admite dos sintaxis para `routerLink`:
 
-```html title="src/app/components/shared/navbar/navbar.component.html"
+```html title="src/app/components/shared/navbar/navbar.html"
 <nav>
   <!-- 1. Sintaxis literal simple: ideal para rutas fijas -->
   <a routerLink="/">Contador</a>
@@ -198,7 +198,7 @@ Angular admite dos sintaxis para `routerLink`:
     * **`[routerLink]="['/ruta', parametro]"`:** Se utiliza la sintaxis de enlace de propiedad (*property binding*) con un array. Angular evalúa cada elemento del array como un segmento de la URL y se encarga de escapar caracteres especiales automáticamente mediante `encodeURIComponent`.
 
 !!! warning "Requisito Obligatorio en Componentes Standalone"
-    Para que `routerLink` funcione, es **estrictamente obligatorio** importar `RouterLink` en el array `imports` de `NavbarComponent`. Si lo omites, Angular no reconocerá la directiva y el enlace se comportará como un texto inerte que no reacciona al clic.
+    Para que `routerLink` funcione, es **estrictamente obligatorio** importar `RouterLink` en el array `imports` de `Navbar`. Si lo omites, Angular no reconocerá la directiva y el enlace se comportará como un texto inerte que no reacciona al clic.
 
 ---
 
@@ -207,9 +207,9 @@ Angular admite dos sintaxis para `routerLink`:
 Para proporcionar una experiencia de usuario clara, el menú debe indicar visualmente en qué página se encuentra el usuario en cada momento.
 
 #### A. Definición de Estilos Locales
-Agregamos los estilos visuales en la parte superior de `navbar.component.html`:
+Agregamos los estilos visuales en la parte superior de `navbar.html`:
 
-```html title="src/app/components/shared/navbar/navbar.component.html"
+```html title="src/app/components/shared/navbar/navbar.html"
 <style>
   nav {
     display: flex;
@@ -262,8 +262,8 @@ Como la URL `/hero` comienza por el carácter `/`, Angular asume que la ruta ra�
 #### D. La Solución: `[routerLinkActiveOptions]="{ exact: true }"`
 Para solucionar este comportamiento y exigir que la coincidencia sea estricta, añadimos la directiva de configuración `[routerLinkActiveOptions]="{ exact: true }"` al enlace de la raíz:
 
-=== "src/app/components/shared/navbar/navbar.component.html"
-    ```html title="src/app/components/shared/navbar/navbar.component.html"
+=== "src/app/components/shared/navbar/navbar.html"
+    ```html title="src/app/components/shared/navbar/navbar.html"
     <style>
       nav {
         display: flex;
@@ -309,7 +309,7 @@ Ahora, al alternar entre "Contador" y "Hero", la clase `active` se transfiere li
 !!! info "📖 Para saber más: Manual de Referencia"
     Para dominar la configuración de rutas, componentes enrutados y directivas de navegación en Angular, consulta el **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md)**.
 
-Una vez configurado nuestro menú de navegación global con `NavbarComponent`, es momento de preparar la estructura base para el nuevo módulo de la aplicación: el módulo temático de Dragonball. Esta tarea afianza el flujo de trabajo estándar en Angular para registrar nuevas páginas enrutadas en una Single Page Application (SPA).
+Una vez configurado nuestro menú de navegación global con `Navbar`, es momento de preparar la estructura base para el nuevo módulo de la aplicación: el módulo temático de Dragonball. Esta tarea afianza el flujo de trabajo estándar en Angular para registrar nuevas páginas enrutadas en una Single Page Application (SPA).
 
 ---
 
@@ -318,12 +318,12 @@ Una vez configurado nuestro menú de navegación global con `NavbarComponent`, e
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
 1. **Creación de la carpeta y archivos de la página:** Dentro del directorio `src/app/pages/`, crea una subcarpeta llamada `dragonball/`. Dentro de ella, añade dos archivos:
-    - `dragonball-page.component.ts`: el controlador TypeScript del componente standalone.
-    - `dragonball-page.component.html`: la plantilla visual asociada.
-2. **Definición del componente standalone:** En `dragonball-page.component.ts`, declara el componente con el decorador `@Component`. Debe especificar su selector (o prescindir de él si solo se usará mediante el enrutador) y vincular el archivo de plantilla mediante `templateUrl: './dragonball-page.component.html'`.
-3. **Estructura básica de la vista:** En `dragonball-page.component.html`, añade un título descriptivo `<h1>DragonBall Page</h1>` y un separador horizontal `<hr />`.
-4. **Registro de la ruta en `app.routes.ts`:** Abre `src/app/app.routes.ts` y añade la definición de ruta para el path `'dragonball'`, asociándola a `DragonballPageComponent`.
-5. **Actualización de la barra de navegación:** Abre `src/app/components/shared/navbar/navbar.component.html` y añade un nuevo elemento `<a>` con la directiva `[routerLink]="['/dragonball']"` (o `routerLink="/dragonball"`) y `routerLinkActive="active"`.
+    - `dragonball-page.ts`: el controlador TypeScript del componente standalone.
+    - `dragonball-page.html`: la plantilla visual asociada.
+2. **Definición del componente standalone:** En `dragonball-page.ts`, declara el componente con el decorador `@Component`. Debe especificar su selector (o prescindir de él si solo se usará mediante el enrutador) y vincular el archivo de plantilla mediante `templateUrl: './dragonball-page.html'`.
+3. **Estructura básica de la vista:** En `dragonball-page.html`, añade un título descriptivo `<h1>DragonBall Page</h1>` y un separador horizontal `<hr />`.
+4. **Registro de la ruta en `app.routes.ts`:** Abre `src/app/app.routes.ts` y añade la definición de ruta para el path `'dragonball'`, asociándola a `DragonballPage`.
+5. **Actualización de la barra de navegación:** Abre `src/app/components/shared/navbar/navbar.html` y añade un nuevo elemento `<a>` con la directiva `[routerLink]="['/dragonball']"` (o `routerLink="/dragonball"`) y `routerLinkActive="active"`.
 6. **Criterio de éxito y verificación:**
     - Abre el navegador en `http://localhost:4200`.
     - Haz clic en el nuevo enlace "Dragonball" del Navbar: la URL debe cambiar de inmediato a `http://localhost:4200/dragonball` sin que la página parpadee ni se recargue el navegador.
@@ -345,22 +345,22 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 
 #### Paso 1: Crear el controlador del componente
 
-Creamos el archivo `src/app/pages/dragonball/dragonball-page.component.ts`. Al tratarse de una versión moderna de Angular (v19+), los componentes son standalone por defecto y no requieren la propiedad obsoleta `standalone: true`:
+Creamos el archivo `src/app/pages/dragonball/dragonball-page.ts`. Al tratarse de una versión moderna de Angular (v19+), los componentes son standalone por defecto y no requieren la propiedad obsoleta `standalone: true`:
 
-```typescript title="src/app/pages/dragonball/dragonball-page.component.ts"
+```typescript title="src/app/pages/dragonball/dragonball-page.ts"
 import { Component } from '@angular/core';
 
 @Component({
-  templateUrl: './dragonball-page.component.html',
+  templateUrl: './dragonball-page.html',
 })
-export class DragonballPageComponent {}
+export class DragonballPage {}
 ```
 
 #### Paso 2: Crear la plantilla HTML
 
-Creamos `src/app/pages/dragonball/dragonball-page.component.html` con el encabezado semántico:
+Creamos `src/app/pages/dragonball/dragonball-page.html` con el encabezado semántico:
 
-```html title="src/app/pages/dragonball/dragonball-page.component.html"
+```html title="src/app/pages/dragonball/dragonball-page.html"
 <h1>DragonBall Page</h1>
 <hr />
 ```
@@ -371,16 +371,16 @@ Editamos `src/app/app.routes.ts` e incorporamos la ruta al array `routes`:
 
 ```typescript title="src/app/app.routes.ts" hl_lines="9-12"
 import { Routes } from '@angular/router';
-import { CounterPageComponent } from './pages/counter/counter-page.component';
-import { HeroPageComponent } from './pages/hero/hero-page.component';
-import { DragonballPageComponent } from './pages/dragonball/dragonball-page.component';
+import { CounterPage } from './pages/counter/counter-page';
+import { HeroPage } from './pages/hero/hero-page';
+import { DragonballPage } from './pages/dragonball/dragonball-page';
 
 export const routes: Routes = [
-  { path: '', component: CounterPageComponent },
-  { path: 'hero', component: HeroPageComponent },
+  { path: '', component: CounterPage },
+  { path: 'hero', component: HeroPage },
   {
     path: 'dragonball',
-    component: DragonballPageComponent,
+    component: DragonballPage,
   },
   { path: '**', redirectTo: '' },
 ];
@@ -388,9 +388,9 @@ export const routes: Routes = [
 
 #### Paso 4: Enlazar la página en el menú de navegación
 
-Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo el enlace de Dragonball con su directiva de estado activo:
+Actualizamos `src/app/components/shared/navbar/navbar.html` añadiendo el enlace de Dragonball con su directiva de estado activo:
 
-```html title="src/app/components/shared/navbar/navbar.component.html" hl_lines="6"
+```html title="src/app/components/shared/navbar/navbar.html" hl_lines="6"
 <nav>
   <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     Contador
@@ -420,7 +420,7 @@ Actualizamos `src/app/components/shared/navbar/navbar.component.html` añadiendo
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
 | Usar `<a href="/dragonball">` en lugar de `routerLink` | La pantalla parpadea en blanco y se recarga completamente el navegador; se pierde todo el estado de la aplicación. | **Causa:** El atributo nativo `href` ejecuta una recarga HTTP completa. <br/>**Solución:** Usar siempre la directiva `routerLink="/dragonball"`. |
-| Olvidar importar `RouterLink` y `RouterLinkActive` en `NavbarComponent` | Advertencia en consola de compilación: *Can't bind to 'routerLink' since it isn't a known property of 'a'*. | **Causa:** En componentes standalone, las directivas del router deben figurar explícitamente en el array `imports: [RouterLink, RouterLinkActive]`. |
+| Olvidar importar `RouterLink` y `RouterLinkActive` en `Navbar` | Advertencia en consola de compilación: *Can't bind to 'routerLink' since it isn't a known property of 'a'*. | **Causa:** En componentes standalone, las directivas del router deben figurar explícitamente en el array `imports: [RouterLink, RouterLinkActive]`. |
 | Escribir `path: '/dragonball'` con barra inicial en `app.routes.ts` | Error de configuración de rutas o fallo de coincidencia al navegar. | **Causa:** En la definición de rutas de Angular, los paths no llevan barra inicial (`/`). Solo se usa `'dragonball'`. |
 | El enlace activo permanece encendido en todas las rutas | El enlace de inicio siempre aparece resaltado, sin importar en qué página estemos. | **Causa:** Toda ruta comienza con `/`. <br/>**Solución:** Añadir `[routerLinkActiveOptions]="{ exact: true }"` al enlace de la ruta raíz. |
 
@@ -469,7 +469,7 @@ export interface Character {
 
 ### Implementación Inicial de la Vista y Estructura
 
-Antes de modularizar en componentes especializados, construimos la funcionalidad completa en una sola página contenedora (`DragonballPageComponent`). Esta arquitectura nos permite dominar dos fundamentos clave de Angular moderno:
+Antes de modularizar en componentes especializados, construimos la funcionalidad completa en una sola página contenedora (`DragonballPage`). Esta arquitectura nos permite dominar dos fundamentos clave de Angular moderno:
 
 1. El nuevo **Control Flow** (`@for`, `@if`, `@empty`).
 2. La sincronización de entradas de usuario (**Formularios con Signals**) sin necesidad de librerías externas ni `ngModel`.
@@ -478,21 +478,21 @@ Antes de modularizar en componentes especializados, construimos la funcionalidad
 
 #### 1. Controlador Inicial: Datos y Señales Locales
 
-En `src/app/pages/dragonball/dragonball-page.component.ts`:
+En `src/app/pages/dragonball/dragonball-page.ts`:
 
 * Importamos la interfaz `Character` para garantizar el tipado estricto.
 * Definimos la señal maestra `characters` con el listado inicial de guerreros.
 * Creamos dos señales locales (`name` y `power`) que custodiarán en tiempo real los valores de las cajas de texto del formulario:
 
-=== "src/app/pages/dragonball/dragonball-page.component.ts"
-    ```typescript title="src/app/pages/dragonball/dragonball-page.component.ts"
+=== "src/app/pages/dragonball/dragonball-page.ts"
+    ```typescript title="src/app/pages/dragonball/dragonball-page.ts"
     import { Component, signal } from '@angular/core';
     import { Character } from '../../interfaces/character.interface';
 
     @Component({
-      templateUrl: './dragonball-page.component.html',
+      templateUrl: './dragonball-page.html',
     })
-    export class DragonballPageComponent {
+    export class DragonballPage {
       // Señales para el estado del formulario de agregar personaje
       name = signal('');
       power = signal(0);
@@ -511,13 +511,13 @@ En `src/app/pages/dragonball/dragonball-page.component.ts`:
 
 #### 2. Maquetación Base HTML (Estructura Estática con Bootstrap)
 
-Antes de incorporar la lógica de Angular, definimos la estructura visual limpia en `src/app/pages/dragonball/dragonball-page.component.html`. Utilizando las clases de rejilla de Bootstrap (`row` y `col-12 col-sm-6`), dividimos la pantalla en dos columnas para que el alumno comprenda primero la maquetación visual antes de añadir la reactividad:
+Antes de incorporar la lógica de Angular, definimos la estructura visual limpia en `src/app/pages/dragonball/dragonball-page.html`. Utilizando las clases de rejilla de Bootstrap (`row` y `col-12 col-sm-6`), dividimos la pantalla en dos columnas para que el alumno comprenda primero la maquetación visual antes de añadir la reactividad:
 
 * **Columna Izquierda:** El formulario de entrada (cajas de texto y botón en estado estático).
 * **Columna Derecha:** El listado con elementos de ejemplo para previsualizar el diseño en el navegador.
 
-=== "src/app/pages/dragonball/dragonball-page.component.html"
-    ```html title="src/app/pages/dragonball/dragonball-page.component.html (Paso 1: Estructura HTML Base)"
+=== "src/app/pages/dragonball/dragonball-page.html"
+    ```html title="src/app/pages/dragonball/dragonball-page.html (Paso 1: Estructura HTML Base)"
     <h1>DragonBall Page</h1>
     <hr />
 
@@ -556,8 +556,8 @@ Una vez verificado el aspecto visual en el navegador, sustituimos los elementos 
 1. **Columna Derecha (Listado Dinámico):** Reemplazamos los `<li>` fijos por la directiva `@for (character of characters(); track character.id; let idx = $index)` junto con su bloque `@empty` y clases condicionales dinámicas (`[class.text-bg-danger]="character.power > 9000"`).
 2. **Columna Izquierda (Formulario Reactivo):** Conectamos los `<input>` con las señales reactivas mediante `[value]` y `(input)` apoyándonos en variables de referencia de plantilla (`#txtName`, `#txtPower`), y añadimos la previsualización en vivo en el encabezado `<h3>Agregar: {{ name() }}</h3>`.
 
-=== "src/app/pages/dragonball/dragonball-page.component.html"
-    ```html title="src/app/pages/dragonball/dragonball-page.component.html (Paso 2: Plantilla Dinamizada con Angular)"
+=== "src/app/pages/dragonball/dragonball-page.html"
+    ```html title="src/app/pages/dragonball/dragonball-page.html (Paso 2: Plantilla Dinamizada con Angular)"
     <h1>DragonBall Page</h1>
     <hr />
 
@@ -679,8 +679,8 @@ Ahora que ya tenemos el formulario maquetado y los campos de entrada sincronizad
 
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
-1. **Enlace del evento en el botón:** En `dragonball-page.component.html`, añade el enlace de evento `(click)="addCharacter()"` al botón "Agregar".
-2. **Implementación de `addCharacter()` con validación defensiva:** En `src/app/pages/dragonball/dragonball-page.component.ts`:
+1. **Enlace del evento en el botón:** En `dragonball-page.html`, añade el enlace de evento `(click)="addCharacter()"` al botón "Agregar".
+2. **Implementación de `addCharacter()` con validación defensiva:** En `src/app/pages/dragonball/dragonball-page.ts`:
     - Aplica el **Early Return Pattern**: si el nombre está vacío (tras aplicar `.trim()`), o si el poder es menor o igual a cero (`power <= 0`), aborta la función inmediatamente con `return` sin realizar ninguna mutación.
     - Crea un nuevo objeto de tipo `Character` asignándole un identificador numérico único (por ejemplo, `this.characters().length + 1`), el nombre y el poder ingresados.
 3. **Actualización Inmutable del array reactivo:**
@@ -710,16 +710,16 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 
 #### Paso 1: Actualizar el controlador TypeScript
 
-En `src/app/pages/dragonball/dragonball-page.component.ts`, implementamos las señales y los métodos con validación y actualización inmutable:
+En `src/app/pages/dragonball/dragonball-page.ts`, implementamos las señales y los métodos con validación y actualización inmutable:
 
-```typescript title="src/app/pages/dragonball/dragonball-page.component.ts" hl_lines="20-43"
+```typescript title="src/app/pages/dragonball/dragonball-page.ts" hl_lines="20-43"
 import { Component, signal } from '@angular/core';
 import { Character } from '../../interfaces/character.interface';
 
 @Component({
-  templateUrl: './dragonball-page.component.html',
+  templateUrl: './dragonball-page.html',
 })
-export class DragonballPageComponent {
+export class DragonballPage {
   // Señales para el formulario reactivo
   name = signal('');
   power = signal(0);
@@ -761,9 +761,9 @@ export class DragonballPageComponent {
 
 #### Paso 2: Conectar la plantilla HTML
 
-En `src/app/pages/dragonball/dragonball-page.component.html`, enlazamos el evento `(click)` del botón "Agregar" con el método `addCharacter()` recién implementado en el controlador:
+En `src/app/pages/dragonball/dragonball-page.html`, enlazamos el evento `(click)` del botón "Agregar" con el método `addCharacter()` recién implementado en el controlador:
 
-```html title="src/app/pages/dragonball/dragonball-page.component.html" hl_lines="27-29"
+```html title="src/app/pages/dragonball/dragonball-page.html" hl_lines="27-29"
 <h1>DragonBall Page</h1>
 <hr />
 
@@ -872,17 +872,17 @@ En `src/app/pages/dragonball/dragonball-page.component.html`, enlazamos el event
 
 Cuando una vista contiene un formulario y una lista, mezclar ambos en un solo archivo rompe la **Separación de Responsabilidades (SoC)**. Vamos a extraer dos componentes atómicos:
 
-* `CharacterListComponent`: Componente tonto (*Dumb*) que solo muestra datos recibidos.
-* `CharacterAddComponent`: Componente que gestiona el formulario y emite eventos hacia el padre.
+* `CharacterList`: Componente tonto (*Dumb*) que solo muestra datos recibidos.
+* `CharacterAdd`: Componente que gestiona el formulario y emite eventos hacia el padre.
 
 ```mermaid
 flowchart TD
-    subgraph Padre ["DragonballSuperPageComponent (Componente Contenedor Padre / Smart)"]
+    subgraph Padre ["DragonballSuperPage (Componente Contenedor Padre / Smart)"]
         Estado["<b>Estado Reactivo Maestro y Lógica</b><br/><code>characters = signal(Character[])</code><br/><code>addCharacter(character)</code>"]
 
         subgraph Plantilla ["Plantilla HTML del Padre: Componentes Hijos Anidados (Dumb)"]
-            Add["<b>CharacterAddComponent</b><br/><i>(Formulario de Entrada)</i><br/><code>newCharacter = output()</code>"]
-            Lista["<b>CharacterListComponent</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code>"]
+            Add["<b>CharacterAdd</b><br/><i>(Formulario de Entrada)</i><br/><code>newCharacter = output()</code>"]
+            Lista["<b>CharacterList</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code>"]
             Add ~~~ Lista
         end
 
@@ -897,19 +897,19 @@ flowchart TD
     style Lista fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
 ```
 
-### El Componente Hijo: `CharacterListComponent`
+### El Componente Hijo: `CharacterList`
 Utiliza el nuevo **`input.required<T>()`** de Angular 19:
 
-=== "src/app/components/dragonball/character-list/character-list.component.ts"
-    ```typescript title="src/app/components/dragonball/character-list/character-list.component.ts"
+=== "src/app/components/dragonball/character-list/character-list.ts"
+    ```typescript title="src/app/components/dragonball/character-list/character-list.ts"
     import { Component, input } from '@angular/core';
     import { Character } from '../../../interfaces/character.interface';
 
     @Component({
       selector: 'dragonball-character-list',
-      templateUrl: './character-list.component.html',
+      templateUrl: './character-list.html',
     })
-    export class CharacterListComponent {
+    export class CharacterList {
       // Input obligatorio: el padre TIENE que proporcionarlo
       characters = input.required<Character[]>();
 
@@ -918,8 +918,8 @@ Utiliza el nuevo **`input.required<T>()`** de Angular 19:
     }
     ```
 
-=== "src/app/components/dragonball/character-list/character-list.component.html"
-    ```html title="src/app/components/dragonball/character-list/character-list.component.html"
+=== "src/app/components/dragonball/character-list/character-list.html"
+    ```html title="src/app/components/dragonball/character-list/character-list.html"
     <h3>{{ listName() }}</h3>
 
     <ul class="list-group">
@@ -951,7 +951,7 @@ Utiliza el nuevo **`input.required<T>()`** de Angular 19:
 !!! info "📖 Para saber más: Manual de Referencia"
     Aprende más sobre el patrón Smart/Dumb (Container/Presentational), la nueva función `output()` y la comunicación entre componentes en el **[Manual de Referencia: 07. Comunicación entre Componentes](manual/07-anidar-componentes.md)**.
 
-En este reto aplicaremos el principio de **Separación de Responsabilidades (SoC)** y el patrón arquitectónico **Smart & Dumb Components**. Extraeremos el formulario de creación de personajes de la página principal hacia un componente hijo presentacional (`CharacterAddComponent`), el cual comunicará los nuevos datos al componente padre mediante la función reactiva **`output<T>()`** de Angular 19+.
+En este reto aplicaremos el principio de **Separación de Responsabilidades (SoC)** y el patrón arquitectónico **Smart & Dumb Components**. Extraeremos el formulario de creación de personajes de la página principal hacia un componente hijo presentacional (`CharacterAdd`), el cual comunicará los nuevos datos al componente padre mediante la función reactiva **`output<T>()`** de Angular 19+.
 
 ---
 
@@ -960,17 +960,17 @@ En este reto aplicaremos el principio de **Separación de Responsabilidades (SoC
 Antes de consultar la solución guiada, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
 1. **Creación del componente hijo presentacional:** Dentro de `src/app/components/dragonball/`, crea la carpeta `character-add/` con sus dos archivos:
-    * `character-add.component.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
-    * `character-add.component.html`: plantilla con el formulario extraído.
+    * `character-add.ts`: controlador TypeScript del componente con selector `dragonball-character-add`.
+    * `character-add.html`: plantilla con el formulario extraído.
 2. **Definición del evento de salida con `output()`:**
-    * En `CharacterAddComponent`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
+    * En `CharacterAdd`, declara un evento de salida tipado: `newCharacter = output<Character>()`.
 3. **Manejo del estado local y emisión del evento:**
     * Mueve las señales locales `name` y `power`, así como el método `resetFields()`, al componente hijo.
     * En el método `addCharacter()` del hijo, valida los campos, genera el nuevo objeto `Character` (usando `Math.floor(Math.random() * 1000)` o similar para el id) y emítelo al padre mediante `this.newCharacter.emit(character)`.
     * Tras emitir, limpia los inputs locales llamando a `this.resetFields()`.
 4. **Integración en el componente padre:**
-    * Abre la página contenedora (`DragonballSuperPageComponent` o `DragonballPageComponent`).
-    * Importa `CharacterAddComponent` en el array `imports` del decorador `@Component`.
+    * Abre la página contenedora (`DragonballSuperPage` o `DragonballPage`).
+    * Importa `CharacterAdd` en el array `imports` del decorador `@Component`.
     * En la plantilla del padre, sustituye el bloque HTML del formulario por la etiqueta del componente hijo:
       ```html
       <dragonball-character-add (newCharacter)="addCharacter($event)" />
@@ -994,19 +994,19 @@ Antes de consultar la solución guiada, realiza de forma autónoma los siguiente
 
 ### 🛠️ Solución Paso a Paso y Explicación Técnica
 
-#### Paso 1: Crear el Componente Hijo `CharacterAddComponent`
+#### Paso 1: Crear el Componente Hijo `CharacterAdd`
 
-Creamos `src/app/components/dragonball/character-add/character-add.component.ts`. Declaramos la salida mediante la función `output<Character>()`:
+Creamos `src/app/components/dragonball/character-add/character-add.ts`. Declaramos la salida mediante la función `output<Character>()`:
 
-```typescript title="src/app/components/dragonball/character-add/character-add.component.ts" hl_lines="12-13 15-31"
+```typescript title="src/app/components/dragonball/character-add/character-add.ts" hl_lines="12-13 15-31"
 import { Component, output, signal } from '@angular/core';
 import { Character } from '../../../interfaces/character.interface';
 
 @Component({
   selector: 'dragonball-character-add',
-  templateUrl: './character-add.component.html',
+  templateUrl: './character-add.html',
 })
-export class CharacterAddComponent {
+export class CharacterAdd {
   name = signal('');
   power = signal(0);
 
@@ -1038,11 +1038,11 @@ export class CharacterAddComponent {
 }
 ```
 
-#### Paso 2: Crear la Plantilla del Hijo `character-add.component.html`
+#### Paso 2: Crear la Plantilla del Hijo `character-add.html`
 
-Creamos `src/app/components/dragonball/character-add/character-add.component.html`:
+Creamos `src/app/components/dragonball/character-add/character-add.html`:
 
-```html title="src/app/components/dragonball/character-add/character-add.component.html"
+```html title="src/app/components/dragonball/character-add/character-add.html"
 <h3>Agregar Personaje</h3>
 
 <input
@@ -1070,19 +1070,19 @@ Creamos `src/app/components/dragonball/character-add/character-add.component.htm
 
 #### Paso 3: Conectar el Hijo en el Componente Padre
 
-En el controlador del componente padre (por ejemplo, `DragonballSuperPageComponent` o la página contenedora), importamos el nuevo componente hijo y escuchamos su evento:
+En el controlador del componente padre (por ejemplo, `DragonballSuperPage` o la página contenedora), importamos el nuevo componente hijo y escuchamos su evento:
 
-```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts" hl_lines="4 8 16-18"
+```typescript title="src/app/pages/dragonball-super/dragonball-super-page.ts" hl_lines="4 8 16-18"
 import { Component, signal } from '@angular/core';
 import { Character } from '../../interfaces/character.interface';
-import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
-import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
+import { CharacterList } from '../../components/dragonball/character-list/character-list';
+import { CharacterAdd } from '../../components/dragonball/character-add/character-add';
 
 @Component({
-  templateUrl: './dragonball-super-page.component.html',
-  imports: [CharacterListComponent, CharacterAddComponent],
+  templateUrl: './dragonball-super-page.html',
+  imports: [CharacterList, CharacterAdd],
 })
-export class DragonballSuperPageComponent {
+export class DragonballSuperPage {
   characters = signal<Character[]>([
     { id: 1, name: 'Goku', power: 9001 },
     { id: 2, name: 'Vegeta', power: 8000 },
@@ -1098,7 +1098,7 @@ export class DragonballSuperPageComponent {
 
 En la plantilla HTML del padre, consumimos el componente hijo y capturamos el evento mediante la variable especial `$event`:
 
-```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html" hl_lines="4-6"
+```html title="src/app/pages/dragonball-super/dragonball-super-page.html" hl_lines="4-6"
 <section class="row">
   <!-- Columna Formulario: Componente Hijo de Adición -->
   <div class="col-12 col-sm-6">
@@ -1122,8 +1122,8 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 ### 🔍 Análisis de la Solución y Conceptos Clave
 
 1. **Patrón Smart & Dumb (Contenedor vs Presentacional):**  
-   * **Componente Dumb (`CharacterAddComponent`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
-   * **Componente Smart (`DragonballSuperPageComponent`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
+   * **Componente Dumb (`CharacterAdd`):** No conoce la colección completa de personajes, no tiene acceso a servicios ni sabe dónde se almacenará la información. Su única misión es recopilar datos del usuario, validarlos y emitir un evento con la carga útil (*payload*).
+   * **Componente Smart (`DragonballSuperPage`):** Es el dueño del estado maestro. Decide qué hacer cuando llega un evento (guardarlo en memoria, persistirlo en base de datos o enviarlo a un servicio).
 
 2. **La función moderna `output()` frente a `@Output() EventEmitter`:**  
    En versiones anteriores, se requería importar `@Output()` y crear una instancia `new EventEmitter<T>()` de RxJS. La función **`output<T>()`** de Angular 19+ es una primitiva más liviana, que no depende de RxJS para la emisión de eventos simples entre componentes, reduciendo el tamaño del bundle y simplificando la sintaxis.
@@ -1138,7 +1138,7 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
 | Olvidar `$event`: `(newCharacter)="addCharacter()"` | En la lista se agrega un elemento con valores `undefined` o se produce un error en tiempo de ejecución. | **Causa:** Sin `$event`, el argumento recibido en el método del padre es `undefined`. <br/>**Solución:** Escribir siempre `(newCharacter)="addCharacter($event)"`. |
-| Olvidar importar `CharacterAddComponent` en el padre | Error de compilación: *'dragonball-character-add' is not a known element*. | **Causa:** En componentes standalone, todo componente hijo debe listarse en el array `imports: [...]` del padre. |
+| Olvidar importar `CharacterAdd` en el padre | Error de compilación: *'dragonball-character-add' is not a known element*. | **Causa:** En componentes standalone, todo componente hijo debe listarse en el array `imports: [...]` del padre. |
 | Intentar importar y modificar la señal `characters` directamente en el hijo | Fuerte acoplamiento entre componentes; se rompe el principio de componente Dumb reutilizable. | **Causa:** Manipulación directa del estado ajeno. <br/>**Solución:** El hijo solo debe emitir eventos mediante `output()`; el padre es quien actualiza su estado. |
 | Usar decorador antiguo `@Output()` mezclado con `output()` | Error de sintaxis o confusión de API. | **Causa:** Mezcla de estilos legados y modernos. <br/>**Solución:** Usar exclusivamente la función moderna `newCharacter = output<Character>()`. |
 
@@ -1148,7 +1148,7 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 
 !!! tip "Estrategia para Guiar esta Práctica en Clase"
     1. **La regla de oro del flujo de datos:** Dibuje en la pizarra el diagrama fundamental de Angular: *"Propiedades bajan con `[input]`, Eventos suben con `(output)`"*. Refuerce que un componente hijo nunca debe alterar directamente las propiedades de su padre.
-    2. **Demostración de reutilización:** Haga reflexionar a los alumnos sobre la ventaja de esta separación: `CharacterAddComponent` ahora podría insertarse en cualquier otra página de la aplicación sin cambiar una sola línea de su código, ya que no depende de nada exterior.
+    2. **Demostración de reutilización:** Haga reflexionar a los alumnos sobre la ventaja de esta separación: `CharacterAdd` ahora podría insertarse en cualquier otra página de la aplicación sin cambiar una sola línea de su código, ya que no depende de nada exterior.
 
 ---
 
@@ -1157,7 +1157,7 @@ En la plantilla HTML del padre, consumimos el componente hijo y capturamos el ev
 !!! info "📖 Para saber más: Manual de Referencia"
     Consulta el sistema de inyección de dependencias, la función `inject()` y la gestión de estado reactivo en el **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md)**.
 
-Hasta este punto, nuestra aplicación funciona correctamente, pero presenta una limitación arquitectónica fundamental: **el estado reactivo de los personajes (`characters`) y la lógica para agregarlos (`addCharacter`) están acoplados directamente dentro del componente de página (`DragonballSuperPageComponent`)**.
+Hasta este punto, nuestra aplicación funciona correctamente, pero presenta una limitación arquitectónica fundamental: **el estado reactivo de los personajes (`characters`) y la lógica para agregarlos (`addCharacter`) están acoplados directamente dentro del componente de página (`DragonballSuperPage`)**.
 
 Si en el futuro creamos un menú de navegación que muestre el total de héroes registrados, un panel de estadísticas secundario o una pantalla de batalla, no podríamos acceder a esos datos sin duplicar la señal o recurrir a pasar propiedades innecesarias a través de múltiples niveles (*prop drilling*).
 
@@ -1174,9 +1174,9 @@ Para resolver esta limitación desacoplando la lógica de negocio de la capa de 
 Un **Servicio** es una clase TypeScript que encapsula datos y operaciones de negocio para ser compartidos por cualquier componente de la aplicación. Al decorarlo con `@Injectable({ providedIn: 'root' })`, Angular lo gestiona como un **Singleton**: crea una única instancia viva a nivel global que se comparte en toda la aplicación.
 
 #### 2. Paso 1: Mover la señal y la lógica al Servicio
-Creamos el archivo `src/app/services/dragonball.service.ts`. Trasladamos la señal `characters` y el método `addCharacter()` que antes estaban en `DragonballSuperPageComponent`:
+Creamos el archivo `src/app/services/dragonball.ts`. Trasladamos la señal `characters` y el método `addCharacter()` que antes estaban en `DragonballSuperPage`:
 
-```typescript title="src/app/services/dragonball.service.ts"
+```typescript title="src/app/services/dragonball.ts"
 import { Injectable, signal } from '@angular/core';
 import { Character } from '../interfaces/character.interface';
 
@@ -1213,31 +1213,31 @@ export class DragonballService {
 
 #### 3. Paso 2: Inyectar y Consumir el Servicio en el Componente Padre
 
-Ahora que el estado no le pertenece a la página, refactorizamos `DragonballSuperPageComponent`:
+Ahora que el estado no le pertenece a la página, refactorizamos `DragonballSuperPage`:
 
 * Eliminamos la señal local `characters` y el método `addCharacter()`.
 * Inyectamos el servicio mediante la función moderna **`inject()`** de Angular Core (sin necesidad de declarar constructores tradicionales).
 
-=== "src/app/pages/dragonball-super/dragonball-super-page.component.ts"
-    ```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts"
+=== "src/app/pages/dragonball-super/dragonball-super-page.ts"
+    ```typescript title="src/app/pages/dragonball-super/dragonball-super-page.ts"
     import { Component, inject } from '@angular/core';
-    import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
-    import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
-    import { DragonballService } from '../../services/dragonball.service';
+    import { CharacterList } from '../../components/dragonball/character-list/character-list';
+    import { CharacterAdd } from '../../components/dragonball/character-add/character-add';
+    import { DragonballService } from '../../services/dragonball';
 
     @Component({
       selector: 'dragonball-super',
-      imports: [CharacterListComponent, CharacterAddComponent],
-      templateUrl: './dragonball-super-page.component.html',
+      imports: [CharacterList, CharacterAdd],
+      templateUrl: './dragonball-super-page.html',
     })
-    export class DragonballSuperPageComponent {
+    export class DragonballSuperPage {
       // Inyección moderna de dependencias limpia y directa sin constructor
       public dragonballService = inject(DragonballService);
     }
     ```
 
-=== "src/app/pages/dragonball-super/dragonball-super-page.component.html"
-    ```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html"
+=== "src/app/pages/dragonball-super/dragonball-super-page.html"
+    ```html title="src/app/pages/dragonball-super/dragonball-super-page.html"
     <h1>DragonBall Super (Con Servicio Centralizado)</h1>
     <hr />
 
@@ -1323,7 +1323,7 @@ const loadFromLocalStorage = (): Character[] => {
 ##### ¿Por qué está FUERA de la clase `DragonballService`?
 
 1. **Función Pura sin `this`:** No necesita acceder a la instancia del servicio; solo lee de `localStorage` y devuelve un array limpio.
-2. **Encapsulamiento privado de módulo:** Al ser una constante no exportada, queda oculta dentro del archivo `dragonball.service.ts`, impidiendo que ningún componente exterior la invoque o corrompa por error.
+2. **Encapsulamiento privado de módulo:** Al ser una constante no exportada, queda oculta dentro del archivo `dragonball.ts`, impidiendo que ningún componente exterior la invoque o corrompa por error.
 3. **Disponibilidad síncrona inmediata:** Permite inicializar la propiedad `characters = signal<Character[]>(loadFromLocalStorage());` de forma síncrona antes de que se ejecute el constructor de la clase.
 
 ##### Operador Ternario Defensivo con Fallback
@@ -1354,9 +1354,9 @@ flowchart TD
 ```
 
 #### 5. Código Final del Servicio con Persistencia
-Con todos los componentes integrados, el archivo `src/app/services/dragonball.service.ts` definitivo queda así:
+Con todos los componentes integrados, el archivo `src/app/services/dragonball.ts` definitivo queda así:
 
-```typescript title="src/app/services/dragonball.service.ts"
+```typescript title="src/app/services/dragonball.ts"
 import { effect, Injectable, signal } from '@angular/core';
 import { Character } from '../interfaces/character.interface';
 
@@ -1395,25 +1395,25 @@ export class DragonballService {
 
 En los temas iniciales de esta sección aparecía listado el concepto **`linkedSignal`**. Aunque en la lección de persistencia resolvimos la carga inicial de datos mediante `signal(loadFromLocalStorage())`, en aplicaciones Angular modernas surge con frecuencia un dilema arquitectónico cuando un componente hijo necesita **derivar un estado a partir de un `input()`, pero además permitir que el usuario lo modifique localmente** (por ejemplo, en un formulario de edición rápida o un panel de detalle interactivo).
 
-Para dar respuesta a esta necesidad y comprender en profundidad por qué Angular introdujo esta primitiva, vamos a incorporar una nueva funcionalidad a nuestra aplicación: el componente **`CharacterDetailComponent`**.
+Para dar respuesta a esta necesidad y comprender en profundidad por qué Angular introdujo esta primitiva, vamos a incorporar una nueva funcionalidad a nuestra aplicación: el componente **`CharacterDetail`**.
 
 ---
 
-### 1. Justificación Didáctica: ¿Por qué creamos `CharacterDetailComponent`?
+### 1. Justificación Didáctica: ¿Por qué creamos `CharacterDetail`?
 
 Hasta este momento, nuestra pantalla de DragonBall Super cuenta con dos componentes principales:
 
-1. **`CharacterAddComponent`**: Formulario para introducir nuevos guerreros.
-2. **`CharacterListComponent`**: Listado reactivo para mostrar los personajes registrados.
+1. **`CharacterAdd`**: Formulario para introducir nuevos guerreros.
+2. **`CharacterList`**: Listado reactivo para mostrar los personajes registrados.
 
 Ahora planteamos el siguiente requerimiento funcional en clase:
 
 > 🎯 **Nuevo Requerimiento Didáctico:**  
-> Queremos que al hacer clic sobre cualquier guerrero de la lista, se muestre en pantalla una **tarjeta de detalle (`CharacterDetailComponent`)** con su ficha técnica. Además, el usuario dispondrá de un botón para **"Entrenar (+100 de poder)"** que aumentará temporalmente su fuerza en pantalla antes de confirmar los cambios o para simular combates.
+> Queremos que al hacer clic sobre cualquier guerrero de la lista, se muestre en pantalla una **tarjeta de detalle (`CharacterDetail`)** con su ficha técnica. Además, el usuario dispondrá de un botón para **"Entrenar (+100 de poder)"** que aumentará temporalmente su fuerza en pantalla antes de confirmar los cambios o para simular combates.
 
 ``` mermaid
 flowchart TD
-    subgraph Smart ["<b>DragonballSuperPageComponent</b> (Componente Smart / Orquestador)"]
+    subgraph Smart ["<b>DragonballSuperPage</b> (Componente Smart / Orquestador)"]
         direction TB
 
         subgraph EstadoPadre ["Lógica y Estado Gestionado por la Página Padre"]
@@ -1424,9 +1424,9 @@ flowchart TD
 
         subgraph Dumb ["Componentes Hijos Presentacionales (Dumb)"]
             direction LR
-            AddComp["<b>CharacterAddComponent</b><br/><i>Formulario de alta</i>"]
-            ListComp["<b>CharacterListComponent</b><br/><i>Listado de personajes</i>"]
-            DetailComp["<b>CharacterDetailComponent</b><br/><i>Ficha con linkedSignal</i>"]
+            AddComp["<b>CharacterAdd</b><br/><i>Formulario de alta</i>"]
+            ListComp["<b>CharacterList</b><br/><i>Listado de personajes</i>"]
+            DetailComp["<b>CharacterDetail</b><br/><i>Ficha con linkedSignal</i>"]
         end
 
         %% 1. Alta de personaje
@@ -1501,11 +1501,11 @@ flowchart LR
 
 ---
 
-### 2. Paso 1: Crear el Componente `CharacterDetailComponent`
+### 2. Paso 1: Crear el Componente `CharacterDetail`
 
-Creamos el archivo `src/app/components/dragonball/character-detail/character-detail.component.ts`. Diseñamos una tarjeta con Bootstrap que muestra el estado derivado y los controles para interactuar con él:
+Creamos el archivo `src/app/components/dragonball/character-detail/character-detail.ts`. Diseñamos una tarjeta con Bootstrap que muestra el estado derivado y los controles para interactuar con él:
 
-```typescript title="src/app/components/dragonball/character-detail/character-detail.component.ts"
+```typescript title="src/app/components/dragonball/character-detail/character-detail.ts"
 import { Component, input, linkedSignal } from '@angular/core';
 import { Character } from '../../../interfaces/character.interface';
 
@@ -1559,7 +1559,7 @@ import { Character } from '../../../interfaces/character.interface';
     </div>
   `,
 })
-export class CharacterDetailComponent {
+export class CharacterDetail {
   // 1. Entrada requerida: el personaje seleccionado por el componente padre
   character = input.required<Character>();
 
@@ -1581,21 +1581,21 @@ export class CharacterDetailComponent {
 
 ---
 
-### 3. Paso 2: Permitir la Selección desde `CharacterListComponent`
+### 3. Paso 2: Permitir la Selección desde `CharacterList`
 
-Para que el usuario pueda seleccionar qué guerrero consultar en detalle, modificamos **ambos archivos** de `CharacterListComponent` (el TypeScript y su plantilla HTML) para emitir un evento mediante **`output<Character>()`** al pulsar el botón **"Detalles"**:
+Para que el usuario pueda seleccionar qué guerrero consultar en detalle, modificamos **ambos archivos** de `CharacterList` (el TypeScript y su plantilla HTML) para emitir un evento mediante **`output<Character>()`** al pulsar el botón **"Detalles"**:
 
-#### A. Controlador TypeScript (`character-list.component.ts`)
+#### A. Controlador TypeScript (`character-list.ts`)
 
-```typescript title="src/app/components/dragonball/character-list/character-list.component.ts" hl_lines="1 13"
+```typescript title="src/app/components/dragonball/character-list/character-list.ts" hl_lines="1 13"
 import { Component, input, output } from '@angular/core';
 import { Character } from '../../../interfaces/character.interface';
 
 @Component({
   selector: 'dragonball-character-list',
-  templateUrl: './character-list.component.html',
+  templateUrl: './character-list.html',
 })
-export class CharacterListComponent {
+export class CharacterList {
   // Entradas requeridas y opcionales con signals
   characters = input.required<Character[]>();
   listName = input<string>('Listado de Personajes');
@@ -1605,9 +1605,9 @@ export class CharacterListComponent {
 }
 ```
 
-#### B. Plantilla HTML (`character-list.component.html`)
+#### B. Plantilla HTML (`character-list.html`)
 
-```html title="src/app/components/dragonball/character-list/character-list.component.html" hl_lines="18-24"
+```html title="src/app/components/dragonball/character-list/character-list.html" hl_lines="18-24"
 <h3>{{ listName() }}</h3>
 
 <ul class="list-group">
@@ -1653,33 +1653,33 @@ export class CharacterListComponent {
 
 ### 4. Paso 3: Integrar y Visualizar en la Página Orquestadora
 
-Por último, integramos `CharacterDetailComponent` en nuestra página padre (`DragonballSuperPageComponent`), editando **tanto su archivo TypeScript como su HTML** para guardar el personaje seleccionado y mostrar su ficha en pantalla.
+Por último, integramos `CharacterDetail` en nuestra página padre (`DragonballSuperPage`), editando **tanto su archivo TypeScript como su HTML** para guardar el personaje seleccionado y mostrar su ficha en pantalla.
 
-!!! tip "📌 Nota sobre nombres de archivos (Angular 19 vs Angular 20+)"
-    Si estás trabajando en la página `DragonballPage` (`dragonball-page.ts` / `dragonball-page.html`) o usas la convención moderna de Angular 20+ sin sufijos `.component` en los nombres de archivos (por ejemplo, `character-detail.ts` o `dragonball.ts`), aplica **exactamente estos mismos cambios** en tu página activa donde estás renderizando `<dragonball-character-list>`.
+!!! tip "📌 Nota sobre la página activa (`DragonballPage` vs `DragonballSuperPage`)"
+    Si estás trabajando directamente en la página `DragonballPage` (`dragonball-page.ts` / `dragonball-page.html`) en lugar de `DragonballSuperPage`, aplica **exactamente estos mismos cambios** en la página activa donde estás renderizando `<dragonball-character-list>`.
 
-#### A. Controlador TypeScript de la Página (`dragonball-super-page.component.ts`)
+#### A. Controlador TypeScript de la Página (`dragonball-super-page.ts`)
 
 Asegúrate de:
 
-1. Importar `signal`, `Character` y `CharacterDetailComponent`.
-2. Añadir `CharacterDetailComponent` dentro del array `imports` de `@Component`.
+1. Importar `signal`, `Character` y `CharacterDetail`.
+2. Añadir `CharacterDetail` dentro del array `imports` de `@Component`.
 3. Declarar la propiedad `public selectedCharacter = signal<Character | null>(null);` dentro de la clase.
 
-```typescript title="src/app/pages/dragonball-super/dragonball-super-page.component.ts" hl_lines="1 4 6 10 17"
+```typescript title="src/app/pages/dragonball-super/dragonball-super-page.ts" hl_lines="1 4 6 10 17"
 import { Component, inject, signal } from '@angular/core';
-import { CharacterListComponent } from '../../components/dragonball/character-list/character-list.component';
-import { CharacterAddComponent } from '../../components/dragonball/character-add/character-add.component';
-import { CharacterDetailComponent } from '../../components/dragonball/character-detail/character-detail.component';
-import { DragonballService } from '../../services/dragonball.service';
+import { CharacterList } from '../../components/dragonball/character-list/character-list';
+import { CharacterAdd } from '../../components/dragonball/character-add/character-add';
+import { CharacterDetail } from '../../components/dragonball/character-detail/character-detail';
+import { DragonballService } from '../../services/dragonball';
 import { Character } from '../../interfaces/character.interface';
 
 @Component({
   selector: 'dragonball-super',
-  imports: [CharacterListComponent, CharacterAddComponent, CharacterDetailComponent],
-  templateUrl: './dragonball-super-page.component.html',
+  imports: [CharacterList, CharacterAdd, CharacterDetail],
+  templateUrl: './dragonball-super-page.html',
 })
-export class DragonballSuperPageComponent {
+export class DragonballSuperPage {
   // Inyección del servicio de datos
   public dragonballService = inject(DragonballService);
 
@@ -1688,14 +1688,14 @@ export class DragonballSuperPageComponent {
 }
 ```
 
-#### B. Plantilla HTML de la Página (`dragonball-super-page.component.html`)
+#### B. Plantilla HTML de la Página (`dragonball-super-page.html`)
 
 Realiza dos acciones en tu archivo HTML:
 
 1. En `<dragonball-character-list>`, conecta el evento de salida: `(selectCharacter)="selectedCharacter.set($event)"`.
 2. Añade debajo del `</section>` principal el bloque `@if (selectedCharacter(); as character)` con la etiqueta `<dragonball-character-detail [character]="character" />`.
 
-```html title="src/app/pages/dragonball-super/dragonball-super-page.component.html" hl_lines="17 23-33"
+```html title="src/app/pages/dragonball-super/dragonball-super-page.html" hl_lines="17 23-33"
 <h1>DragonBall Super (Con Servicio y Detalle Reactivo)</h1>
 <hr />
 
@@ -1741,9 +1741,9 @@ Realiza dos acciones en tu archivo HTML:
        **Causa:** En el archivo `.ts` de la página olvidaste declarar la señal dentro de la clase.  
        **Solución:** Añade `public selectedCharacter = signal<Character | null>(null);` en tu clase TypeScript (asegurándote de tener importados `signal` de `@angular/core` y la interfaz `Character`).
 
-    2. **Aviso amarillo en `@Component({ imports: [..., CharacterDetailComponent] })` (`is not used within the template`)**  
-       **Causa:** Importaste `CharacterDetailComponent` en el TypeScript, pero todavía no añadiste la etiqueta `<dragonball-character-detail [character]="character" />` dentro del HTML.  
-       **Solución:** Añade la `<section class="row mt-4">` inferior con el bloque `@if (selectedCharacter(); as character)` en tu plantilla HTML y verifica que el selector en `CharacterDetailComponent` sea `'dragonball-character-detail'`.
+    2. **Aviso amarillo en `@Component({ imports: [..., CharacterDetail] })` (`is not used within the template`)**  
+       **Causa:** Importaste `CharacterDetail` en el TypeScript, pero todavía no añadiste la etiqueta `<dragonball-character-detail [character]="character" />` dentro del HTML.  
+       **Solución:** Añade la `<section class="row mt-4">` inferior con el bloque `@if (selectedCharacter(); as character)` en tu plantilla HTML y verifica que el selector en `CharacterDetail` sea `'dragonball-character-detail'`.
 
     3. **Compila sin errores, pero al pulsar "Detalles" no ocurre nada:**  
        * **Verifica la ruta del navegador:** Asegúrate de estar en la ruta donde integraste estos cambios (por ejemplo, `http://localhost:4200/dragonball-super` o `/dragonball` según dónde hayas editado).
@@ -1760,7 +1760,7 @@ Guarda todos los archivos y abre la aplicación en el navegador (`http://localho
 3. **Mutación Local del `linkedSignal`:** Pulsa **3 veces** el botón verde **"⚡ Entrenar (+100)"**. Observa cómo el poder en la tarjeta sube a `9101`, luego a `9201` y finalmente a `9301`.  
    *(Esto demuestra que `currentPower` es mutable localmente sin alterar los datos originales de la lista).*
 4. **La Magia de la Sincronización al Cambiar desde el Padre:** Ahora haz clic en **"Detalles"** en otro personaje, por ejemplo **Vegeta** (Poder base: `8000`).  
-   *¿Qué ocurre por dentro?* Aunque veas cambiar los datos, Angular **NO destruye ni vuelve a crear** `CharacterDetailComponent` (el `@if` sigue siendo verdadero); simplemente **actualiza la entrada `[character]` desde el padre**. En ese instante, `linkedSignal` detecta el cambio en la señal fuente y **reinicia automáticamente `currentPower` a `8000`**, descartando los 300 puntos de Goku sin escribir ningún `ngOnChanges` ni `effect()`.
+   *¿Qué ocurre por dentro?* Aunque veas cambiar los datos, Angular **NO destruye ni vuelve a crear** `CharacterDetail` (el `@if` sigue siendo verdadero); simplemente **actualiza la entrada `[character]` desde el padre**. En ese instante, `linkedSignal` detecta el cambio en la señal fuente y **reinicia automáticamente `currentPower` a `8000`**, descartando los 300 puntos de Goku sin escribir ningún `ngOnChanges` ni `effect()`.
 
 ---
 

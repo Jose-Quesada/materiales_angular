@@ -11,7 +11,7 @@ Esta guía paso a paso recoge todo el desarrollo, código incremental y explicac
 
 ## 📋 Ficha Técnica y Objetivos Didácticos
 
-* **Versión de Angular:** 19.x (Modern Angular).
+* **Versión de Angular:** 20+ / 22.x (Modern Angular).
 * **Paradigma:** Componentes Standalone, Reactividad con Señales (*Signals*), Zoneless-ready.
 * **Proyecto a construir:** `bases` (SPA con páginas de contador reactivo y gestión de héroes).
 * **Repositorio de referencia final:** [GitHub - DevTalles Bases (fin-seccion-04)](https://github.com/DevTalles-corp/angular-bases/tree/fin-seccion-04)
@@ -19,15 +19,15 @@ Esta guía paso a paso recoge todo el desarrollo, código incremental y explicac
 ``` mermaid
 flowchart TD
     subgraph S1 ["Fase 1 · Setup Inicial y Arquitectura de la SPA"]
-        A["<b>1. Creación del Proyecto (ng new bases)</b><br/>Angular 19, componentes standalone puros y sin NgModules"] --> B["<b>2. Estructura de Directorios src/</b><br/>Análisis de main.ts, index.html y app.config.ts"]
+        A["<b>1. Creación del Proyecto (ng new bases)</b><br/>Angular moderno, componentes standalone puros y sin NgModules"] --> B["<b>2. Estructura de Directorios src/</b><br/>Análisis de main.ts, index.html y app.config.ts"]
     end
 
     subgraph S2 ["Fase 2 · Creación de Componentes y Navegación"]
-        C["<b>3. CounterPageComponent (SoC)</b><br/>Separación estricta de responsabilidades (HTML, CSS, TS)"] --> D["<b>4. Angular Router Declarativo</b><br/>Configuración de rutas con router-outlet y RouterLink"]
+        C["<b>3. CounterPage (SoC)</b><br/>Separación estricta de responsabilidades (HTML, CSS, TS)"] --> D["<b>4. Angular Router Declarativo</b><br/>Configuración de rutas con router-outlet y RouterLink"]
     end
 
     subgraph S3 ["Fase 3 · Reactividad Moderna con Signals"]
-        E["<b>5. Signals Básicos (set y update)</b><br/>Primitivas reactivas con mutación atómica y sin Zone.js"] --> F["<b>6. Signals Computadas (computed)</b><br/>Cálculo derivado reactivo en HeroPageComponent"]
+        E["<b>5. Signals Básicos (set y update)</b><br/>Primitivas reactivas con mutación atómica y sin Zone.js"] --> F["<b>6. Signals Computadas (computed)</b><br/>Cálculo derivado reactivo en HeroPage"]
     end
 
     S1 ==> S2 ==> S3
@@ -81,7 +81,7 @@ Antes de comenzar, verificamos que Node.js y el Angular CLI estén instalados en
 ```bash
 node -v          # Requiere v20.x o superior
 npm -v           # Gestor de paquetes
-ng version       # Comprueba Angular CLI 19+
+ng version       # Comprueba Angular CLI 20+ (v22 recomendado)
 ```
 
 Si el Angular CLI no está instalado:
@@ -180,12 +180,12 @@ sequenceDiagram
     participant HTML as index.html
     participant Main as main.ts
     participant Config as app.config.ts
-    participant App as app.component.ts
+    participant App as app.ts
 
     Navegador->>HTML: Carga index.html
     HTML->>Main: Ejecuta bundle principal (main.ts)
-    Main->>Config: Carga appConfig (providers, rutas, zone)
-    Main->>App: bootstrapApplication(AppComponent, appConfig)
+    Main->>Config: Carga appConfig (providers, rutas)
+    Main->>App: bootstrapApplication(App, appConfig)
     App-->>HTML: Renderiza la vista dentro de app-root
 ```
 
@@ -222,34 +222,37 @@ Inicia la aplicación de forma standalone mediante la función `bootstrapApplica
 ```typescript title="src/main.ts"
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
+import { App } from './app/app';
 
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
+bootstrapApplication(App, appConfig).catch((err) =>
   console.error(err)
 );
 ```
 
 ### `src/app/app.config.ts` (Configuración y Proveedores Globales)
-Define los proveedores (*providers*) globales, tales como la detección de cambios y el enrutador:
+Define los proveedores (*providers*) globales, tales como los escuchas de errores, la detección de cambios y el enrutador:
 
 ```typescript title="src/app/app.config.ts"
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Coalescencia de eventos para optimizar ciclos de detección de cambio
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    // Manejo global de errores del navegador
+    provideBrowserGlobalErrorListeners(),
     // Inyección de rutas de la aplicación
     provideRouter(routes),
   ],
 };
 ```
 
+!!! note "Convención de archivos y Zone.js en Angular 20+ / 22"
+    A partir de Angular 20, el CLI prescinde del sufijo `.component` tanto en los nombres de archivos (`app.ts`, `app.html`, `app.css`) como en el nombre de la clase raíz (`export class App` en lugar de `AppComponent`). Además, en Angular 22 los proyectos nuevos nacen en modo **Zoneless por defecto**, por lo que ya no verás `provideZoneChangeDetection()` en `app.config.ts`. Si sigues un proyecto generado con Angular 19, conservará `app.component.ts` (`AppComponent`) y `provideZoneChangeDetection({ eventCoalescing: true })`.
+
 ---
 
-## Creación del Primer Componente: `CounterPageComponent`
+## Creación del Primer Componente: `CounterPage`
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para conocer todos los metadatos del decorador `@Component`, la encapsulación de estilos (`ViewEncapsulation`) y el ciclo de vida, consulta el **[Manual de Referencia: 03. Componentes Standalone](manual/03-componentes.md)**.
@@ -257,12 +260,12 @@ export const appConfig: ApplicationConfig = {
 Para que los alumnos asimilen la estructura interna de un componente sin depender de la magia de los generadores automáticos, **construiremos este primer componente de forma 100% manual**.
 
 ### Creación del Archivo
-Creamos la carpeta y el archivo: `src/app/pages/counter/counter-page.component.ts`.
+Creamos la carpeta y el archivo: `src/app/pages/counter/counter-page.ts`.
 
 ### Anatomía del Componente con Plantilla Inline
 En esta primera fase, incluimos la plantilla de forma *inline* con template strings para visualizar la relación directa entre la clase TypeScript y su HTML:
 
-```typescript title="src/app/pages/counter/counter-page.component.ts"
+```typescript title="src/app/pages/counter/counter-page.ts"
 import { Component } from '@angular/core';
 
 @Component({
@@ -282,7 +285,7 @@ import { Component } from '@angular/core';
     }
   `,
 })
-export class CounterPageComponent {
+export class CounterPage {
   // Estado tradicional (propiedad de clase)
   counter = 10;
 
@@ -305,7 +308,7 @@ export class CounterPageComponent {
 
 ---
 
-## 🎯 Tarea Práctica: Separar Template de la Lógica en `CounterPageComponent`
+## 🎯 Tarea Práctica: Separar Template de la Lógica en `CounterPage`
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para profundizar en la sintaxis de plantillas, enlaces y directivas, consulta el **[Manual de Referencia: 04. Plantillas y Control Flow](manual/04-plantillas.md)**.
@@ -320,10 +323,10 @@ Es momento de aplicar una refactorización guiada para desacoplar la vista de la
 
 Antes de consultar la solución, realiza de forma autónoma los siguientes pasos en tu proyecto:
 
-1. **Crear el archivo de vista:** Dentro de la carpeta `src/app/pages/counter/`, crea un nuevo archivo llamado `counter-page.component.html`.
+1. **Crear el archivo de vista:** Dentro de la carpeta `src/app/pages/counter/`, crea un nuevo archivo llamado `counter-page.html`.
 2. **Mover el marcado HTML:** Corta el contenido HTML que se encuentra dentro del template literal del componente y pégalo limpiamente en el nuevo archivo `.html`.
-3. **Vincular el template externo:** En `counter-page.component.ts`, sustituye la propiedad `template` por la propiedad de metadatos `templateUrl`, asignándole la ruta relativa al archivo HTML recién creado.
-4. **Decisión sobre los estilos:** Mantén los estilos de los botones en el archivo `.ts` mediante la propiedad `styles` (o de forma opcional, sepáralos en un archivo `counter-page.component.css` usando `styleUrl`).
+3. **Vincular el template externo:** En `counter-page.ts`, sustituye la propiedad `template` por la propiedad de metadatos `templateUrl`, asignándole la ruta relativa al archivo HTML recién creado.
+4. **Decisión sobre los estilos:** Mantén los estilos de los botones en el archivo `.ts` mediante la propiedad `styles` (o de forma opcional, sepáralos en un archivo `counter-page.css` usando `styleUrl`).
 5. **Verificación interactiva:** Abre el navegador en `http://localhost:4200` y comprueba que:
     - El título y el valor del contador se rendericen sin advertencias ni errores en la consola de desarrollo (F12).
     - Los botones `+1`, `-1` y `Reset` mantengan intacta su funcionalidad y reactividad ante los clics.
@@ -341,10 +344,10 @@ Antes de consultar la solución, realiza de forma autónoma los siguientes pasos
 
 ### 🛠️ Solución Paso a Paso y Explicación Técnica
 
-#### Paso 1: Crear `counter-page.component.html`
-Creamos el archivo de vista `src/app/pages/counter/counter-page.component.html` y trasladamos el marcado HTML puro, beneficiándonos inmediatamente del resaltado de sintaxis, formateo automático y autocompletado del editor:
+#### Paso 1: Crear `counter-page.html`
+Creamos el archivo de vista `src/app/pages/counter/counter-page.html` y trasladamos el marcado HTML puro, beneficiándonos inmediatamente del resaltado de sintaxis, formateo automático y autocompletado del editor:
 
-```html title="src/app/pages/counter/counter-page.component.html"
+```html title="src/app/pages/counter/counter-page.html"
 <h1>Counter: {{ counter }}</h1>
 <hr />
 
@@ -353,14 +356,14 @@ Creamos el archivo de vista `src/app/pages/counter/counter-page.component.html` 
 <button (click)="resetCounter()">Reset</button>
 ```
 
-#### Paso 2: Actualizar `counter-page.component.ts`
+#### Paso 2: Actualizar `counter-page.ts`
 En el archivo TypeScript, cambiamos la propiedad `template` por `templateUrl`, indicando la ruta relativa con `./`:
 
-```typescript title="src/app/pages/counter/counter-page.component.ts" hl_lines="4"
+```typescript title="src/app/pages/counter/counter-page.ts" hl_lines="4"
 import { Component } from '@angular/core';
 
 @Component({
-  templateUrl: './counter-page.component.html',
+  templateUrl: './counter-page.html',
   styles: `
     button {
       padding: 5px;
@@ -369,7 +372,7 @@ import { Component } from '@angular/core';
     }
   `,
 })
-export class CounterPageComponent {
+export class CounterPage {
   counter = 10;
 
   increaseBy(value: number) {
@@ -391,7 +394,7 @@ export class CounterPageComponent {
     * **`templateUrl`:** Espera una ruta relativa (*string*) hacia un archivo físico `.html`. Es el estándar recomendado para componentes de mediana o gran complejidad en proyectos reales.
 2. **El prefijo obligatorio `./`:** En Angular moderno, la ruta asignada a `templateUrl` debe ser **relativa al directorio del propio componente**. Omitir el `./` puede generar fallos de resolución durante el empaquetado con Vite / esbuild.
 3. **Manejo flexible de estilos (`styles` vs `styleUrl`):**
-   Angular ofrece total flexibilidad: cuando un componente solo requiere 2 o 3 reglas CSS sencillas (como el espaciado y ancho de los botones), mantenerlas en `styles: `...`` dentro del archivo `.ts` ahorra archivos adicionales. Si las reglas visuales crecen, se extraen a un archivo `.css` independiente vinculado con `styleUrl: './counter-page.component.css'`.
+   Angular ofrece total flexibilidad: cuando un componente solo requiere 2 o 3 reglas CSS sencillas (como el espaciado y ancho de los botones), mantenerlas en `styles: `...`` dentro del archivo `.ts` ahorra archivos adicionales. Si las reglas visuales crecen, se extraen a un archivo `.css` independiente vinculado con `styleUrl: './counter-page.css'`.
 
 ---
 
@@ -399,8 +402,8 @@ export class CounterPageComponent {
 
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
-| Dejar `template: './counter-page.component.html'` | En pantalla aparece el texto plano `"./counter-page.component.html"` en vez de los botones. | **Causa:** `template` interpreta el valor como código HTML literal. <br/>**Solución:** Cambiar el nombre de la propiedad a `templateUrl`. |
-| Omitir el `./` (`templateUrl: 'counter-page.component.html'`) | Error de compilación: *Cannot find module / file not found*. | **Causa:** Sin `./`, el compilador no sabe que debe buscar en la misma carpeta. <br/>**Solución:** Escribir siempre la ruta relativa explícita `./nombre-archivo.html`. |
+| Dejar `template: './counter-page.html'` | En pantalla aparece el texto plano `"./counter-page.html"` en vez de los botones. | **Causa:** `template` interpreta el valor como código HTML literal. <br/>**Solución:** Cambiar el nombre de la propiedad a `templateUrl`. |
+| Omitir el `./` (`templateUrl: 'counter-page.html'`) | Error de compilación: *Cannot find module / file not found*. | **Causa:** Sin `./`, el compilador no sabe que debe buscar en la misma carpeta. <br/>**Solución:** Escribir siempre la ruta relativa explícita `./nombre-archivo.html`. |
 | Discrepancias tipográficas en el nombre del archivo | Error de compilación 404 del servidor de desarrollo. | **Causa:** Sensibilidad a mayúsculas o nombres distintos. <br/>**Solución:** Comprobar que el nombre del archivo en disco coincida exactamente con la cadena en `templateUrl`. |
 
 ---
@@ -410,7 +413,7 @@ export class CounterPageComponent {
 !!! tip "Estrategia para Guiar esta Práctica en Clase"
     1. **Presentación del reto:** Proyecte únicamente el enunciado de la tarea en pantalla y anime a los alumnos a resolverlo de forma individual antes de mirar la solución.
     2. **Validación de conceptos:** Circule por el aula comprobando que los estudiantes identifiquen claramente la diferencia conceptual y sintáctica entre `template` y `templateUrl`.
-    3. **Demostración de errores en vivo:** Pida voluntariamente a un alumno que cometa el error de asignar `template: './counter-page.component.html'` para proyectarlo; esto permite que todo el grupo comprenda visualmente por qué Angular imprime el string de la ruta en el navegador cuando se usa la propiedad incorrecta.
+    3. **Demostración de errores en vivo:** Pida voluntariamente a un alumno que cometa el error de asignar `template: './counter-page.html'` para proyectarlo; esto permite que todo el grupo comprenda visualmente por qué Angular imprime el string de la ruta en el navegador cuando se usa la propiedad incorrecta.
 
 ---
 
@@ -424,27 +427,27 @@ Configuramos la ruta inicial vacía (`''`) para renderizar nuestro componente:
 
 ```typescript title="src/app/app.routes.ts"
 import { Routes } from '@angular/router';
-import { CounterPageComponent } from './pages/counter/counter-page.component';
+import { CounterPage } from './pages/counter/counter-page';
 
 export const routes: Routes = [
   {
     path: '',
-    component: CounterPageComponent,
+    component: CounterPage,
   },
 ];
 ```
 
-### Configuración del Shell en `src/app/app.component.html`
-Limpiamos el archivo `app.component.html` original y dejamos únicamente el `<router-outlet />` envuelto en un contenedor de Bootstrap:
+### Configuración del Shell en `src/app/app.html`
+Limpiamos el archivo `app.html` original y dejamos únicamente el `<router-outlet />` envuelto en un contenedor de Bootstrap:
 
-=== "src/app/app.component.html"
+=== "src/app/app.html"
     ```html
     <section class="mx-5 mt-2">
       <router-outlet />
     </section>
     ```
 
-=== "src/app/app.component.ts"
+=== "src/app/app.ts"
     ```typescript
     import { Component } from '@angular/core';
     import { RouterOutlet } from '@angular/router';
@@ -452,15 +455,15 @@ Limpiamos el archivo `app.component.html` original y dejamos únicamente el `<ro
     @Component({
       selector: 'app-root',
       imports: [RouterOutlet],
-      templateUrl: './app.component.html',
+      templateUrl: './app.html',
     })
-    export class AppComponent {
+    export class App {
       title = 'bases';
     }
     ```
 
 !!! warning "Error Típico de los Alumnos"
-    Si los alumnos olvidan agregar `RouterOutlet` al array `imports: [RouterOutlet]` de `app.component.ts`, la etiqueta `<router-outlet />` no funcionará y la página quedará en blanco.
+    Si los alumnos olvidan agregar `RouterOutlet` al array `imports: [RouterOutlet]` de `app.ts`, la etiqueta `<router-outlet />` no funcionará y la página quedará en blanco.
 
 ---
 
@@ -488,12 +491,12 @@ flowchart TD
 
 Vamos a convivir el estado tradicional (`counter`) con el estado reactivo (`counterSignal`):
 
-=== "src/app/pages/counter/counter-page.component.ts"
+=== "src/app/pages/counter/counter-page.ts"
     ```typescript hl_lines="1 15 22 23 28"
     import { Component, signal } from '@angular/core';
 
     @Component({
-      templateUrl: './counter-page.component.html',
+      templateUrl: './counter-page.html',
       styles: `
         button {
           padding: 5px;
@@ -502,7 +505,7 @@ Vamos a convivir el estado tradicional (`counter`) con el estado reactivo (`coun
         }
       `,
     })
-    export class CounterPageComponent {
+    export class CounterPage {
       counter = 10;
       counterSignal = signal(10); // Inicialización de la señal
 
@@ -523,7 +526,7 @@ Vamos a convivir el estado tradicional (`counter`) con el estado reactivo (`coun
     }
     ```
 
-=== "src/app/pages/counter/counter-page.component.html"
+=== "src/app/pages/counter/counter-page.html"
     ```html hl_lines="2"
     <h1>Counter: {{ counter }}</h1>
     <h1>Counter Signal: {{ counterSignal() }}</h1>
@@ -589,7 +592,7 @@ Disparo de Evento ──> Señal mutada ──> Repinta ÚNICAMENTE el nodo susc
 
 ---
 
-## 🎯 Tarea Práctica: Creación de `HeroPageComponent` y Refuerzo de Señales
+## 🎯 Tarea Práctica: Creación de `HeroPage` y Refuerzo de Señales
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para repasar la declaración de señales escribibles (`signal()`), el método `.set()` y el enlace de eventos, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)**.
@@ -614,8 +617,8 @@ Antes de consultar la solución detallada, sigue paso a paso las siguientes inst
    ```
 
 2. **Crear la plantilla HTML base:**  
-   Crea la carpeta `src/app/pages/hero/` y dentro de ella el archivo `hero-page.component.html` con la siguiente estructura base de trabajo:
-   ```html title="src/app/pages/hero/hero-page.component.html"
+   Crea la carpeta `src/app/pages/hero/` y dentro de ella el archivo `hero-page.html` con la siguiente estructura base de trabajo:
+   ```html title="src/app/pages/hero/hero-page.html"
    <h1>{{ name() }}</h1>
 
    <dl>
@@ -643,7 +646,7 @@ Antes de consultar la solución detallada, sigue paso a paso las siguientes inst
    ```
 
 3. **Crear el controlador del componente:**  
-   Crea el archivo `src/app/pages/hero/hero-page.component.ts` declarando el componente standalone `HeroPageComponent` vinculado a la plantilla anterior.
+   Crea el archivo `src/app/pages/hero/hero-page.ts` declarando el componente standalone `HeroPage` vinculado a la plantilla anterior.
 
 4. **Declaración de Señales:**  
    Define dos señales reactivas en la clase:
@@ -661,7 +664,7 @@ Antes de consultar la solución detallada, sigue paso a paso las siguientes inst
     * `resetForm()`: Restablece `name` a `'Ironman'` y `age` a `45`.
 
 7. **Configuración de Enrutamiento:**  
-   En `src/app/app.routes.ts`, registra la ruta `'hero'` asociada a `HeroPageComponent`.
+   En `src/app/app.routes.ts`, registra la ruta `'hero'` asociada a `HeroPage`.
 
 8. **⭐ Reto Extra:**  
    Muestra en la etiqueta `<dd>` de "Capitalizado" el valor de la señal `name` transformado en mayúsculas (ej. `IRONMAN` o `SPIDERMAN`), **sin crear una nueva señal**.
@@ -711,17 +714,17 @@ Editamos `src/index.html` e incorporamos el enlace CDN en el bloque `<head>`:
 </html>
 ```
 
-#### Paso 2: Crear el Controlador `HeroPageComponent`
+#### Paso 2: Crear el Controlador `HeroPage`
 
-En `src/app/pages/hero/hero-page.component.ts`:
+En `src/app/pages/hero/hero-page.ts`:
 
-```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="8-9 12-14 17-30"
+```typescript title="src/app/pages/hero/hero-page.ts" hl_lines="8-9 12-14 17-30"
 import { Component, signal } from '@angular/core';
 
 @Component({
-  templateUrl: './hero-page.component.html',
+  templateUrl: './hero-page.html',
 })
-export class HeroPageComponent {
+export class HeroPage {
   // 1. Señales reactivas
   name = signal('Ironman');
   age = signal(45);
@@ -748,11 +751,11 @@ export class HeroPageComponent {
 }
 ```
 
-#### Paso 3: Completar la Plantilla `hero-page.component.html`
+#### Paso 3: Completar la Plantilla `hero-page.html`
 
 Completamos la plantilla conectando el evento `(click)="changeAge()"` y resolviendo el reto extra de mayúsculas mediante `name().toUpperCase()`:
 
-```html title="src/app/pages/hero/hero-page.component.html" hl_lines="15 22"
+```html title="src/app/pages/hero/hero-page.html" hl_lines="15 22"
 <h1>{{ name() }}</h1>
 
 <dl>
@@ -785,21 +788,21 @@ Completamos la plantilla conectando el evento `(click)="changeAge()"` y resolvie
 
 #### Paso 4: Registrar la Ruta en `src/app/app.routes.ts`
 
-Importamos `HeroPageComponent` y añadimos la ruta `'hero'`:
+Importamos `HeroPage` y añadimos la ruta `'hero'`:
 
 ```typescript title="src/app/app.routes.ts" hl_lines="3 10-13"
 import { Routes } from '@angular/router';
-import { CounterPageComponent } from './pages/counter/counter-page.component';
-import { HeroPageComponent } from './pages/hero/hero-page.component';
+import { CounterPage } from './pages/counter/counter-page';
+import { HeroPage } from './pages/hero/hero-page';
 
 export const routes: Routes = [
   {
     path: '',
-    component: CounterPageComponent,
+    component: CounterPage,
   },
   {
     path: 'hero',
-    component: HeroPageComponent,
+    component: HeroPage,
   },
   {
     path: '**',
@@ -826,7 +829,7 @@ export const routes: Routes = [
 | Error Común | Síntoma en el Navegador | Causa y Solución |
 | :--- | :--- | :--- |
 | Olvidar `(click)` en el botón "Cambiar edad" | Al hacer clic en "Cambiar edad", el número 45 no cambia. | **Causa:** El botón original del Gist no tenía el enlace de evento. <br/>**Solución:** Añadir `(click)="changeAge()"`. |
-| Escribir `path: '/hero'` con barra inicial en `app.routes.ts` | Error de navegación o no coincide la ruta al entrar a `localhost:4200/hero`. | **Causa:** En Angular Router los paths no llevan barra inicial. <br/>**Solución:** Escribir `{ path: 'hero', component: HeroPageComponent }`. |
+| Escribir `path: '/hero'` con barra inicial en `app.routes.ts` | Error de navegación o no coincide la ruta al entrar a `localhost:4200/hero`. | **Causa:** En Angular Router los paths no llevan barra inicial. <br/>**Solución:** Escribir `{ path: 'hero', component: HeroPage }`. |
 | Omitir `()` al invocar el método: `{{ getHeroDescription }}` | En pantalla se imprime la definición del código de la función en texto plano. | **Causa:** Falta invocar la función con `()`. <br/>**Solución:** Escribir `{{ getHeroDescription() }}`. |
 | Olvidar incluir la hoja de estilos de Bootstrap | Los botones aparecen grises y sin espaciado ni estilos modernos. | **Causa:** No haberse añadido el `<link>` de Bootstrap en `src/index.html`. |
 
@@ -864,18 +867,18 @@ Para transformar valores exclusivamente visuales en la plantilla, Angular propor
 
 ---
 
-### Código Final de `HeroPageComponent` con `computed` y `Pipe`
+### Código Final de `HeroPage` con `computed` y `Pipe`
 
-=== "src/app/pages/hero/hero-page.component.ts"
-    ```typescript title="src/app/pages/hero/hero-page.component.ts" hl_lines="1 2 6 12-18"
+=== "src/app/pages/hero/hero-page.ts"
+    ```typescript title="src/app/pages/hero/hero-page.ts" hl_lines="1 2 6 12-18"
     import { Component, computed, signal } from '@angular/core';
     import { UpperCasePipe } from '@angular/common';
 
     @Component({
-      templateUrl: './hero-page.component.html',
+      templateUrl: './hero-page.html',
       imports: [UpperCasePipe], // Importación obligatoria para usar | uppercase en el HTML
     })
-    export class HeroPageComponent {
+    export class HeroPage {
       name = signal('Ironman');
       age = signal(45);
 
@@ -903,8 +906,8 @@ Para transformar valores exclusivamente visuales en la plantilla, Angular propor
     }
     ```
 
-=== "src/app/pages/hero/hero-page.component.html"
-    ```html title="src/app/pages/hero/hero-page.component.html" hl_lines="13 16-17"
+=== "src/app/pages/hero/hero-page.html"
+    ```html title="src/app/pages/hero/hero-page.html" hl_lines="13 16-17"
     <h1>{{ name() }}</h1>
 
     <dl>
