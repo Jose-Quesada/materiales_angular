@@ -81,7 +81,7 @@ sequenceDiagram
     Auth->>Log: HttpRequest modificada
     Log->>Log: Inicia temporizador de red
     Log->>Servidor: Envía petición por la red
-    Servidor-->>Log: Retorna HttpResponse (JSON)
+    Servidor-->>Log: Devuelve HttpResponse (JSON)
     Log->>Log: Registra métrica: 200 OK (115ms)
     Log-->>Auth: HttpResponse
     Auth-->>Servicio: Observable<Post[]>
@@ -202,12 +202,15 @@ obtenerProductos(pagina: number = 1): Observable<ApiResponse<Producto>> {
 
 #### 1.4. Observables como base de HttpClient
 
-`HttpClient` devuelve Observables en lugar de Promises. Esto es una decisión deliberada de diseño por varias razones:
+`HttpClient` devuelve **Observables fríos (*Cold Observables*)** de RxJS en lugar de `Promise` nativas. Esta es una decisión deliberada de arquitectura en Angular por cinco razones fundamentales:
 
-1. **Cancelación:** Las peticiones HTTP pueden cancelarse desuscribiéndose del Observable.
-2. **Reintentos:** Operadores como `retry()` permiten reintentar peticiones fallidas fácilmente.
-3. **Composición:** Los Observables se pueden combinar, transformar y encadenar con operadores.
-4. **Manejo de eventos:** `observe: 'events'` permite acceder a eventos del ciclo de vida de la petición.
+1. **Evaluación perezosa (*Lazy*) bajo demanda:** Llamar a `this.http.get('/api/datos')` no dispara ninguna llamada de red; únicamente construye una "receta" declarativa. La petición HTTP solo se abre cuando un consumidor invoca `.subscribe()` (o cuando `AsyncPipe`, `toSignal()` o `rxResource()` se suscriben internamente).
+2. **Cancelación automática de peticiones en vuelo:** Si el usuario cambia de vista o escribe un nuevo término en un buscador antes de que el servidor responda, desuscribirse del Observable (`.unsubscribe()` o mediante `switchMap`) **aborta físicamente la conexión HTTP** (`XMLHttpRequest` / `fetch` con `AbortController`), ahorrando ancho de banda y evitando condiciones de carrera (*race conditions*).
+3. **Unicasting por suscripción:** Como el Observable de `HttpClient` es frío, **cada llamada a `.subscribe()` ejecuta una nueva petición HTTP independiente**. Si necesitas compartir la misma respuesta entre varios suscriptores sin repetir la llamada de red, puedes aplicar el operador `shareReplay(1)`.
+4. **Reintentos y resiliencia declarativa:** Operadores como `retry()`, `timeout()` y `catchError()` permiten reintentar peticiones fallidas con *backoff* o devolver datos de respaldo sin ensuciar la lógica del componente.
+5. **Flujo de múltiples eventos (`observe: 'events'`):** Una `Promise` solo puede resolverse una única vez. En cambio, al subir o descargar un archivo pesado con `reportProgress: true`, el Observable de `HttpClient` emite múltiples eventos de progreso (`UploadProgress`, `DownloadProgress`) a lo largo del tiempo antes de emitir la respuesta final (`Response`).
+
+> En la **[Sección 2 - Observables (RxJS)](#seccion-2-observables-rxjs)** se analiza en profundidad la arquitectura interna de los Observables y su comparativa detallada frente a las Promesas (`Promise`).
 
 #### 1.5. Gestión de errores
 
@@ -426,145 +429,424 @@ Los interceptores son middleware que se ejecutan en cada petición/respuesta HTT
 
 ### SECCIÓN 2 - Observables (RxJS)
 
-#### 2.1. Qué es RxJS
+#### 2.1. Qué es RxJS y el Modelo Push vs Pull
 
-RxJS (Reactive Extensions for JavaScript) es una biblioteca para programación reactiva utilizando Observables. Permite trabajar con secuencias de eventos asíncronos (streams de datos) utilizando operadores funcionales.
+**RxJS** (*Reactive Extensions for JavaScript*) es la biblioteca estándar de programación reactiva en el ecosistema Angular. Combina tres pilares clásicos de la ingeniería de software: el **Patrón Observer**, el **Patrón Iterator** y la **Programación Funcional con colecciones**.
 
-**Conceptos clave:**
+Según la documentación oficial de RxJS (`rxjs.dev/guide/observable`), para entender qué lugar ocupa un **`Observable`** en JavaScript debemos distinguir dos protocolos de comunicación entre un **Productor** de datos y un **Consumidor**:
 
-- **Observable:** Un stream de datos que emite valores a lo largo del tiempo.
-- **Observer:** Un objeto que reacciona a los valores emitidos (`next`, `error`, `complete`).
-- **Subscription:** La conexión entre un Observable y un Observer.
-- **Subject:** Un Observable que también puede emitir valores (multicast).
-- **Operadores:** Funciones puras que transforman Observables (map, filter, etc.).
+* **Sistemas *Pull* (Tirar):** El **consumidor** decide cuándo solicita un dato al productor; el productor es pasivo.
+* **Sistemas *Push* (Empujar):** El **productor** decide cuándo envía un dato al consumidor; el consumidor es pasivo y reacciona cuando llega la notificación.
 
-#### 2.2. Observable
+| Protocolo | Un único valor (*Single*) | Múltiples valores en el tiempo (*Multiple*) |
+| :--- | :--- | :--- |
+| **Pull** (el consumidor pide) | **`Function`** (`fn()`) | **`Iterator` / `Generator`** (`iterator.next()`) |
+| **Push** (el productor emite) | **`Promise`** (`promise.then()`) | **`Observable`** (`observable$.subscribe()`) |
 
-**Creación de Observables:**
+Un **`Observable` rellena el hueco que faltaba en JavaScript**: es una colección *Push* perezosa (*lazy*) capaz de emitir **cero, uno o múltiples valores** (de forma **síncrona o asíncrona**) a lo largo del tiempo.
+
+**Los 6 bloques fundamentales de RxJS:**
+
+1. **`Observable`:** Representa la idea de una colección invocable de valores o eventos futuros (la "receta" del flujo).
+2. **`Observer` (Observador):** Conjunto de hasta tres callbacks (`next`, `error`, `complete`) que saben cómo escuchar los valores entregados por el `Observable`.
+3. **`Subscription` (Suscripción):** Representa la ejecución en curso de un `Observable`. Su propósito principal es permitir cancelar dicha ejecución mediante `.unsubscribe()`.
+4. **`Operators` (Operadores):** Funciones puras que permiten transformar, filtrar, combinar o manejar errores de un flujo de forma declarativa dentro de `.pipe(...)`.
+5. **`Subject`:** El equivalente a un `EventEmitter`; es la única forma de difundir (*multicast*) un mismo valor o evento a múltiples `Observers` simultáneamente.
+6. **`Schedulers` (Planificadores):** Controladores centralizados que determinan el contexto de concurrencia (cuándo y en qué cola del *Event Loop* se ejecuta una emisión, como `asyncScheduler` o `asapScheduler`).
+
+---
+
+#### 2.2. Anatomía y Ciclo de Vida de un Observable
+
+La documentación oficial de RxJS divide la vida de todo `Observable` en **cuatro etapas bien diferenciadas**:
+
+1. **Creación** (`new Observable()` o funciones de creación como `of`, `from`, `interval`, `http.get`).
+2. **Suscripción** (`observable$.subscribe(observer)`).
+3. **Ejecución** (emisión de notificaciones `next`, `error` y `complete`).
+4. **Disposición / Cancelación** (`subscription.unsubscribe()` y función de limpieza o *Teardown*).
+
+```mermaid
+sequenceDiagram
+    participant C as Consumidor (Componente)
+    participant O as Observable (Productor)
+    participant R as Recurso (HTTP / Timer / DOM)
+
+    Note over C,O: 1. Creación (Lazy: no ejecuta nada aún)
+    C->>O: 2. .subscribe({ next, error, complete })
+    O->>R: Abre conexión / inicia recurso
+    loop 3. Ejecución: next*(error|complete)?
+        R-->>O: Nuevo dato disponible
+        O-->>C: next(valor)
+    end
+    alt Finalización normal o error
+        R-->>O: Fin del flujo
+        O-->>C: complete() o error(err)
+        O->>R: Teardown automático (libera recurso)
+    else 4. Cancelación anticipada del consumidor
+        C->>O: subscription.unsubscribe()
+        O->>R: Ejecuta Teardown (aborta HTTP / clearInterval)
+    end
+```
+
+##### 1. Creación de Observables
+
+Podemos construir un `Observable` manualmente con su constructor `new Observable(subscriber => ...)` o mediante las **funciones de creación** oficiales de RxJS:
 
 ```typescript
-import { Observable, of, from, interval } from 'rxjs';
+import { Observable, of, from, fromEvent, interval, timer, EMPTY, throwError } from 'rxjs';
 
-// Observable desde cero
-const manual$ = new Observable<string>(subscriber => {
-  subscriber.next('Primer valor');
-  subscriber.next('Segundo valor');
+// A) Creación manual desde cero con función de limpieza (Teardown)
+const relojManual$ = new Observable<number>(subscriber => {
+  console.log('🚀 Ejecución iniciada para un suscriptor');
+  let contador = 0;
 
-  setTimeout(() => {
-    subscriber.next('Valor asíncrono');
-    subscriber.complete(); // Finaliza el stream
+  // Emisión síncrona inmediata
+  subscriber.next(contador++);
+
+  // Emisiones asíncronas periódicas
+  const idIntervalo = setInterval(() => {
+    subscriber.next(contador++);
+
+    if (contador > 3) {
+      subscriber.complete(); // Cierra el flujo con éxito
+    }
   }, 1000);
 
-  // Cleanup (se ejecuta al desuscribirse)
+  // Función de Teardown (Limpieza): se ejecuta automáticamente al hacer
+  // unsubscribe(), complete() o error()
   return () => {
-    console.log('Limpieza: desuscripción');
+    console.log('🧹 Limpiando intervalo en memoria');
+    clearInterval(idIntervalo);
   };
 });
 
-// Creación con helpers
-of(1, 2, 3, 4, 5);           // Emite valores y completa
-from([10, 20, 30]);           // Desde array/iterable
-from(fetch('/api/datos'));    // Desde Promise
-interval(1000);               // Emite números cada segundo
+// B) Funciones de creación integradas en RxJS
+const valoresFijos$ = of('A', 'B', 'C');                   // Emite 'A', 'B', 'C' síncronamente y completa
+const desdeArray$   = from([10, 20, 30]);                  // Convierte un Array o Iterable en emisiones individuales
+const desdePromesa$ = from(fetch('/api/usuarios'));        // Convierte una Promise en Observable
+const clicksDom$    = fromEvent<MouseEvent>(document, 'click'); // Escucha eventos del DOM
+const cadaSegundo$  = interval(1000);                      // Emite 0, 1, 2... cada 1000ms (infinito hasta desuscribir)
+const trasRetardo$  = timer(2000);                         // Espera 2s, emite 0 y completa
+const vacio$        = EMPTY;                               // No emite ningún next y completa inmediatamente
+const fallo$        = throwError(() => new Error('Fallo'));// Emite directamente por el canal error
 ```
 
-**Suscripción:**
+##### 2. Suscripción y el Contrato del `Observer`
+
+Suscribirse a un `Observable` es el equivalente reactivo a **invocar una función**, proporcionando un objeto **`Observer`** con hasta tres canales de notificación:
+
+* **`next(valor)`:** Se ejecuta cada vez que el `Observable` emite un dato (puede ocurrir **0, 1 o infinitas veces**).
+* **`error(err)`:** Se ejecuta si ocurre una excepción no controlada en el flujo. **Cierra el flujo inmediatamente**.
+* **`complete()`:** Se ejecuta cuando el productor indica que ya no habrá más datos. **Cierra el flujo inmediatamente**.
+
+!!! info "El Contrato del Observable (Gramática Oficial RxJS)"
+    En la especificación de RxJS, toda ejecución cumple estrictamente la expresión regular:
+    
+    `next*(error|complete)?`
+    
+    Esto significa que un `Observable` puede emitir cero o más notificaciones `next`, y opcionalmente finalizar con **un único `error`** o **un único `complete`** (nunca ambos). Una vez emitido `error` o `complete`, **es imposible que el Observable vuelva a emitir ningún valor**.
 
 ```typescript
-const subscription = manual$.subscribe({
-  next: (valor) => console.log('Recibido:', valor),
-  error: (err) => console.error('Error:', err),
-  complete: () => console.log('Stream completado')
+const sub = relojManual$.subscribe({
+  next: (segundo) => console.log('Valor recibido:', segundo),
+  error: (err) => console.error('Ocurrió un error:', err),
+  complete: () => console.log('✅ Flujo completado con éxito')
 });
 ```
 
-**Desuscripción y memory leaks:**
+##### 3. Desuscripción y Prevención de Fugas de Memoria (*Memory Leaks*)
 
-Las suscripciones que no se cancelan causan memory leaks. Estrategias para evitarlos:
+Si un componente se suscribe a un `Observable` de larga duración (como `interval`, `fromEvent`, un `Subject` global o `ActivatedRoute.params`) y el usuario navega a otra página sin cancelar la suscripción, el callback sigue vivo en memoria reteniendo la instancia del componente destruido.
+
+En **Angular 22**, disponemos de cinco estrategias ordenadas de más declarativa a más manual:
 
 ```typescript
-import { Subject, takeUntil, take } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed, toSignal, rxResource } from '@angular/core/rxjs-interop';
+import { Subject, interval, take, takeUntil } from 'rxjs';
 
-// Estrategia 1: takeUntil con Subject
-private destroy$ = new Subject<void>();
+@Component({
+  selector: 'app-ejemplo-limpieza',
+  imports: [AsyncPipe],
+  template: `<p>Contador AsyncPipe: {{ contador$ | async }}</p>`
+})
+export class EjemploLimpiezaComponent implements OnInit, OnDestroy {
+  private http = inject(HttpClient);
+  private destroyRef = inject(DestroyRef);
+  private destroy$ = new Subject<void>();
 
-ngOnInit(): void {
-  this.dataService.obtenerDatos()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(data => this.datos = data);
+  // ✅ ESTRATEGIA 1 (Recomendada en Angular 22): toSignal() o rxResource()
+  // Se suscriben y cancelan automáticamente cuando el componente se destruye.
+  contadorSignal = toSignal(interval(1000), { initialValue: 0 });
+
+  // ✅ ESTRATEGIA 2: AsyncPipe en la plantilla ({{ contador$ | async }})
+  // Angular gestiona subscribe() y unsubscribe() al montar/desmontar la vista.
+  contador$ = interval(1000);
+
+  constructor() {
+    // ✅ ESTRATEGIA 3 (Moderna para .subscribe manual): takeUntilDestroyed()
+    // En el constructor no necesita parámetros; fuera del constructor recibe this.destroyRef.
+    interval(1000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(val => console.log('Tick seguro:', val));
+  }
+
+  ngOnInit(): void {
+    // Uso de takeUntilDestroyed fuera del contexto de inyección (ngOnInit / métodos)
+    interval(1000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => console.log('Tick en ngOnInit:', val));
+
+    // ✅ ESTRATEGIA 4: take(1) — Completa y libera tras la primera emisión
+    this.http.get('/api/config').pipe(take(1)).subscribe();
+
+    // ✅ ESTRATEGIA 5 (Clásica): takeUntil(this.destroy$) + ngOnDestroy
+    interval(1000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
-
-ngOnDestroy(): void {
-  this.destroy$.next();
-  this.destroy$.complete();
-}
-
-// Estrategia 2: take(1) - solo la primera emisión
-this.http.get('/api/data').pipe(take(1)).subscribe(/* ... */);
-
-// Estrategia 3: AsyncPipe (automático, la mejor opción)
-// En template: {{ datos$ | async }}
-
-// Estrategia 4: takeUntilDestroyed() (Angular 16+)
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-this.http.get('/api/data').pipe(takeUntilDestroyed()).subscribe(/* ... */);
 ```
 
-#### 2.3. Subject
+---
 
-Un `Subject` es un tipo especial de Observable que permite emitir valores a múltiples suscriptores (multicast) y también actuar como Observer.
+#### 2.3. Observables Fríos (*Cold*) vs Calientes (*Hot*)
+
+Una de las distinciones más importantes en RxJS y Angular es saber si un `Observable` es **Frío (*Cold* / *Unicast*)** o **Caliente (*Hot* / *Multicast*)**:
+
+| Característica | *Cold Observable* (Frío) | *Hot Observable* (Caliente) |
+| :--- | :--- | :--- |
+| **¿Dónde se crea el productor?** | **Dentro** de la función del Observable al hacer `.subscribe()`. | **Fuera** del Observable; existe antes de que nadie se suscriba. |
+| **Modelo de difusión** | **Unicast** (un productor independiente por cada suscriptor). | **Multicast** (todos los suscriptores comparten el mismo productor). |
+| **Analogía del mundo real** | Ver un vídeo bajo demanda en Netflix (cada persona empieza desde el minuto 00:00). | Ver una emisión de televisión o Twitch en directo (te enganchas en el minuto actual). |
+| **Ejemplos en Angular** | `this.http.get(...)`, `of()`, `from()`, `interval()`, `timer()`. | `fromEvent(document, 'click')`, `Subject`, `BehaviorSubject`, WebSockets, `Router.events`. |
+
+##### El peligro de los *Cold Observables* en `HttpClient` y cómo compartirlos (`shareReplay`)
+
+Como `this.http.get()` devuelve un **Observable frío**, si te suscribes dos veces al mismo Observable (por ejemplo, dos bloques `| async` en una plantilla o dos `.subscribe()`), **Angular disparará dos peticiones HTTP idénticas por la red**:
+
+```typescript
+import { shareReplay } from 'rxjs';
+
+// ❌ CUIDADO: Observable frío sin compartir
+const peticionFria$ = this.http.get<Usuario[]>('/api/usuarios');
+peticionFria$.subscribe(); // 🌐 Dispara Petición HTTP #1
+peticionFria$.subscribe(); // 🌐 Dispara Petición HTTP #2 (¡Duplicada!)
+
+// ✅ SOLUCIÓN: Convertir en Multicast con caché de la última emisión
+const peticionCompartida$ = this.http.get<Usuario[]>('/api/usuarios').pipe(
+  shareReplay({ bufferSize: 1, refCount: true })
+);
+peticionCompartida$.subscribe(); // 🌐 Dispara Petición HTTP #1
+peticionCompartida$.subscribe(); // ⚡ Reutiliza la respuesta en memoria sin tocar la red
+```
+
+---
+
+#### 2.4. Comparativa Exhaustiva: `Observable` (RxJS) vs `Promise` (JavaScript)
+
+Tanto las **Promesas (`Promise`)** como los **`Observables`** permiten gestionar asincronía, pero sus capacidades y modelo de ejecución son radicalmente distintos. La documentación oficial de Angular destaca esta comparativa como pieza clave para entender por qué el framework adopta RxJS:
+
+| Criterio | `Promise` (JavaScript Nativo) | `Observable` (RxJS en Angular) |
+| :--- | :--- | :--- |
+| **1. Cantidad de valores** | **Un único valor** (se resuelve una sola vez con `resolve` o falla con `reject`). | **De 0 a infinitos valores** a lo largo del tiempo (`next` puede emitirse múltiples veces). |
+| **2. Momento de ejecución** | **Impaciente (*Eager*):** el código de la promesa se ejecuta **en el mismo instante en que se instancia** (`new Promise(...)`). | **Perezoso (*Lazy*):** es declarativo; **no ejecuta nada** hasta que alguien invoca `.subscribe()`. |
+| **3. Cancelación** | **No cancelable por sí misma:** una vez iniciada, continuará hasta resolverse o rechazarse (requiere acoplar `AbortController` externamente). | **Cancelable de serie:** llamar a `subscription.unsubscribe()` (o usar `switchMap` / `takeUntilDestroyed`) aborta la operación en curso. |
+| **4. Síncrono vs Asíncrono** | **Siempre asíncrona:** incluso `Promise.resolve(1).then(...)` se encola en la *Microtask Queue* del Event Loop. | **Síncrono o asíncrono:** `of(1, 2)` emite de inmediato en el mismo hilo; `interval(1000)` o `http.get()` emiten asíncronamente. |
+| **5. Modelo de difusión** | **Siempre compartida (*Multicast*):** varios `.then()` sobre la misma promesa leen el mismo resultado ya calculado. | **Unicast por defecto (*Cold*):** cada `.subscribe()` re-ejecuta el flujo desde cero (configurable a *Multicast* con `Subject` o `shareReplay`). |
+| **6. Operadores de transformación** | Básicos (`.then()`, `.catch()`, `.finally()`, `Promise.all`, `Promise.race`). | Más de **100 operadores declarativos y componibles** en `.pipe()` (`map`, `filter`, `debounceTime`, `switchMap`, `retry`, `combineLatest`...). |
+| **7. Reintentos ante fallos** | Manual (hay que escribir bucles recursivos o funciones envolventes con `try/catch`). | Declarativo en una línea con `retry(3)` o `retry({ count: 3, delay: 1000 })`. |
+| **8. Control temporal (UI)** | No dispone de control de tiempo integrado. | Control nativo del tiempo: `debounceTime`, `throttleTime`, `auditTime`, ` timeout`, `delay`. |
+
+##### Comparación Práctica en Código (4 Escenarios Clave)
+
+###### Escenario 1: Ejecución *Eager* (Inmediata) vs *Lazy* (Bajo demanda)
+
+```typescript
+// 🔴 PROMISE (Eager): Se ejecuta INMEDIATAMENTE aunque nadie llame a .then()
+const promesa = new Promise<string>((resolve) => {
+  console.log('⚡ [Promise] ¡Ejecutando llamada a servidor ahora mismo!');
+  resolve('Datos de la promesa');
+});
+// En consola ya aparece: "⚡ [Promise] ¡Ejecutando llamada a servidor ahora mismo!"
+
+// 🟢 OBSERVABLE (Lazy): Solo define la receta; NO hace nada todavía
+const observable$ = new Observable<string>((subscriber) => {
+  console.log('🎯 [Observable] Ejecutando llamada solo porque alguien se suscribió');
+  subscriber.next('Datos del observable');
+  subscriber.complete();
+});
+// En consola NO aparece nada hasta la siguiente línea:
+observable$.subscribe(valor => console.log(valor));
+```
+
+###### Escenario 2: Un Único Valor vs Múltiples Valores en el Tiempo
+
+```typescript
+// 🔴 PROMISE: Solo el primer resolve() surte efecto; los demás se ignoran para siempre
+const promesaUnica = new Promise<number>((resolve) => {
+  resolve(1);
+  resolve(2); // ❌ Ignorado silenciosamente
+  resolve(3); // ❌ Ignorado silenciosamente
+});
+promesaUnica.then(val => console.log('Promise:', val)); // Imprime solo: Promise: 1
+
+// 🟢 OBSERVABLE: Puede emitir una secuencia continua en el tiempo
+const flujoMultiple$ = new Observable<number>((subscriber) => {
+  subscriber.next(1);
+  subscriber.next(2);
+  setTimeout(() => {
+    subscriber.next(3);
+    subscriber.complete();
+  }, 500);
+});
+flujoMultiple$.subscribe(val => console.log('Observable:', val));
+// Imprime: Observable: 1 -> Observable: 2 -> (500ms después) -> Observable: 3
+```
+
+###### Escenario 3: Cancelación Real de una Petición HTTP en Vuelo
+
+```typescript
+// 🟢 OBSERVABLE en Angular HttpClient: Cancelación directa en 1 línea
+const suscripcion = this.http.get('/api/informe-pesado').subscribe({
+  next: (datos) => console.log('Informe recibido:', datos)
+});
+
+// Si el usuario pulsa "Cancelar" o abandona el componente a los 200ms:
+suscripcion.unsubscribe();
+// En la pestaña Network de Chrome DevTools verás la petición marcada como "(canceled)"
+```
+
+###### Escenario 4: Conversión Bidireccional entre `Observable` y `Promise` (`firstValueFrom` / `lastValueFrom`)
+
+!!! warning "Deprecación de `.toPromise()`"
+    El antiguo método `observable$.toPromise()` fue **eliminado en RxJS 7+** porque podía devolver `undefined` de forma ambigua si el Observable completaba sin emitir valores. En Angular moderno se utilizan **`firstValueFrom()`** y **`lastValueFrom()`**.
+
+```typescript
+import { firstValueFrom, lastValueFrom, from, of } from 'rxjs';
+
+// 1. De Observable a Promise (para usar con async / await)
+async cargarConfiguracionInicial(): Promise<void> {
+  // firstValueFrom: se suscribe, resuelve la Promise con la PRIMERA emisión y se desuscribe automáticamente
+  const usuario = await firstValueFrom(
+    this.http.get<Usuario>('/api/perfil')
+  );
+  console.log('Usuario con async/await:', usuario);
+
+  // lastValueFrom: espera a que el Observable haga complete() y resuelve con el ÚLTIMO valor emitido
+  const ultimoNumero = await lastValueFrom(of(10, 20, 30)); // Resultado: 30
+}
+
+// 2. De Promise a Observable (para integrarla en una tubería .pipe() de RxJS)
+const observableDesdePromesa$ = from(fetch('/api/status').then(r => r.json()));
+```
+
+**¿Cuándo usar cada uno en Angular 22?**
+
+* **Usa `Observable` (RxJS):** en comunicaciones HTTP (`HttpClient`), buscadores en tiempo real (`debounceTime` + `switchMap`), eventos de interfaz o `Router`, WebSockets, coordinación de múltiples fuentes asíncronas (`combineLatest`, `forkJoin`) y cualquier operación que deba poder **cancelarse**.
+* **Usa `Signal` (Reactividad Síncrona de Angular):** para almacenar y exponer el **estado de la interfaz** en componentes y servicios (`signal()`, `computed()`, o convirtiendo un Observable con `toSignal()` / `rxResource()`).
+* **Usa `Promise` (`async/await`):** cuando interactúes con APIs nativas del navegador basadas en promesas (como `navigator.clipboard.writeText()`, `import()` dinámico en *Lazy Loading* de rutas o librerías de terceros que solo devuelvan `Promise`).
+
+---
+
+#### 2.5. `Subject` y sus Variantes (*Multicasting*)
+
+Un **`Subject`** es un tipo híbrido especial en RxJS: **es a la vez un `Observable` y un `Observer`**.
+
+* Como **`Observable`**, múltiples consumidores pueden suscribirse a él (`subject.subscribe(...)`). Es siempre un **Observable caliente (*Hot* / *Multicast*)**: todos los suscriptores comparten exactamente el mismo flujo de ejecución.
+* Como **`Observer`**, puedes empujar nuevos valores desde fuera llamando a `subject.next(valor)`, `subject.error(err)` o `subject.complete()`.
+
+!!! tip "Buena práctica de encapsulación: `.asObservable()`"
+    En un servicio de Angular, nunca expongas el `Subject` directamente como `public`, ya que cualquier componente podría llamar por error a `.next()` o `.complete()` y romper el flujo global. Declara el `Subject` como `private` y expón únicamente su vista de solo lectura mediante **`asObservable()`** (o bien utiliza una `signal()` privada con `.asReadonly()` si solo gestionas estado síncrono).
+
+RxJS proporciona **cuatro variantes de `Subject`** según cómo tratan a los suscriptores que llegan tarde:
+
+| Tipo de Subject | ¿Requiere valor inicial? | ¿Qué recibe un nuevo suscriptor al suscribirse? | Caso de uso principal |
+| :--- | :--- | :--- | :--- |
+| **`Subject<T>`** | No | Nada al suscribirse; **solo emisiones futuras** posteriores a su suscripción. | Bus de eventos (*Event Bus*), notificaciones puntuales, clicks o señal de destrucción (`destroy$`). |
+| **`BehaviorSubject<T>`** | **Sí** (obligatorio) | **El último valor emitido** (o el valor inicial si aún no se emitió nada) + emisiones futuras. | Estado compartido clásico (usuario autenticado, tema actual, carrito) antes o junto a Signals. |
+| **`ReplaySubject<T>`** | No (`new ReplaySubject(N)`) | **Los últimos `N` valores emitidos** en el historial + emisiones futuras. | Caché de historial de eventos, logs recientes o reproducir acciones previas a un suscriptor tardío. |
+| **`AsyncSubject<T>`** | No | Nada durante la ejecución; emite **únicamente el último valor cuando se llama a `.complete()`**. | Cálculos pesados largos donde solo importa el resultado final una vez completada la tarea. |
+
+##### 1. `Subject` (Emisión solo a suscriptores presentes)
 
 ```typescript
 import { Subject } from 'rxjs';
 
 const eventoSubject = new Subject<string>();
 
-// Suscriptor 1
+// Suscriptor 1 (llega antes de las emisiones)
 eventoSubject.subscribe(valor => console.log('Sub 1:', valor));
 
-// Suscriptor 2
+eventoSubject.next('Evento A'); // Solo Sub 1 recibe 'Evento A'
+
+// Suscriptor 2 (llega tarde: NO recibe 'Evento A')
 eventoSubject.subscribe(valor => console.log('Sub 2:', valor));
 
-// Emitir valores
-eventoSubject.next('Evento A'); // Ambos suscriptores lo reciben
-eventoSubject.next('Evento B');
+eventoSubject.next('Evento B'); // Tanto Sub 1 como Sub 2 reciben 'Evento B'
 ```
 
-**Casos de uso típicos de Subject:**
-
-- **Event Bus:** Comunicación desacoplada entre componentes.
-- **Notificaciones:** Servicio de notificaciones que emite a múltiples consumidores.
-- **Señal de destrucción:** `takeUntil(this.destroy$)`.
-
-#### 2.4. BehaviorSubject
-
-`BehaviorSubject` es una variante de `Subject` que:
-
-- Requiere un valor inicial.
-- Almacena el último valor emitido.
-- Los nuevos suscriptores reciben inmediatamente el último valor.
+##### 2. `BehaviorSubject` (Valor inicial + Último estado siempre disponible)
 
 ```typescript
 import { BehaviorSubject } from 'rxjs';
 
 const usuarioSubject = new BehaviorSubject<Usuario | null>(null);
 
-// Estado reactivo simple
+// Suscriptor 1 recibe inmediatamente: null
 usuarioSubject.subscribe(usuario => {
-  console.log('Usuario actual:', usuario);
+  console.log('Sub 1 (Usuario actual):', usuario);
 });
 
-// Nuevo suscriptor recibe el último valor inmediatamente
+// Actualizamos el estado; Sub 1 recibe: { id: 1, nombre: 'Ana' }
 usuarioSubject.next({ id: 1, nombre: 'Ana' });
 
-// Suscriptor tardío
+// Lectura síncrona puntual del valor actual (útil en Guards o Interceptores)
+console.log('Valor instantáneo:', usuarioSubject.getValue());
+
+// Suscriptor tardío: recibe INMEDIATAMENTE { id: 1, nombre: 'Ana' } nada más suscribirse
 setTimeout(() => {
-  usuarioSubject.subscribe(u => console.log('Tardío:', u));
-  // Output: Tardío: { id: 1, nombre: 'Ana' }
+  usuarioSubject.subscribe(u => console.log('Sub Tardío:', u));
 }, 2000);
 ```
 
-#### 2.5. Operadores principales de RxJS
+##### 3. `ReplaySubject` y `AsyncSubject`
+
+```typescript
+import { ReplaySubject, AsyncSubject } from 'rxjs';
+
+// ReplaySubject(2): recuerda y re-emite los últimos 2 valores a quien se suscriba tarde
+const historial$ = new ReplaySubject<string>(2);
+historial$.next('Paso 1');
+historial$.next('Paso 2');
+historial$.next('Paso 3');
+
+historial$.subscribe(paso => console.log('Replay tardío:', paso));
+// Imprime inmediatamente:
+// Replay tardío: Paso 2
+// Replay tardío: Paso 3
+
+// AsyncSubject: solo entrega el último valor cuando el flujo se completa
+const resultadoFinal$ = new AsyncSubject<number>();
+resultadoFinal$.subscribe(res => console.log('AsyncSubject:', res));
+resultadoFinal$.next(10);
+resultadoFinal$.next(20);
+resultadoFinal$.next(99);
+resultadoFinal$.complete(); // Recién aquí imprime: AsyncSubject: 99
+```
+
+---
+
+#### 2.6. Operadores principales de RxJS y Tuberías (`.pipe()`)
+
+Los **operadores de transformación (*Pipeable Operators*)** son funciones puras que reciben un `Observable` de entrada y devuelven **un nuevo `Observable` de salida** sin mutar nunca el flujo original. Se encadenan dentro del método **`.pipe(op1(), op2(), ...)`**, formando una tubería de procesamiento declarativa.
 
 ##### map - Transformar valores
 

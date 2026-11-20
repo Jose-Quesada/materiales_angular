@@ -5,7 +5,7 @@ title: 07. GifsApp - Servicios y HTTP
 
 # Sección 07: GifsApp — Servicios, HTTP, Mappers y Persistencia
 
-En esta sección conectamos nuestra aplicación con una API del mundo real: **Giphy API**. Aprenderemos a configurar el nuevo **`provideHttpClient()`**, modelar respuestas JSON complejas mediante **QuickType**, implementar el **Patrón Mapper** para blindar nuestra aplicación frente a cambios en APIs externas, construir un **Buscador con Caché en Memoria**, enlazar **Parámetros Dinámicos de URL** con **`toSignal()`**, y persistir el historial en **`LocalStorage`** usando **`effect()`**.
+En esta sección conectamos nuestra aplicación con una API del mundo real: **Giphy API**. Aprenderemos a realizar peticiones asíncronas con **`HttpClient`** (integrado de serie en Angular 22) y cuándo configurar **`provideHttpClient()`**, modelar respuestas JSON complejas mediante **QuickType**, implementar el **Patrón Mapper** para blindar nuestra aplicación frente a cambios en APIs externas, construir un **Buscador con Caché en Memoria**, enlazar **Parámetros Dinámicos de URL** con **`toSignal()`**, y persistir el historial en **`LocalStorage`** usando **`effect()`**.
 
 ---
 
@@ -19,7 +19,7 @@ En esta sección conectamos nuestra aplicación con una API del mundo real: **Gi
 ``` mermaid
 flowchart TD
     subgraph CapaAPI ["Fase 1 · Capa Externa y Comunicación HTTP"]
-        API["<b>Giphy Developers API</b><br/>Endpoints REST oficiales: /trending y /search"] --> HTTP["<b>HttpClient (withFetch)</b><br/>Peticiones asíncronas configuradas en app.config.ts"]
+        API["<b>Giphy Developers API</b><br/>Endpoints REST oficiales: /trending y /search"] --> HTTP["<b>HttpClient (Fetch API por defecto)</b><br/>Peticiones asíncronas disponibles globalmente"]
     end
 
     subgraph CapaDominio ["Fase 2 · Transformación y Estado Centralizado (GifService)"]
@@ -147,7 +147,7 @@ Actualizamos nuestros archivos de entorno en `src/environments/`:
 Antes de escribir código en Angular, es una práctica profesional indispensable **inspeccionar la respuesta real de la API** abriendo la URL en el navegador o utilizando un cliente HTTP (Thunder Client, Postman o curl).
 
 #### Endpoint de Tendencias (Trending)
-Retorna los GIFs más populares del momento:
+Devuelve los GIFs más populares del momento:
 ```http
 GET https://api.giphy.com/v1/gifs/trending?api_key=TU_API_KEY&limit=20
 ```
@@ -199,6 +199,7 @@ Al ejecutar la petición en el navegador, observamos la siguiente estructura ra�
     Cada elemento individual del array `data` contiene **más de 50 propiedades** (dimensiones en webp, mp4, gifs fijos, datos de analytics, autor, flags).
     
     Si consumiéramos este objeto tal cual en nuestros componentes:
+    
     1. Acoplaríamos nuestra interfaz a los nombres de campos de Giphy.
     2. Sobrecargaríamos la memoria del navegador reteniendo datos que nunca mostraremos.
     3. Si Giphy cambia su estructura, se romperían todas nuestras plantillas.
@@ -211,6 +212,7 @@ Al ejecutar la petición en el navegador, observamos la siguiente estructura ra�
 
 En el patrón de arquitectura de Angular, **los componentes nunca deben realizar llamadas HTTP directamente**.  
 La regla de **Separación de Responsabilidades (SoC)** dicta que:
+
 * La **UI (Componentes)** es "tonta": solo recibe datos ya procesados y emite eventos de usuario.
 * La **Capa de Servicios**: es "ciega" respecto a cómo se pintan los datos, pero es la encargada de consultar la API externa, mapear los resultados y custodiar el estado reactivo centralizado (*Single Source of Truth*).
 
@@ -223,6 +225,7 @@ ng g s gifs/services/gifs
 ```
 
 Este comando genera:
+
 * `src/app/gifs/services/gifs.service.ts`: La clase del servicio inyectable.
 * `src/app/gifs/services/gifs.service.spec.ts`: Archivo de pruebas unitarias.
 
@@ -230,12 +233,12 @@ Este comando genera:
 
 ### 2. Esqueleto Inicial del Servicio
 
-El servicio se crea decorado con `@Injectable({ providedIn: 'root' })`, lo que indica a Angular que existirá **una única instancia compartida (*Singleton*)** en toda la aplicación:
+El servicio se crea decorado con `@Service()` (introducido en Angular 22 como sustituto moderno de `@Injectable({ providedIn: 'root' })`), lo que indica a Angular que existirá **una única instancia compartida (*Singleton*)** en toda la aplicación:
 
 ```typescript title="src/app/gifs/services/gifs.service.ts (Esqueleto Inicial)"
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GifService {
   // Estado reactivo: lista de gifs y bandera de carga
   trendingGifs = signal<any[]>([]);
@@ -251,29 +254,33 @@ En las siguientes fases conectaremos `HttpClient` y tiparemos `trendingGifs` con
 
 ---
 
-## Configuración Global del Cliente HTTP: `provideHttpClient()`
+## Configuración del Cliente HTTP en Angular 22: `HttpClient` y `provideHttpClient()`
 
 !!! info "📖 Para saber más: Manual de Referencia"
     Para dominar `provideHttpClient()`, configuración de interceptores funcionales y manejo de errores HTTP, consulta el **[Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md)**.
 
-Para que `GifService` pueda realizar peticiones asíncronas en red mediante `HttpClient`, debemos registrar el proveedor del cliente HTTP en la raíz de la aplicación.
+A partir de **Angular 21 y consolidado en Angular 22**, **`HttpClient` viene provisto automáticamente en `root`** (de forma *tree-shakeable*) y utiliza la **Fetch API** nativa como backend por defecto (por lo que `withFetch()` ya no es necesario).
 
-En Angular moderno no importamos módulos (`HttpClientModule` está formalmente en desuso). Registramos la función **`provideHttpClient()`** en los proveedores de `src/app/app.config.ts`:
+Esto significa que, para realizar peticiones HTTP básicas en `GifService`, **ya no necesitas modificar `src/app/app.config.ts`**: puedes inyectar `HttpClient` directamente con `inject(HttpClient)`.
 
-```typescript title="src/app/app.config.ts" hl_lines="3 9"
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+El archivo `src/app/app.config.ts` generado por Angular 22 (modo *zoneless* por defecto, sin `provideZoneChangeDetection`) queda así:
+
+```typescript title="src/app/app.config.ts"
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(), // Cliente HTTP disponible globalmente para inyección
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
   ],
 };
 ```
+
+!!! note "¿Cuándo sí debemos añadir `provideHttpClient()` en `app.config.ts`?"
+    * **Si vas a añadir características opcionales**, como interceptores funcionales (`provideHttpClient(withInterceptors([...]))`) o soporte de progreso de subida mediante XHR (`provideHttpClient(withXhr())`).
+    * **Si trabajas con versiones anteriores (Angular 17–20)**, donde aún era obligatorio registrar `provideHttpClient()` manualmente en `providers` (reemplazando al antiguo `HttpClientModule`, ya en desuso).
 
 ---
 
@@ -309,6 +316,7 @@ Para tipar el contrato externo que recibimos del servidor, no escribimos las int
 1. Realiza una petición de prueba a Giphy en el navegador (`/gifs/trending?api_key=...&limit=20`) y copia el JSON completo devuelto.
 2. En Visual Studio Code, crea el archivo `src/app/gifs/interfaces/giphy.interfaces.ts`.
 3. Abre la paleta de comandos con ++ctrl+shift+p++ (o ++cmd+shift+p++ en macOS), selecciona **Paste JSON as Code** y escribe como nombre de interfaz superior: `GiphyResponse`.
+4. **Renombrado semántico (`Datum` → `GiphyItem`):** Al generar el código automáticamente, QuickType tipa el campo `data` como `Datum[]` (y crea `export interface Datum`). Para que el código sea más descriptivo, sitúa el cursor sobre `Datum`, pulsa ++f2++ (*Rename Symbol*) y renómbralo a `GiphyItem` (así se actualizarán todas sus referencias a `GiphyItem[]` y `export interface GiphyItem`).
 
 El archivo `src/app/gifs/interfaces/giphy.interfaces.ts` tipa exhaustivamente la estructura del DTO externo:
 
@@ -378,7 +386,15 @@ export interface Gif {
 
 ### 3. El Mapper: `src/app/gifs/mapper/gif.mapper.ts`
 
-Creamos la clase utilitaria `GifMapper` que contiene funciones puras estáticas encargadas de la transformación:
+Un **Mapper** es una pieza intermedia que actúa como traductor entre dos formatos de datos: toma la respuesta compleja que llega desde la API externa (`GiphyItem`) y la convierte en el modelo limpio que necesita nuestra aplicación (`Gif`).
+
+**¿Por qué se usa en lugar de pasar los datos de Giphy directamente?**
+
+* **Desacoplamiento ante cambios de la API:** Si mañana Giphy cambia la estructura de su JSON (por ejemplo, la ruta `item.images.original.url`) o decidimos cambiar a otro proveedor de GIFs, solo tendremos que adaptar `GifMapper` sin modificar ni un solo componente.
+* **Limpieza y ahorro de memoria:** Evitamos propagar por toda la aplicación objetos gigantes con más de 50 propiedades que la interfaz no utiliza.
+* **Reutilización centralizada:** Tanto la carga de tendencias (*trending*) como el buscador (*search*) devolverán exactamente el mismo tipo `Gif[]`, usando este único punto de conversión.
+
+Creamos la clase utilitaria `GifMapper` con dos métodos puros: `mapGiphyItemToGif` (transforma un único elemento) y `mapGiphyItemsToGifArray` (aplica esa transformación a todo el array mediante `.map()`):
 
 ```typescript title="src/app/gifs/mapper/gif.mapper.ts"
 import { Gif } from '../interfaces/gif.interface';
@@ -401,6 +417,10 @@ export class GifMapper {
 }
 ```
 
+!!! note "¿Qué hace `.map()` y por qué se llama así?"
+    * **¿Qué hace?** `items.map(...)` es el método nativo de los arrays en JavaScript/TypeScript que recorre cada elemento del array original (`GiphyItem[]`), le aplica la función transformadora (`this.mapGiphyItemToGif`) y **construye un nuevo array** con los resultados (`Gif[]`) **sin modificar el original** (misma cantidad de elementos, distinta forma).
+    * **¿Por qué se llama `map` (y *Mapper*)?** El término proviene de las matemáticas (*mapping* = **correspondencia o proyección**): a cada elemento de un conjunto de origen (`GiphyItem`) le corresponde exactamente un elemento transformado en el conjunto de destino (`Gif`). Por esa misma razón, a la clase encargada de proyectar un modelo en otro se le llama **Mapper**.
+
 !!! tip "¿Por qué métodos `static` en el Mapper?"
     `GifMapper` no mantiene estado ni interactúa con la red; es una caja de transformación determinista: ante un mismo `GiphyItem`, siempre devuelve el mismo `Gif`. Al declarar sus métodos como `static`, podemos consumirlo directamente como `GifMapper.mapGiphyItemsToGifArray(...)` sin necesidad de instanciarlo con `new` ni inyectarlo mediante DI.
 
@@ -408,21 +428,108 @@ export class GifMapper {
 
 ## Carga de Tendencias con `HttpClient`: Petición HTTP GET
 
-Ahora que contamos con los contratos tipados y el mapper, volvemos a `src/app/gifs/services/gifs.service.ts` para implementar la llamada de red para las tendencias.
+Ahora que contamos con los contratos tipados y el mapper, volvemos a `src/app/gifs/services/gifs.service.ts` para implementar la carga de tendencias paso a paso.
 
-### 1. Inyección Funcional de `HttpClient` y Estado Reactivo
+Para no mezclar demasiados conceptos a la vez, vamos a dividir la llamada HTTP en **tres fases**:
 
-En Angular moderno inyectamos `HttpClient` utilizando la función `inject()` a nivel de campo:
+### 1. Fase 1: Inyectar `HttpClient` y definir la petición `http.get()`
 
-```typescript title="src/app/gifs/services/gifs.service.ts (Fase 1: Tendencias)" hl_lines="2 8 11-13 19-33"
+En primer lugar, inyectamos `HttpClient` con `inject(HttpClient)` y declaramos las señales de estado (`trendingGifs` y `trendingGifsLoading`). Después, dentro de `loadTrendingGifs()`, preparamos la petición `GET` hacia el endpoint `/gifs/trending`:
+
+```typescript title="Fase 1: Preparar la petición (sin suscripción aún)" hl_lines="2 8-12"
+export class GifService {
+  private http = inject(HttpClient);
+
+  trendingGifs = signal<Gif[]>([]);
+  trendingGifsLoading = signal(true);
+
+  loadTrendingGifs() {
+    this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
+      params: {
+        api_key: environment.giphyApiKey,
+        limit: 20,
+      },
+    });
+  }
+}
+```
+
+* **`<GiphyResponse>` (Tipado genérico):** indica a TypeScript la estructura exacta del JSON que devolverá Giphy, habilitando el autocompletado en `resp.data`.
+* **`params` (Query Parameters seguros):** en lugar de concatenar texto en la URL (`?api_key=...&limit=20`), `HttpClient` construye y codifica los parámetros automáticamente de forma segura.
+
+!!! warning "En este punto la petición todavía NO se envía: ¿qué es un `Observable`?"
+    `this.http.get(...)` no devuelve los GIFs directamente ni una `Promise`, sino un **`Observable`** (una pieza de la librería **RxJS** incluida en Angular para trabajar con flujos de datos asíncronos a lo largo del tiempo).
+
+    Para entenderlo sin rodeos en este punto:
+
+    * **Un `Observable` es un flujo de datos potencial:** piensa en él como una **receta de cocina** o una **suscripción a un canal**; describe *cómo* obtener o emitir datos en el futuro (en este caso, la respuesta HTTP cuando llegue del servidor), pero por sí solo no ejecuta nada.
+    * **Es un *Cold Observable* (Observable frío):** en `HttpClient`, la petición de red **no arranca al llamar a `this.http.get(...)`**. Permanece en espera hasta que alguien se **suscriba** a él con `.subscribe(...)` (Fase 2).
+    * **Diferencia clave con una `Promise`:** una promesa de JavaScript se dispara en cuanto se crea; un `Observable` frío solo se activa cuando hay un suscriptor escuchando (y permite además transformar o cancelar la operación antes de recibir el resultado).
+
+    > 📖 **Para profundizar:** si quieres ver la teoría completa sobre RxJS, la diferencia entre *Cold* y *Hot Observables*, operadores y gestión de suscripciones, consulta el **[Manual de Referencia: 10. Cliente HTTP y Observables (RxJS)](manual/10-http.md#seccion-2-observables-rxjs)**.
+
+---
+
+### 2. Fase 2: Disparar la petición con `.subscribe()`
+
+Para que Angular ejecute realmente la llamada HTTP por la red y nos entregue la respuesta cuando llegue del servidor, encadenamos `.subscribe(...)` al `http.get(...)` y llamamos a `this.loadTrendingGifs()` desde el `constructor()`:
+
+```typescript title="Fase 2: Activar la petición con .subscribe()" hl_lines="1-3 12-14"
+  constructor() {
+    this.loadTrendingGifs();
+  }
+
+  loadTrendingGifs() {
+    this.http
+      .get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
+        params: {
+          api_key: environment.giphyApiKey,
+          limit: 20,
+        },
+      })
+      .subscribe((resp) => {
+        console.log({ resp }); // Aquí llega el GiphyResponse completo desde la API
+      });
+  }
+```
+
+* **El `constructor()`** se ejecuta una sola vez cuando Angular instancia el servicio *Singleton*, lanzando la carga inicial de tendencias.
+* **`.subscribe((resp) => { ... })`** es el disparador de la petición HTTP. La función flecha interior se ejecutará de forma asíncrona en el momento en que Giphy responda.
+
+---
+
+### 3. Fase 3: Transformar con `GifMapper` y actualizar las señales
+
+Una vez recibimos `resp` dentro de `.subscribe()`, convertimos el array pesado de Giphy (`resp.data`) al modelo limpio de nuestra app usando `GifMapper` y actualizamos nuestras señales reactivas:
+
+```typescript title="Fase 3: Mapear datos y actualizar el estado" hl_lines="2-5"
+      .subscribe((resp) => {
+        const gifs = GifMapper.mapGiphyItemsToGifArray(resp.data);
+        this.trendingGifs.set(gifs);
+        this.trendingGifsLoading.set(false);
+        console.log({ gifs });
+      });
+```
+
+1. **Transformación (`GifMapper`):** extrae únicamente `id`, `title` y `url` de cada elemento de `resp.data`.
+2. **Actualizar datos (`this.trendingGifs.set(gifs)`):** guarda el nuevo `Gif[]` en la señal para que cualquier componente conectado se actualice automáticamente.
+3. **Finalizar carga (`this.trendingGifsLoading.set(false)`):** apaga el indicador de carga.
+
+---
+
+### 4. Código Completo de `GifService` (Tendencias)
+
+Uniendo las tres fases, el archivo completo `src/app/gifs/services/gifs.service.ts` queda así:
+
+```typescript title="src/app/gifs/services/gifs.service.ts (Fase 1: Tendencias)" hl_lines="1 3-6 10 13-14 16-18 20-34"
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { environment } from '@environments/environment';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GifService {
   private http = inject(HttpClient);
 
@@ -454,25 +561,7 @@ export class GifService {
 
 ---
 
-### 2. Anatomía Técnica de la Petición `http.get()`
-
-La instrucción `this.http.get<GiphyResponse>(...)` encapsula cuatro principios de arquitectura esenciales:
-
-1. **Parámetro Genérico de Tipado (`<GiphyResponse>`):**  
-   Le indica al compilador de TypeScript cuál es la forma exacta del cuerpo (*body*) que esperamos recibir del servidor. Esto habilita el autocompletado y la verificación estricta de tipos en `resp.data`.
-2. **Gestión Segura de Query Parameters con `params`:**  
-   En lugar de concatenar cadenas manualmente (`${url}?api_key=${key}&limit=20`), pasamos un objeto en la propiedad `params`. `HttpClient` se encarga automáticamente de formatear, concatenar y codificar en formato URL (*URL-encoding*) todos los parámetros de búsqueda de forma segura contra inyecciones.
-3. **La Naturaleza de los Observables Fríos (*Cold Observables*):**  
-   El método `http.get()` retorna un `Observable`. En la biblioteca RxJS, las llamadas HTTP de Angular son **frías por diseño**: si no ejecutas `.subscribe(...)`, **la petición HTTP nunca se emitirá por la red**. La suscripción es el disparador que activa la transferencia de datos.
-4. **Transformación Reactiva y Actualización de Señales:**  
-   En el momento en que la respuesta llega del servidor:
-    * El mapper transforma los DTOs en modelos de dominio: `GifMapper.mapGiphyItemsToGifArray(resp.data)`.
-    * Mutamos la señal reactiva con el nuevo valor: `this.trendingGifs.set(gifs)`.
-    * Desactivamos el estado de carga: `this.trendingGifsLoading.set(false)`.
-
----
-
-### 3. Verificación en el Navegador (DevTools)
+### 5. Verificación en el Navegador (DevTools)
 
 Al guardar los cambios y abrir `http://localhost:4200/dashboard`:
 
@@ -484,15 +573,13 @@ Al guardar los cambios y abrir `http://localhost:4200/dashboard`:
 
 ---
 
-!!! tip "💡 Evolución Angular 22: Servicios con `@Service()` y Reactividad Asíncrona con `rxResource()`"
-    En el patrón clásico de Angular 19, observamos dos prácticas habituales:
-    1. El decorador `@Injectable({ providedIn: 'root' })`.
-    2. La suscripción manual a `HttpClient` con `.subscribe()` y la gestión de dos señales separadas: `trendingGifs` y `trendingGifsLoading = signal(true)`.
-
-    En **Angular 22**, estos dos aspectos se simplifican con las nuevas características estables del framework:
+!!! tip "💡 Evolución Angular 22: `@Service()` y Reactividad Asíncrona con `rxResource()`"
+    En Angular 22, el CLI genera los servicios directamente con **`@Service()`** (reemplazando al clásico `@Injectable({ providedIn: 'root' })` de Angular 19–21 de forma autónoma y *tree-shakeable*).
     
-    * **Nuevo decorador `@Service()`:** Reemplaza a `@Injectable({ providedIn: 'root' })` de forma autónoma.
-    * **Reactividad Asíncrona Estable con `rxResource()`:** Elimina por completo las suscripciones manuales y los booleanos de carga. Angular gestiona automáticamente el ciclo de vida:
+    Además, si quieres evitar la suscripción manual con `.subscribe()` y las señales separadas `trendingGifs` / `trendingGifsLoading`, puedes emplear **`rxResource()`**:
+    
+    * **¿Cómo funciona su lógica?** `rxResource()` envuelve un `Observable` (devuelto por la función `loader`) y **se suscribe automáticamente por ti** en cuanto se crea el servicio, gestionando también la cancelación y limpieza de suscripciones.
+    * **Señales automáticas integradas:** expone directamente `trendingResource.value()` (los datos), `trendingResource.isLoading()` (estado de carga), `trendingResource.error()` (errores) y `trendingResource.reload()` (recarga manual).
     
     ```typescript
     // Alternativa Angular 22 con @Service() y rxResource():
@@ -523,7 +610,13 @@ Al guardar los cambios y abrir `http://localhost:4200/dashboard`:
       // trendingResource.error()      -> Información del error si falla la petición
     }
     ```
-    *Conclusión didáctica:* Ambas formas son plenamente funcionales. Aprender primero el `.subscribe()` permite entender el flujo HTTP nativo, mientras que `rxResource()` muestra el futuro declarativo hacia el que avanza Angular.
+    *Conclusión didáctica:* Ambas formas son plenamente funcionales. Aprender primero el `.subscribe()` permite entender el flujo HTTP nativo, mientras que `rxResource()` muestra el enfoque declarativo moderno de Angular 22.
+
+    **📚 Dónde se explica en profundidad en este curso:**
+    
+    * **[Manual de Referencia: 05. Signals y Reactividad (`resource()` y `rxResource()`)](manual/05-signals.md#resource-y-rxresource-reactividad-asincrona-con-signals)** — Fundamentos, diagrama de flujo y ciclo de vida completo.
+    * **[Manual de Referencia: 10. Cliente HTTP (`rxResource()` para integración con RxJS)](manual/10-http.md#52-rxresource-para-integracion-con-rxjs)** — Uso con `request` reactivo y comparativa frente a `HttpClient + toSignal`.
+    * **[Guía de Clase 10: CountryApp (`resource()` y `rxResource()`)](10-country-funcionalidad.md#3-la-revolucion-asincrona-resource-y-rxresource)** — Implementación práctica paso a paso en un proyecto real.
 
 ---
 
@@ -584,8 +677,8 @@ En la plantilla HTML de `GifListComponent`, iteramos sobre la lista de objetos `
 </div>
 ```
 
-> [!NOTE] Optimización del seguimiento (`track gif.id`)
-> Al iterar sobre colecciones reactivas en la directiva `@for`, utilizar un identificador único e inmutable como `gif.id` optimiza la reconciliación del DOM virtual de Angular, evitando renderizados innecesarios cuando la lista se actualiza.
+!!! note "Optimización del seguimiento (`track gif.id`)"
+    Al iterar sobre colecciones reactivas en la directiva `@for`, utilizar un identificador único e inmutable como `gif.id` optimiza la reconciliación del DOM virtual de Angular, evitando renderizados innecesarios cuando la lista se actualiza.
 
 ### 3. Ajuste de Estilos en `GifListItemComponent` (`object-cover`)
 
@@ -752,13 +845,40 @@ Una vez validada la captura limpia del evento, la interfaz de usuario queda list
 
 ---
 
+## 🎯 Tarea Práctica 1: Primera Conexión del Buscador (`searchGifs`)
+
+### 📋 Enunciado del Reto para el Alumno
+
+Antes de ver la solución completa con operadores RxJS, pon en práctica lo aprendido creando la primera versión de la búsqueda de GIFs:
+
+1. En `GifService` (`src/app/gifs/services/gifs.service.ts`), crea el método **`searchGifs(query: string)`** que realice una petición HTTP `GET` al endpoint **`${environment.giphyUrl}/gifs/search`** enviando los parámetros `api_key`, `limit: 20` y `q: query`.
+2. En esta primera aproximación, suscríbete dentro del método, transforma `resp.data` con `GifMapper.mapGiphyItemsToGifArray(resp.data)` e imprime el resultado en consola con `console.log({ search: gifs })`.
+3. En **`SearchPageComponent`** (`src/app/gifs/pages/search-page/search-page.component.ts`), inyecta `GifService` mediante `inject(GifService)` y llama a `this.gifService.searchGifs(query)` dentro de `onSearch(query: string)`.
+
+### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+
+!!! exercise "Pausa de Trabajo Autónomo"
+    Detente un momento e intenta implementar `searchGifs(query)` y su llamada desde `SearchPageComponent` por tu cuenta.
+    
+    **Criterio de éxito:** Al escribir un término (por ejemplo, `saitama` o `goku`) en el buscador y pulsar ++enter++, la consola del navegador debe mostrar `{ search: Gif[] }` con los 20 GIFs ya mapeados.
+
+### ⚠️ Errores Típicos del Alumno en esta Tarea
+
+* **Olvidar el parámetro `q` en `params`:** El endpoint `/gifs/search` requiere obligatoriamente `q: query` además de `api_key` y `limit`.
+* **No suscribirse:** Si solo llamas a `this.http.get(...)` sin `.subscribe(...)` (ni devuelves el Observable para que otro se suscriba), la petición de red **nunca se dispara**.
+* **No limpiar espacios (`trim()`):** Si pulsas ++enter++ con el input vacío o solo espacios, se consume cuota innecesaria de la API de Giphy.
+
+> En la siguiente sección veremos por qué suscribirse dentro del servicio impide devolver los resultados al componente y cómo resolverlo devolviendo un `Observable<Gif[]>` con `.pipe(map(...))`.
+
+---
+
 ## Búsqueda de Gifs: Conexión HTTP y Resultados en Vivo
 
 Una vez validada la captura limpia del evento de teclado en `SearchPageComponent`, conectamos la interfaz de usuario con el endpoint oficial de búsqueda de Giphy (`/gifs/search`).
 
-### 1. El Antipatrón Asíncrono Clásico vs Retorno de Observables
+### 1. El Antipatrón Asíncrono Clásico vs Devolver Observables
 
-Al diseñar métodos de búsqueda en servicios de Angular que consumen APIs externas, los desarrolladores suelen enfrentarse a un error conceptual muy extendido: intentar resolver la suscripción dentro del propio servicio y retornar los datos síncronamente.
+Al diseñar métodos de búsqueda en servicios de Angular que consumen APIs externas, los desarrolladores suelen enfrentarse a un error conceptual muy extendido: intentar resolver la suscripción dentro del propio servicio y devolver los datos síncronamente.
 
 ```typescript
 // ❌ ANTIPATRÓN COMÚN: Intentar tratar una llamada asíncrona como síncrona
@@ -767,24 +887,24 @@ searchGifs(query: string) {
     params: { api_key: environment.giphyApiKey, limit: 20, q: query }
   }).subscribe((resp) => {
     const gifs = GifMapper.mapGiphyItemsToGifArray(resp.data);
-    return gifs; // ¡Error conceptual! Retorna al callback interno de subscribe, no a quien invocó searchGifs()
+    return gifs; // ¡Error conceptual! Devuelve al callback interno de subscribe, no a quien invocó searchGifs()
   });
 
-  // El método searchGifs() finaliza inmediatamente antes de recibir la respuesta y retorna undefined
+  // El método searchGifs() finaliza inmediatamente antes de recibir la respuesta y devuelve undefined
 }
 ```
 
 !!! danger "Antipatrón Didáctico: Suscripciones prematuras en Servicios"
-    * `HttpClient.get()` no devuelve datos inmediatos: retorna un **Observable frío**.
+    * `HttpClient.get()` no devuelve datos inmediatos, sino un **Observable frío**.
     * La sentencia `return gifs;` dentro de la función de callback de `.subscribe()` entrega el valor al suscriptor interno de RxJS, jamás al componente que llamó a `searchGifs()`.
     * Como la llamada de red es asíncrona, el método `searchGifs()` termina su ejecución síncrona en microsegundos y devuelve `undefined` al componente.
 
 #### La Solución Arquitectónica
-En una arquitectura limpia con RxJS y Angular, **el servicio prepara, transforma y expone el flujo reactivo**, retornando un `Observable<Gif[]>`. Es el componente de presentación el encargado de suscribirse al flujo para volcar los resultados en su estado local (mediante Signals):
+En una arquitectura limpia con RxJS y Angular, **el servicio prepara, transforma y expone el flujo reactivo**, devolviendo un `Observable<Gif[]>`. Es el componente de presentación el encargado de suscribirse al flujo para volcar los resultados en su estado local (mediante Signals):
 
 ``` mermaid
 flowchart LR
-    Service["<b>GifService.searchGifs()</b><br/>Prepara petición + pipe(map)"] -->|Retorna Observable&lt;Gif[]&gt;| Component["<b>SearchPageComponent</b><br/>.subscribe((gifs) =&gt; gifs.set(gifs))"]
+    Service["<b>GifService.searchGifs()</b><br/>Prepara petición + pipe(map)"] -->|Devuelve Observable&lt;Gif[]&gt;| Component["<b>SearchPageComponent</b><br/>.subscribe((gifs) =&gt; gifs.set(gifs))"]
     Component -->|Actualiza Señal| View["<b>&lt;gif-list [gifs]='gifs()' /&gt;</b><br/>Renderizado Reactivo"]
 ```
 
@@ -819,7 +939,7 @@ searchGifs(query: string): Observable<Gif[]> {
 
 Inyectamos `GifService` en `SearchPageComponent` mediante `inject()` y actualizamos `onSearch()` aplicando el patrón *Early Return* para sanitizar la entrada de usuario antes de disparar la petición HTTP:
 
-```typescript title="src/app/gifs/pages/search-page/search-page.component.ts" hl_lines="2 13 18-25"
+```typescript title="src/app/gifs/pages/search-page/search-page.component.ts" hl_lines="2 12-13 15-22"
 import { Component, inject, signal } from '@angular/core';
 import { GifService } from '../../services/gifs.service';
 import { GifListComponent } from '../../components/gif-list/gif-list.component';
@@ -916,7 +1036,7 @@ tap((items) => {
 ```
 
 * **Normalización de Claves (`query.toLowerCase()`)**: Garantiza que búsquedas con diferencias de mayúsculas y minúsculas (ej: `Goku`, `goku`, `GOKU`) se asignen al mismo registro de caché, evitando duplicados.
-* **Inmutabilidad Estricta (`...history`)**: Nunca mutamos el objeto directamente (`history[query] = items`). El método `.update()` recibe el estado anterior y retorna un **nuevo objeto en memoria** mediante el operador de propagación (*spread*), permitiendo que el grafo de reactividad de Signals detecte el cambio de referencia y notifique a las vistas asociadas.
+* **Inmutabilidad Estricta (`...history`)**: Nunca mutamos el objeto directamente (`history[query] = items`). El método `.update()` recibe el estado anterior y devuelve un **nuevo objeto en memoria** mediante el operador de propagación (*spread*), permitiendo que el grafo de reactividad de Signals detecte el cambio de referencia y notifique a las vistas asociadas.
 
 ### 4. Señal Computada Derivada: `searchHistoryKeys`
 
@@ -938,22 +1058,22 @@ getHistoryGifs(query: string): Gif[] {
 }
 ```
 
-* **Operador de Coalescencia Nula (`?? []`)**: Si se solicita un término que aún no existe en el diccionario, retorna un array vacío en lugar de `undefined`, protegiendo a los componentes consumidores contra errores de tipo *Cannot read properties of undefined*.
+* **Operador de Coalescencia Nula (`?? []`)**: Si se solicita un término que aún no existe en el diccionario, devuelve un array vacío en lugar de `undefined`, protegiendo a los componentes consumidores contra errores de tipo *Cannot read properties of undefined*.
 
 ### 6. Código Consolidado de `GifService`
 
 A continuación se presenta la implementación completa y consolidada de `GifService` con carga de tendencias, búsqueda HTTP y sistema reactivo de caché en memoria:
 
-```typescript title="src/app/gifs/services/gifs.service.ts (Servicio Completo con Tendencias, Búsqueda y Caché)" hl_lines="13-14 34-40 43-45"
+```typescript title="src/app/gifs/services/gifs.service.ts (Servicio Completo con Tendencias, Búsqueda y Caché)" hl_lines="2 4 14-15 39-59 61-63"
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable, map, tap } from 'rxjs';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GifService {
   private http = inject(HttpClient);
 
@@ -1020,11 +1140,27 @@ export class GifService {
 
 Para permitir que el usuario comparta un enlace con una búsqueda fija (por ejemplo, `/dashboard/history/dragonball`) o pulse sobre un término del historial en el menú lateral, configuramos una ruta dinámica con parámetros en la aplicación.
 
+## 🎯 Tarea Práctica 2 (Opcional): Crear la Página de Historial (`GifHistoryComponent`)
+
+### 📋 Enunciado del Reto para el Alumno
+
+Antes de configurar los argumentos dinámicos en la URL, prepara la nueva pantalla que mostrará los GIFs de un término guardado en el historial:
+
+1. Crea una nueva página llamada **`gif-history`** dentro de `src/app/gifs/pages/gif-history/` (componente `GifHistoryComponent` con `export default class` para poder cargarlo de forma perezosa).
+2. Registra su ruta hija dentro de `dashboard` en **`src/app/app.routes.ts`** para que sea accesible desde la navegación lateral.
+
+### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+
+!!! exercise "Pausa de Trabajo Autónomo"
+    Intenta generar el componente `gif-history` y enlazar su ruta en `app.routes.ts` antes de revisar la configuración completa con parámetros dinámicos.
+
+    **Pista:** Recuerda exportar la clase como `export default class GifHistoryComponent` para que `import('./gifs/pages/gif-history/gif-history.component')` funcione directamente en `loadComponent`.
+
 ### 1. Definición de la Ruta Dinámica en `src/app/app.routes.ts`
 
 Registramos la ruta hija `history/:query` bajo el cascarón `DashboardPageComponent`, utilizando carga perezosa (*lazy loading*) mediante la función `loadComponent`:
 
-```typescript title="src/app/app.routes.ts" hl_lines="13-16"
+```typescript title="src/app/app.routes.ts" hl_lines="19-23"
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -1114,6 +1250,7 @@ La función **`toSignal()`** (del paquete `@angular/core/rxjs-interop`) resuelve
     ```
 
 #### Mecánica de Ejecución y Acceso a la Caché:
+
 1. Cuando el usuario navega a `/dashboard/history/dragonball`, el enrutador emite el objeto `{ query: 'dragonball' }`.
 2. El operador `pipe(map(...))` extrae el valor `dragonball`.
 3. `toSignal()` actualiza la señal `query()`.
@@ -1174,12 +1311,34 @@ flowchart TD
 * **En arquitecturas tradicionales:** Sincronizar estos dos componentes requería levantar eventos al padre (`@Output()` / `EventEmitter`), utilizar servicios con `Subject` / `BehaviorSubject` de RxJS o librerías externas de gestión de estado (NgRx).
 * **Con Angular Signals y un Servicio Singleton:** Basta con que `SideMenuOptionsComponent` lea la señal computada `gifService.searchHistoryKeys()`. Cuando el usuario realiza una búsqueda, el servicio actualiza la señal y Angular actualiza **únicamente** la lista del menú lateral de forma reactiva y automática.
 
+## 🎯 Tarea Práctica 3: Mostrar el Historial Dinámico en el Menú Lateral
+
+### 📋 Enunciado del Reto para el Alumno
+
+Con `searchHistoryKeys` ya expuesto en `GifService`, traslada la lista de términos buscados al menú lateral (`SideMenuOptionsComponent`):
+
+1. Inyecta **`GifService`** en **`SideMenuOptionsComponent`** (`side-menu-options.component.ts`) usando `inject(GifService)`.
+2. En **`side-menu-options.component.html`**, añade un segundo bloque **`@for`** justo debajo del listado estático `menuOptions` para iterar sobre **`gifService.searchHistoryKeys()`**.
+3. Muestra cada término (`key`) usando la misma estructura visual `<a>` del menú (puedes utilizar el icono `fa-solid fa-clock-rotate-left`). En este paso basta con que los términos aparezcan listados debajo de **Buscador** conforme realizas búsquedas.
+
+### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+
+!!! exercise "Pausa de Trabajo Autónomo"
+    Detente aquí e intenta conectar `SideMenuOptionsComponent` con `gifService.searchHistoryKeys()`.
+
+    **Criterio de éxito:** Cada vez que busques un término nuevo en `/dashboard/search` (por ejemplo, `saitama`, `goku`, `overwatch`), ese término debe aparecer automáticamente en la barra lateral izquierda. Si vuelves a buscar el mismo término, no debe duplicarse.
+
+### ⚠️ Errores Típicos del Alumno en esta Tarea
+
+* **Olvidar los paréntesis en la señal computada:** Debes escribir `gifService.searchHistoryKeys()`, no `gifService.searchHistoryKeys`, porque es una función `Signal<string[]>`.
+* **Usar `track $index` en lugar de `track key`:** Dado que cada clave en `searchHistoryKeys()` es única, usar `track key` optimiza el renderizado de Angular.
+
 ### 2. Implementación de `SideMenuOptionsComponent`
 
 Actualizamos la clase TypeScript inyectando `GifService` y la plantilla HTML con la directiva `@for`:
 
 === "src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts"
-    ```typescript title="src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts" hl_lines="2 18"
+    ```typescript title="src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.ts" hl_lines="1 3 18"
     import { Component, inject } from '@angular/core';
     import { RouterLink, RouterLinkActive } from '@angular/router';
     import { GifService } from '../../../services/gifs.service';
@@ -1217,7 +1376,7 @@ Actualizamos la clase TypeScript inyectando `GifService` y la plantilla HTML con
     ```
 
 === "src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.html"
-    ```html title="src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.html" hl_lines="18-34"
+    ```html title="src/app/gifs/components/side-menu/side-menu-options/side-menu-options.component.html" hl_lines="18-33"
     <div id="nav" class="w-full px-4 py-4 space-y-1">
       <!-- Opciones Estáticas de Navegación -->
       @for (item of menuOptions; track item.route) {
@@ -1263,8 +1422,30 @@ Actualizamos la clase TypeScript inyectando `GifService` y la plantilla HTML con
 
 En este punto, el historial de búsquedas y la memoria caché funcionan a la perfección en memoria. Sin embargo, surge un problema fundamental de persistencia:
 
-> [!WARNING] El Problema de la Volatilidad de Memoria
-> Si el usuario pulsa ++f5++ o recarga el navegador, la instancia de `GifService` se reinicializa en el inyector de dependencias. La señal `searchHistory` vuelve a su valor inicial (`{}`) y todo el historial de búsquedas desaparece.
+!!! warning "El Problema de la Volatilidad de Memoria"
+    Si el usuario pulsa ++f5++ o recarga el navegador, la instancia de `GifService` se reinicializa en el inyector de dependencias. La señal `searchHistory` vuelve a su valor inicial (`{}`) y todo el historial de búsquedas desaparece.
+
+## 🎯 Tarea Práctica 4: Persistir el Historial en `localStorage`
+
+### 📋 Enunciado del Reto para el Alumno
+
+Antes de ver la solución final, aplica lo aprendido en la **Sección 05 (Efectos y LocalStorage)** para evitar que el historial de búsquedas se pierda al recargar la página:
+
+1. En **`GifService`**, implementa un **`effect()`** que serialice `this.searchHistory()` con `JSON.stringify(...)` y lo guarde en `localStorage` bajo una clave (por ejemplo, `'gifs'`).
+2. Crea una función auxiliar (por ejemplo, `loadFromLocalStorage()`) que lea esa clave de `localStorage`, haga `JSON.parse(...)` y sirva como valor inicial de la señal `searchHistory`.
+
+### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
+
+!!! exercise "Pausa de Trabajo Autónomo"
+    Pausa la lectura e intenta persistir y restaurar `searchHistory` en `localStorage` por tu cuenta.
+    
+    **Criterio de éxito:** Realiza varias búsquedas (`saitama`, `goku`, `vegeta`), recarga la página con ++f5++ y comprueba que tanto las entradas del menú lateral como sus GIFs en `/dashboard/history/:query` siguen disponibles sin hacer nuevas peticiones HTTP.
+
+### ⚠️ Errores Típicos del Alumno en esta Tarea
+
+* **Inicializar `searchHistory` con `{}` en lugar de leer `localStorage`:** Si inicializas la señal con `{}` y luego registras el `effect()`, el efecto se ejecutará al arrancar el servicio y **sobrescribirá** los datos guardados en `localStorage` con un objeto vacío.
+* **Olvidar que `localStorage` solo guarda strings:** Debes convertir el diccionario `Record<string, Gif[]>` con `JSON.stringify()` al guardar y reconstruirlo con `JSON.parse()` al leer (usando `'{}'` como respaldo si `getItem` devuelve `null`).
+* **Usar `'[]'` en lugar de `'{}'` como fallback:** `searchHistory` es un objeto diccionario (`Record<string, Gif[]>`), no un array.
 
 Para solventar esta limitación, implementamos una estrategia de **persistencia local desatendida** utilizando la API de almacenamiento web (`localStorage`) y la función **`effect()`** de Angular Signals.
 
@@ -1307,6 +1488,7 @@ saveGifsToLocalStorage = effect(() => {
 Un **`effect`** es una operación reactiva que se programa y ejecuta automáticamente siempre que alguna de las señales leídas dentro de su cuerpo cambie de valor.
 
 #### Requisitos y Reglas de Uso de `effect()`:
+
 1. **Contexto de Inyección (*Injection Context*):** `effect()` debe instanciarse en un contexto donde el inyector de dependencias esté disponible (por ejemplo, en el constructor o como valor inicial de una propiedad de clase en un servicio o componente).
 2. **Ejecución Asíncrona (Microtask):** Los efectos no se ejecutan síncronamente al mutar la señal, sino que Angular los agrupa y los procesa en el siguiente microciclo, optimizando el rendimiento.
 3. **No debe emitir otras señales:** No se debe mutar otra señal dentro de un efecto para evitar bucles infinitos de reactividad (a menos que se configure explícitamente `allowSignalWrites: true`).
@@ -1324,8 +1506,8 @@ Un **`effect`** es una operación reactiva que se programa y ejecuta automática
 
 A continuación se muestra el código completo y definitivo de `GifService`, integrando la carga inicial de tendencias, la búsqueda HTTP, la caché reactiva y la persistencia automática en `localStorage`:
 
-```typescript title="src/app/gifs/services/gifs.service.ts (Versión Definitiva con Persistencia)" hl_lines="1 10-17 28 35-38"
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+```typescript title="src/app/gifs/services/gifs.service.ts (Versión Definitiva con Persistencia)" hl_lines="1 9 11-15 26 34-37"
+import { computed, effect, inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { environment } from '@environments/environment';
@@ -1341,7 +1523,7 @@ const loadFromLocalStorage = (): Record<string, Gif[]> => {
   return gifs;
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GifService {
   private http = inject(HttpClient);
 
@@ -1412,8 +1594,8 @@ export class GifService {
 3. Navega al buscador y realiza varias búsquedas (ej: `goku`, `vegeta`, `sailor moon`).
 4. Observa cómo la clave `gifs` actualiza su contenido JSON en tiempo real con cada búsqueda.
 5. Recarga la página (++f5++):
-   * Comprueba que las opciones del menú lateral se cargan inmediatamente.
-   * Haz clic sobre cualquiera de los términos del historial: la ruta `/dashboard/history/:query` se abre de inmediato mostrando los GIFs almacenados en caché, sin realizar ninguna petición de red.
+    * Comprueba que las opciones del menú lateral se cargan inmediatamente.
+    * Haz clic sobre cualquiera de los términos del historial: la ruta `/dashboard/history/:query` se abre de inmediato mostrando los GIFs almacenados en caché, sin realizar ninguna petición de red.
 
 ---
 

@@ -5,40 +5,39 @@ title: 10. CountryApp - Servicios y Resources
 
 # Sección 10: CountryApp — Servicios, REST Countries API, Mappers y Resources
 
-En esta sección dotamos de funcionalidad real a **CountryApp**. Conectamos la aplicación con la **REST Countries API**, aplicamos el **Patrón Mapper** para desacoplar los modelos externos de la capa de dominio, formateamos datos con **Pipes nativos (`DecimalPipe`)**, implementamos un robusto **manejo de excepciones HTTP** y dominamos la mayor revolución en el manejo de datos asíncronos en Angular: las primitivas reactivas **`resource()`** y **`rxResource()`**.
+En esta sección conectamos **CountryApp** con datos reales procedentes de la **REST Countries API v3.1**. Implementaremos el servicio singleton `CountryService` con el decorador `@Service()` de **Angular 22**, generaremos los contratos externos con QuickType y aplicaremos el **Patrón Mapper** (*Anti-Corruption Layer*) incluyendo la traducción al español y la prevención de errores de contexto `this`. Además, estudiaremos en tres fases progresivas cómo pasar de una suscripción manual (`.subscribe()`) a la reactividad asíncrona declarativa con **`resource()`** y **`rxResource()`**, centralizaremos los estados de carga/error/vacío en `CountryListComponent` y construiremos la vista de detalle con estadísticas DaisyUI, un comparador de banderas (`diff`) y navegación de retorno con `Location`.
 
 ---
 
 ## 📋 Ficha Técnica y Objetivos Didácticos
 
-* **Proyecto:** `country-app` (Integración de datos reales y capa de servicios).
+* **Proyecto:** `country-app` (Capa de datos reales, transformación y reactividad asíncrona).
 * **API Externa:** [REST Countries API v3.1](https://restcountries.com/) (`https://restcountries.com/v3.1`).
-* **Stack Tecnológico:** Angular 19 - 22, `HttpClient`, RxJS, Signals, `resource()`, `rxResource()`, DecimalPipe.
+* **Stack Tecnológico (Angular 22):** `@Service()`, `HttpClient` nativo (con Fetch por defecto), RxJS (`map`, `catchError`, `throwError`, `delay`, `of`, `firstValueFrom`), Signals, `resource()`, `rxResource()`, `DecimalPipe`, `Location`.
 * **Patrones Arquitectónicos:**
-    * **Data Mapper Pattern:** Transformación inmutable del contrato externo (`RESTCountry`) a la entidad de dominio (`Country`).
-    * **Asynchronous Reactivity:** Sustitución de suscripciones manuales por recursos declarativos con gestión automática de estados (`isLoading`, `value`, `error`).
-    * **Graceful Degradation:** Manejo de errores HTTP 404 y caídas de red retornando colecciones vacías seguras con `catchError`.
+    * **Data Mapper Pattern:** Desacoplamiento total entre el DTO externo (`RESTCountry`) y el modelo de dominio (`Country`).
+    * **Declarative Async State:** Transición progresiva desde estado manual (`.subscribe()`) → Promesas (`resource()`) → Observables (`rxResource()`).
+    * **Presentational State Inputs:** `CountryListComponent` renderiza estados de error, carga y vacío recibidos desde cualquier página contenedor.
 * **Código Fuente de Referencia:** [GitHub - DevTalles CountryApp (fin-seccion-10)](https://github.com/DevTalles-corp/angular-country-app/tree/fin-seccion-10)
 
 ``` mermaid
 flowchart TD
     subgraph CapaAPI ["1. API Externa (REST Countries v3.1)"]
-        API["<b>REST Countries Endpoints</b><br/>/capital/{query} | /name/{query} | /alpha/{code}"]
+        API["<b>Endpoints REST</b><br/><code>/capital/{query}</code> | <code>/name/{query}</code> | <code>/alpha/{code}</code>"]
     end
 
-    subgraph CapaServicio ["2. Servicio y Transformación (Domain Layer)"]
-        HTTP["<b>HttpClient</b><br/>Peticiones tipadas con RxJS"] --> Service["<b>CountryService</b><br/>Lógica de negocio y manejo de errores con catchError"]
-        Service --> Mapper["<b>CountryMapper</b><br/>Mapeo inmutable de datos y traducción a español"]
+    subgraph CapaServicio ["2. Servicio @Service() y Capa Anticorrupción"]
+        HTTP["<b>HttpClient</b><br/>Peticiones tipadas con RxJS"] --> Service["<b>CountryService (@Service())</b><br/>Normalización, <code>catchError</code> y <code>throwError</code>"]
+        Service --> Mapper["<b>CountryMapper</b><br/><code>RESTCountry</code> &rarr; <code>Country</code> (español)"]
     end
 
-    subgraph CapaReactiva ["3. Estado Asíncrono Declarativo (Component Layer)"]
-        Mapper --> RxRes["<b>rxResource() / resource()</b><br/>Gestión automática de loading, value y error"]
+    subgraph CapaReactiva ["3. Evolución Reactiva Asíncrona"]
+        Mapper --> RxRes["<b>rxResource()</b><br/><code>.value()</code>, <code>.isLoading()</code>, <code>.error()</code>, <code>.hasValue()</code>"]
     end
 
-    subgraph CapaPresentacion ["4. Interfaz de Usuario (UI)"]
-        RxRes --> UI1["<b>Estado de Carga:</b> Spinner DaisyUI"]
-        RxRes --> UI2["<b>Estado de Error:</b> Alerta visual de fallo"]
-        RxRes --> UI3["<b>Estado de Éxito:</b> Tabla con DecimalPipe"]
+    subgraph CapaPresentacion ["4. Vistas y Detalle"]
+        RxRes --> List["<b>CountryListComponent</b><br/>Estados de error, vacío, carga y <code>DecimalPipe</code>"]
+        RxRes --> Detail["<b>CountryPageComponent</b><br/><code>CountryInformationComponent</code> + <code>NotFoundComponent</code>"]
     end
 
     CapaAPI ==> CapaServicio ==> CapaReactiva ==> CapaPresentacion
@@ -46,442 +45,838 @@ flowchart TD
 
 ---
 
-## 1. Configuración del Cliente HTTP y Modelos de Dominio
+## 1. REST Countries API, `HttpClient` en Angular 22 e Interfaces
 
 !!! info "📖 Para saber más: Manual de Referencia"
-    Para repasar la configuración moderna de `provideHttpClient`, interceptores y tipado de peticiones, consulta el **[Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md)**.
+    Para repasar la configuración del cliente HTTP, interceptores funcionales y gestión de errores, consulta el **[Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md)**.
 
-### 1.1. Registro de `provideHttpClient` en `app.config.ts`
-En Angular standalone, el cliente HTTP se activa mediante `provideHttpClient()` con soporte optimizado para `fetch`:
+### 1.1. Exploración de endpoints en Postman
 
-```typescript title="src/app/app.config.ts" hl_lines="8"
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-import { routes } from './app.routes';
+Antes de escribir código, probamos en Postman (o en el navegador) los tres endpoints que consumiremos de [REST Countries v3.1](https://restcountries.com/):
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withFetch()), // Uso de fetch nativo
-  ],
-};
+* **Buscar por capital:** `https://restcountries.com/v3.1/capital/madrid` (devuelve `RESTCountry[]`).
+* **Buscar por nombre de país:** `https://restcountries.com/v3.1/name/costa` (devuelve `RESTCountry[]`).
+* **Buscar por código Alpha (cca2 / cca3):** `https://restcountries.com/v3.1/alpha/ESP` (también devuelve un array `RESTCountry[]` de un elemento).
+
+### 1.2. Configuración de `HttpClient` en `src/app/app.config.ts`
+
+En **Angular 21 y consolidado en Angular 22**, **`HttpClient` viene provisto automáticamente en `root`** y utiliza la **API nativa `Fetch`** como transporte por defecto. Por lo tanto, para realizar peticiones HTTP estándar en una aplicación nueva de Angular 22 **no es necesario añadir `provideHttpClient(withFetch())`** salvo que quieras configurar opciones avanzadas (como `withInterceptors([...])`).
+
+=== "Angular 22 (Configuración por defecto)"
+    ```typescript title="src/app/app.config.ts (Angular 22)"
+    import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+    import { provideRouter } from '@angular/router';
+
+    import { routes } from './app.routes';
+
+    export const appConfig: ApplicationConfig = {
+      providers: [
+        provideBrowserGlobalErrorListeners(),
+        provideRouter(routes),
+      ],
+    };
+    ```
+
+=== "Angular 19–21 / Características personalizadas"
+    ```typescript title="src/app/app.config.ts (Angular 19–21 o con interceptores)" hl_lines="3 11"
+    import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+    import { provideRouter } from '@angular/router';
+    import { provideHttpClient, withFetch } from '@angular/common/http';
+
+    import { routes } from './app.routes';
+
+    export const appConfig: ApplicationConfig = {
+      providers: [
+        provideZoneChangeDetection({ eventCoalescing: true }),
+        provideRouter(routes),
+        provideHttpClient(withFetch()),
+      ],
+    };
+    ```
+
+### 1.3. Generación del DTO Externo (`RESTCountry`) con QuickType
+
+1. Copia el JSON devuelto por Postman al consultar `https://restcountries.com/v3.1/capital/tallinn` (o una muestra representativa de países).
+2. Crea `src/app/country/interfaces/rest-countries.interface.ts`.
+3. Abre la paleta de comandos (++ctrl+shift+p++ / ++cmd+shift+p++), ejecuta **Paste JSON as Code** y escribe el nombre **`RESTCountry`** (TypeScript inferirá automáticamente los tipos internos como `Name`, `Flags`, `Currency` y `Translation`):
+
+```typescript title="src/app/country/interfaces/rest-countries.interface.ts (Extracto principal)"
+export interface RESTCountry {
+  name:         Name;
+  cca2:         string;
+  capital:      string[];
+  region:       string;
+  subregion:    string;
+  translations: { [key: string]: Translation };
+  flag:         string;
+  population:   number;
+  flags:        Flags;
+  // ... resto de propiedades generadas por QuickType (borders, languages, maps, etc.)
+}
+
+export interface Flags {
+  png:  string;
+  svg:  string;
+  alt?: string;
+}
+
+export interface Name {
+  common:     string;
+  official:   string;
+  nativeName: { [key: string]: Translation };
+}
+
+export interface Translation {
+  official: string;
+  common:   string;
+}
 ```
 
----
+### 1.4. Entidad de Dominio (`Country`) y Patrón `CountryMapper`
 
-### 1.2. Interfaz Externa vs Entidad de Dominio
-La API de REST Countries devuelve objetos masivos con decenas de propiedades que no necesitamos en nuestra aplicación. 
-
-#### Modelo de Dominio Interno: `src/app/country/interfaces/country.interface.ts`
-Diseñamos un contrato limpio con únicamente los datos que nuestra aplicación consume:
+Creamos nuestra interfaz limpia de dominio en `src/app/country/interfaces/country.interface.ts` con solo los campos que nuestra aplicación necesita (en la última fase de detalles añadiremos también `region` y `subRegion`):
 
 ```typescript title="src/app/country/interfaces/country.interface.ts"
 export interface Country {
-  cca2: string;            // Código de 2 letras (ej: ES, MX, AR)
-  flag: string;            // Emoji de bandera (ej: 🇪🇸)
-  flagSvg: string;         // URL vectorial SVG de la bandera
-  name: string;            // Nombre traducido al español
-  capital: string;         // Capital principal
-  population: number;      // Número de habitantes
-  region: string;          // Continente / Región
-  subregion: string;       // Subregión geográfica
-}
-```
-
-#### Modelo de Respuesta Externa: `src/app/country/interfaces/rest-countries.interface.ts`
-Generamos la interfaz de la API externa (obtenida mediante QuickType a partir del JSON de `https://restcountries.com/v3.1/all`):
-
-```typescript title="src/app/country/interfaces/rest-countries.interface.ts"
-export interface RESTCountry {
-  name: {
-    common: string;
-    official: string;
-    nativeName?: Record<string, { official: string; common: string }>;
-  };
   cca2: string;
-  capital?: string[];
-  region: string;
-  subregion?: string;
-  population: number;
   flag: string;
-  flags: {
-    png: string;
-    svg: string;
-    alt?: string;
-  };
-  translations: Record<string, { official: string; common: string }>;
+  flagSvg: string;
+  name: string;
+  capital: string;
+  population: number;
+
+  region: string;
+  subRegion: string;
 }
 ```
 
----
+Ahora implementamos `CountryMapper` en `src/app/country/mappers/country.mapper.ts` con dos métodos estáticos puros:
 
-### 1.3. El Patrón Mapper: `CountryMapper`
-Creamos `src/app/country/mappers/country.mapper.ts`. Este patrón convierte los datos volátiles del servidor externo en entidades seguras de nuestra aplicación. Si el servidor cambia el nombre de un campo en el futuro, **solo editamos este mapper**, manteniendo intactos nuestros componentes y vistas:
-
-```typescript title="src/app/country/mappers/country.mapper.ts"
-import { Country } from '../interfaces/country.interface';
-import { RESTCountry } from '../interfaces/rest-countries.interface';
+```typescript title="src/app/country/mappers/country.mapper.ts" hl_lines="11-12 21-27"
+import type { Country } from '../interfaces/country.interface';
+import type { RESTCountry } from '../interfaces/rest-countries.interface';
 
 export class CountryMapper {
-  // Transforma un único país de la API a nuestro modelo Country
+  // Transforma un único objeto RESTCountry => Country
   static mapRestCountryToCountry(restCountry: RESTCountry): Country {
     return {
       cca2: restCountry.cca2,
       flag: restCountry.flag,
       flagSvg: restCountry.flags.svg,
-      // Si existe traducción oficial al español, la usamos; de lo contrario, nombre común en inglés
-      name: restCountry.translations['spa']?.common ?? restCountry.name.common,
-      capital: restCountry.capital ? restCountry.capital.join(', ') : 'Sin capital',
+      name: restCountry.translations['spa']?.common ?? 'No Spanish Name',
+      capital: restCountry.capital?.join(',') ?? 'No Capital',
       population: restCountry.population,
+
       region: restCountry.region,
-      subregion: restCountry.subregion ?? 'Sin subregión',
+      subRegion: restCountry.subregion,
     };
   }
 
-  // Transforma un array completo mediante programación funcional pura
-  static mapRestCountryArrayToCountryArray(restCountries: RESTCountry[]): Country[] {
-    return restCountries.map(this.mapRestCountryToCountry);
+  // Transforma un array completo RESTCountry[] => Country[]
+  static mapRestCountryArrayToCountryArray(
+    restCountries: RESTCountry[]
+  ): Country[] {
+    return restCountries.map((restCountry) =>
+      CountryMapper.mapRestCountryToCountry(restCountry)
+    );
   }
 }
 ```
 
+!!! warning "Tres detalles fundamentales del Mapper explicados en clase"
+    1. **Nombre del país en español (computed property `'spa'`):** dentro de `RESTCountry`, `translations` tiene tipo `{ [key: string]: Translation }` (`Record<string, Translation>`). Accedemos a la clave `'spa'` con notación de corchetes (`restCountry.translations['spa']?.common ?? 'No Spanish Name'`).
+    2. **Capital como `string[]` y territorios sin capital:** la API devuelve `capital` como array de strings (`["Madrid"]`), por eso usamos `.join(',')`. Además, conviene usar encadenamiento opcional (`restCountry.capital?.join(',')`) porque territorios como la Antártida o Macao no tienen propiedad `capital` y provocarían un `TypeError`.
+    3. **El error del `this` en `.pipe(map(...))`:** si en el servicio escribieras `.pipe(map(CountryMapper.mapRestCountryArrayToCountryArray))` pasando el método por referencia **y dentro del método usaras `this.mapRestCountryToCountry`**, JavaScript perdería el contexto de `this` (`undefined`) al invocar la función suelta. Por eso usamos una función flecha en el `pipe` (`map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp))`) y referenciamos explícitamente `CountryMapper.mapRestCountryToCountry` dentro del `.map()`.
+
 ---
 
-## 2. El Servicio Central: `CountryService`
-
-Creamos `src/app/country/services/country.service.ts`. Este servicio contiene las llamadas HTTP contra los diferentes endpoints de REST Countries, aplicando transformación con `map` y atrapando errores 404 con `catchError`.
+## 2. `CountryService`, `DecimalPipe`, Suscripción Manual y Excepciones
 
 !!! info "📖 Para saber más: Manual de Referencia"
-    Para estudiar la inyección de dependencias con `inject()`, ámbitos de inyección y singletons, consulta el **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md)**.
+    Para dominar los servicios singleton con `@Service()` y el pipe `DecimalPipe`, consulta:
+    * **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md)**
+    * **[Manual de Referencia: 06. Pipes Nativos (`DecimalPipe`)](manual/06-pipes.md)**
 
-```typescript title="src/app/country/services/country.service.ts"
-import { inject, Injectable } from '@angular/core';
+### 2.1. `CountryService` con `@Service()` (Angular 22) y `catchError`
+
+En **Angular 22**, definimos el servicio directamente con **`@Service()`** (equivalente moderno, autónomo y *tree-shakeable* de `@Injectable({ providedIn: 'root' })`).  
+Además, normalizamos el término (`query = query.toLowerCase()`) y manejamos cualquier código HTTP de error (como un `404 Not Found` cuando la API no encuentra coincidencias) mediante `catchError` + `throwError`, **sin silenciar el fallo**:
+
+```typescript title="src/app/country/services/country.service.ts (Fase inicial: searchByCapital)" hl_lines="2-3 11 13 18-27"
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
-import { Country } from '../interfaces/country.interface';
+import { inject, Service } from '@angular/core';
+import { map, Observable, catchError, throwError } from 'rxjs';
+
 import { RESTCountry } from '../interfaces/rest-countries.interface';
+import type { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
 
 const API_URL = 'https://restcountries.com/v3.1';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CountryService {
   private http = inject(HttpClient);
 
-  // 1. Buscar países por nombre de capital
   searchByCapital(query: string): Observable<Country[]> {
-    const term = query.trim().toLowerCase();
-    if (!term) return of([]);
+    query = query.toLowerCase();
 
-    return this.http.get<RESTCountry[]>(`${API_URL}/capital/${term}`).pipe(
-      map(resp => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
-      // Si la API devuelve 404 (no encontrado), devolvemos un array vacío sin romper la app
-      catchError(error => {
-        console.warn(`No se encontraron países para la capital: ${term}`);
-        return of([]);
+    return this.http.get<RESTCountry[]>(`${API_URL}/capital/${query}`).pipe(
+      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
+      catchError((error) => {
+        console.log('Error fetching ', error);
+
+        return throwError(
+          () => new Error(`No se pudo obtener países con ese query ${query}`)
+        );
       })
-    );
-  }
-
-  // 2. Buscar países por nombre de país
-  searchByCountry(query: string): Observable<Country[]> {
-    const term = query.trim().toLowerCase();
-    if (!term) return of([]);
-
-    return this.http.get<RESTCountry[]>(`${API_URL}/name/${term}`).pipe(
-      map(resp => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
-      catchError(() => of([]))
-    );
-  }
-
-  // 3. Buscar país individual por código Alfa (ej: ES, FRA, COL)
-  searchCountryByAlphaCode(code: string): Observable<Country | undefined> {
-    const term = code.trim().toLowerCase();
-    return this.http.get<RESTCountry[]>(`${API_URL}/alpha/${term}`).pipe(
-      map(resp => {
-        const [first] = resp;
-        return first ? CountryMapper.mapRestCountryToCountry(first) : undefined;
-      }),
-      catchError(() => of(undefined))
     );
   }
 }
 ```
+
+### 2.2. Fase 1 en `ByCapitalPageComponent`: Suscripción manual con `.subscribe()`
+
+Antes de introducir `resource()` y `rxResource()`, resulta muy instructivo implementar la primera versión controlando manualmente el ciclo completo de la petición HTTP con tres señales (`isLoading`, `isError`, `countries`) y `.subscribe({ next, error })`:
+
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 1: Manual)" hl_lines="13 15-17 21 23-35"
+import { Component, inject, signal } from '@angular/core';
+import { SearchInputComponent } from '../../components/search-input/search-input.component';
+import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { CountryService } from '../../services/country.service';
+import type { Country } from '../../interfaces/country.interface';
+
+@Component({
+  selector: 'app-by-capital-page',
+  imports: [SearchInputComponent, CountryListComponent],
+  templateUrl: './by-capital-page.component.html',
+})
+export class ByCapitalPageComponent {
+  countryService = inject(CountryService);
+
+  isLoading = signal(false);
+  isError = signal<string | null>(null);
+  countries = signal<Country[]>([]);
+
+  onSearch(query: string) {
+    // Bloqueo preventivo: evita peticiones duplicadas si ya hay una en vuelo
+    if (this.isLoading()) return;
+
+    this.isLoading.set(true);
+    this.isError.set(null);
+
+    this.countryService.searchByCapital(query).subscribe({
+      next: (countries) => {
+        this.isLoading.set(false);
+        this.countries.set(countries);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.countries.set([]);
+        this.isError.set(err);
+      },
+    });
+  }
+}
+```
+
+```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html (Fase 1)"
+<country-search-input
+  placeholder="Buscar por capital"
+  (value)="onSearch($event)"
+/>
+
+@if (isError()) {
+  <h3>{{ isError() }}</h3>
+} @else {
+  <country-list [countries]="countries()" />
+}
+```
+
+### 2.3. Renderizado en `CountryListComponent` con `DecimalPipe`
+
+Actualizamos `CountryListComponent` para recibir `countries = input.required<Country[]>()` y formatear la población con separadores de miles usando `DecimalPipe` (`| number`):
+
+=== "country-list.component.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.component.ts" hl_lines="2-3 7 11"
+    import { Component, input } from '@angular/core';
+    import { Country } from '../../interfaces/country.interface';
+    import { DecimalPipe } from '@angular/common';
+
+    @Component({
+      selector: 'country-list',
+      imports: [DecimalPipe],
+      templateUrl: './country-list.component.html',
+    })
+    export class CountryListComponent {
+      countries = input.required<Country[]>();
+    }
+    ```
+
+=== "country-list.component.html"
+    ```html title="src/app/country/components/country-list/country-list.component.html" hl_lines="14-27"
+    <section class="mt-5">
+      <table class="table table-md mt-2 w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ícono</th>
+            <th>Bandera</th>
+            <th>Nombre</th>
+            <th>Capital</th>
+            <th>Población</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (country of countries(); track country.cca2; let index = $index) {
+          <tr>
+            <td>{{ index + 1 }}</td>
+            <td>{{ country.flag }}</td>
+            <td>
+              <img [src]="country.flagSvg" [alt]="country.name" class="w-10" />
+            </td>
+            <td>{{ country.name }}</td>
+            <td>{{ country.capital }}</td>
+            <td>
+              <span class="badge badge-secondary">
+                {{ country.population | number }}
+              </span>
+            </td>
+            <td>
+              <a class="link-primary cursor-pointer">Más información</a>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+    ```
 
 ---
 
 ## 3. La Revolución Asíncrona: `resource()` y `rxResource()`
 
-Tradicionalmente en Angular, para cargar datos HTTP en un componente se requería:
-1. Declarar una variable para los datos.
-2. Declarar un booleano `isLoading = true`.
-3. Inscribirse con `.subscribe({ next, error })` en el ciclo de vida `ngOnInit`.
-4. Acordarse de poner `isLoading = false` en `next` y en `error`.
-5. Gestionar la desuscripción para evitar fugas de memoria.
+Gestionar manualmente `isLoading`, `isError`, `countries`, bloquear peticiones simultáneas y recordar actualizar todas las banderas en `next` y `error` genera mucho código repetitivo (*boilerplate*) y es propenso a *race conditions* si el usuario escribe rápido.
 
-En **Angular moderno**, el equipo de Google introdujo la **Resource API**, una primitiva que encapsula **todo el ciclo de vida asíncrono en una única señal reactiva declarativa**.
+Para resolverlo de raíz, **Angular 22** consolida como APIs **estables** la familia **Resource API**: `resource()`, `rxResource()` y `httpResource()`.
 
 !!! info "📖 Para saber más: Manual de Referencia"
-    Para una comparativa exhaustiva entre `resource()`, `rxResource()` y `toSignal()`, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)**.
+    Para una explicación completa del grafo reactivo de señales asíncronas y el ciclo de vida de `resource()`, `rxResource()` y `httpResource()`, consulta:
+    * **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md#resource-y-rxresource-reactividad-asincrona-con-signals)**
+    * **[Manual de Referencia: 10. Cliente HTTP (`resource()`, `rxResource()`, `httpResource()`)](manual/10-http.md)**
 
-### 3.1. ¿Cómo funciona `rxResource()`?
+### 3.1. Fase 2: Reactividad basada en Promesas con `resource()` y `firstValueFrom`
 
-`rxResource()` toma una función `request` (que retorna los parámetros reactivos) y un `loader` (que devuelve un Observable de datos):
+En este primer salto evolutivo eliminamos las tres señales manuales (`isLoading`, `isError`, `countries`) y el método `onSearch`. En su lugar declaramos únicamente una señal disparadora (`query = signal('')`) y conectamos **`resource()`**:
 
-```typescript
-// Señal que almacena el término que el usuario busca
-query = signal('');
-
-// Recurso asíncrono enlazado a la señal query
-countryResource = rxResource({
-  request: () => ({ query: this.query() }),
-  loader: ({ request }) => {
-    if (!request.query) return of([]);
-    return this.countryService.searchByCapital(request.query);
-  },
-});
-```
-
-Propiedades reactivas que `countryResource` nos regala automáticamente:
-* **`countryResource.value()`:** Señal con los datos resueltos (`Country[] | undefined`).
-* **`countryResource.isLoading()`:** Señal booleana reactiva (`true` mientras la petición está en vuelo, `false` al terminar).
-* **`countryResource.error()`:** Señal con el error capturado si la petición falla.
-* **`countryResource.reload()`:** Método para reejecutar la petición manualmente.
-
----
-
-## 4. Implementación en la Página: `ByCapitalPageComponent`
-
-Actualizamos `ByCapitalPageComponent` integrando `rxResource()` y mostrando los distintos estados al usuario (carga, error y tabla de resultados):
-
-```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts"
-import { Component, inject, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
-import { CountryService } from '../../services/country.service';
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 2: resource)" hl_lines="1-2 14 16-26"
+import { Component, inject, resource, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { SearchInputComponent } from '../../components/search-input/search-input.component';
-import { CountryTableComponent } from '../../components/country-table/country-table.component';
+import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-by-capital-page',
-  imports: [SearchInputComponent, CountryTableComponent],
+  imports: [SearchInputComponent, CountryListComponent],
   templateUrl: './by-capital-page.component.html',
 })
-export default class ByCapitalPageComponent {
-  private countryService = inject(CountryService);
+export class ByCapitalPageComponent {
+  countryService = inject(CountryService);
+  query = signal('');
 
-  // Señal con el término de búsqueda activo
-  query = signal<string>('');
+  countryResource = resource({
+    request: () => ({ query: this.query() }),
+    loader: async ({ request }) => {
+      if (!request.query) return [];
 
-  // Recurso reactivo asíncrono
+      // resource() espera una Promesa: convertimos el Observable con firstValueFrom
+      return await firstValueFrom(
+        this.countryService.searchByCapital(request.query)
+      );
+    },
+  });
+}
+```
+
+* **`request` (disparador reactivo):** cada vez que cambia alguna señal leída dentro de `request` (aquí `this.query()`), Angular ejecuta automáticamente el `loader` y cancela cualquier ejecución previa pendiente.
+* **`if (!request.query) return [];`:** al montar el componente `query()` vale `''`; devolvemos un array vacío sin disparar ninguna llamada HTTP innecesaria.
+* **Señales expuestas automáticamente por `countryResource`:** `.value()`, `.isLoading()`, `.error()`, `.hasValue()`, `.status()` y `.reload()`.
+
+### 3.2. Tarea: `searchByCountry` y navegación al detalle (`[routerLink]`)
+
+Antes de pasar a `rxResource()`, ampliamos `CountryService`, `CountryListComponent` y `ByCountryPageComponent`:
+
+1. Añadimos **`searchByCountry(query: string)`** al endpoint `/name/${query}` en `CountryService`.
+2. Importamos **`RouterLink`** en `CountryListComponent` y enlazamos el botón **Más información** a la ruta dinámica `/country/by/:code`:
+
+```html title="src/app/country/components/country-list/country-list.component.html (Enlace a detalle)" hl_lines="2-5"
+<td>
+  <a
+    [routerLink]="['/country/by', country.cca2]"
+    class="link-primary cursor-pointer"
+    >Más información</a
+  >
+</td>
+```
+
+### 3.3. Fase 3: Observables puros sin `firstValueFrom` usando `rxResource()`
+
+Dado que `HttpClient` y nuestros métodos de `CountryService` ya trabajan con **Observables de RxJS**, tener que transformarlos a Promesas con `await firstValueFrom(...)` dentro de `resource()` añade fricción innecesaria.
+
+La función **`rxResource()`** (de `@angular/core/rxjs-interop`) funciona exactamente igual que `resource()`, pero permite que `loader` devuelva directamente un **`Observable`**:
+
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 3: rxResource)" hl_lines="2-3 18-25"
+import { Component, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
+
+import { SearchInputComponent } from '../../components/search-input/search-input.component';
+import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { CountryService } from '../../services/country.service';
+
+@Component({
+  selector: 'app-by-capital-page',
+  imports: [SearchInputComponent, CountryListComponent],
+  templateUrl: './by-capital-page.component.html',
+})
+export class ByCapitalPageComponent {
+  countryService = inject(CountryService);
+  query = signal('');
+
   countryResource = rxResource({
     request: () => ({ query: this.query() }),
     loader: ({ request }) => {
       if (!request.query) return of([]);
+
       return this.countryService.searchByCapital(request.query);
     },
   });
-
-  onSearch(newQuery: string) {
-    this.query.set(newQuery);
-  }
 }
 ```
 
-```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html"
-<h1 class="text-3xl font-extrabold mb-2">Por Capital</h1>
-<p class="text-base-content/70 mb-6">Encuentra países buscando por el nombre de su capital.</p>
+Y aplicamos exactamente el mismo patrón en `ByCountryPageComponent` llamando a `this.countryService.searchByCountry(request.query)`:
 
-<!-- Buscador -->
-<country-search-input 
-  placeholder="Ej: Madrid, Tokyo, Bogotá..." 
-  (value)="onSearch($event)" 
-/>
+```typescript title="src/app/country/pages/by-country-page/by-country-page.component.ts" hl_lines="18-25"
+import { Component, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
 
-<!-- 1. Estado de Carga (Spinner DaisyUI) -->
-@if (countryResource.isLoading()) {
-  <div class="flex flex-col items-center justify-center py-12 gap-3">
-    <span class="loading loading-spinner loading-lg text-primary"></span>
-    <p class="text-base-content/70 font-medium">Consultando REST Countries API...</p>
-  </div>
-}
-
-<!-- 2. Estado de Error -->
-@else if (countryResource.error()) {
-  <div class="alert alert-error shadow-lg my-4">
-    <span>❌ Ocurrió un error al cargar la información. Intenta de nuevo.</span>
-  </div>
-}
-
-<!-- 3. Estado de Éxito: Tabla de Países -->
-@else {
-  <country-table [countries]="countryResource.value() ?? []" />
-}
-```
-
----
-
-## 5. Ficha de Detalle de País: `CountryPageComponent`
-
-Cuando el usuario hace clic en el botón "Ver más" de la tabla, la aplicación navega a `/country/by/:code`.
-
-Creamos `src/app/country/pages/country-page/country-page.component.ts`. Usamos el parámetro de ruta `:code` junto con `rxResource` para cargar la ficha completa del país:
-
-```typescript title="src/app/country/pages/country-page/country-page.component.ts"
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { DecimalPipe } from '@angular/common';
-import { map, of } from 'rxjs';
+import { SearchInputComponent } from '../../components/search-input/search-input.component';
+import { CountryListComponent } from '../../components/country-list/country-list.component';
 import { CountryService } from '../../services/country.service';
 
 @Component({
-  selector: 'app-country-page',
-  imports: [DecimalPipe, RouterLink],
-  templateUrl: './country-page.component.html',
+  selector: 'app-by-country-page',
+  imports: [SearchInputComponent, CountryListComponent],
+  templateUrl: './by-country-page.component.html',
 })
-export default class CountryPageComponent {
-  private route = inject(ActivatedRoute);
-  private countryService = inject(CountryService);
+export class ByCountryPageComponent {
+  countryService = inject(CountryService);
+  query = signal('');
 
-  // Convierte el parámetro de ruta en una señal reactiva
-  countryCode = toSignal(
-    this.route.params.pipe(map(params => params['code'] ?? ''))
-  );
-
-  // Recurso asíncrono para cargar el país por código Alfa
   countryResource = rxResource({
-    request: () => ({ code: this.countryCode() }),
+    request: () => ({ query: this.query() }),
     loader: ({ request }) => {
-      if (!request.code) return of(undefined);
-      return this.countryService.searchCountryByAlphaCode(request.code);
+      if (!request.query) return of([]);
+
+      return this.countryService.searchByCountry(request.query);
     },
   });
 }
 ```
 
-```html title="src/app/country/pages/country-page/country-page.component.html"
-@if (countryResource.isLoading()) {
-  <div class="flex justify-center py-16">
-    <span class="loading loading-spinner loading-lg text-primary"></span>
-  </div>
-} @else if (countryResource.value(); as country) {
-  <div class="card lg:card-side bg-base-100 shadow-xl border border-base-300">
-    <figure class="lg:w-1/2 p-6 bg-base-200 flex items-center justify-center">
-      <img 
-        [src]="country.flagSvg" 
-        [alt]="country.name" 
-        class="max-h-80 rounded-lg shadow-md object-contain" 
-      />
-    </figure>
-    
-    <div class="card-body lg:w-1/2">
-      <h2 class="card-title text-3xl font-bold flex items-center gap-2">
-        {{ country.flag }} {{ country.name }}
-      </h2>
-      <p class="text-base-content/70">Código Alfa: <span class="badge badge-primary">{{ country.cca2 }}</span></p>
+*Observa el detalle clave:* cuando `!request.query`, ya no podemos devolver `[]` a secas; como `rxResource` exige un `Observable`, envolvemos el array vacío con la función creacional **`of([])`** de RxJS.
 
-      <div class="divider my-2"></div>
-
-      <div class="grid grid-cols-2 gap-4 text-sm">
-        <div>
-          <span class="font-bold block text-base-content/60">Capital:</span>
-          <span class="text-base">{{ country.capital }}</span>
-        </div>
-        <div>
-          <span class="font-bold block text-base-content/60">Población:</span>
-          <!-- Uso de DecimalPipe para formato legible -->
-          <span class="text-base font-semibold">{{ country.population | number }} hab.</span>
-        </div>
-        <div>
-          <span class="font-bold block text-base-content/60">Región:</span>
-          <span class="text-base">{{ country.region }}</span>
-        </div>
-        <div>
-          <span class="font-bold block text-base-content/60">Subregión:</span>
-          <span class="text-base">{{ country.subregion }}</span>
-        </div>
-      </div>
-
-      <div class="card-actions justify-end mt-6">
-        <a routerLink="/country/by-capital" class="btn btn-outline btn-secondary">
-          ⬅ Regresar
-        </a>
-      </div>
-    </div>
-  </div>
-} @else {
-  <div class="alert alert-warning">
-    <span>⚠️ No se encontró ningún país con el código indicado.</span>
-  </div>
-}
-```
+!!! tip "💡 Angular 22: Novedades de nomenclatura en Resource API y `httpResource()`"
+    * **API estable y alias unificados:** en Angular 19–20 nacieron las propiedades `request` y `loader` (presentes en el código del curso). En la estabilización hacia **Angular 22**, la firma moderna unificada permite usar **`params`** en lugar de `request` y, en el caso de `rxResource()`, **`stream`** en lugar de `loader` (`params: () => ({ query: this.query() }), stream: ({ params }) => ...`). Conocer ambas nomenclaturas te permitirá leer tanto el código del curso como cualquier proyecto nuevo en Angular 22.
+    * **Alternativa directa `httpResource()`:** cuando un componente solo necesita hacer un `GET` sencillo sin lógica de caché en el servicio, Angular 22 ofrece **`httpResource()`** (`@angular/common/http`), capaz de reactivar la petición automáticamente cuando cambia una señal en la URL:
+      ```typescript
+      import { httpResource } from '@angular/common/http';
+      // Si la función devuelve undefined, no dispara la petición HTTP
+      rawResource = httpResource<RESTCountry[]>(() =>
+        this.query() ? `https://restcountries.com/v3.1/capital/${this.query()}` : undefined
+      );
+      ```
+      En CountryApp seguimos usando `CountryService` + `rxResource()` para conservar el Patrón Mapper, el manejo de errores y la caché en memoria que implementaremos en la Sección 11.
 
 ---
 
-## 💡 Evolución Angular 22: Declaración Limpia y Asincronía Estable
+## 4. Mostrar Estados al Usuario en `CountryListComponent`
 
-!!! tip "1. Declaración Directa con `@Service()`"
-    En la declaración convencional de Angular 19 se define `CountryService` usando `@Injectable({ providedIn: 'root' })`.
-    
-    En **Angular 22**, puedes escribir directamente:
-    ```typescript
-    import { inject, Service } from '@angular/core';
+Para visualizar claramente el estado de carga durante las pruebas, simulamos una latencia de 2 segundos en `searchByCountry` encadenando el operador RxJS **`delay(2000)`** dentro del `.pipe(...)`:
 
-    @Service()
-    export class CountryService {
-      private http = inject(HttpClient);
-      // ... resto de métodos idénticos
+```typescript title="src/app/country/services/country.service.ts (Simulación de latencia)" hl_lines="3"
+    return this.http.get<RESTCountry[]>(url).pipe(
+      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
+      delay(2000), // Simula conexión lenta de red
+      catchError((error) => { ... })
+    );
+```
+
+En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delegamos la presentación de esos estados a `CountryListComponent` mediante **tres Signal Inputs opcionales**:
+
+=== "country-list.component.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.component.ts" hl_lines="14-16"
+    import { Component, input } from '@angular/core';
+    import { Country } from '../../interfaces/country.interface';
+    import { DecimalPipe } from '@angular/common';
+    import { RouterLink } from '@angular/router';
+
+    @Component({
+      selector: 'country-list',
+      imports: [DecimalPipe, RouterLink],
+      templateUrl: './country-list.component.html',
+    })
+    export class CountryListComponent {
+      countries = input.required<Country[]>();
+
+      errorMessage = input<string | unknown | null>();
+      isLoading = input<boolean>(false);
+      isEmpty = input<boolean>(false);
     }
     ```
-    `@Service()` asume automáticamente el ámbito singleton raíz (*root*) y habilita optimizaciones agresivas de *tree-shaking*.
 
-!!! tip "2. Graduación de `resource()` y `rxResource()` a API Estable"
-    En Angular 19, `resource` y `rxResource` formaban parte del paquete experimental en fase *Developer Preview*. En **Angular 22**, esta arquitectura asíncrona es **100% estable, recomendada y libre de advertencias**, convirtiéndose en la vía estándar para sincronizar llamadas HTTP con plantillas reactivas.
+=== "country-list.component.html"
+    ```html title="src/app/country/components/country-list/country-list.component.html" hl_lines="39-59"
+    <section class="mt-5">
+      <table class="table table-md mt-2 w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ícono</th>
+            <th>Bandera</th>
+            <th>Nombre</th>
+            <th>Capital</th>
+            <th>Población</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (country of countries(); track country.cca2; let index = $index) {
+          <tr>
+            <td>{{ index + 1 }}</td>
+            <td>{{ country.flag }}</td>
+            <td>
+              <img [src]="country.flagSvg" [alt]="country.name" class="w-10" />
+            </td>
+            <td>{{ country.name }}</td>
+            <td>{{ country.capital }}</td>
+            <td>
+              <span class="badge badge-secondary">
+                {{ country.population | number }}
+              </span>
+            </td>
+            <td>
+              <a
+                [routerLink]="['/country/by', country.cca2]"
+                class="link-primary cursor-pointer"
+                >Más información</a
+              >
+            </td>
+          </tr>
+          }
 
-!!! tip "3. Parámetro de Ruta directo como Signal Input"
-    En `CountryPageComponent`, en lugar de inyectar `ActivatedRoute` y transformar el Observable con `toSignal()`, en Angular 19/22 puedes recibir el código directamente como un **Signal Input**:
-    ```typescript
-    // En CountryPageComponent:
-    export default class CountryPageComponent {
-      private countryService = inject(CountryService);
+          @if (errorMessage()) {
+          <tr>
+            <td colspan="8" class="text-center">
+              {{ errorMessage() }}
+            </td>
+          </tr>
+          }
 
-      // Enlazado automáticamente desde la URL /country/by/:code
-      countryCode = input.required<string>({ alias: 'code' });
+          <!--  -->
+          @if (countries().length === 0 && !isLoading()) {
+          <tr>
+            <td colspan="8" class="text-center">No se encontraron resultados</td>
+          </tr>
+          }
+
+          <!--  -->
+          @if (isLoading()) {
+          <tr>
+            <td colspan="8" class="text-center">Buscando países</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+    ```
+
+!!! note "Dos detalles clave de implementación en `CountryListComponent`"
+    * **¿Por qué `errorMessage = input<string | unknown | null>()` incluye `unknown`?** Porque la señal `countryResource.error()` de Angular devuelve exactamente el tipo `Signal<unknown>`. Aceptar `unknown` evita errores de compilación al enlazar `[errorMessage]="countryResource.error()"`.
+    * **Comentarios `<!-- -->` entre bloques `@if`:** cuando colocamos varios `@if` seguidos dentro de un `<tbody>`, el servicio de lenguaje de Angular en VS Code a veces pierde el autocompletado al pegar bloques contiguos; separar los bloques con un comentario HTML vacío `<!-- -->` resuelve el problema visual y de IntelliSense.
+
+Ahora conectamos las cuatro propiedades en `by-capital-page.component.html` y `by-country-page.component.html`:
+
+```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html" hl_lines="6-11"
+<country-search-input
+  placeholder="Buscar por capital"
+  (value)="query.set($event)"
+/>
+
+<country-list
+  [countries]="countryResource.value() ?? []"
+  [errorMessage]="countryResource.error()"
+  [isEmpty]="countryResource.value()?.length === 0"
+  [isLoading]="countryResource.isLoading()"
+/>
+```
+
+*(En `by-country-page.component.html` solo cambia el `placeholder="Buscar por país"`).*
+
+---
+
+## 5. Vista de Detalle (`CountryPage`), `NotFoundComponent` y `CountryInformationComponent`
+
+Cuando el usuario hace clic en **"Más información"** sobre cualquier fila, navega a `/country/by/:code` (por ejemplo `/country/by/ESP`). Veamos cómo se construye esta pantalla en sus cuatro piezas:
+
+### 5.1. `searchCountryByAlphaCode` en `CountryService`
+
+Aunque consultemos un único código Alpha (`/alpha/ESP`), la API de REST Countries responde siempre con un **array de un elemento** (`RESTCountry[]`). Tras mapear el array con `CountryMapper`, encadenamos un segundo operador `map((countries) => countries.at(0))` para obtener directamente `Country | undefined`:
+
+```typescript title="src/app/country/services/country.service.ts (Método de detalle)" hl_lines="5-7"
+  searchCountryByAlphaCode(code: string) {
+    const url = `${API_URL}/alpha/${code}`;
+
+    return this.http.get<RESTCountry[]>(url).pipe(
+      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
+      map((countries) => countries.at(0)),
+      catchError((error) => {
+        console.log('Error fetching ', error);
+
+        return throwError(
+          () => new Error(`No se pudo obtener países con ese código ${code}`)
+        );
+      })
+    );
+  }
+```
+
+### 5.2. Componente reutilizable `NotFoundComponent` y servicio `Location`
+
+Creamos `src/app/shared/components/not-found/` para mostrar una vista amigable cuando el usuario introduce un código de país inexistente.  
+Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angular/common` y ejecutamos **`this.location.back()`** (historial nativo del navegador). Así el botón devuelve al usuario exactamente a la pantalla desde la que vino (sea *Por capital*, *Por país* o *Por región*), manteniendo `NotFoundComponent` 100% reutilizable:
+
+=== "not-found.component.ts"
+    ```typescript title="src/app/shared/components/not-found/not-found.component.ts" hl_lines="1 10 13"
+    import { Location } from '@angular/common';
+    import { Component, inject } from '@angular/core';
+
+    @Component({
+      selector: 'app-not-found',
+      imports: [],
+      templateUrl: './not-found.component.html',
+    })
+    export class NotFoundComponent {
+      location = inject(Location);
+
+      goBack() {
+        this.location.back();
+      }
+    }
+    ```
+
+=== "not-found.component.html"
+    ```html title="src/app/shared/components/not-found/not-found.component.html" hl_lines="25"
+    <section class="flex flex-col items-center justify-center mt-10">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="75"
+        height="75"
+        viewBox="0 0 24 24"
+      >
+        <rect width="24" height="24" fill="none" />
+        <g
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-width="2"
+        >
+          <path
+            stroke-linejoin="round"
+            d="M14 19c3.771 0 5.657 0 6.828-1.172S22 14.771 22 11s0-5.657-1.172-6.828S17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172S2 7.229 2 11s0 5.657 1.172 6.828c.653.654 1.528.943 2.828 1.07"
+          />
+          <path
+            d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225s-.399-1.355-.212-3.404L6.5 17.5m3.379-8.621L12 11m0 0l2.121 2.121M12 11l2.121-2.121M12 11l-2.121 2.121"
+          />
+        </g>
+      </svg>
+      <h1>No se encontró el país</h1>
+      <a (click)="goBack()" class="link-primary cursor-pointer">Regresar</a>
+    </section>
+    ```
+
+### 5.3. Página Orquestadora `CountryPageComponent`
+
+Captura el segmento dinámico `:code` de la URL mediante `inject(ActivatedRoute).snapshot.params['code']`, consulta el país con `rxResource` y decide qué subcomponente mostrar en función del estado del recurso (`error()`, `isLoading()`, `hasValue()`):
+
+=== "country-page.component.ts"
+    ```typescript title="src/app/country/pages/country-page/country-page.component.ts" hl_lines="14 17-22"
+    import { Component, inject } from '@angular/core';
+    import { rxResource } from '@angular/core/rxjs-interop';
+    import { ActivatedRoute } from '@angular/router';
+    import { CountryService } from '../../services/country.service';
+    import { NotFoundComponent } from '../../../shared/components/not-found/not-found.component';
+    import { CountryInformationComponent } from './country-information/country-information.component';
+
+    @Component({
+      selector: 'app-country-page',
+      imports: [NotFoundComponent, CountryInformationComponent],
+      templateUrl: './country-page.component.html',
+    })
+    export class CountryPageComponent {
+      countryCode = inject(ActivatedRoute).snapshot.params['code'];
+      countryService = inject(CountryService);
 
       countryResource = rxResource({
-        request: () => ({ code: this.countryCode() }),
+        request: () => ({ code: this.countryCode }),
+        loader: ({ request }) => {
+          return this.countryService.searchCountryByAlphaCode(request.code);
+        },
+      });
+    }
+    ```
+
+=== "country-page.component.html"
+    ```html title="src/app/country/pages/country-page/country-page.component.html"
+    <!--  -->
+    @if (countryResource.error()) {
+    <app-not-found />
+    }
+
+    <!--  -->
+    @if (countryResource.isLoading()) {
+    <h1 class="text-3xl">Cargando...</h1>
+    }
+
+    <!--  -->
+    @if (countryResource.hasValue()) {
+    <country-information-page [country]="countryResource.value()!" />
+    }
+    ```
+
+### 5.4. Subcomponente Presentacional `CountryInformationComponent`
+
+Recibe el país validado mediante `country = input.required<Country>()` y calcula `currentYear = computed(() => new Date().getFullYear())` (ya que las plantillas HTML de Angular no permiten instanciar clases con `new Date()` directamente).
+
+Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nombre, Sub Región y Bandera) con el componente interactivo **`diff aspect-[16/9]`**, que superpone la bandera nítida sobre una versión desenfocada (`blur brightness-75`) con un deslizador arrastrable (`diff-resizer`):
+
+=== "country-information.component.ts"
+    ```typescript title="src/app/country/pages/country-page/country-information/country-information.component.ts" hl_lines="11 13-15"
+    import { Component, computed, input } from '@angular/core';
+    import { Country } from '../../../interfaces/country.interface';
+    import { DecimalPipe } from '@angular/common';
+
+    @Component({
+      selector: 'country-information-page',
+      imports: [DecimalPipe],
+      templateUrl: './country-information.component.html',
+    })
+    export class CountryInformationComponent {
+      country = input.required<Country>();
+
+      currentYear = computed(() => {
+        return new Date().getFullYear();
+      });
+    }
+    ```
+
+=== "country-information.component.html"
+    ```html title="src/app/country/pages/country-page/country-information/country-information.component.html" hl_lines="8 35-46"
+    <section class="mx-10">
+      <h1 class="text-3xl">{{ country().name }}</h1>
+      <h2 class="text-xl font-thin">
+        Población {{ country().population | number }}
+      </h2>
+    </section>
+
+    <section class="stats shadow mx-5">
+      <div class="stat place-items-center">
+        <div class="stat-title">Población</div>
+        <div class="stat-value">{{ country().population | number }}</div>
+        <div class="stat-desc">Desde {{ currentYear() }}</div>
+      </div>
+
+      <div class="stat place-items-center">
+        <div class="stat-title">Nombre</div>
+        <div class="stat-value text-secondary">{{ country().name }}</div>
+        <div class="stat-desc text-secondary">{{ country().region }}</div>
+      </div>
+
+      <div class="stat place-items-center">
+        <div class="stat-title">Sub Region</div>
+        <div class="stat-value">{{ country().subRegion }}</div>
+        <div class="stat-desc">{{ country().region }}</div>
+      </div>
+
+      <div class="stat place-items-center">
+        <div class="stat-title">Bandera</div>
+        <div class="stat-value">{{ country().flag }}</div>
+        <div class="stat-desc">{{ country().subRegion }}</div>
+      </div>
+    </section>
+
+    <section class="diff aspect-[16/9]">
+      <div class="diff-item-1">
+        <img [alt]="country().name" [src]="country().flagSvg" />
+      </div>
+      <div class="diff-item-2">
+        <img
+          class="blur brightness-75"
+          [alt]="country().name"
+          [src]="country().flagSvg"
+        />
+      </div>
+      <div class="diff-resizer"></div>
+    </section>
+    ```
+
+---
+
+## 💡 Evolución Angular 22: Resumen de Prácticas Modernas
+
+!!! tip "1. Servicios más limpios con `@Service()` y `HttpClient` integrado"
+    En Angular 22 ya no necesitas registrar `provideHttpClient(withFetch())` manualmente para peticiones básicas ni repetir `@Injectable({ providedIn: 'root' })` en cada servicio estándar: `@Service()` y el proveedor automático de `HttpClient` en `root` reducen el código repetitivo al mínimo.
+
+!!! tip "2. Recepción directa del parámetro `:code` con `withComponentInputBinding()`"
+    Si añades `withComponentInputBinding()` a `provideRouter(routes, withComponentInputBinding())` en `app.config.ts`, `CountryPageComponent` puede recibir el parámetro `:code` directamente como una señal de entrada en lugar de inyectar `ActivatedRoute`:
+    ```typescript
+    // En CountryPageComponent (Angular 22 con withComponentInputBinding):
+    export class CountryPageComponent {
+      countryService = inject(CountryService);
+      code = input.required<string>(); // Vinculado automáticamente desde /country/by/:code
+
+      countryResource = rxResource({
+        request: () => ({ code: this.code() }),
         loader: ({ request }) => this.countryService.searchCountryByAlphaCode(request.code),
       });
     }
     ```
+    Observa que además esto hace la vista reactiva si navegas de un país a otro sin destruir el componente.
 
 ---
 
 ## 📝 Evaluación y Preguntas para el Aula
 
-??? question "¿Qué ventajas ofrece el Patrón Mapper frente a usar directamente la interfaz de la API externa en los componentes?"
-    **Respuesta:** Proporciona **aislamiento e independencia de dependencias externas**. Si la API externa cambia la estructura del JSON (por ejemplo, renombra `population` por `inhabitants` o modifica el formato de `flags`), solo debemos modificar una línea en `CountryMapper`. Todos nuestros componentes, plantillas y tests seguirán funcionando sin enterarse del cambio externo.
+??? question "¿Por qué usar `CountryMapper` en lugar de consumir directamente la interfaz `RESTCountry` en las plantillas?"
+    **Respuesta:** Para aislar nuestra aplicación frente a cambios externos (*Anti-Corruption Layer*). Además de reducir decenas de propiedades innecesarias a solo los 8 campos que mostramos, centraliza decisiones como traducir el nombre al español (`translations['spa']`) o formatear el array `capital` con `.join(',')`.
 
-??? question "¿Por qué `rxResource()` es superior a gestionar manualmente un `isLoading = signal(true)` y un `.subscribe()`?"
-    **Respuesta:** Porque `rxResource()` es **declarativo y automático**:
-    1. Si la señal de entrada (`request`) cambia, cancela automáticamente la petición anterior (*switchMap* nativo) y dispara la nueva.
-    2. Sincroniza de forma atómica los estados de `isLoading`, `value` y `error`.
-    3. Evita fugas de memoria al encargarse Angular de la desuscripción cuando el componente se destruye.
+??? question "¿Qué problema ocurre si pasamos `map(CountryMapper.mapRestCountryArrayToCountryArray)` por referencia y dentro llamamos a `this.mapRestCountryToCountry`?"
+    **Respuesta:** **Pérdida del contexto `this`**. En JavaScript/TypeScript, pasar un método como callback desconecta la función de su clase, haciendo que `this` valga `undefined` dentro de `map`. Se resuelve invocando el método dentro de una función flecha (`map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp))`) o refiriéndose directamente a `CountryMapper.mapRestCountryToCountry`.
 
-??? question "¿Para qué sirve el pipe `number` (`DecimalPipe`) en la plantilla de países?"
-    **Respuesta:** Para formatear cantidades numéricas grandes con separadores de miles según la configuración regional (`47420000` → `47,420,000` o `47.420.000`), mejorando drásticamente la legibilidad de la población para el usuario final.
+??? question "¿Qué ventaja clave aporta `rxResource()` frente a `resource()` cuando trabajamos con `HttpClient`?"
+    **Respuesta:** `HttpClient` devuelve **Observables** de RxJS. Con `resource()` estamos obligados a convertir el Observable a Promesa mediante `await firstValueFrom(...)`; con `rxResource()` devolvemos el Observable directamente (o `of([])` cuando la consulta está vacía) y Angular gestiona por nosotros la suscripción y la cancelación automática si el usuario cambia la búsqueda.
+
+??? question "¿Por qué usamos `Location.back()` en `NotFoundComponent` en vez de un `routerLink` fijo?"
+    **Respuesta:** Porque un país no encontrado puede haber sido abierto desde *Por capital*, *Por país*, *Por región* o mediante una URL externa. `location.back()` devuelve al usuario exactamente a su vista de origen sin acoplar `NotFoundComponent` a una ruta concreta.
 
 ---
 
 ## 📚 Material de Referencia y Profundización
 
-* [Manual de Referencia: 05. Signals y Reactividad (`resource` y `rxResource`)](manual/05-signals.md)
-* [Manual de Referencia: 06. Pipes Nativos y Custom (`DecimalPipe`)](manual/06-pipes.md)
-* [Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md)
+* [Manual de Referencia: 05. Signals y Reactividad (`resource`, `rxResource`, `httpResource`)](manual/05-signals.md)
+* [Manual de Referencia: 06. Pipes Nativos (`DecimalPipe`)](manual/06-pipes.md)
+* [Manual de Referencia: 09. Servicios e Inyección de Dependencias (`@Service()`)](manual/09-servicios.md)
 * [Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md)
 * [API Oficial de REST Countries v3.1](https://restcountries.com/)
