@@ -50,6 +50,12 @@ flowchart TD
     Fase1 ==> Fase2 ==> Fase3 ==> Fase4
 ```
 
+### 🗺️ Mapa Visual: Comunicación Padre ↔ Hijos y Servicio Singleton
+
+Este esquema ilustra la arquitectura final de `DragonballSuperPageComponent`: el menú superior fijo **`<app-navbar />`**, los dos componentes hijos comunicados con **`output()`** e **`input.required()`**, y **`DragonballService`** persistiendo automáticamente en `localStorage` mediante `effect()`:
+
+![Mapa visual de la Sección 05: Navbar, DragonballSuperPage, CharacterAdd, CharacterList y DragonballService](assets/bases-05-dragonball-wireframe.svg)
+
 ---
 
 ## Introducción y Hoja de Ruta

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 510" width="820" height="510" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="820" height="510" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Barra de navegador -->
+  <rect x="0" y="0" width="820" height="36" rx="14" fill="#e2e8f0" />
+  <rect x="0" y="22" width="820" height="14" fill="#e2e8f0" />
+  <circle cx="22" cy="18" r="5.5" fill="#f87171" />
+  <circle cx="40" cy="18" r="5.5" fill="#fbbf24" />
+  <circle cx="58" cy="18" r="5.5" fill="#4ade80" />
+  <rect x="90" y="7" width="380" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="104" y="22" font-size="11.5" fill="#475569">localhost:4200/dashboard/trending</text>
+
+  <!-- 1. Contenedor con Scroll propio (#groupDiv) -->
+  <rect x="18" y="50" width="784" height="332" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="2.2" />
+  <rect x="30" y="39" width="525" height="22" rx="5" fill="#0284c7" />
+  <text x="40" y="54" font-size="11.5" font-weight="700" fill="#ffffff">TrendingPageComponent · #groupDiv (h-screen overflow-y-scroll · (scroll)="onScroll()")</text>
+
+  <!-- Etiqueta @for exterior -->
+  <text x="34" y="78" font-size="11" font-weight="700" fill="#0369a1">grid-cols-2 md:grid-cols-4  →  @for (group of gifService.trendingGifGroup(); track $index)</text>
+
+  <!-- Columna 0: group[0] -->
+  <rect x="34" y="88" width="172" height="278" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.8" />
+  <text x="120" y="106" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3730a3">group[0] · Columna 1</text>
+  <rect x="44" y="114" width="152" height="62" rx="6" fill="#c7d2fe" stroke="#6366f1" stroke-width="1" />
+  <text x="120" y="149" text-anchor="middle" font-size="11" font-weight="600" fill="#312e81">gif[0] (bajo)</text>
+  <rect x="44" y="184" width="152" height="104" rx="6" fill="#c7d2fe" stroke="#6366f1" stroke-width="1" />
+  <text x="120" y="240" text-anchor="middle" font-size="11" font-weight="600" fill="#312e81">gif[1] (alto)</text>
+  <rect x="44" y="296" width="152" height="60" rx="6" fill="#c7d2fe" stroke="#6366f1" stroke-width="1" />
+  <text x="120" y="330" text-anchor="middle" font-size="11" font-weight="600" fill="#312e81">gif[2] (bajo)</text>
+
+  <!-- Columna 1: group[1] -->
+  <rect x="218" y="88" width="172" height="278" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.8" />
+  <text x="304" y="106" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">group[1] · Columna 2</text>
+  <rect x="228" y="114" width="152" height="96" rx="6" fill="#a7f3d0" stroke="#10b981" stroke-width="1" />
+  <text x="304" y="166" text-anchor="middle" font-size="11" font-weight="600" fill="#064e3b">gif[3] (alto)</text>
+  <rect x="228" y="218" width="152" height="64" rx="6" fill="#a7f3d0" stroke="#10b981" stroke-width="1" />
+  <text x="304" y="254" text-anchor="middle" font-size="11" font-weight="600" fill="#064e3b">gif[4] (medio)</text>
+  <rect x="228" y="290" width="152" height="66" rx="6" fill="#a7f3d0" stroke="#10b981" stroke-width="1" />
+  <text x="304" y="327" text-anchor="middle" font-size="11" font-weight="600" fill="#064e3b">gif[5] (medio)</text>
+
+  <!-- Columna 2: group[2] -->
+  <rect x="402" y="88" width="172" height="278" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.8" />
+  <text x="488" y="106" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">group[2] · Columna 3</text>
+  <rect x="412" y="114" width="152" height="72" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1" />
+  <text x="488" y="154" text-anchor="middle" font-size="11" font-weight="600" fill="#78350f">gif[6] (medio)</text>
+  <rect x="412" y="194" width="152" height="72" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1" />
+  <text x="488" y="234" text-anchor="middle" font-size="11" font-weight="600" fill="#78350f">gif[7] (medio)</text>
+  <rect x="412" y="274" width="152" height="82" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1" />
+  <text x="488" y="319" text-anchor="middle" font-size="11" font-weight="600" fill="#78350f">gif[8] (alto)</text>
+
+  <!-- Columna 3: group[3] -->
+  <rect x="586" y="88" width="172" height="278" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.8" />
+  <text x="672" y="106" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6b21a8">group[3] · Columna 4</text>
+  <rect x="596" y="114" width="152" height="106" rx="6" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" />
+  <text x="672" y="171" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">gif[9] (alto)</text>
+  <rect x="596" y="228" width="152" height="58" rx="6" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" />
+  <text x="672" y="261" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">gif[10] (bajo)</text>
+  <rect x="596" y="294" width="152" height="62" rx="6" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" />
+  <text x="672" y="329" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">gif[11] (bajo)</text>
+
+  <!-- Barra de scroll visual a la derecha del #groupDiv -->
+  <rect x="772" y="88" width="16" height="278" rx="8" fill="#e2e8f0" />
+  <rect x="775" y="140" width="10" height="110" rx="5" fill="#64748b" />
+
+  <!-- 2. Servicios conectados abajo -->
+  <rect x="18" y="402" width="382" height="92" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2" />
+  <text x="34" y="424" font-size="11.5" font-weight="700" fill="#3730a3">GifService (Paginación y Matriz Masonry)</text>
+  <text x="34" y="445" font-size="10.5" fill="#334155">• trendingGifs.update(prev =&gt; [...prev, ...gifs])</text>
+  <text x="34" y="463" font-size="10.5" fill="#334155">• trendingPage + offset = page * 20 (bloqueo loading)</text>
+  <text x="34" y="481" font-size="10.5" font-weight="600" fill="#4f46e5">• trendingGifGroup = computed&lt;Gif[][]&gt; (de 3 en 3)</text>
+
+  <rect x="420" y="402" width="382" height="92" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2" />
+  <text x="436" y="424" font-size="11.5" font-weight="700" fill="#be123c">ScrollStateService (shared/services/)</text>
+  <text x="436" y="445" font-size="10.5" fill="#334155">• trendingScrollState = signal&lt;number&gt;(0)</text>
+  <text x="436" y="463" font-size="10.5" fill="#334155">• Guarda scrollTop desde onScroll() vía viewChild</text>
+  <text x="436" y="481" font-size="10.5" font-weight="600" fill="#be123c">• Restaura en ngAfterViewInit() / afterNextRender()</text>
+</svg>

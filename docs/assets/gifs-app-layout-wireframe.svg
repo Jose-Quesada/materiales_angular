@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 490" width="820" height="490" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="820" height="490" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Barra de navegador -->
+  <rect x="0" y="0" width="820" height="36" rx="14" fill="#e2e8f0" />
+  <rect x="0" y="22" width="820" height="14" fill="#e2e8f0" />
+  <circle cx="22" cy="18" r="5.5" fill="#f87171" />
+  <circle cx="40" cy="18" r="5.5" fill="#fbbf24" />
+  <circle cx="58" cy="18" r="5.5" fill="#4ade80" />
+  <rect x="90" y="7" width="380" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="104" y="22" font-size="11.5" fill="#475569">localhost:4200/dashboard/trending</text>
+
+  <!-- 1. DashboardPageComponent (Shell) -->
+  <rect x="18" y="48" width="784" height="426" rx="10" fill="#ffffff" stroke="#475569" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="30" y="38" width="340" height="22" rx="5" fill="#334155" />
+  <text x="40" y="53" font-size="11.5" font-weight="700" fill="#ffffff">DashboardPageComponent (Shell · Layout Maestro)</text>
+
+  <!-- 2. SideMenuComponent (Izquierda fija w-[220px]) -->
+  <rect x="34" y="74" width="224" height="384" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+  <rect x="44" y="64" width="204" height="20" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1" />
+  <text x="146" y="78" text-anchor="middle" font-size="10.5" font-weight="700" fill="#f8fafc">&lt;gifs-side-menu /&gt; (w-[220px])</text>
+
+  <!-- 2A. SideMenuHeaderComponent -->
+  <rect x="46" y="96" width="200" height="106" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+  <text x="56" y="114" font-size="10.5" font-weight="700" fill="#38bdf8">&lt;gifs-side-menu-header /&gt;</text>
+  <text x="56" y="136" font-size="15" font-weight="800" fill="#ffffff">Gifs<tspan fill="#3b82f6">App</tspan></text>
+  <text x="56" y="152" font-size="10" fill="#94a3b8">Maneja tus actividades</text>
+  <circle cx="70" cy="178" r="12" fill="#3b82f6" />
+  <text x="70" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">U</text>
+  <text x="90" y="175" font-size="10" fill="#94a3b8">Bienvenido,</text>
+  <text x="90" y="188" font-size="11" font-weight="600" fill="#f1f5f9">Usuario</text>
+
+  <!-- 2B. SideMenuOptionsComponent -->
+  <rect x="46" y="216" width="200" height="228" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2" />
+  <text x="56" y="234" font-size="10.5" font-weight="700" fill="#34d399">&lt;gifs-side-menu-options /&gt;</text>
+
+  <rect x="56" y="248" width="180" height="44" rx="6" fill="#2563eb" />
+  <text x="68" y="267" font-size="11.5" font-weight="700" fill="#ffffff">📈 Trending</text>
+  <text x="68" y="282" font-size="9.5" fill="#bfdbfe">Gifs Populares (routerLinkActive)</text>
+
+  <rect x="56" y="302" width="180" height="44" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1" />
+  <text x="68" y="321" font-size="11.5" font-weight="700" fill="#e2e8f0">🔍 Buscador</text>
+  <text x="68" y="336" font-size="9.5" fill="#94a3b8">Buscar Gifs (/dashboard/search)</text>
+
+  <text x="146" y="424" text-anchor="middle" font-size="10" fill="#64748b">Navegación fija en todas las rutas</text>
+
+  <!-- 3. Área Principal ml-[220px] (<router-outlet />) -->
+  <rect x="274" y="74" width="512" height="384" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="286" y="64" width="465" height="22" rx="5" fill="#d97706" />
+  <text x="296" y="79" font-size="11" font-weight="700" fill="#ffffff">TrendingPageComponent (en &lt;router-outlet /&gt; · ml-[220px] · Lazy Loaded)</text>
+
+  <!-- 3A. GifListComponent -->
+  <rect x="292" y="102" width="476" height="338" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" />
+  <text x="306" y="122" font-size="11.5" font-weight="700" fill="#6b21a8">&lt;gif-list [gifs]="gifs()" /&gt; · GifListComponent (grid-cols-1 sm:grid-cols-2 md:grid-cols-3)</text>
+
+  <!-- Fila 1 de GifListItemComponent -->
+  <rect x="308" y="136" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="377" y="160" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="322" y="172" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="377" y="212" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #1</text>
+  <text x="377" y="259" text-anchor="middle" font-size="9.5" fill="#0369a1">[imageUrl]="gif"</text>
+
+  <rect x="461" y="136" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="530" y="160" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="475" y="172" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="530" y="212" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #2</text>
+  <text x="530" y="259" text-anchor="middle" font-size="9.5" fill="#0369a1">[imageUrl]="gif"</text>
+
+  <rect x="614" y="136" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="683" y="160" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="628" y="172" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="683" y="212" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #3</text>
+  <text x="683" y="259" text-anchor="middle" font-size="9.5" fill="#0369a1">[imageUrl]="gif"</text>
+
+  <!-- Fila 2 de GifListItemComponent -->
+  <rect x="308" y="284" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="377" y="308" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="322" y="320" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="377" y="360" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #4</text>
+  <text x="377" y="407" text-anchor="middle" font-size="9.5" fill="#0369a1">input.required()</text>
+
+  <rect x="461" y="284" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="530" y="308" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="475" y="320" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="530" y="360" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #5</text>
+  <text x="530" y="407" text-anchor="middle" font-size="9.5" fill="#0369a1">input.required()</text>
+
+  <rect x="614" y="284" width="138" height="132" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="683" y="308" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369a1">&lt;gif-list-item /&gt;</text>
+  <rect x="628" y="320" width="110" height="72" rx="6" fill="#bae6fd" />
+  <text x="683" y="360" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">GIF #6</text>
+  <text x="683" y="407" text-anchor="middle" font-size="9.5" fill="#0369a1">input.required()</text>
+</svg>

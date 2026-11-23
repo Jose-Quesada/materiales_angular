@@ -33,6 +33,12 @@ flowchart TD
     Deteccion ==> Orquestacion ==> Presentacion
 ```
 
+### 🗺️ Mapa Visual: Rejilla Masonry (`Gif[][]`), `#groupDiv` y Servicios
+
+Este esquema resume cómo encajan en pantalla las columnas del **Masonry** (grupos de 3 GIFs calculados por `trendingGifGroup`), el contenedor con scroll propio **`#groupDiv`** y los dos servicios Singleton (`GifService` y `ScrollStateService`):
+
+![Mapa visual del layout Masonry e Infinite Scroll en GifsApp](assets/gifs-app-masonry-wireframe.svg)
+
 !!! warning "Puesta a punto antes de empezar (si retomas el proyecto o descargas el código)"
     1. Ejecuta `npm install` y `ng serve -o` para levantar la aplicación.
     2. Si **no ves ningún GIF** o aparecen errores de red, revisa que hayas configurado tu **API Key** (no el SDK) de [Giphy Developers](https://developers.giphy.com/dashboard/) exactamente igual en **ambos** archivos: `src/environments/environment.ts` y `src/environments/environment.development.ts`.

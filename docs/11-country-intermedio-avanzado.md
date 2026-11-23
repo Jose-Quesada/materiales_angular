@@ -14,14 +14,14 @@ En esta sección llevamos **CountryApp** a un estándar de producción profesion
 * **Proyecto:** `country-app` (Optimización, caché en memoria y persistencia en URL).
 * **Stack Tecnológico (Angular 22):** Signals, `effect((onCleanup) => ...)`, `linkedSignal()`, `@Service()`, RxJS (`of`, `tap`, `catchError`, `throwError`, `delay`), `ActivatedRoute`, `Router`, TypeScript (`Map`, `Record`, Union Types).
 * **Patrones Arquitectónicos:**
-    * **Signal-Based Debounce Pattern:** Temporizador en UI dentro de `SearchInputComponent` cancelado automáticamente con `onCleanup` antes de saturar la API.
+    * **Signal-Based Debounce Pattern:** Temporizador en UI dentro de `SearchInput` cancelado automáticamente con `onCleanup` antes de saturar la API.
     * **In-Memory Cache Pattern:** Almacenes asociativos `Map` separados por dominio en `CountryService` (`queryCacheCapital`, `queryCacheCountry`, `queryCacheRegion`) para respuestas instantáneas (`0ms`).
     * **URL as Single Source of Truth + Input Validation:** Hidratación desde `ActivatedRoute.snapshot.queryParamMap` mediante `linkedSignal()`, actualización dinámica con `Router.navigate()` y saneamiento estricto con `validateQueryParam()`.
 * **Código Fuente de Referencia:** [GitHub - DevTalles CountryApp (fin-seccion-11)](https://github.com/DevTalles-corp/angular-country-app/tree/fin-seccion-11)
 
 ``` mermaid
 flowchart TD
-    subgraph EntradaUsuario ["1. Debounce Reactivo con Signals (SearchInputComponent)"]
+    subgraph EntradaUsuario ["1. Debounce Reactivo con Signals (SearchInput)"]
         Typing["<b>Tecleo en &lt;input&gt;</b><br/><code>(keyup)='inputValue.set(txtSearch.value)'</code>"] --> Effect["<b>effect((onCleanup) => ...)</b><br/>Cancela timer previo con <code>clearTimeout</code> y emite tras <code>debounceTime()</code>"]
     end
 
@@ -36,7 +36,7 @@ flowchart TD
         CheckCache -- "No (Cache Miss)" --> FetchHTTP["<b>HTTP GET a REST Countries</b><br/>Guarda con <code>tap(countries => cache.set(...))</code>"]
     end
 
-    subgraph Renderizado ["4. Renderizado en CountryListComponent"]
+    subgraph Renderizado ["4. Renderizado en CountryList"]
         ReturnMemory --> Table["<b>&lt;country-list /&gt;</b>"]
         FetchHTTP --> Table
     end
@@ -55,12 +55,12 @@ Teclas:    t ──(60ms)── e ──(70ms)── g ──(espera debounceTim
 Timers:    └── cancelado   └── cancelado  └─────────── completa ─────────────> 1 sola petición HTTP
 ```
 
-!!! note "¿Por qué colocar el Debounce en `SearchInputComponent` y no en `CountryService`?"
-    Por **Separación de Responsabilidades (SoC)**: el servicio (`CountryService`) tiene como única responsabilidad ejecutar peticiones HTTP y gestionar la caché, sin preocuparse de la velocidad a la que teclea el usuario. Es el componente visual de entrada (`SearchInputComponent`) quien controla cuándo emitir el valor estabilizado hacia cualquier página que lo utilice.
+!!! note "¿Por qué colocar el Debounce en `SearchInput` y no en `CountryService`?"
+    Por **Separación de Responsabilidades (SoC)**: el servicio (`CountryService`) tiene como única responsabilidad ejecutar peticiones HTTP y gestionar la caché, sin preocuparse de la velocidad a la que teclea el usuario. Es el componente visual de entrada (`SearchInput`) quien controla cuándo emitir el valor estabilizado hacia cualquier página que lo utilice.
 
 ### Paso 1: Proteger la API mientras probamos `(keyup)`
 
-Si cambiamos temporalmente `(keyup.enter)` por `(keyup)` en `search-input.component.html`, cada tecla emitirá de inmediato hacia `ByCapitalPageComponent` y luego al servicio. Mientras diseñamos el efecto de debounce, podemos cortocircuitar temporalmente `searchByCapital` devolviendo `of([])` (ya que `rxResource` espera un `Observable`) para comprobar las emisiones en consola sin saturar la API externa:
+Si cambiamos temporalmente `(keyup.enter)` por `(keyup)` en `search-input.html`, cada tecla emitirá de inmediato hacia `ByCapitalPage` y luego al servicio. Mientras diseñamos el efecto de debounce, podemos cortocircuitar temporalmente `searchByCapital` devolviendo `of([])` (ya que `rxResource` espera un `Observable`) para comprobar las emisiones en consola sin saturar la API externa:
 
 ```typescript title="Prueba temporal en CountryService (solo durante el experimento)"
   searchByCapital(query: string): Observable<Country[]> {
@@ -75,7 +75,7 @@ Si cambiamos temporalmente `(keyup.enter)` por `(keyup)` en `search-input.compon
 
 ### Paso 2: Señal local `inputValue` y por qué `setTimeout` solo no basta
 
-En `src/app/country/components/search-input/search-input.component.ts` introducimos una señal reactiva local `inputValue` conectada al `<input>` mediante `(keyup)="inputValue.set(txtSearch.value)"`.
+En `src/app/country/components/search-input/search-input.ts` introducimos una señal reactiva local `inputValue` conectada al `<input>` mediante `(keyup)="inputValue.set(txtSearch.value)"`.
 
 Si dentro de `debounceEffect = effect(() => { ... })` solo pusiéramos un `setTimeout`, **no tendríamos debounce**: todas las pulsaciones seguirían emitiéndose, simplemente retrasadas N milisegundos.
 
@@ -83,16 +83,16 @@ Si dentro de `debounceEffect = effect(() => { ... })` solo pusiéramos un `setTi
 
 El secreto está en utilizar el callback **`onCleanup`** que Angular inyecta automáticamente como primer argumento de `effect((onCleanup) => { ... })`:
 
-=== "search-input.component.ts (Con Debounce)"
-    ```typescript title="src/app/country/components/search-input/search-input.component.ts" hl_lines="10 14 16-26"
+=== "search-input.ts (Con Debounce)"
+    ```typescript title="src/app/country/components/search-input/search-input.ts" hl_lines="10 14 16-26"
     import { Component, effect, input, output, signal } from '@angular/core';
 
     @Component({
       selector: 'country-search-input',
       imports: [],
-      templateUrl: './search-input.component.html',
+      templateUrl: './search-input.html',
     })
-    export class SearchInputComponent {
+    export class SearchInput {
       placeholder = input('Buscar');
       debounceTime = input(1000);
 
@@ -114,8 +114,8 @@ El secreto está en utilizar el callback **`onCleanup`** que Angular inyecta aut
     }
     ```
 
-=== "search-input.component.html"
-    ```html title="src/app/country/components/search-input/search-input.component.html" hl_lines="9"
+=== "search-input.html"
+    ```html title="src/app/country/components/search-input/search-input.html" hl_lines="9"
     <section class="flex flex-row gap-2 mt-2">
       <input
         type="text"
@@ -134,7 +134,7 @@ El secreto está en utilizar el callback **`onCleanup`** que Angular inyecta aut
     ```
 
 === "Uso personalizado en el padre"
-    ```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html" hl_lines="4"
+    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html" hl_lines="4"
     <country-search-input
       placeholder="Buscar por capital"
       (value)="query.set($event)"
@@ -297,26 +297,26 @@ Añadimos el mapa privado `private queryCacheRegion = new Map<Region, Country[]>
 
 *(Nota sobre el repositorio del curso: en la rama original `fin-seccion-11` se deslizó un pequeño desliz tipográfico leyendo `this.queryCacheCountry.has(region)` en lugar de `this.queryCacheRegion.has(region)`. Aquí lo corregimos usando `this.queryCacheRegion` para que la caché de regiones funcione realmente).*
 
-### Paso 3: Implementar `ByRegionPageComponent` (Fase inicial con `signal()`)
+### Paso 3: Implementar `ByRegionPage` (Fase inicial con `signal()`)
 
 En la primera fase declaramos `selectedRegion = signal<Region | null>(null)` y enlazamos `rxResource` (en la Sección 4 evolucionará a `linkedSignal` + validación de URL):
 
-=== "by-region-page.component.ts (Fase 1)"
-    ```typescript title="src/app/country/pages/by-region-page/by-region-page.component.ts (Fase inicial)" hl_lines="26 28-35"
+=== "by-region-page.ts (Fase 1)"
+    ```typescript title="src/app/country/pages/by-region-page/by-region-page.ts (Fase inicial)" hl_lines="26 28-35"
     import { Component, inject, signal } from '@angular/core';
     import { rxResource } from '@angular/core/rxjs-interop';
     import { of } from 'rxjs';
 
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { CountryList } from '../../components/country-list/country-list';
     import { Region } from '../../interfaces/region.type';
     import { CountryService } from '../../services/country.service';
 
     @Component({
       selector: 'app-by-region-page',
-      imports: [CountryListComponent],
-      templateUrl: './by-region-page.component.html',
+      imports: [CountryList],
+      templateUrl: './by-region-page.html',
     })
-    export class ByRegionPageComponent {
+    export class ByRegionPage {
       countryService = inject(CountryService);
 
       public regions: Region[] = [
@@ -341,8 +341,8 @@ En la primera fase declaramos `selectedRegion = signal<Region | null>(null)` y e
     }
     ```
 
-=== "by-region-page.component.html"
-    ```html title="src/app/country/pages/by-region-page/by-region-page.component.html" hl_lines="6-13"
+=== "by-region-page.html"
+    ```html title="src/app/country/pages/by-region-page/by-region-page.html" hl_lines="6-13"
     <h1 class="text-2xl">Por región</h1>
     <h3 class="text-lg">Seleccione una región</h3>
 
@@ -372,7 +372,7 @@ En la primera fase declaramos `selectedRegion = signal<Region | null>(null)` y e
 
 ## 4. Preservación de Estado en la URL con Query Parameters (en 3 Fases)
 
-Si el usuario busca `"madrid"`, entra a ver la ficha de España (`/country/by/ESP`) y pulsa **Regresar**, Angular destruye y recrea `ByCapitalPageComponent` desde cero, dejando el buscador vacío.
+Si el usuario busca `"madrid"`, entra a ver la ficha de España (`/country/by/ESP`) y pulsa **Regresar**, Angular destruye y recrea `ByCapitalPage` desde cero, dejando el buscador vacío.
 
 Podríamos pensar en guardar un `lastQuery` en `CountryService`, pero esa solución **no resuelve recargas (`F5`) ni permite compartir un enlace con resultados** a otro usuario. La solución arquitectónica correcta es reflejar el filtro activo en los **Query Parameters de la URL** (`/country/by-capital?query=madrid`).
 
@@ -384,7 +384,7 @@ Podríamos pensar en guardar un `lastQuery` en `CountryService`, pero esa soluci
 ### Fase 1: Lectura del `queryParam` inicial e hidratación con `linkedSignal()`
 
 Cuando entramos a `/country/by-capital?query=madrid`, necesitamos que ocurran dos cosas a la vez:
-1. Que `ByCapitalPageComponent` lea `?query=madrid` al montarse.
+1. Que `ByCapitalPage` lea `?query=madrid` al montarse.
 2. Que `<country-search-input>` rellene la caja de texto con `"madrid"`.
 
 #### ¿Por qué necesitamos `linkedSignal()` y no solo `signal()` o `computed()`?
@@ -393,10 +393,10 @@ Cuando entramos a `/country/by-capital?query=madrid`, necesitamos que ocurran do
 * Si usáramos `computed(() => this.initialValue() ?? '')`, sería **de solo lectura** y no podríamos hacer `(keyup)="inputValue.set(txtSearch.value)"`.
 * **`linkedSignal()`** nos da exactamente lo mejor de ambos mundos: crea una **señal escribible** (`WritableSignal`) cuyo valor inicial se calcula automáticamente a partir de una función origen (`() => this.initialValue() ?? ''`) y que aun así podemos mutar con `.set()` al teclear.
 
-Actualizamos primero `SearchInputComponent` añadiendo `initialValue` y cambiando `inputValue` a `linkedSignal`:
+Actualizamos primero `SearchInput` añadiendo `initialValue` y cambiando `inputValue` a `linkedSignal`:
 
-=== "search-input.component.ts (Completo)"
-    ```typescript title="src/app/country/components/search-input/search-input.component.ts" hl_lines="5 17 21"
+=== "search-input.ts (Completo)"
+    ```typescript title="src/app/country/components/search-input/search-input.ts" hl_lines="5 17 21"
     import {
       Component,
       effect,
@@ -408,9 +408,9 @@ Actualizamos primero `SearchInputComponent` añadiendo `initialValue` y cambiand
     @Component({
       selector: 'country-search-input',
       imports: [],
-      templateUrl: './search-input.component.html',
+      templateUrl: './search-input.html',
     })
-    export class SearchInputComponent {
+    export class SearchInput {
       placeholder = input('Buscar');
       debounceTime = input(1000);
       initialValue = input<string>();
@@ -433,8 +433,8 @@ Actualizamos primero `SearchInputComponent` añadiendo `initialValue` y cambiand
     }
     ```
 
-=== "search-input.component.html (Completo)"
-    ```html title="src/app/country/components/search-input/search-input.component.html" hl_lines="10"
+=== "search-input.html (Completo)"
+    ```html title="src/app/country/components/search-input/search-input.html" hl_lines="10"
     <section class="flex flex-row gap-2 mt-2">
       <input
         type="text"
@@ -453,9 +453,9 @@ Actualizamos primero `SearchInputComponent` añadiendo `initialValue` y cambiand
     </section>
     ```
 
-Ahora leemos la fotografía inicial (`snapshot`) de la ruta en `ByCapitalPageComponent` y la conectamos mediante `linkedSignal`:
+Ahora leemos la fotografía inicial (`snapshot`) de la ruta en `ByCapitalPage` y la conectamos mediante `linkedSignal`:
 
-```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 1: Lectura)" hl_lines="1 4 6"
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts (Fase 1: Lectura)" hl_lines="1 4 6"
   activatedRoute = inject(ActivatedRoute);
 
   // Tomamos el snapshot inicial porque tras montar el componente los cambios los dicta el usuario
@@ -470,23 +470,23 @@ Con la Fase 1 ya podemos abrir directamente `/country/by-capital?query=madrid` y
 
 Para mantener la URL sincronizada, inyectamos **`Router`** y navegamos programáticamente dentro del `loader` de `rxResource` justo después de comprobar `if (!request.query) return of([]);`:
 
-=== "ByCapitalPageComponent (Completo)"
-    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts" hl_lines="3 17-18 20 22 29-33"
+=== "ByCapitalPage (Completo)"
+    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts" hl_lines="3 17-18 20 22 29-33"
     import { Component, inject, linkedSignal } from '@angular/core';
     import { rxResource } from '@angular/core/rxjs-interop';
     import { ActivatedRoute, Router } from '@angular/router';
     import { of } from 'rxjs';
 
-    import { SearchInputComponent } from '../../components/search-input/search-input.component';
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { SearchInput } from '../../components/search-input/search-input';
+    import { CountryList } from '../../components/country-list/country-list';
     import { CountryService } from '../../services/country.service';
 
     @Component({
       selector: 'app-by-capital-page',
-      imports: [SearchInputComponent, CountryListComponent],
-      templateUrl: './by-capital-page.component.html',
+      imports: [SearchInput, CountryList],
+      templateUrl: './by-capital-page.html',
     })
-    export class ByCapitalPageComponent {
+    export class ByCapitalPage {
       countryService = inject(CountryService);
       activatedRoute = inject(ActivatedRoute);
       router = inject(Router);
@@ -512,8 +512,8 @@ Para mantener la URL sincronizada, inyectamos **`Router`** y navegamos programá
     }
     ```
 
-=== "by-capital-page.component.html"
-    ```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html" hl_lines="5"
+=== "by-capital-page.html"
+    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html" hl_lines="5"
     <country-search-input
       placeholder="Buscar por capital"
       (value)="query.set($event)"
@@ -529,23 +529,23 @@ Para mantener la URL sincronizada, inyectamos **`Router`** y navegamos programá
     />
     ```
 
-=== "ByCountryPageComponent (Tarea resuelta)"
-    ```typescript title="src/app/country/pages/by-country-page/by-country-page.component.ts" hl_lines="18-19 21 23 30-34"
+=== "ByCountryPage (Tarea resuelta)"
+    ```typescript title="src/app/country/pages/by-country-page/by-country-page.ts" hl_lines="18-19 21 23 30-34"
     import { Component, inject, linkedSignal } from '@angular/core';
     import { rxResource } from '@angular/core/rxjs-interop';
     import { ActivatedRoute, Router } from '@angular/router';
     import { of } from 'rxjs';
 
-    import { SearchInputComponent } from '../../components/search-input/search-input.component';
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { SearchInput } from '../../components/search-input/search-input';
+    import { CountryList } from '../../components/country-list/country-list';
     import { CountryService } from '../../services/country.service';
 
     @Component({
       selector: 'app-by-country-page',
-      imports: [SearchInputComponent, CountryListComponent],
-      templateUrl: './by-country-page.component.html',
+      imports: [SearchInput, CountryList],
+      templateUrl: './by-country-page.html',
     })
-    export class ByCountryPageComponent {
+    export class ByCountryPage {
       countryService = inject(CountryService);
 
       activatedRoute = inject(ActivatedRoute);
@@ -572,7 +572,7 @@ Para mantener la URL sincronizada, inyectamos **`Router`** y navegamos programá
     }
     ```
 
-    ```html title="src/app/country/pages/by-country-page/by-country-page.component.html" hl_lines="4"
+    ```html title="src/app/country/pages/by-country-page/by-country-page.html" hl_lines="4"
     <country-search-input
       (value)="query.set($event)"
       placeholder="Buscar por país"
@@ -591,21 +591,21 @@ Para mantener la URL sincronizada, inyectamos **`Router`** y navegamos programá
     * Si escribieras `this.router.navigate(['/country/by-capital', request.query])`, Angular buscaría una ruta configurada como `by-capital/:algo` (segmento obligatorio de ruta), provocando un error de enrutamiento.
     * Al pasar `{ queryParams: { query: request.query } }` como segundo argumento (*NavigationExtras*), Angular construye una URL opcional (`/country/by-capital?query=...`) e incluso **escapa automáticamente caracteres especiales y espacios** (por ejemplo `"San José"` → `?query=San%20Jos%C3%A9`).
 
-### Fase 3: Validación estricta de `queryParams` en `ByRegionPageComponent`
+### Fase 3: Validación estricta de `queryParams` en `ByRegionPage`
 
-En `ByRegionPageComponent` también queremos guardar la región elegida en la URL (`?region=Europe`). Pero existe un riesgo importante: **cualquier usuario puede editar manualmente la barra de direcciones** y escribir `/country/by-region?region=Oceania123123` (o `?region=aMeriCas`).
+En `ByRegionPage` también queremos guardar la región elegida en la URL (`?region=Europe`). Pero existe un riesgo importante: **cualquier usuario puede editar manualmente la barra de direcciones** y escribir `/country/by-region?region=Oceania123123` (o `?region=aMeriCas`).
 
 Si confiáramos ciegamente en una aserción de TypeScript como `queryParam as Region`, en tiempo de ejecución pasaríamos `"Oceania123123"` a REST Countries y la petición fallaría con un error `404 Not Found`.
 
 Para blindar la vista, creamos una **función pura validadora `validateQueryParam(queryParam: string): Region`** con un diccionario `Record<string, Region>` que normaliza a minúsculas y aplica un valor seguro por defecto (`'Americas'`) si el parámetro no existe o es inválido:
 
-```typescript title="src/app/country/pages/by-region-page/by-region-page.component.ts (Completo con validación)" hl_lines="10-23 42-43 45 47-49 56-60"
+```typescript title="src/app/country/pages/by-region-page/by-region-page.ts (Completo con validación)" hl_lines="10-23 42-43 45 47-49 56-60"
 import { Component, inject, linkedSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
-import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { CountryList } from '../../components/country-list/country-list';
 import { Region } from '../../interfaces/region.type';
 import { CountryService } from '../../services/country.service';
 
@@ -626,10 +626,10 @@ function validateQueryParam(queryParam: string): Region {
 
 @Component({
   selector: 'app-by-region-page',
-  imports: [CountryListComponent],
-  templateUrl: './by-region-page.component.html',
+  imports: [CountryList],
+  templateUrl: './by-region-page.html',
 })
-export class ByRegionPageComponent {
+export class ByRegionPage {
   countryService = inject(CountryService);
 
   public regions: Region[] = [
@@ -699,10 +699,10 @@ De este modo:
 ??? question "¿Por qué elegimos `Map` frente a `Set` u objetos `{}` para la caché de `CountryService`?"
     **Respuesta:** Un `Set` solo guarda valores únicos sin clave asociativa, mientras que `Map<string, Country[]>` está diseñado específicamente para almacenar pares clave-valor (`término -> países`) con métodos limpios (`.has()`, `.get()`, `.set()`) y soporte nativo para tipos como `Region`.
 
-??? question "¿Qué problema resolvemos con `linkedSignal()` en `SearchInputComponent` que no resuelven ni `signal()` ni `computed()`?"
+??? question "¿Qué problema resolvemos con `linkedSignal()` en `SearchInput` que no resuelven ni `signal()` ni `computed()`?"
     **Respuesta:** `signal(this.initialValue())` toma una instantánea fija al crearse (ignora cambios posteriores y puede quedar desfasado si `initialValue` llega vacío), mientras que `computed()` es de solo lectura y no permite escribir con `(keyup)="inputValue.set(...)"`. **`linkedSignal()`** se sincroniza con `initialValue()` **y** sigue siendo escribible manualmente por el usuario.
 
-??? question "¿Por qué usar `validateQueryParam()` en `ByRegionPageComponent` en vez de `queryParam as Region`?"
+??? question "¿Por qué usar `validateQueryParam()` en `ByRegionPage` en vez de `queryParam as Region`?"
     **Respuesta:** Porque `as Region` es una aserción de TypeScript que **desaparece al compilar a JavaScript**. Si un usuario modifica la URL a `?region=Marte`, la app enviaría una petición inválida y devolvería error 404. `validateQueryParam` verifica en tiempo de ejecución contra el diccionario `validRegions` y garantiza un valor `Region` válido.
 
 ---

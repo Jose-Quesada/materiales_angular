@@ -33,6 +33,15 @@ flowchart TD
     CapaAPI ==> CapaDominio ==> CapaUI
 ```
 
+### 🗺️ Mapa Visual: Historial Dinámico, Rutas `:query` y Servicio Singleton
+
+Al finalizar esta sección, `GifsApp` evolucionará hacia esta arquitectura visual donde **`GifService`** (Singleton + `localStorage`) sincroniza en tiempo real el menú lateral con las vistas de búsqueda e historial:
+
+![Mapa visual de GifsApp con historial dinámico y GifService](assets/gifs-app-history-wireframe.svg)
+
+* Las **Búsquedas Recientes** en **`SideMenuOptionsComponent`** se generan dinámicamente desde `gifService.searchHistoryKeys()` y navegan a `/dashboard/history/:query`.
+* **`GifHistoryComponent`** lee el parámetro `:query` con `toSignal()`, consulta la caché en memoria en tiempo `O(1)` y reutiliza el mismo **`<gif-list />`** sin repetir peticiones HTTP.
+
 ---
 
 ## Continuación del Proyecto y Preparación del Entorno

@@ -34,6 +34,15 @@ flowchart TD
     CapaLayout ==> CapaVistas
 ```
 
+### 🗺️ Mapa Visual: ¿Qué parte de la pantalla pinta cada componente?
+
+Antes de construir las piezas por separado, este esquema muestra **cómo se encajan los distintos componentes de `GifsApp` dentro de la ventana del navegador**:
+
+![Mapa visual de componentes de GifsApp en pantalla](assets/gifs-app-layout-wireframe.svg)
+
+* La barra lateral **`<gifs-side-menu />`** permanece fija a la izquierda (`w-[220px]`) y delega su contenido en dos componentes atómicos: **`<gifs-side-menu-header />`** y **`<gifs-side-menu-options />`**.
+* El área principal (`ml-[220px]`) proyecta dentro de **`<router-outlet />`** la página activa (`TrendingPageComponent` o `SearchPageComponent`), que reutiliza **`<gif-list />`** y **`<gif-list-item />`**.
+
 ---
 
 ## Inicio del Proyecto y Configuración de Tailwind CSS

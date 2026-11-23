@@ -5,7 +5,7 @@ title: 10. CountryApp - Servicios y Resources
 
 # Sección 10: CountryApp — Servicios, REST Countries API, Mappers y Resources
 
-En esta sección conectamos **CountryApp** con datos reales procedentes de la **REST Countries API v3.1**. Implementaremos el servicio singleton `CountryService` con el decorador `@Service()` de **Angular 22**, generaremos los contratos externos con QuickType y aplicaremos el **Patrón Mapper** (*Anti-Corruption Layer*) incluyendo la traducción al español y la prevención de errores de contexto `this`. Además, estudiaremos en tres fases progresivas cómo pasar de una suscripción manual (`.subscribe()`) a la reactividad asíncrona declarativa con **`resource()`** y **`rxResource()`**, centralizaremos los estados de carga/error/vacío en `CountryListComponent` y construiremos la vista de detalle con estadísticas DaisyUI, un comparador de banderas (`diff`) y navegación de retorno con `Location`.
+En esta sección conectamos **CountryApp** con datos reales procedentes de la **REST Countries API v3.1**. Implementaremos el servicio singleton `CountryService` con el decorador `@Service()` de **Angular 22**, generaremos los contratos externos con QuickType y aplicaremos el **Patrón Mapper** (*Anti-Corruption Layer*) incluyendo la traducción al español y la prevención de errores de contexto `this`. Además, estudiaremos en tres fases progresivas cómo pasar de una suscripción manual (`.subscribe()`) a la reactividad asíncrona declarativa con **`resource()`** y **`rxResource()`**, centralizaremos los estados de carga/error/vacío en `CountryList` y construiremos la vista de detalle con estadísticas DaisyUI, un comparador de banderas (`diff`) y navegación de retorno con `Location`.
 
 ---
 
@@ -17,7 +17,7 @@ En esta sección conectamos **CountryApp** con datos reales procedentes de la **
 * **Patrones Arquitectónicos:**
     * **Data Mapper Pattern:** Desacoplamiento total entre el DTO externo (`RESTCountry`) y el modelo de dominio (`Country`).
     * **Declarative Async State:** Transición progresiva desde estado manual (`.subscribe()`) → Promesas (`resource()`) → Observables (`rxResource()`).
-    * **Presentational State Inputs:** `CountryListComponent` renderiza estados de error, carga y vacío recibidos desde cualquier página contenedor.
+    * **Presentational State Inputs:** `CountryList` renderiza estados de error, carga y vacío recibidos desde cualquier página contenedor.
 * **Código Fuente de Referencia:** [GitHub - DevTalles CountryApp (fin-seccion-10)](https://github.com/DevTalles-corp/angular-country-app/tree/fin-seccion-10)
 
 ``` mermaid
@@ -36,8 +36,8 @@ flowchart TD
     end
 
     subgraph CapaPresentacion ["4. Vistas y Detalle"]
-        RxRes --> List["<b>CountryListComponent</b><br/>Estados de error, vacío, carga y <code>DecimalPipe</code>"]
-        RxRes --> Detail["<b>CountryPageComponent</b><br/><code>CountryInformationComponent</code> + <code>NotFoundComponent</code>"]
+        RxRes --> List["<b>CountryList</b><br/>Estados de error, vacío, carga y <code>DecimalPipe</code>"]
+        RxRes --> Detail["<b>CountryPage</b><br/><code>CountryInformation</code> + <code>NotFound</code>"]
     end
 
     CapaAPI ==> CapaServicio ==> CapaReactiva ==> CapaPresentacion
@@ -234,23 +234,23 @@ export class CountryService {
 }
 ```
 
-### 2.2. Fase 1 en `ByCapitalPageComponent`: Suscripción manual con `.subscribe()`
+### 2.2. Fase 1 en `ByCapitalPage`: Suscripción manual con `.subscribe()`
 
 Antes de introducir `resource()` y `rxResource()`, resulta muy instructivo implementar la primera versión controlando manualmente el ciclo completo de la petición HTTP con tres señales (`isLoading`, `isError`, `countries`) y `.subscribe({ next, error })`:
 
-```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 1: Manual)" hl_lines="13 15-17 21 23-35"
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts (Fase 1: Manual)" hl_lines="13 15-17 21 23-35"
 import { Component, inject, signal } from '@angular/core';
-import { SearchInputComponent } from '../../components/search-input/search-input.component';
-import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { SearchInput } from '../../components/search-input/search-input';
+import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country.service';
 import type { Country } from '../../interfaces/country.interface';
 
 @Component({
   selector: 'app-by-capital-page',
-  imports: [SearchInputComponent, CountryListComponent],
-  templateUrl: './by-capital-page.component.html',
+  imports: [SearchInput, CountryList],
+  templateUrl: './by-capital-page.html',
 })
-export class ByCapitalPageComponent {
+export class ByCapitalPage {
   countryService = inject(CountryService);
 
   isLoading = signal(false);
@@ -279,7 +279,7 @@ export class ByCapitalPageComponent {
 }
 ```
 
-```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html (Fase 1)"
+```html title="src/app/country/pages/by-capital-page/by-capital-page.html (Fase 1)"
 <country-search-input
   placeholder="Buscar por capital"
   (value)="onSearch($event)"
@@ -292,12 +292,12 @@ export class ByCapitalPageComponent {
 }
 ```
 
-### 2.3. Renderizado en `CountryListComponent` con `DecimalPipe`
+### 2.3. Renderizado en `CountryList` con `DecimalPipe`
 
-Actualizamos `CountryListComponent` para recibir `countries = input.required<Country[]>()` y formatear la población con separadores de miles usando `DecimalPipe` (`| number`):
+Actualizamos `CountryList` para recibir `countries = input.required<Country[]>()` y formatear la población con separadores de miles usando `DecimalPipe` (`| number`):
 
-=== "country-list.component.ts"
-    ```typescript title="src/app/country/components/country-list/country-list.component.ts" hl_lines="2-3 7 11"
+=== "country-list.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.ts" hl_lines="2-3 7 11"
     import { Component, input } from '@angular/core';
     import { Country } from '../../interfaces/country.interface';
     import { DecimalPipe } from '@angular/common';
@@ -305,15 +305,15 @@ Actualizamos `CountryListComponent` para recibir `countries = input.required<Cou
     @Component({
       selector: 'country-list',
       imports: [DecimalPipe],
-      templateUrl: './country-list.component.html',
+      templateUrl: './country-list.html',
     })
-    export class CountryListComponent {
+    export class CountryList {
       countries = input.required<Country[]>();
     }
     ```
 
-=== "country-list.component.html"
-    ```html title="src/app/country/components/country-list/country-list.component.html" hl_lines="14-27"
+=== "country-list.html"
+    ```html title="src/app/country/components/country-list/country-list.html" hl_lines="14-27"
     <section class="mt-5">
       <table class="table table-md mt-2 w-full">
         <thead>
@@ -369,19 +369,19 @@ Para resolverlo de raíz, **Angular 22** consolida como APIs **estables** la fam
 
 En este primer salto evolutivo eliminamos las tres señales manuales (`isLoading`, `isError`, `countries`) y el método `onSearch`. En su lugar declaramos únicamente una señal disparadora (`query = signal('')`) y conectamos **`resource()`**:
 
-```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 2: resource)" hl_lines="1-2 14 16-26"
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts (Fase 2: resource)" hl_lines="1-2 14 16-26"
 import { Component, inject, resource, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { SearchInputComponent } from '../../components/search-input/search-input.component';
-import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { SearchInput } from '../../components/search-input/search-input';
+import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-by-capital-page',
-  imports: [SearchInputComponent, CountryListComponent],
-  templateUrl: './by-capital-page.component.html',
+  imports: [SearchInput, CountryList],
+  templateUrl: './by-capital-page.html',
 })
-export class ByCapitalPageComponent {
+export class ByCapitalPage {
   countryService = inject(CountryService);
   query = signal('');
 
@@ -405,12 +405,12 @@ export class ByCapitalPageComponent {
 
 ### 3.2. Tarea: `searchByCountry` y navegación al detalle (`[routerLink]`)
 
-Antes de pasar a `rxResource()`, ampliamos `CountryService`, `CountryListComponent` y `ByCountryPageComponent`:
+Antes de pasar a `rxResource()`, ampliamos `CountryService`, `CountryList` y `ByCountryPage`:
 
 1. Añadimos **`searchByCountry(query: string)`** al endpoint `/name/${query}` en `CountryService`.
-2. Importamos **`RouterLink`** en `CountryListComponent` y enlazamos el botón **Más información** a la ruta dinámica `/country/by/:code`:
+2. Importamos **`RouterLink`** en `CountryList` y enlazamos el botón **Más información** a la ruta dinámica `/country/by/:code`:
 
-```html title="src/app/country/components/country-list/country-list.component.html (Enlace a detalle)" hl_lines="2-5"
+```html title="src/app/country/components/country-list/country-list.html (Enlace a detalle)" hl_lines="2-5"
 <td>
   <a
     [routerLink]="['/country/by', country.cca2]"
@@ -426,21 +426,21 @@ Dado que `HttpClient` y nuestros métodos de `CountryService` ya trabajan con **
 
 La función **`rxResource()`** (de `@angular/core/rxjs-interop`) funciona exactamente igual que `resource()`, pero permite que `loader` devuelva directamente un **`Observable`**:
 
-```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Fase 3: rxResource)" hl_lines="2-3 18-25"
+```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts (Fase 3: rxResource)" hl_lines="2-3 18-25"
 import { Component, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 
-import { SearchInputComponent } from '../../components/search-input/search-input.component';
-import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { SearchInput } from '../../components/search-input/search-input';
+import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-by-capital-page',
-  imports: [SearchInputComponent, CountryListComponent],
-  templateUrl: './by-capital-page.component.html',
+  imports: [SearchInput, CountryList],
+  templateUrl: './by-capital-page.html',
 })
-export class ByCapitalPageComponent {
+export class ByCapitalPage {
   countryService = inject(CountryService);
   query = signal('');
 
@@ -455,23 +455,23 @@ export class ByCapitalPageComponent {
 }
 ```
 
-Y aplicamos exactamente el mismo patrón en `ByCountryPageComponent` llamando a `this.countryService.searchByCountry(request.query)`:
+Y aplicamos exactamente el mismo patrón en `ByCountryPage` llamando a `this.countryService.searchByCountry(request.query)`:
 
-```typescript title="src/app/country/pages/by-country-page/by-country-page.component.ts" hl_lines="18-25"
+```typescript title="src/app/country/pages/by-country-page/by-country-page.ts" hl_lines="18-25"
 import { Component, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 
-import { SearchInputComponent } from '../../components/search-input/search-input.component';
-import { CountryListComponent } from '../../components/country-list/country-list.component';
+import { SearchInput } from '../../components/search-input/search-input';
+import { CountryList } from '../../components/country-list/country-list';
 import { CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-by-country-page',
-  imports: [SearchInputComponent, CountryListComponent],
-  templateUrl: './by-country-page.component.html',
+  imports: [SearchInput, CountryList],
+  templateUrl: './by-country-page.html',
 })
-export class ByCountryPageComponent {
+export class ByCountryPage {
   countryService = inject(CountryService);
   query = signal('');
 
@@ -502,7 +502,7 @@ export class ByCountryPageComponent {
 
 ---
 
-## 4. Mostrar Estados al Usuario en `CountryListComponent`
+## 4. Mostrar Estados al Usuario en `CountryList`
 
 Para visualizar claramente el estado de carga durante las pruebas, simulamos una latencia de 2 segundos en `searchByCountry` encadenando el operador RxJS **`delay(2000)`** dentro del `.pipe(...)`:
 
@@ -514,10 +514,10 @@ Para visualizar claramente el estado de carga durante las pruebas, simulamos una
     );
 ```
 
-En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delegamos la presentación de esos estados a `CountryListComponent` mediante **tres Signal Inputs opcionales**:
+En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delegamos la presentación de esos estados a `CountryList` mediante **tres Signal Inputs opcionales**:
 
-=== "country-list.component.ts"
-    ```typescript title="src/app/country/components/country-list/country-list.component.ts" hl_lines="14-16"
+=== "country-list.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.ts" hl_lines="14-16"
     import { Component, input } from '@angular/core';
     import { Country } from '../../interfaces/country.interface';
     import { DecimalPipe } from '@angular/common';
@@ -526,9 +526,9 @@ En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delega
     @Component({
       selector: 'country-list',
       imports: [DecimalPipe, RouterLink],
-      templateUrl: './country-list.component.html',
+      templateUrl: './country-list.html',
     })
-    export class CountryListComponent {
+    export class CountryList {
       countries = input.required<Country[]>();
 
       errorMessage = input<string | unknown | null>();
@@ -537,8 +537,8 @@ En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delega
     }
     ```
 
-=== "country-list.component.html"
-    ```html title="src/app/country/components/country-list/country-list.component.html" hl_lines="39-59"
+=== "country-list.html"
+    ```html title="src/app/country/components/country-list/country-list.html" hl_lines="39-59"
     <section class="mt-5">
       <table class="table table-md mt-2 w-full">
         <thead>
@@ -603,13 +603,13 @@ En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delega
     </section>
     ```
 
-!!! note "Dos detalles clave de implementación en `CountryListComponent`"
+!!! note "Dos detalles clave de implementación en `CountryList`"
     * **¿Por qué `errorMessage = input<string | unknown | null>()` incluye `unknown`?** Porque la señal `countryResource.error()` de Angular devuelve exactamente el tipo `Signal<unknown>`. Aceptar `unknown` evita errores de compilación al enlazar `[errorMessage]="countryResource.error()"`.
     * **Comentarios `<!-- -->` entre bloques `@if`:** cuando colocamos varios `@if` seguidos dentro de un `<tbody>`, el servicio de lenguaje de Angular en VS Code a veces pierde el autocompletado al pegar bloques contiguos; separar los bloques con un comentario HTML vacío `<!-- -->` resuelve el problema visual y de IntelliSense.
 
-Ahora conectamos las cuatro propiedades en `by-capital-page.component.html` y `by-country-page.component.html`:
+Ahora conectamos las cuatro propiedades en `by-capital-page.html` y `by-country-page.html`:
 
-```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html" hl_lines="6-11"
+```html title="src/app/country/pages/by-capital-page/by-capital-page.html" hl_lines="6-11"
 <country-search-input
   placeholder="Buscar por capital"
   (value)="query.set($event)"
@@ -623,11 +623,11 @@ Ahora conectamos las cuatro propiedades en `by-capital-page.component.html` y `b
 />
 ```
 
-*(En `by-country-page.component.html` solo cambia el `placeholder="Buscar por país"`).*
+*(En `by-country-page.html` solo cambia el `placeholder="Buscar por país"`).*
 
 ---
 
-## 5. Vista de Detalle (`CountryPage`), `NotFoundComponent` y `CountryInformationComponent`
+## 5. Vista de Detalle (`CountryPage`), `NotFound` y `CountryInformation`
 
 Cuando el usuario hace clic en **"Más información"** sobre cualquier fila, navega a `/country/by/:code` (por ejemplo `/country/by/ESP`). Veamos cómo se construye esta pantalla en sus cuatro piezas:
 
@@ -653,22 +653,22 @@ Aunque consultemos un único código Alpha (`/alpha/ESP`), la API de REST Countr
   }
 ```
 
-### 5.2. Componente reutilizable `NotFoundComponent` y servicio `Location`
+### 5.2. Componente reutilizable `NotFound` y servicio `Location`
 
 Creamos `src/app/shared/components/not-found/` para mostrar una vista amigable cuando el usuario introduce un código de país inexistente.  
-Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angular/common` y ejecutamos **`this.location.back()`** (historial nativo del navegador). Así el botón devuelve al usuario exactamente a la pantalla desde la que vino (sea *Por capital*, *Por país* o *Por región*), manteniendo `NotFoundComponent` 100% reutilizable:
+Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angular/common` y ejecutamos **`this.location.back()`** (historial nativo del navegador). Así el botón devuelve al usuario exactamente a la pantalla desde la que vino (sea *Por capital*, *Por país* o *Por región*), manteniendo `NotFound` 100% reutilizable:
 
-=== "not-found.component.ts"
-    ```typescript title="src/app/shared/components/not-found/not-found.component.ts" hl_lines="1 10 13"
+=== "not-found.ts"
+    ```typescript title="src/app/shared/components/not-found/not-found.ts" hl_lines="1 10 13"
     import { Location } from '@angular/common';
     import { Component, inject } from '@angular/core';
 
     @Component({
       selector: 'app-not-found',
       imports: [],
-      templateUrl: './not-found.component.html',
+      templateUrl: './not-found.html',
     })
-    export class NotFoundComponent {
+    export class NotFound {
       location = inject(Location);
 
       goBack() {
@@ -677,8 +677,8 @@ Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angula
     }
     ```
 
-=== "not-found.component.html"
-    ```html title="src/app/shared/components/not-found/not-found.component.html" hl_lines="25"
+=== "not-found.html"
+    ```html title="src/app/shared/components/not-found/not-found.html" hl_lines="25"
     <section class="flex flex-col items-center justify-center mt-10">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -707,25 +707,25 @@ Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angula
     </section>
     ```
 
-### 5.3. Página Orquestadora `CountryPageComponent`
+### 5.3. Página Orquestadora `CountryPage`
 
 Captura el segmento dinámico `:code` de la URL mediante `inject(ActivatedRoute).snapshot.params['code']`, consulta el país con `rxResource` y decide qué subcomponente mostrar en función del estado del recurso (`error()`, `isLoading()`, `hasValue()`):
 
-=== "country-page.component.ts"
-    ```typescript title="src/app/country/pages/country-page/country-page.component.ts" hl_lines="14 17-22"
+=== "country-page.ts"
+    ```typescript title="src/app/country/pages/country-page/country-page.ts" hl_lines="14 17-22"
     import { Component, inject } from '@angular/core';
     import { rxResource } from '@angular/core/rxjs-interop';
     import { ActivatedRoute } from '@angular/router';
     import { CountryService } from '../../services/country.service';
-    import { NotFoundComponent } from '../../../shared/components/not-found/not-found.component';
-    import { CountryInformationComponent } from './country-information/country-information.component';
+    import { NotFound } from '../../../shared/components/not-found/not-found';
+    import { CountryInformation } from './country-information/country-information';
 
     @Component({
       selector: 'app-country-page',
-      imports: [NotFoundComponent, CountryInformationComponent],
-      templateUrl: './country-page.component.html',
+      imports: [NotFound, CountryInformation],
+      templateUrl: './country-page.html',
     })
-    export class CountryPageComponent {
+    export class CountryPage {
       countryCode = inject(ActivatedRoute).snapshot.params['code'];
       countryService = inject(CountryService);
 
@@ -738,8 +738,8 @@ Captura el segmento dinámico `:code` de la URL mediante `inject(ActivatedRoute)
     }
     ```
 
-=== "country-page.component.html"
-    ```html title="src/app/country/pages/country-page/country-page.component.html"
+=== "country-page.html"
+    ```html title="src/app/country/pages/country-page/country-page.html"
     <!--  -->
     @if (countryResource.error()) {
     <app-not-found />
@@ -756,14 +756,14 @@ Captura el segmento dinámico `:code` de la URL mediante `inject(ActivatedRoute)
     }
     ```
 
-### 5.4. Subcomponente Presentacional `CountryInformationComponent`
+### 5.4. Subcomponente Presentacional `CountryInformation`
 
 Recibe el país validado mediante `country = input.required<Country>()` y calcula `currentYear = computed(() => new Date().getFullYear())` (ya que las plantillas HTML de Angular no permiten instanciar clases con `new Date()` directamente).
 
 Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nombre, Sub Región y Bandera) con el componente interactivo **`diff aspect-[16/9]`**, que superpone la bandera nítida sobre una versión desenfocada (`blur brightness-75`) con un deslizador arrastrable (`diff-resizer`):
 
-=== "country-information.component.ts"
-    ```typescript title="src/app/country/pages/country-page/country-information/country-information.component.ts" hl_lines="11 13-15"
+=== "country-information.ts"
+    ```typescript title="src/app/country/pages/country-page/country-information/country-information.ts" hl_lines="11 13-15"
     import { Component, computed, input } from '@angular/core';
     import { Country } from '../../../interfaces/country.interface';
     import { DecimalPipe } from '@angular/common';
@@ -771,9 +771,9 @@ Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nom
     @Component({
       selector: 'country-information-page',
       imports: [DecimalPipe],
-      templateUrl: './country-information.component.html',
+      templateUrl: './country-information.html',
     })
-    export class CountryInformationComponent {
+    export class CountryInformation {
       country = input.required<Country>();
 
       currentYear = computed(() => {
@@ -782,8 +782,8 @@ Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nom
     }
     ```
 
-=== "country-information.component.html"
-    ```html title="src/app/country/pages/country-page/country-information/country-information.component.html" hl_lines="8 35-46"
+=== "country-information.html"
+    ```html title="src/app/country/pages/country-page/country-information/country-information.html" hl_lines="8 35-46"
     <section class="mx-10">
       <h1 class="text-3xl">{{ country().name }}</h1>
       <h2 class="text-xl font-thin">
@@ -840,10 +840,10 @@ Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nom
     En Angular 22 ya no necesitas registrar `provideHttpClient(withFetch())` manualmente para peticiones básicas ni repetir `@Injectable({ providedIn: 'root' })` en cada servicio estándar: `@Service()` y el proveedor automático de `HttpClient` en `root` reducen el código repetitivo al mínimo.
 
 !!! tip "2. Recepción directa del parámetro `:code` con `withComponentInputBinding()`"
-    Si añades `withComponentInputBinding()` a `provideRouter(routes, withComponentInputBinding())` en `app.config.ts`, `CountryPageComponent` puede recibir el parámetro `:code` directamente como una señal de entrada en lugar de inyectar `ActivatedRoute`:
+    Si añades `withComponentInputBinding()` a `provideRouter(routes, withComponentInputBinding())` en `app.config.ts`, `CountryPage` puede recibir el parámetro `:code` directamente como una señal de entrada en lugar de inyectar `ActivatedRoute`:
     ```typescript
-    // En CountryPageComponent (Angular 22 con withComponentInputBinding):
-    export class CountryPageComponent {
+    // En CountryPage (Angular 22 con withComponentInputBinding):
+    export class CountryPage {
       countryService = inject(CountryService);
       code = input.required<string>(); // Vinculado automáticamente desde /country/by/:code
 
@@ -868,8 +868,8 @@ Para la interfaz combinamos las tarjetas **`stats`** de DaisyUI (Población, Nom
 ??? question "¿Qué ventaja clave aporta `rxResource()` frente a `resource()` cuando trabajamos con `HttpClient`?"
     **Respuesta:** `HttpClient` devuelve **Observables** de RxJS. Con `resource()` estamos obligados a convertir el Observable a Promesa mediante `await firstValueFrom(...)`; con `rxResource()` devolvemos el Observable directamente (o `of([])` cuando la consulta está vacía) y Angular gestiona por nosotros la suscripción y la cancelación automática si el usuario cambia la búsqueda.
 
-??? question "¿Por qué usamos `Location.back()` en `NotFoundComponent` en vez de un `routerLink` fijo?"
-    **Respuesta:** Porque un país no encontrado puede haber sido abierto desde *Por capital*, *Por país*, *Por región* o mediante una URL externa. `location.back()` devuelve al usuario exactamente a su vista de origen sin acoplar `NotFoundComponent` a una ruta concreta.
+??? question "¿Por qué usamos `Location.back()` en `NotFound` en vez de un `routerLink` fijo?"
+    **Respuesta:** Porque un país no encontrado puede haber sido abierto desde *Por capital*, *Por país*, *Por región* o mediante una URL externa. `location.back()` devuelve al usuario exactamente a su vista de origen sin acoplar `NotFound` a una ruta concreta.
 
 ---
 

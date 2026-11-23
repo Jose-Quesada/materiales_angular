@@ -33,6 +33,12 @@ flowchart TD
     S1 ==> S2 ==> S3
 ```
 
+### 🗺️ Mapa Visual: ¿Cómo funciona nuestra primera SPA en Angular?
+
+Antes de crear los primeros archivos, este esquema muestra **cómo `index.html`, `AppComponent` y `<router-outlet />` se coordinan** para intercambiar en pantalla `CounterPageComponent` (`/`) y `HeroPageComponent` (`/hero`) sin recargar el navegador:
+
+![Mapa visual de la SPA en la Sección 04: AppComponent, RouterOutlet, CounterPage y HeroPage](assets/bases-04-layout-wireframe.svg)
+
 ---
 
 ## Introducción y Temas Clave

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 530" width="820" height="530" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="820" height="530" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Barra de navegador -->
+  <rect x="0" y="0" width="820" height="36" rx="14" fill="#e2e8f0" />
+  <rect x="0" y="22" width="820" height="14" fill="#e2e8f0" />
+  <circle cx="22" cy="18" r="5.5" fill="#f87171" />
+  <circle cx="40" cy="18" r="5.5" fill="#fbbf24" />
+  <circle cx="58" cy="18" r="5.5" fill="#4ade80" />
+  <rect x="90" y="7" width="420" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="104" y="22" font-size="11.5" fill="#475569">localhost:4200/dashboard/history/<tspan font-weight="700" fill="#2563eb">goku</tspan></text>
+  <text x="524" y="22" font-size="10.5" font-weight="600" fill="#1d4ed8">← parámetro dinámico :query</text>
+
+  <!-- 1. DashboardPageComponent -->
+  <rect x="18" y="48" width="784" height="346" rx="10" fill="#ffffff" stroke="#475569" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="30" y="38" width="330" height="22" rx="5" fill="#334155" />
+  <text x="40" y="53" font-size="11.5" font-weight="700" fill="#ffffff">DashboardPageComponent (Shell con Historial Vivo)</text>
+
+  <!-- 2. SideMenuOptionsComponent con Historial -->
+  <rect x="34" y="72" width="230" height="308" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+  <text x="46" y="92" font-size="10.5" font-weight="700" fill="#34d399">&lt;gifs-side-menu-options /&gt;</text>
+
+  <rect x="46" y="102" width="206" height="30" rx="5" fill="#1e293b" />
+  <text x="58" y="121" font-size="11" fill="#cbd5e1">📈 Trending</text>
+  <rect x="46" y="138" width="206" height="30" rx="5" fill="#1e293b" />
+  <text x="58" y="157" font-size="11" fill="#cbd5e1">🔍 Buscador (/search)</text>
+
+  <!-- Bloque de Historial Dinámico -->
+  <rect x="46" y="180" width="206" height="186" rx="7" fill="#1e293b" stroke="#f59e0b" stroke-width="1.8" />
+  <text x="56" y="198" font-size="9.5" font-weight="700" fill="#fbbf24">BÚSQUEDAS RECIENTES</text>
+  <text x="56" y="212" font-size="9.5" fill="#94a3b8">@for (key of searchHistoryKeys())</text>
+
+  <rect x="56" y="222" width="186" height="28" rx="5" fill="#2563eb" />
+  <text x="68" y="240" font-size="11" font-weight="700" fill="#ffffff">🕒 Goku (activo)</text>
+  <rect x="56" y="256" width="186" height="28" rx="5" fill="#0f172a" />
+  <text x="68" y="274" font-size="11" fill="#cbd5e1">🕒 Saitama</text>
+  <rect x="56" y="290" width="186" height="28" rx="5" fill="#0f172a" />
+  <text x="68" y="308" font-size="11" fill="#cbd5e1">🕒 Vegeta</text>
+  <text x="149" y="352" text-anchor="middle" font-size="9.5" fill="#fbbf24">[routerLink]="['/dashboard/history', key]"</text>
+
+  <!-- 3. GifHistoryComponent -->
+  <rect x="280" y="72" width="506" height="308" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="292" y="62" width="470" height="21" rx="5" fill="#d97706" />
+  <text x="302" y="76" font-size="11" font-weight="700" fill="#ffffff">GifHistoryComponent (o SearchPageComponent en /dashboard/search)</text>
+
+  <!-- Cabecera de GifHistoryComponent -->
+  <rect x="298" y="96" width="470" height="52" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+  <text x="312" y="117" font-size="13.5" font-weight="700" fill="#0f172a">Historial de Búsqueda: <tspan fill="#2563eb">Goku</tspan></text>
+  <text x="312" y="136" font-size="10.5" fill="#475569">query = toSignal(route.params.pipe(map(...)))  →  gifsByKey = computed(...)</text>
+
+  <!-- GifListComponent reutilizado -->
+  <rect x="298" y="162" width="470" height="202" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" />
+  <text x="312" y="182" font-size="11" font-weight="700" fill="#6b21a8">&lt;gif-list [gifs]="gifsByKey()" /&gt; · Reutiliza el mismo componente de galería</text>
+
+  <rect x="314" y="196" width="136" height="148" rx="7" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+  <text x="382" y="264" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0369a1">Goku GIF #1</text>
+  <text x="382" y="284" text-anchor="middle" font-size="9.5" fill="#0284c7">Leído de caché O(1)</text>
+
+  <rect x="465" y="196" width="136" height="148" rx="7" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+  <text x="533" y="264" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0369a1">Goku GIF #2</text>
+  <text x="533" y="284" text-anchor="middle" font-size="9.5" fill="#0284c7">Sin petición HTTP</text>
+
+  <rect x="616" y="196" width="136" height="148" rx="7" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+  <text x="684" y="264" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0369a1">Goku GIF #3</text>
+  <text x="684" y="284" text-anchor="middle" font-size="9.5" fill="#0284c7">Sin petición HTTP</text>
+
+  <!-- 4. Capa de Servicio Singleton abajo (GifService + localStorage + Giphy API) -->
+  <rect x="18" y="416" width="784" height="98" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2" />
+  <rect x="30" y="405" width="320" height="22" rx="5" fill="#4f46e5" />
+  <text x="40" y="420" font-size="11.5" font-weight="700" fill="#ffffff">GifService (@Service() Singleton · Capa de Datos)</text>
+
+  <rect x="34" y="438" width="245" height="60" rx="7" fill="#ffffff" stroke="#818cf8" stroke-width="1.5" />
+  <text x="46" y="457" font-size="11" font-weight="700" fill="#3730a3">searchHistory (Signal)</text>
+  <text x="46" y="473" font-size="10" fill="#475569">Record&lt;string, Gif[]&gt; (Caché)</text>
+  <text x="46" y="488" font-size="10" fill="#4f46e5">searchHistoryKeys = computed(...)</text>
+
+  <rect x="296" y="438" width="235" height="60" rx="7" fill="#ffffff" stroke="#818cf8" stroke-width="1.5" />
+  <text x="308" y="457" font-size="11" font-weight="700" fill="#3730a3">effect() ↔ localStorage</text>
+  <text x="308" y="473" font-size="10" fill="#475569">Guarda JSON al cambiar el historial</text>
+  <text x="308" y="488" font-size="10" fill="#4f46e5">Hidrata al recargar (F5)</text>
+
+  <rect x="548" y="438" width="238" height="60" rx="7" fill="#ffffff" stroke="#818cf8" stroke-width="1.5" />
+  <text x="560" y="457" font-size="11" font-weight="700" fill="#3730a3">HttpClient + GifMapper</text>
+  <text x="560" y="473" font-size="10" fill="#475569">GET /trending y /search (Giphy)</text>
+  <text x="560" y="488" font-size="10" fill="#4f46e5">.pipe(map(...), tap(...))</text>
+
+  <!-- Flechas de conexión -->
+  <line x1="149" y1="380" x2="149" y2="416" stroke="#4f46e5" stroke-width="2" />
+  <polygon points="149,380 144,390 154,390" fill="#4f46e5" />
+  <line x1="533" y1="380" x2="533" y2="416" stroke="#4f46e5" stroke-width="2" />
+  <polygon points="533,380 528,390 538,390" fill="#4f46e5" />
+</svg>

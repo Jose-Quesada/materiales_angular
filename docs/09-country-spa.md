@@ -5,7 +5,7 @@ title: 09. CountryApp - Rutas y Layout
 
 # Sección 09: CountryApp — Rutas Hijas, Layout y DaisyUI
 
-En esta sección iniciamos la construcción de **CountryApp**, una Single Page Application (SPA) modular orientada a la exploración geográfica mundial. Aprenderemos a organizar aplicaciones medianas mediante **archivos de rutas desacoplados por funcionalidad (*feature routing*)**, diseñar un **Layout Wrapper reutilizable**, configurar **Tailwind CSS junto con DaisyUI** (tema `sunset` y arquitectura *Sticky Footer* con Flexbox), construir un **menú de navegación superior con iconos SVG de Iconify** y refactorizar progresivamente prototipos de página hacia **componentes atómicos (`SearchInputComponent` y `CountryListComponent`)** conectados mediante **Signal Inputs y Signal Outputs**, aplicando las mejores prácticas de la guía oficial de estilos de **Angular 22**.
+En esta sección iniciamos la construcción de **CountryApp**, una Single Page Application (SPA) modular orientada a la exploración geográfica mundial. Aprenderemos a organizar aplicaciones medianas mediante **archivos de rutas desacoplados por funcionalidad (*feature routing*)**, diseñar un **Layout Wrapper reutilizable**, configurar **Tailwind CSS junto con DaisyUI** (tema `sunset` y arquitectura *Sticky Footer* con Flexbox), construir un **menú de navegación superior con iconos SVG de Iconify** y refactorizar progresivamente prototipos de página hacia **componentes atómicos (`SearchInput` y `CountryList`)** conectados mediante **Signal Inputs y Signal Outputs**, aplicando las mejores prácticas de la guía oficial de estilos de **Angular 22**.
 
 ---
 
@@ -15,32 +15,32 @@ En esta sección iniciamos la construcción de **CountryApp**, una Single Page A
 * **Stack Tecnológico (Angular 22):** Angular 22 (*Zoneless* y *Standalone Components* por defecto), Tailwind CSS v3/v4, DaisyUI v4/v5 (`themes: ["sunset"]`), [Iconify](https://iconify.design/) (iconos SVG vectoriales), Angular Schematics.
 * **Patrones Arquitectónicos:**
     * **Feature-Driven Architecture:** Separación limpia entre el dominio de negocio (`src/app/country/`) y las piezas transversales (`src/app/shared/`).
-    * **Nested Routing & Lazy Children:** Carga ansiosa de la portada (`HomePageComponent`) y carga perezosa del subárbol `/country` mediante `loadChildren` + `export default`.
-    * **Layout Wrapper Pattern:** Componente cascarón (`CountryLayoutComponent`) que fija `<country-top-menu />` y proyecta sus rutas hijas en un `<router-outlet />` interno.
-    * **Progressive Atomic Extraction:** Prototipado rápido en página y extracción desacoplada hacia `SearchInputComponent` (`country-search-input`) y `CountryListComponent` (`country-list`).
+    * **Nested Routing & Lazy Children:** Carga ansiosa de la portada (`HomePage`) y carga perezosa del subárbol `/country` mediante `loadChildren` + `export default`.
+    * **Layout Wrapper Pattern:** Componente cascarón (`CountryLayout`) que fija `<country-top-menu />` y proyecta sus rutas hijas en un `<router-outlet />` interno.
+    * **Progressive Atomic Extraction:** Prototipado rápido en página y extracción desacoplada hacia `SearchInput` (`country-search-input`) y `CountryList` (`country-list`).
 * **Código Fuente de Referencia:** [GitHub - DevTalles CountryApp (fin-seccion-09)](https://github.com/DevTalles-corp/angular-country-app/tree/fin-seccion-09)
 
 ``` mermaid
 flowchart TD
     subgraph Shell ["1. Estructura Shell y Enrutamiento Global"]
-        AppHtml["<b>AppComponent (Flexbox Sticky Footer)</b><br/><code>&lt;router-outlet /&gt;</code> + <code>flex-1</code> + <code>&lt;app-footer /&gt;</code>"] --> AppRoutes["<b>app.routes.ts</b><br/><code>''</code> (HomePage) | <code>'country'</code> (loadChildren)"]
+        AppHtml["<b>App (Flexbox Sticky Footer)</b><br/><code>&lt;router-outlet /&gt;</code> + <code>flex-1</code> + <code>&lt;app-footer /&gt;</code>"] --> AppRoutes["<b>app.routes.ts</b><br/><code>''</code> (HomePage) | <code>'country'</code> (loadChildren)"]
     end
 
     subgraph FeatureRouting ["2. Feature Routing: Dominio Country"]
-        AppRoutes --> Layout["<b>CountryLayoutComponent</b><br/><code>&lt;country-top-menu /&gt;</code> + outlet interno"]
+        AppRoutes --> Layout["<b>CountryLayout</b><br/><code>&lt;country-top-menu /&gt;</code> + outlet interno"]
         Layout --> CRoutes["<b>country.routes.ts</b><br/>Rutas hijas bajo <code>children</code>"]
     end
 
     subgraph Pages ["3. Vistas de Navegación (Páginas)"]
-        CRoutes --> P1["<b>ByCapitalPageComponent</b><br/><code>/country/by-capital</code>"]
-        CRoutes --> P2["<b>ByCountryPageComponent</b><br/><code>/country/by-country</code>"]
-        CRoutes --> P3["<b>ByRegionPageComponent</b><br/><code>/country/by-region</code>"]
-        CRoutes --> P4["<b>CountryPageComponent</b><br/><code>/country/by/:code</code>"]
+        CRoutes --> P1["<b>ByCapitalPage</b><br/><code>/country/by-capital</code>"]
+        CRoutes --> P2["<b>ByCountryPage</b><br/><code>/country/by-country</code>"]
+        CRoutes --> P3["<b>ByRegionPage</b><br/><code>/country/by-region</code>"]
+        CRoutes --> P4["<b>CountryPage</b><br/><code>/country/by/:code</code>"]
     end
 
     subgraph Reusable ["4. Componentes Atómicos Reutilizables"]
-        P1 -.-> Search["<b>SearchInputComponent</b><br/><code>input()</code> + <code>output()</code>"]
-        P1 -.-> List["<b>CountryListComponent</b><br/>Tabla DaisyUI reutilizable"]
+        P1 -.-> Search["<b>SearchInput</b><br/><code>input()</code> + <code>output()</code>"]
+        P1 -.-> List["<b>CountryList</b><br/>Tabla DaisyUI reutilizable"]
         P2 -.-> Search
         P2 -.-> List
         P3 -.-> List
@@ -48,6 +48,15 @@ flowchart TD
 
     Shell ==> FeatureRouting ==> Pages
 ```
+
+### 🗺️ Mapa Visual: ¿Qué parte de la pantalla pinta cada componente?
+
+Antes de escribir la primera línea de código, este esquema muestra **cómo se encajan los distintos componentes dentro de la ventana del navegador** (por ejemplo, al visitar `/country/by-capital`):
+
+![Mapa visual de componentes de CountryApp en pantalla](assets/country-app-layout-wireframe.svg)
+
+* En la ruta raíz **`/`**, el `<router-outlet />` principal de `App` pinta **`HomePage`** en lugar de `CountryLayout`, manteniendo siempre **`<app-footer />`** anclado en la parte inferior.
+* Al navegar entre **Por Capital**, **Por País**, **Por Región** o **Más info**, `CountryLayout` y `<country-top-menu />` permanecen intactos y únicamente se intercambia el componente dentro del **`<router-outlet />` interno**.
 
 ---
 
@@ -67,11 +76,21 @@ ng new country-app --routing --style=css --ssr=false
 cd country-app
 ```
 
-!!! note "Angular 22: Modo Zoneless por defecto y nombres de archivos"
+!!! note "Angular 22: Modo Zoneless por defecto y generación de componentes"
     * En **Angular 22**, las aplicaciones nuevas nacen **Zoneless por defecto**, por lo que `src/app/app.config.ts` registra `provideBrowserGlobalErrorListeners()` y `provideRouter(routes)` sin depender de `provideZoneChangeDetection()`.
-    * Además, a partir de Angular 20–22, `ng generate component` omite el sufijo `.component` en los archivos nuevos (`mi-componente.ts`), aunque en este proyecto mantendremos la convención explícita `*.component.ts` configurada con la extensión **Angular Schematics** de VS Code (`.vscode/settings.json`):
+    * A partir de Angular 20–22, `ng generate component` omite el sufijo `.component` en los archivos y `Component` en las clases (`by-capital-page.ts` / `export class ByCapitalPage`). **En esta guía seguimos exactamente esa convención nativa de Angular 22** para que coincida 1:1 con lo que genera tu CLI (si descargas el repositorio histórico de referencia de GitHub en Angular 19, verás la convención clásica `*.component.ts`).
 
-```json title=".vscode/settings.json"
+**Opción A — Si generas componentes desde la terminal con Angular CLI (recomendado y sin extensiones):**  
+No necesitas crear `.vscode/settings.json`. Basta con pasar los flags **`--skip-tests`** (evita el `.spec.ts`) y **`--inline-style`** (o `-s`, evita crear un archivo `.css` vacío al usar Tailwind/DaisyUI):
+
+```bash
+ng g c country/pages/by-capital-page --skip-tests --inline-style
+```
+
+**Opción B — Solo si usas la extensión *Angular Schematics* de VS Code:**  
+Esta configuración en `.vscode/settings.json` **únicamente tiene efecto al usar dicha extensión desde el menú contextual de VS Code** (la consola de Angular CLI la ignora):
+
+```json title=".vscode/settings.json (Solo para la extensión Angular Schematics)"
 {
   "angular-schematics.schematicsDefaultOptions": {
     "angular-*": {
@@ -168,11 +187,11 @@ En el proyecto moderno con **Tailwind CSS v4 + DaisyUI v5** (estándar actual en
     @tailwind utilities;
     ```
 
-### 1.3. Cascarón global con *Sticky Footer* en `AppComponent`
+### 1.3. Cascarón global con *Sticky Footer* en `App`
 
-Antes de crear las páginas, preparamos `src/app/app.component.html` con un contenedor **Flexbox vertical** que garantice que el pie de página (`<app-footer />`) quede siempre pegado en la parte inferior de la pantalla aunque la página tenga pocos resultados:
+Antes de crear las páginas, preparamos `src/app/app.html` con un contenedor **Flexbox vertical** que garantice que el pie de página (`<app-footer />`) quede siempre pegado en la parte inferior de la pantalla aunque la página tenga pocos resultados:
 
-```html title="src/app/app.component.html" hl_lines="1 4 6"
+```html title="src/app/app.html" hl_lines="1 4 6"
 <main class="m-auto flex-grow flex flex-col min-h-screen">
   <router-outlet />
 
@@ -218,46 +237,46 @@ src/app/
 !!! info "📖 Para saber más: Manual de Referencia"
     Para dominar `loadChildren`, `loadComponent`, rutas hijas y redirecciones en Angular Router, consulta el **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md)**.
 
-### 2.1. Creación de `HomePageComponent` y `ByCapitalPageComponent`
+### 2.1. Creación de `HomePage` y `ByCapitalPage`
 
 Creamos inicialmente dos páginas base para conectar las primeras rutas:
 
-=== "HomePageComponent"
-    ```typescript title="src/app/shared/pages/home-page/home-page.component.ts"
+=== "HomePage"
+    ```typescript title="src/app/shared/pages/home-page/home-page.ts"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'app-home-page',
       imports: [],
-      templateUrl: './home-page.component.html',
+      templateUrl: './home-page.html',
     })
-    export class HomePageComponent {}
+    export class HomePage {}
     ```
 
-=== "ByCapitalPageComponent"
-    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts"
+=== "ByCapitalPage"
+    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'app-by-capital-page',
       imports: [],
-      templateUrl: './by-capital-page.component.html',
+      templateUrl: './by-capital-page.html',
     })
-    export class ByCapitalPageComponent {}
+    export class ByCapitalPage {}
     ```
 
 ### 2.2. Enrutador Global (`src/app/app.routes.ts`)
 
-En `src/app/app.routes.ts` cargamos la portada (`HomePageComponent`) de forma ansiosa (*eager*) al entrar en la raíz `''`, y delegamos toda la sección `/country` mediante carga perezosa (`loadChildren`):
+En `src/app/app.routes.ts` cargamos la portada (`HomePage`) de forma ansiosa (*eager*) al entrar en la raíz `''`, y delegamos toda la sección `/country` mediante carga perezosa (`loadChildren`):
 
 ```typescript title="src/app/app.routes.ts" hl_lines="5-12"
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './shared/pages/home-page/home-page.component';
+import { HomePage } from './shared/pages/home-page/home-page';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomePageComponent,
+    component: HomePage,
   },
   {
     path: 'country',
@@ -281,7 +300,7 @@ export const routes: Routes = [
 Un **Layout Component** es un componente cascarón diseñado para envolver un conjunto de rutas relacionadas: renderiza elementos fijos comunes (como el menú superior de navegación) e incluye su **propio `<router-outlet />` interno** donde se inyecta la página hija activa.
 
 ```text
-[CountryLayoutComponent] -> ruta padre '' dentro de /country
+[CountryLayout] -> ruta padre '' dentro de /country
 ┌────────────────────────────────────────────────────────┐
 │  <country-top-menu />  (Por capital | Por país | ...)  │
 ├────────────────────────────────────────────────────────┤
@@ -292,21 +311,21 @@ Un **Layout Component** es un componente cascarón diseñado para envolver un co
 └────────────────────────────────────────────────────────┘
 ```
 
-### 3.1. Creación de `CountryLayoutComponent`
+### 3.1. Creación de `CountryLayout`
 
 Creamos el componente en `src/app/country/layouts/CountryLayout/CountryLayout.component.ts`:
 
 ```typescript title="src/app/country/layouts/CountryLayout/CountryLayout.component.ts" hl_lines="2 7"
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TopMenuComponent } from '../../components/top-menu/top-menu.component';
+import { TopMenu } from '../../components/top-menu/top-menu';
 
 @Component({
   selector: 'app-country-layout',
-  imports: [RouterOutlet, TopMenuComponent],
+  imports: [RouterOutlet, TopMenu],
   templateUrl: './CountryLayout.component.html',
 })
-export class CountryLayoutComponent {}
+export class CountryLayout {}
 ```
 
 ```html title="src/app/country/layouts/CountryLayout/CountryLayout.component.html" hl_lines="1 4"
@@ -319,21 +338,21 @@ export class CountryLayoutComponent {}
 
 ### 3.2. Archivo de Rutas por Funcionalidad: `country.routes.ts` (Fase 1)
 
-Definimos inicialmente la ruta padre que monta `CountryLayoutComponent` y su arreglo `children` con la primera ruta hija (`by-capital`) y la redirección por defecto:
+Definimos inicialmente la ruta padre que monta `CountryLayout` y su arreglo `children` con la primera ruta hija (`by-capital`) y la redirección por defecto:
 
 ```typescript title="src/app/country/country.routes.ts (Fase 1)" hl_lines="7-18 22"
 import { Routes } from '@angular/router';
-import { ByCapitalPageComponent } from './pages/by-capital-page/by-capital-page.component';
-import { CountryLayoutComponent } from './layouts/CountryLayout/CountryLayout.component';
+import { ByCapitalPage } from './pages/by-capital-page/by-capital-page';
+import { CountryLayout } from './layouts/CountryLayout/CountryLayout.component';
 
 export const countryRoutes: Routes = [
   {
     path: '',
-    component: CountryLayoutComponent,
+    component: CountryLayout,
     children: [
       {
         path: 'by-capital',
-        component: ByCapitalPageComponent,
+        component: ByCapitalPage,
       },
       {
         path: '**',
@@ -346,31 +365,31 @@ export const countryRoutes: Routes = [
 export default countryRoutes;
 ```
 
-Al navegar a `/country`, Angular entra en `countryRoutes`, carga el `CountryLayoutComponent` y redirige `''` / `'**'` hacia `/country/by-capital`.
+Al navegar a `/country`, Angular entra en `countryRoutes`, carga el `CountryLayout` y redirige `''` / `'**'` hacia `/country/by-capital`.
 
 ---
 
 ## 4. Componentes UI de DaisyUI: Portada Hero y Footer Global
 
-### 4.1. Portada de Bienvenida (`HomePageComponent`)
+### 4.1. Portada de Bienvenida (`HomePage`)
 
-Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui.com/components/hero/) en `home-page.component.html` y añadimos `RouterLink` en el botón **Empezar** para navegar hacia `/country`:
+Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui.com/components/hero/) en `home-page.html` y añadimos `RouterLink` en el botón **Empezar** para navegar hacia `/country`:
 
-=== "home-page.component.ts"
-    ```typescript title="src/app/shared/pages/home-page/home-page.component.ts" hl_lines="2 6"
+=== "home-page.ts"
+    ```typescript title="src/app/shared/pages/home-page/home-page.ts" hl_lines="2 6"
     import { Component } from '@angular/core';
     import { RouterLink } from '@angular/router';
 
     @Component({
       selector: 'app-home-page',
       imports: [RouterLink],
-      templateUrl: './home-page.component.html',
+      templateUrl: './home-page.html',
     })
-    export class HomePageComponent {}
+    export class HomePage {}
     ```
 
-=== "home-page.component.html"
-    ```html title="src/app/shared/pages/home-page/home-page.component.html" hl_lines="16"
+=== "home-page.html"
+    ```html title="src/app/shared/pages/home-page/home-page.html" hl_lines="16"
     <div
       class="hero min-h-screen"
       style="
@@ -392,24 +411,24 @@ Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui
     </div>
     ```
 
-### 4.2. Pie de Página Reutilizable (`FooterComponent`)
+### 4.2. Pie de Página Reutilizable (`Footer`)
 
-Creamos `FooterComponent` en `src/app/shared/components/footer/` tomando la plantilla estándar de DaisyUI Footer y lo registramos en `AppComponent`:
+Creamos `Footer` en `src/app/shared/components/footer/` tomando la plantilla estándar de DaisyUI Footer y lo registramos en `App`:
 
-=== "footer.component.ts"
-    ```typescript title="src/app/shared/components/footer/footer.component.ts"
+=== "footer.ts"
+    ```typescript title="src/app/shared/components/footer/footer.ts"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'app-footer',
       imports: [],
-      templateUrl: './footer.component.html',
+      templateUrl: './footer.html',
     })
-    export class FooterComponent {}
+    export class Footer {}
     ```
 
-=== "footer.component.html"
-    ```html title="src/app/shared/components/footer/footer.component.html"
+=== "footer.html"
+    ```html title="src/app/shared/components/footer/footer.html"
     <footer class="footer bg-base-200 text-base-content p-10">
       <aside>
         <svg
@@ -454,45 +473,45 @@ Creamos `FooterComponent` en `src/app/shared/components/footer/` tomando la plan
     </footer>
     ```
 
-=== "app.component.ts"
-    ```typescript title="src/app/app.component.ts" hl_lines="3 7"
+=== "app.ts"
+    ```typescript title="src/app/app.ts" hl_lines="3 7"
     import { Component } from '@angular/core';
     import { RouterOutlet } from '@angular/router';
-    import { FooterComponent } from './shared/components/footer/footer.component';
+    import { Footer } from './shared/components/footer/footer';
 
     @Component({
       selector: 'app-root',
-      imports: [RouterOutlet, FooterComponent],
-      templateUrl: './app.component.html',
+      imports: [RouterOutlet, Footer],
+      templateUrl: './app.html',
     })
-    export class AppComponent {}
+    export class App {}
     ```
 
 ---
 
-## 5. Menú Superior e Iconos SVG con Iconify (`TopMenuComponent`)
+## 5. Menú Superior e Iconos SVG con Iconify (`TopMenu`)
 
-Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por región*), creamos `TopMenuComponent` (`src/app/country/components/top-menu/`) utilizando el componente [DaisyUI Menu](https://daisyui.com/components/menu/) (`menu bg-base-200 sm:menu-horizontal rounded-box`) e iconos vectoriales SVG copiados directamente desde [Iconify](https://iconify.design/).
+Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por región*), creamos `TopMenu` (`src/app/country/components/top-menu/`) utilizando el componente [DaisyUI Menu](https://daisyui.com/components/menu/) (`menu bg-base-200 sm:menu-horizontal rounded-box`) e iconos vectoriales SVG copiados directamente desde [Iconify](https://iconify.design/).
 
 * **Navegación declarativa:** cada enlace apunta a su ruta hija relativa (`routerLink="by-capital"`, `by-country`, `by-region`).
 * **Estado activo automático:** `routerLinkActive="btn-primary"` resalta en el color primario del tema `sunset` el botón cuya ruta coincide con la URL actual.
 * **Importaciones necesarias:** debemos importar `RouterLink` y `RouterLinkActive` de `@angular/router` en el `@Component` para que las directivas funcionen.
 
-=== "top-menu.component.ts"
-    ```typescript title="src/app/country/components/top-menu/top-menu.component.ts" hl_lines="2 6"
+=== "top-menu.ts"
+    ```typescript title="src/app/country/components/top-menu/top-menu.ts" hl_lines="2 6"
     import { Component } from '@angular/core';
     import { RouterLink, RouterLinkActive } from '@angular/router';
 
     @Component({
       selector: 'country-top-menu',
       imports: [RouterLink, RouterLinkActive],
-      templateUrl: './top-menu.component.html',
+      templateUrl: './top-menu.html',
     })
-    export class TopMenuComponent {}
+    export class TopMenu {}
     ```
 
-=== "top-menu.component.html"
-    ```html title="src/app/country/components/top-menu/top-menu.component.html" hl_lines="4 21 39"
+=== "top-menu.html"
+    ```html title="src/app/country/components/top-menu/top-menu.html" hl_lines="4 21 39"
     <nav class="p-4 w-full">
       <ul class="menu bg-base-200 sm:menu-horizontal rounded-box">
         <li>
@@ -561,12 +580,12 @@ Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por
 
 Para que resulte fácil entender cómo evoluciona la interfaz desde un bloque rápido hasta una arquitectura reutilizable, dividimos este proceso en **tres fases progresivas**:
 
-### Fase 1: Prototipado directo en `ByCapitalPageComponent`
+### Fase 1: Prototipado directo en `ByCapitalPage`
 
-En un primer momento maquetamos directamente dentro de `by-capital-page.component.html` tanto el buscador como la tabla de países usando DaisyUI:
+En un primer momento maquetamos directamente dentro de `by-capital-page.html` tanto el buscador como la tabla de países usando DaisyUI:
 
-=== "by-capital-page.component.html (Fase 1)"
-    ```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html (Prototipo inicial)" hl_lines="7-8 11 19-27"
+=== "by-capital-page.html (Fase 1)"
+    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html (Prototipo inicial)" hl_lines="7-8 11 19-27"
     <section class="flex flex-row gap-2 mt-2">
       <input
         type="text"
@@ -602,16 +621,16 @@ En un primer momento maquetamos directamente dentro de `by-capital-page.componen
     </section>
     ```
 
-=== "by-capital-page.component.ts (Fase 1)"
-    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts (Prototipo inicial)"
+=== "by-capital-page.ts (Fase 1)"
+    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts (Prototipo inicial)"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'app-by-capital-page',
       imports: [],
-      templateUrl: './by-capital-page.component.html',
+      templateUrl: './by-capital-page.html',
     })
-    export class ByCapitalPageComponent {
+    export class ByCapitalPage {
       onSearch(value: string) {
         console.log({ value });
       }
@@ -621,31 +640,31 @@ En un primer momento maquetamos directamente dentro de `by-capital-page.componen
 * **Referencia local `#txtSearch`:** permite leer el texto escrito directamente desde la plantilla (`txtSearch.value`) sin necesidad de crear variables intermedias aún.
 * **Doble disparador:** el usuario puede buscar pulsando ++enter++ (`(keyup.enter)`) o haciendo clic en el botón (`(click)`).
 
-### Fase 2: Tarea 1 — Extracción a `SearchInputComponent` y `CountryListComponent`
+### Fase 2: Tarea 1 — Extracción a `SearchInput` y `CountryList`
 
 Como **exactamente la misma caja de búsqueda** se usará también en *Por país*, y **exactamente la misma tabla** se reutilizará en *Por capital*, *Por país* y *Por región*, extraemos ambos bloques a sus propios componentes bajo `src/app/country/components/`:
 
-#### A. Componente `SearchInputComponent` (`country-search-input`)
+#### A. Componente `SearchInput` (`country-search-input`)
 
 Recibe un `placeholder` opcional (con valor por defecto `'Buscar'`) mediante `input('Buscar')` y emite el término tecleado mediante `output<string>()`:
 
-=== "search-input.component.ts"
-    ```typescript title="src/app/country/components/search-input/search-input.component.ts" hl_lines="9-10"
+=== "search-input.ts"
+    ```typescript title="src/app/country/components/search-input/search-input.ts" hl_lines="9-10"
     import { Component, input, output } from '@angular/core';
 
     @Component({
       selector: 'country-search-input',
       imports: [],
-      templateUrl: './search-input.component.html',
+      templateUrl: './search-input.html',
     })
-    export class SearchInputComponent {
+    export class SearchInput {
       placeholder = input('Buscar');
       value = output<string>();
     }
     ```
 
-=== "search-input.component.html"
-    ```html title="src/app/country/components/search-input/search-input.component.html" hl_lines="5 8 11"
+=== "search-input.html"
+    ```html title="src/app/country/components/search-input/search-input.html" hl_lines="5 8 11"
     <section class="flex flex-row gap-2 mt-2">
       <input
         type="text"
@@ -662,24 +681,24 @@ Recibe un `placeholder` opcional (con valor por defecto `'Buscar'`) mediante `in
     </section>
     ```
 
-#### B. Componente `CountryListComponent` (`country-list`)
+#### B. Componente `CountryList` (`country-list`)
 
 Aísla el esqueleto de la tabla DaisyUI que mostrará el listado de países en las distintas pantallas (en la Sección 10 recibirá la lista real de países y estados de carga/error):
 
-=== "country-list.component.ts"
-    ```typescript title="src/app/country/components/country-list/country-list.component.ts"
+=== "country-list.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.ts"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'country-list',
       imports: [],
-      templateUrl: './country-list.component.html',
+      templateUrl: './country-list.html',
     })
-    export class CountryListComponent {}
+    export class CountryList {}
     ```
 
-=== "country-list.component.html"
-    ```html title="src/app/country/components/country-list/country-list.component.html"
+=== "country-list.html"
+    ```html title="src/app/country/components/country-list/country-list.html"
     <section class="mt-5">
       <table class="table table-md mt-2 w-full">
         <thead>
@@ -700,30 +719,30 @@ Aísla el esqueleto de la tabla DaisyUI que mostrará el listado de países en l
     </section>
     ```
 
-#### C. Composición limpia en `ByCapitalPageComponent`
+#### C. Composición limpia en `ByCapitalPage`
 
-Ahora `ByCapitalPageComponent` importa ambos componentes atómicos y su plantilla queda reducida a una composición declarativa muy legible:
+Ahora `ByCapitalPage` importa ambos componentes atómicos y su plantilla queda reducida a una composición declarativa muy legible:
 
-=== "by-capital-page.component.ts"
-    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.component.ts" hl_lines="2-3 7"
+=== "by-capital-page.ts"
+    ```typescript title="src/app/country/pages/by-capital-page/by-capital-page.ts" hl_lines="2-3 7"
     import { Component } from '@angular/core';
-    import { SearchInputComponent } from '../../components/search-input/search-input.component';
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { SearchInput } from '../../components/search-input/search-input';
+    import { CountryList } from '../../components/country-list/country-list';
 
     @Component({
       selector: 'app-by-capital-page',
-      imports: [SearchInputComponent, CountryListComponent],
-      templateUrl: './by-capital-page.component.html',
+      imports: [SearchInput, CountryList],
+      templateUrl: './by-capital-page.html',
     })
-    export class ByCapitalPageComponent {
+    export class ByCapitalPage {
       onSearch(value: string) {
         console.log({ value });
       }
     }
     ```
 
-=== "by-capital-page.component.html"
-    ```html title="src/app/country/pages/by-capital-page/by-capital-page.component.html"
+=== "by-capital-page.html"
+    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html"
     <country-search-input
       placeholder="Buscar por capital"
       (value)="onSearch($event)"
@@ -736,56 +755,56 @@ Ahora `ByCapitalPageComponent` importa ambos componentes atómicos y su plantill
 
 Completamos las tres páginas restantes del dominio `country`:
 
-=== "ByCountryPageComponent"
-    ```typescript title="src/app/country/pages/by-country-page/by-country-page.component.ts"
+=== "ByCountryPage"
+    ```typescript title="src/app/country/pages/by-country-page/by-country-page.ts"
     import { Component } from '@angular/core';
-    import { SearchInputComponent } from '../../components/search-input/search-input.component';
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { SearchInput } from '../../components/search-input/search-input';
+    import { CountryList } from '../../components/country-list/country-list';
 
     @Component({
       selector: 'app-by-country-page',
-      imports: [SearchInputComponent, CountryListComponent],
-      templateUrl: './by-country-page.component.html',
+      imports: [SearchInput, CountryList],
+      templateUrl: './by-country-page.html',
     })
-    export class ByCountryPageComponent {}
+    export class ByCountryPage {}
     ```
 
-    ```html title="src/app/country/pages/by-country-page/by-country-page.component.html"
+    ```html title="src/app/country/pages/by-country-page/by-country-page.html"
     <country-search-input placeholder="Buscar por país" />
 
     <country-list />
     ```
 
-=== "ByRegionPageComponent"
-    ```typescript title="src/app/country/pages/by-region-page/by-region-page.component.ts"
+=== "ByRegionPage"
+    ```typescript title="src/app/country/pages/by-region-page/by-region-page.ts"
     import { Component } from '@angular/core';
-    import { CountryListComponent } from '../../components/country-list/country-list.component';
+    import { CountryList } from '../../components/country-list/country-list';
 
     @Component({
       selector: 'app-by-region-page',
-      imports: [CountryListComponent],
-      templateUrl: './by-region-page.component.html',
+      imports: [CountryList],
+      templateUrl: './by-region-page.html',
     })
-    export class ByRegionPageComponent {}
+    export class ByRegionPage {}
     ```
 
-    ```html title="src/app/country/pages/by-region-page/by-region-page.component.html"
+    ```html title="src/app/country/pages/by-region-page/by-region-page.html"
     <country-list />
     ```
 
-=== "CountryPageComponent"
-    ```typescript title="src/app/country/pages/country-page/country-page.component.ts"
+=== "CountryPage"
+    ```typescript title="src/app/country/pages/country-page/country-page.ts"
     import { Component } from '@angular/core';
 
     @Component({
       selector: 'app-country-page',
       imports: [],
-      templateUrl: './country-page.component.html',
+      templateUrl: './country-page.html',
     })
-    export class CountryPageComponent {}
+    export class CountryPage {}
     ```
 
-    ```html title="src/app/country/pages/country-page/country-page.component.html"
+    ```html title="src/app/country/pages/country-page/country-page.html"
     <p>country-page works!</p>
     ```
 
@@ -793,32 +812,32 @@ Finalmente, registramos todas las rutas hijas en `src/app/country/country.routes
 
 ```typescript title="src/app/country/country.routes.ts (Completo)" hl_lines="17-28"
 import { Routes } from '@angular/router';
-import { ByCapitalPageComponent } from './pages/by-capital-page/by-capital-page.component';
-import { CountryLayoutComponent } from './layouts/CountryLayout/CountryLayout.component';
-import { ByCountryPageComponent } from './pages/by-country-page/by-country-page.component';
-import { ByRegionPageComponent } from './pages/by-region-page/by-region-page.component';
-import { CountryPageComponent } from './pages/country-page/country-page.component';
+import { ByCapitalPage } from './pages/by-capital-page/by-capital-page';
+import { CountryLayout } from './layouts/CountryLayout/CountryLayout.component';
+import { ByCountryPage } from './pages/by-country-page/by-country-page';
+import { ByRegionPage } from './pages/by-region-page/by-region-page';
+import { CountryPage } from './pages/country-page/country-page';
 
 export const countryRoutes: Routes = [
   {
     path: '',
-    component: CountryLayoutComponent,
+    component: CountryLayout,
     children: [
       {
         path: 'by-capital',
-        component: ByCapitalPageComponent,
+        component: ByCapitalPage,
       },
       {
         path: 'by-country',
-        component: ByCountryPageComponent,
+        component: ByCountryPage,
       },
       {
         path: 'by-region',
-        component: ByRegionPageComponent,
+        component: ByRegionPage,
       },
       {
         path: 'by/:code',
-        component: CountryPageComponent,
+        component: CountryPage,
       },
       {
         path: '**',
@@ -858,19 +877,19 @@ Hoy en día **cada Componente Standalone es su propio módulo autocontenido**: d
     En Angular 19–22 todos los componentes son **Standalone por defecto** sin necesidad de escribir `standalone: true` en `@Component`. Además, **Angular 22** mejora las comprobaciones estrictas del compilador sobre rutas y enlaces `[routerLink]`.
 
 !!! tip "2. Parámetros dinámicos como Signal Inputs (`withComponentInputBinding`)"
-    Al configurar la ruta `by/:code`, en la Sección 10 veremos primero la lectura clásica mediante `ActivatedRoute`, y también cómo **Angular 22** permite activar `withComponentInputBinding()` en `provideRouter(routes, withComponentInputBinding())` para recibir `:code` directamente como `code = input.required<string>()` dentro de `CountryPageComponent`.
+    Al configurar la ruta `by/:code`, en la Sección 10 veremos primero la lectura clásica mediante `ActivatedRoute`, y también cómo **Angular 22** permite activar `withComponentInputBinding()` en `provideRouter(routes, withComponentInputBinding())` para recibir `:code` directamente como `code = input.required<string>()` dentro de `CountryPage`.
 
 ---
 
 ## 📝 Evaluación y Preguntas para el Aula
 
-??? question "¿Por qué combinamos `min-h-screen flex flex-col` con `<div class='flex-1 flex-grow'></div>` en `app.component.html`?"
+??? question "¿Por qué combinamos `min-h-screen flex flex-col` con `<div class='flex-1 flex-grow'></div>` en `app.html`?"
     **Respuesta:** Para implementar un **Sticky Footer**. El `div` central con `flex-1 flex-grow` absorbe todo el espacio vertical sobrante entre `<router-outlet />` y `<app-footer />`, garantizando que el pie de página siempre quede anclado al borde inferior de la pantalla aunque la vista actual esté vacía.
 
-??? question "¿Cuál es el propósito de `CountryLayoutComponent` respecto a `AppComponent`?"
-    **Respuesta:** **Aislamiento de diseño por sección (*Nested Layout*)**. `AppComponent` contiene el footer global de toda la aplicación (presente tanto en `HomePage` como en `/country`), mientras que `CountryLayoutComponent` envuelve únicamente las rutas hijas de `/country` añadiendo el menú superior `<country-top-menu />` y un `<router-outlet />` interno.
+??? question "¿Cuál es el propósito de `CountryLayout` respecto a `App`?"
+    **Respuesta:** **Aislamiento de diseño por sección (*Nested Layout*)**. `App` contiene el footer global de toda la aplicación (presente tanto en `HomePage` como en `/country`), mientras que `CountryLayout` envuelve únicamente las rutas hijas de `/country` añadiendo el menú superior `<country-top-menu />` y un `<router-outlet />` interno.
 
-??? question "¿Por qué no nombramos el evento de `SearchInputComponent` como `onValue`?"
+??? question "¿Por qué no nombramos el evento de `SearchInput` como `onValue`?"
     **Respuesta:** Porque siguiendo la regla oficial de estilos de Angular (*Style 05-16*), los `output()` representan **el evento o dato emitido**, no su manejador. Llamarlo `value` permite leer limpiamente en el padre `(value)="onSearch($event)"` en lugar de `(onValue)="onSearch($event)"`.
 
 ---

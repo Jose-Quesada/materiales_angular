@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 530" width="820" height="530" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="820" height="530" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Barra de navegador -->
+  <rect x="0" y="0" width="820" height="36" rx="14" fill="#e2e8f0" />
+  <rect x="0" y="22" width="820" height="14" fill="#e2e8f0" />
+  <circle cx="22" cy="18" r="5.5" fill="#f87171" />
+  <circle cx="40" cy="18" r="5.5" fill="#fbbf24" />
+  <circle cx="58" cy="18" r="5.5" fill="#4ade80" />
+  <rect x="90" y="7" width="380" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="104" y="22" font-size="11.5" fill="#475569">localhost:4200/dragonball-super</text>
+
+  <!-- 1. AppComponent (Shell + Navbar fijo) -->
+  <rect x="18" y="48" width="784" height="352" rx="10" fill="#ffffff" stroke="#475569" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="30" y="38" width="335" height="22" rx="5" fill="#334155" />
+  <text x="40" y="53" font-size="11.5" font-weight="700" fill="#ffffff">AppComponent (&lt;app-navbar /&gt; + &lt;router-outlet /&gt;)</text>
+
+  <!-- 1A. NavbarComponent -->
+  <rect x="34" y="70" width="752" height="44" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+  <text x="48" y="96" font-size="11" font-weight="700" fill="#38bdf8">&lt;app-navbar /&gt;</text>
+  <rect x="165" y="80" width="85" height="24" rx="4" fill="#1e293b" />
+  <text x="207" y="96" text-anchor="middle" font-size="10.5" fill="#cbd5e1">Contador</text>
+  <rect x="260" y="80" width="70" height="24" rx="4" fill="#1e293b" />
+  <text x="295" y="96" text-anchor="middle" font-size="10.5" fill="#cbd5e1">Hero</text>
+  <rect x="340" y="80" width="95" height="24" rx="4" fill="#1e293b" />
+  <text x="387" y="96" text-anchor="middle" font-size="10.5" fill="#cbd5e1">Dragonball</text>
+  <rect x="445" y="80" width="138" height="24" rx="4" fill="#2563eb" />
+  <text x="514" y="96" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">Dragonball Super</text>
+  <text x="772" y="96" text-anchor="end" font-size="10" fill="#94a3b8">routerLink + routerLinkActive</text>
+
+  <!-- 2. DragonballSuperPageComponent (Padre / Smart Component) -->
+  <rect x="34" y="128" width="752" height="258" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="46" y="118" width="445" height="21" rx="5" fill="#d97706" />
+  <text x="56" y="132" font-size="11" font-weight="700" fill="#ffffff">DragonballSuperPageComponent (Padre · Orquestador en &lt;router-outlet /&gt;)</text>
+
+  <!-- 2A. Hijo Izquierdo: CharacterAddComponent -->
+  <rect x="52" y="154" width="330" height="216" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="66" y="174" font-size="11" font-weight="700" fill="#0369a1">&lt;dragonball-character-add /&gt;</text>
+  <text x="66" y="190" font-size="10" fill="#0284c7">Hijo Emisor · output&lt;Character&gt;()</text>
+
+  <rect x="66" y="202" width="302" height="30" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.5" />
+  <text x="78" y="221" font-size="11" fill="#64748b">Nombre: [ Gohan ]  (signal)</text>
+  <rect x="66" y="240" width="302" height="30" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.5" />
+  <text x="78" y="259" font-size="11" fill="#64748b">Poder: [ 8000 ]  (signal)</text>
+  <rect x="66" y="280" width="120" height="30" rx="6" fill="#0284c7" />
+  <text x="126" y="299" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">Agregar</text>
+
+  <rect x="66" y="324" width="302" height="34" rx="6" fill="#bae6fd" />
+  <text x="217" y="340" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0c4a6e">↑ Emite al Padre:</text>
+  <text x="217" y="353" text-anchor="middle" font-size="10" fill="#0369a1">(newCharacter)="dragonballService.addCharacter($event)"</text>
+
+  <!-- Flecha de flujo entre columnas -->
+  <text x="410" y="254" text-anchor="middle" font-size="18" font-weight="700" fill="#d97706">→</text>
+  <text x="410" y="272" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">Vía</text>
+  <text x="410" y="284" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">Servicio</text>
+
+  <!-- 2B. Hijo Derecho: CharacterListComponent -->
+  <rect x="438" y="154" width="330" height="216" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" />
+  <text x="452" y="174" font-size="11" font-weight="700" fill="#6b21a8">&lt;dragonball-character-list /&gt;</text>
+  <text x="452" y="190" font-size="10" fill="#7e22ce">Hijo Presentacional · input.required&lt;Character[]&gt;()</text>
+
+  <rect x="452" y="202" width="302" height="30" rx="5" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2" />
+  <text x="464" y="221" font-size="11" fill="#334155">1 - Goku <tspan font-weight="700" fill="#dc2626">(9001)</tspan></text>
+  <rect x="452" y="238" width="302" height="30" rx="5" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2" />
+  <text x="464" y="257" font-size="11" fill="#334155">2 - Vegeta <tspan font-weight="700" fill="#2563eb">(8000)</tspan></text>
+  <rect x="452" y="274" width="302" height="30" rx="5" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2" />
+  <text x="464" y="293" font-size="10.5" fill="#64748b">@for (character of characters(); track character.id)</text>
+
+  <rect x="452" y="324" width="302" height="34" rx="6" fill="#e9d5ff" />
+  <text x="603" y="340" text-anchor="middle" font-size="10.5" font-weight="700" fill="#581c87">↓ Recibe del Padre:</text>
+  <text x="603" y="353" text-anchor="middle" font-size="10" fill="#6b21a8">[characters]="dragonballService.characters()"</text>
+
+  <!-- 3. DragonballService + localStorage -->
+  <rect x="18" y="420" width="784" height="94" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2" />
+  <rect x="30" y="409" width="340" height="22" rx="5" fill="#059669" />
+  <text x="40" y="424" font-size="11.5" font-weight="700" fill="#ffffff">DragonballService (Singleton · Capa de Estado)</text>
+
+  <rect x="34" y="440" width="356" height="58" rx="7" fill="#ffffff" stroke="#34d399" stroke-width="1.5" />
+  <text x="48" y="460" font-size="11" font-weight="700" fill="#065f46">characters = signal&lt;Character[]&gt;(loadFromLocalStorage())</text>
+  <text x="48" y="480" font-size="10" fill="#475569">addCharacter(newChar) → .update(list =&gt; [...list, newChar])</text>
+
+  <rect x="410" y="440" width="376" height="58" rx="7" fill="#ffffff" stroke="#34d399" stroke-width="1.5" />
+  <text x="424" y="460" font-size="11" font-weight="700" fill="#065f46">saveToLocalStorage = effect(() =&gt; ...)</text>
+  <text x="424" y="480" font-size="10" fill="#475569">Guarda JSON.stringify(this.characters()) en localStorage al instante</text>
+
+  <!-- Flechas entre Padre y Servicio -->
+  <line x1="217" y1="386" x2="217" y2="420" stroke="#059669" stroke-width="2" />
+  <polygon points="217,420 212,410 222,410" fill="#059669" />
+  <line x1="603" y1="386" x2="603" y2="420" stroke="#059669" stroke-width="2" />
+  <polygon points="603,386 598,396 608,396" fill="#059669" />
+</svg>
