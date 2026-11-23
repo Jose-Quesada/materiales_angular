@@ -51,7 +51,7 @@ Vamos a implementarlo en **tres pasos progresivos**:
 
 ### Paso 1: Maquetar la estructura base de Flowbite
 
-En la documentación de [Flowbite — Tailwind CSS Gallery (Masonry)](https://flowbite.com/docs/components/gallery/), el patrón consiste en **un grid padre de columnas** (`grid-cols-2 md:grid-cols-4 gap-4`) que contiene **varios grids internos** (`grid gap-4`), cada uno con grupos de 3 imágenes.
+En la documentación de [Flowbite — Tailwind CSS Gallery (Masonry)](https://flowbite.com/docs/components/gallery/#masonry-grid), el patrón consiste en **un grid padre de columnas** (`grid-cols-2 md:grid-cols-4 gap-4`) que contiene **varios grids internos** (`grid gap-4`), cada uno con grupos de 3 imágenes.
 
 Antes de conectar nuestros GIFs reales, comenta temporalmente `<gif-list ... />` en `src/app/gifs/pages/trending-page/trending-page.component.html` y pega el bloque estático de Flowbite (añadiendo `pt-5` arriba para que respire) para comprobar que el diseño responsive de 2 columnas en móvil y 4 en escritorio funciona.
 
@@ -86,8 +86,23 @@ export class GifService {
 }
 ```
 
-* **`i += 3` y `.slice(i, i + 3)`:** recorre el array de 3 en 3 y extrae cada subgrupo sin mutar `trendingGifs()`.
-* **Reactividad automática:** cada vez que `trendingGifs` reciba nuevos GIFs al hacer scroll, `trendingGifGroup()` se recalculará automáticamente.
+#### ¿Cómo funciona exactamente la transformación de `Gif[]` a `Gif[][]`?
+
+1. **Qué significa `Gif[][]`:** mientras `Gif[]` es una lista plana de GIFs (`[gif0, gif1, gif2, ...]`), `Gif[][]` es **un array de arrays** (una "caja grande" `groups` donde cada elemento interior es una "cajita" con un grupo de hasta 3 GIFs). Cada cajita corresponderá a una columna `<div class="grid gap-4">` en el HTML del Masonry.
+2. **Cómo funciona `.slice(inicio, fin)`:** extrae una porción del array original **sin modificarlo**. Incluye la posición `inicio` y se detiene **justo antes** de `fin` (es decir, toma `inicio`, `inicio + 1` e `inicio + 2`). Si `fin` supera la longitud del array, simplemente devuelve los elementos que queden sin lanzar error.
+3. **Por qué `i += 3` y no `i++`:** si avanzáramos de 1 en 1 (`i++`), los grupos se solaparían (`[0,1,2]`, `[1,2,3]`, `[2,3,4]`...) repitiendo GIFs. Con `i += 3` saltamos directamente al principio del siguiente bloque de 3.
+
+**Ejemplo visual paso a paso** suponiendo que `this.trendingGifs()` tiene **7 GIFs** (`[gif0, gif1, gif2, gif3, gif4, gif5, gif6]`):
+
+| Vuelta del `for` | Valor de `i` | Llamada `.slice(i, i + 3)` | Sub-array extraído | Estado de `groups` tras `groups.push(...)` |
+| :--- | :--- | :--- | :--- | :--- |
+| **Antes del bucle** | — | — | — | `[]` |
+| **1.ª vuelta** | `i = 0` | `.slice(0, 3)` | `[gif0, gif1, gif2]` | `[ [gif0, gif1, gif2] ]` |
+| **2.ª vuelta** | `i = 3` (`0 + 3`) | `.slice(3, 6)` | `[gif3, gif4, gif5]` | `[ [gif0, gif1, gif2], [gif3, gif4, gif5] ]` |
+| **3.ª vuelta** | `i = 6` (`3 + 3`) | `.slice(6, 9)` | `[gif6]` *(solo queda 1)* | `[ [gif0, gif1, gif2], [gif3, gif4, gif5], [gif6] ]` |
+| **Fin del bucle** | `i = 9` (`9 < 7` es `false`) | — | Sale del `for` | Devuelve `groups` (3 grupos listos para `@for`) |
+
+* **Reactividad automática:** al estar envuelto en `computed()`, cada vez que `trendingGifs` reciba 20 nuevos GIFs al hacer scroll, `trendingGifGroup()` se recalculará automáticamente y añadirá las nuevas columnas de 3 en 3.
 
 ### Paso 3: Conectar los `@for` anidados en `TrendingPageComponent`
 
@@ -122,9 +137,32 @@ Ahora reemplazamos las imágenes estáticas de Flowbite por dos bucles `@for` an
 !!! info "📖 Para saber más: Manual de Referencia"
     Para dominar las consultas al DOM y a componentes hijos con Signal Queries (`viewChild`, `viewChildren`, `contentChild`), consulta el **[Manual de Referencia: 14. Queries del DOM (viewChild)](manual/14-queries.md)**.
 
-### Paso 1: ¿Por qué `(scroll)="onScroll($event)"` no se dispara al principio?
+### Paso 1: Escuchar el evento `(scroll)` y convertir el `<div>` en contenedor con scroll propio
 
-Si añadimos `(scroll)="onScroll($event)"` directamente al `<div>` del Masonry, veremos que al mover la rueda del ratón **no aparece nada en consola**. ¿El motivo? El que está haciendo scroll es **todo el documento (`window`)**, no nuestro `<div>` interno, porque el `<div>` crece libremente según su contenido.
+Para detectar cuándo el usuario se desplaza por la galería, empezamos añadiendo el evento `(scroll)="onScroll($event)"` en el `<div>` principal de la plantilla y creando el método `onScroll(event: Event)` en `TrendingPageComponent` para imprimir el evento por consola:
+
+=== "src/app/gifs/pages/trending-page/trending-page.component.html (Prueba inicial)"
+    ```html title="src/app/gifs/pages/trending-page/trending-page.component.html" hl_lines="3"
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5"
+      (scroll)="onScroll($event)"
+    >
+      <!-- @for anidados... -->
+    </div>
+    ```
+
+=== "src/app/gifs/pages/trending-page/trending-page.component.ts (Prueba inicial)"
+    ```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="4-6"
+    export default class TrendingPageComponent {
+      gifService = inject(GifService);
+
+      onScroll(event: Event) {
+        console.log(event);
+      }
+    }
+    ```
+
+Si guardas y mueves ahora la rueda del ratón sobre los GIFs, verás que **no aparece nada en la consola**. ¿El motivo? El que está haciendo scroll es **todo el documento (`window`)**, no nuestro `<div>` interno, porque el `<div>` crece libremente hacia abajo según su contenido.
 
 Para comprobarlo visualmente y convertir nuestro `<div>` en el contenedor con scroll propio:
 
@@ -132,36 +170,49 @@ Para comprobarlo visualmente y convertir nuestro `<div>` en el contenedor con sc
 2. Si añades `overflow-hidden`, los GIFs que sobran se recortan y desaparecen.
 3. La solución real es darle el alto exacto de la pantalla (**`h-screen`**) y habilitar el desplazamiento vertical (**`overflow-y-scroll`**), quitando el fondo rojo:
 
-```html title="src/app/gifs/pages/trending-page/trending-page.component.html" hl_lines="2-4"
+```html title="src/app/gifs/pages/trending-page/trending-page.component.html" hl_lines="2"
 <div
   class="h-screen overflow-y-scroll grid grid-cols-2 md:grid-cols-4 gap-4 pt-5"
   (scroll)="onScroll($event)"
-  #groupDiv
 >
   <!-- @for anidados... -->
 </div>
 ```
 
+Al guardar y mover la rueda del ratón ahora, la consola sí empezará a imprimir el evento `Event` cada vez que te desplaces dentro de la galería.
+
 ### Paso 2: Referencia local `#groupDiv` y `viewChild()`
 
-En lugar de rebuscar en `$event.target` sin tipado estricto, colocamos la referencia local `#groupDiv` en el `<div>` y la capturamos en `TrendingPageComponent` mediante **`viewChild()`** (introducido en Angular 19 y estándar en Angular 22 frente al antiguo decorador `@ViewChild`):
+Aunque el evento `$event` llega al método `onScroll`, rebuscar las medidas del contenedor dentro de `$event.target` pierde el tipado estricto de TypeScript. En su lugar, colocamos la referencia local **`#groupDiv`** en el `<div>` y la capturamos en `TrendingPageComponent` mediante **`viewChild()`** (introducido en Angular 19 y estándar en Angular 22 frente al antiguo decorador `@ViewChild`):
 
-```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="1 6"
-import { Component, ElementRef, inject, viewChild } from '@angular/core';
-// ...
+=== "src/app/gifs/pages/trending-page/trending-page.component.html"
+    ```html title="src/app/gifs/pages/trending-page/trending-page.component.html" hl_lines="4"
+    <div
+      class="h-screen overflow-y-scroll grid grid-cols-2 md:grid-cols-4 gap-4 pt-5"
+      (scroll)="onScroll($event)"
+      #groupDiv
+    >
+      <!-- @for anidados... -->
+    </div>
+    ```
 
-export default class TrendingPageComponent {
-  gifService = inject(GifService);
-  scrollDivRef = viewChild<ElementRef<HTMLDivElement>>('groupDiv');
+=== "src/app/gifs/pages/trending-page/trending-page.component.ts"
+    ```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="1 6 9-12"
+    import { Component, ElementRef, inject, viewChild } from '@angular/core';
+    // ...
 
-  onScroll(event: Event) {
-    const scrollDiv = this.scrollDivRef()?.nativeElement;
-    if (!scrollDiv) return;
+    export default class TrendingPageComponent {
+      gifService = inject(GifService);
+      scrollDivRef = viewChild<ElementRef<HTMLDivElement>>('groupDiv');
 
-    console.log(scrollDiv);
-  }
-}
-```
+      onScroll(event: Event) {
+        const scrollDiv = this.scrollDivRef()?.nativeElement;
+        if (!scrollDiv) return;
+
+        console.log(scrollDiv);
+      }
+    }
+    ```
 
 * **`viewChild` vs `viewChildren`:** `viewChild()` devuelve el **primer** elemento que coincida con el selector (como señal `Signal<ElementRef<HTMLDivElement> | undefined>`); `viewChildren()` se usa cuando hay múltiples elementos coincidentes y se necesita una lista/array.
 * **Tipado `<ElementRef<HTMLDivElement>>`:** es fundamental indicar `HTMLDivElement` dentro de `ElementRef<...>`; de lo contrario, `nativeElement` sería de tipo `any` y perderíamos el autocompletado de `scrollTop`, `clientHeight` y `scrollHeight`.
@@ -173,19 +224,7 @@ export default class TrendingPageComponent {
 
 Para detectar cuándo el usuario está llegando al final del contenedor, medimos tres propiedades nativas del elemento `HTMLDivElement`:
 
-```
-┌───────────────────────────────────────┐ ── 0 (Inicio del scroll)
-│                                       │
-│          Área ya recorrida            │ ── scrollTop (píxeles desplazados desde arriba)
-│                                       │
-├───────────────────────────────────────┤ ── Borde superior del viewport visible
-│                                       │
-│          VENTANA VISIBLE              │ ── clientHeight (altura visible del contenedor)
-│                                       │
-├───────────────────────────────────────┤ ── Borde inferior del viewport visible
-│      Umbral de anticipación (300px)   │
-└───────────────────────────────────────┘ ── scrollHeight (altura total del contenido scrollable)
-```
+![Diagrama de scrollTop, clientHeight, umbral de 300px y scrollHeight](assets/infinite-scroll-diagram.svg)
 
 * **`scrollTop`:** píxeles que ya hemos bajado desde la parte superior (`0` cuando estamos arriba del todo).
 * **`clientHeight`:** altura visible de la caja (`viewport` del contenedor; no cambia salvo que se redimensione la ventana).
@@ -195,7 +234,7 @@ Para detectar cuándo el usuario está llegando al final del contenedor, medimos
 
 Cuando el usuario llega exactamente al fondo, `scrollTop + clientHeight` iguala (o supera ligeramente por decimales/rebote) a `scrollHeight`. Sin embargo, en un **Infinite Scroll** real no queremos esperar a que el usuario choque contra el final en blanco: añadimos un **margen de anticipación de `300px`** para lanzar la petición antes de que termine de bajar:
 
-$$\text{scrollTop} + \text{clientHeight} + 300 \ge \text{scrollHeight}$$
+> **`scrollTop + clientHeight + 300 >= scrollHeight`**
 
 ```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="5-12"
 onScroll(event: Event) {
@@ -337,6 +376,11 @@ Cuando el usuario baja por el scroll infinito de **Trending**, cambia al **Busca
 **¿Por qué guardarlo en un Servicio Singleton y NO en `localStorage`?**  
 Porque los GIFs de tendencias viven en **memoria** dentro de `GifService`. Si el usuario recarga el navegador o limpia la caché, esos GIFs desaparecen; restaurar un `scrollTop` guardado en `localStorage` sobre una lista recién reiniciada no tendría sentido.
 
+**¿Por qué crear un servicio nuevo (`ScrollStateService`) y NO aprovechar `GifService`?**
+
+* **Separación de Responsabilidades (Principio SRP):** `GifService` pertenece a la **capa de datos/negocio** (peticiones HTTP a Giphy, mapeo, caché e historial). La posición del scroll (`scrollTop`) es **estado de interfaz (UI)**, no un dato de dominio de GIFs; mezclar ambos acabaría convirtiendo a `GifService` en un servicio sobrecargado y difícil de mantener.
+* **Reutilización transversal (`src/app/shared/services/`):** al ubicarlo en `shared/`, el mismo `ScrollStateService` puede recordar en el futuro el scroll de **cualquier otra página** de la aplicación (buscador, historial o nuevas secciones) sin acoplarlas a `GifService`.
+
 ### Paso 1: Crear `ScrollStateService`
 
 Creamos `src/app/shared/services/scroll-state.service.ts` con `@Service()` (Angular 22):
@@ -356,11 +400,28 @@ export class ScrollStateService {
     * **Múltiples páginas con `Record<string, number>`:** si en el futuro necesitas recordar el scroll de muchas rutas distintas sin crear decenas de propiedades, puedes usar un diccionario:  
       `pagesScrollState = signal<Record<string, number>>({});` (por ejemplo `{ 'trending': 1000, 'about': 50 }`).
 
-### Paso 2: Guardar y restaurar el scroll en `TrendingPageComponent`
+### Paso 2: El Ciclo de Vida del Componente (`ngAfterViewInit`) y Restauración del Scroll
 
-Implementamos `AfterViewInit` (`ngAfterViewInit`) para restaurar `scrollDiv.scrollTop` justo cuando el DOM del componente termina de renderizarse:
+Antes de restaurar la posición del scroll en `TrendingPageComponent`, debemos entender **en qué momento exacto** podemos tocar el DOM (`#groupDiv`).
 
-```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="1 3 8 10 14-20 31"
+Desde que Angular crea un componente hasta que lo destruye al cambiar de ruta, ejecuta automáticamente una serie de métodos llamados **Lifecycle Hooks (ganchos del ciclo de vida)**. Los 4 más importantes, en orden cronológico, son:
+
+| Momento / Hook | ¿Cuándo se ejecuta? | ¿Están listos los `input()`? | ¿Existe ya el DOM (`viewChild`)? | Uso típico |
+| :--- | :--- | :--- | :--- | :--- |
+| **`constructor()`** | Al instanciar la clase TypeScript | ❌ No | ❌ No (`undefined`) | Inyección de dependencias (`inject()`) |
+| **`ngOnInit()`** | Tras enlazar los valores iniciales de los `input()` | ✅ Sí | ❌ Aún no garantizado | Cargar datos iniciales que dependan de `input()` |
+| **`ngAfterViewInit()`** | **Justo tras pintar el HTML del componente y sus hijos** | ✅ Sí | ✅ **Sí (DOM listo)** | Acceder a `viewChild`, ajustar `scrollTop`, inicializar librerías de DOM |
+| **`ngOnDestroy()`** | Justo antes de destruir el componente al salir de la ruta | ✅ Sí | ✅ Último instante | Limpiar suscripciones/timers o guardar estado al salir |
+
+!!! info "📖 Para saber más: Manual de Referencia"
+    Para ver el diagrama completo de todos los hooks y su orden exacto de ejecución, consulta el **[Manual de Referencia: 03. Componentes (Ciclo de vida)](manual/03-componentes.md#ciclo-de-vida)**.
+
+**¿Por qué usamos `ngAfterViewInit()` aquí (y no `constructor()` ni `ngOnInit()`)?**  
+Porque necesitamos leer el elemento real del DOM (`this.scrollDivRef()?.nativeElement`) para asignarle `scrollDiv.scrollTop`. Si lo intentáramos en el `constructor()` o en `ngOnInit()`, la plantilla HTML todavía no se habría renderizado y `scrollDivRef()` devolvería `undefined`.
+
+Implementamos la interfaz `AfterViewInit` (que obliga a definir `ngAfterViewInit()`) para restaurar `scrollDiv.scrollTop` en cuanto el DOM está listo, y guardamos la posición actual en `onScroll()`:
+
+```typescript title="src/app/gifs/pages/trending-page/trending-page.component.ts" hl_lines="1 3 9 11 15-21 32-33"
 import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { GifService } from '../../services/gifs.service';
 import { ScrollStateService } from 'src/app/shared/services/scroll-state.service';
@@ -402,14 +463,21 @@ export default class TrendingPageComponent implements AfterViewInit {
 }
 ```
 
-*(Nota: guardar `scrollTop` dentro de `onScroll` actualiza la señal en cada movimiento; más adelante, al ver los **Lifecycle Hooks**, aprenderás a guardarlo una sola vez en `ngOnDestroy` justo antes de que el componente se destruya).*
+*(Nota de optimización: guardar `scrollTop` dentro de `onScroll` actualiza la señal en cada desplazamiento; como hemos visto en la tabla del ciclo de vida, otra opción más eficiente es guardarlo una única vez en `ngOnDestroy` justo antes de que el componente se destruya al salir de la ruta).*
 
 !!! tip "💡 Alternativa Moderna en Angular 22: `afterNextRender()`"
-    En Angular 22, si prefieres no implementar la interfaz `AfterViewInit` ni depender de hooks clásicos de clase, puedes ejecutar la restauración del DOM directamente en el constructor usando **`afterNextRender()`**:
+    En Angular moderno (estable en Angular 20–22), en lugar de implementar la interfaz `AfterViewInit` y el método `ngAfterViewInit()`, puedes usar la función **`afterNextRender()`** (de `@angular/core`) directamente dentro del `constructor()`:
+
+    * **¿Cómo funciona si se escribe en el `constructor()`?** `afterNextRender(() => ...)` **no ejecuta tu código durante el constructor** (donde el DOM aún no existe); únicamente **registra/agenda el callback** para que Angular lo ejecute **una sola vez** justo después de terminar el siguiente ciclo de pintado del DOM en pantalla.
+    * **Seguro en SSR (Renderizado en Servidor):** a diferencia de `ngAfterViewInit()` (que también corre en el servidor si activas SSR, pudiendo fallar al tocar APIs del navegador), `afterNextRender()` **solo se ejecuta en el navegador del cliente**.
+    * **Una vez (`afterNextRender`) vs Cada render (`afterEveryRender`):** `afterNextRender()` se dispara **una única vez** (ideal para restaurar `scrollTop`, enfocar un input o inicializar una gráfica/mapa); si necesitaras reaccionar tras *cada* actualización del DOM, existe su hermano `afterEveryRender()`.
+    * **Sin boilerplate de clase:** no necesitas `implements AfterViewInit` ni métodos extra, y funciona en cualquier contexto de inyección (`constructor()`).
+
     ```typescript
     import { afterNextRender } from '@angular/core';
 
     constructor() {
+      // Agenda la restauración del scroll para cuando el DOM termine de pintarse (solo 1 vez y solo en navegador)
       afterNextRender(() => {
         const scrollDiv = this.scrollDivRef()?.nativeElement;
         if (scrollDiv) {
@@ -418,7 +486,8 @@ export default class TrendingPageComponent implements AfterViewInit {
       });
     }
     ```
-    Además de ser más conciso, `afterNextRender()` solo se ejecuta en el navegador (nunca en SSR/servidor).
+
+    *(En aplicaciones con alto rendimiento de DOM también admite fases explícitas como `afterNextRender({ write: () => { ... } })` para evitar lecturas y escrituras mezcladas en el mismo frame).*
 
 ---
 

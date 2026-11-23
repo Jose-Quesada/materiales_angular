@@ -467,6 +467,8 @@ export class GifService {
     * **Diferencia clave con una `Promise`:** una promesa de JavaScript se dispara en cuanto se crea; un `Observable` frío solo se activa cuando hay un suscriptor escuchando (y permite además transformar o cancelar la operación antes de recibir el resultado).
 
     > 📖 **Para profundizar:** si quieres ver la teoría completa sobre RxJS, la diferencia entre *Cold* y *Hot Observables*, operadores y gestión de suscripciones, consulta el **[Manual de Referencia: 10. Cliente HTTP y Observables (RxJS)](manual/10-http.md#seccion-2-observables-rxjs)**.
+    >
+    > 🎥 **Recurso audiovisual recomendado:** [Explicación visual completa sobre Observables y RxJS en YouTube](https://www.youtube.com/watch?v=BOouK6J8pqg).
 
 ---
 
@@ -726,7 +728,7 @@ Una vez actualizados los contratos hijos, refactorizamos `TrendingPageComponent`
       @if (gifService.trendingGifsLoading()) {
         <div class="flex justify-center items-center py-20 text-blue-500">
           <i class="fa-solid fa-spinner fa-spin text-4xl"></i>
-          <span class="ml-3 text-lg text-slate-300">Cargando tendencias...</span>
+          <span class="ml-3 text-lg text-slate-600">Cargando tendencias...</span>
         </div>
       } @else {
         <gif-list [gifs]="gifService.trendingGifs()" />
@@ -739,40 +741,69 @@ El flujo de renderizado opera de forma 100% reactiva:
 1. Mientras la petición HTTP viaja por la red, `gifService.trendingGifsLoading()` evalúa a `true`, mostrando el indicador de carga (*spinner*).
 2. Cuando el flujo HTTP completa la transformación en `GifService` y actualiza la señal `trendingGifs.set(gifs)`, el estado `trendingGifsLoading.set(false)` desencadena el repintado automático, mostrando la cuadrícula de tendencias en tiempo real.
 
+!!! note "¿Por qué NO llamamos a `loadTrendingGifs()` dentro de `TrendingPageComponent`?"
+    Puede llamar la atención que `TrendingPageComponent` solo haga `gifService = inject(GifService)` y no invoque `this.gifService.loadTrendingGifs()`. El motivo está en el ciclo de vida de los servicios *Singleton*:
+
+    * **Instanciación perezosa (*lazy*):** Los servicios con `@Service()` no se crean al arrancar la aplicación, sino la **primera vez** que un componente ejecuta `inject(GifService)`. En ese instante se ejecuta el `constructor()` de `GifService` y dispara `this.loadTrendingGifs()` automáticamente.
+    * **Caché automática al navegar:** Al cambiar de **Trending** a **Buscador** y volver, `TrendingPageComponent` se destruye y se vuelve a crear, pero `GifService` **sigue vivo en memoria** (es *Singleton*). Como su `constructor()` no se repite, **evitamos lanzar peticiones duplicadas** a la API de Giphy y los GIFs se muestran al instante.
+
+    **¿Qué pasaría si lo llamáramos en `TrendingPageComponent` (`constructor()` vs `ngOnInit()`)?**
+
+    * **En ambos casos** la petición se repetiría cada vez que el usuario entre en la ruta `/dashboard/trending`, porque el componente se recrea en cada navegación (algo útil solo si quieres datos frescos en cada visita, no si deseas conservar caché en memoria).
+    * **Diferencia entre `constructor()` y `ngOnInit()` en un componente:**
+        * **`constructor()`:** Se ejecuta al instanciar la clase JavaScript, **antes** de que Angular haya resuelto los `input()` del componente. En Angular moderno se reserva para inicialización muy ligera o inyección de dependencias (`inject()`).
+        * **`ngOnInit()`:** Se ejecuta justo después de que Angular haya enlazado los valores iniciales de los `input()`. Es el lugar adecuado cuando una petición HTTP **depende de un `input()`** del componente o cuando quieres recargar datos explícitamente cada vez que se monta la vista.
+
 ---
 
 ## Diseño de Pantalla y Captura de Eventos: `SearchPageComponent`
 
 Una vez resuelto el consumo de tendencias, abordamos la funcionalidad del **Buscador de Gifs**. Siguiendo el principio de arquitectura de **Separación de Responsabilidades**, diseñamos en primer lugar la vista de usuario y el canal de captura de eventos antes de introducir la capa de comunicación de red.
 
-### 1. Estructura y Maquetación de la Vista
+### 1. Estructura Base del Componente y Maquetación de la Vista
 
-La página de búsqueda requiere un encabezado contextual, un campo de texto interactivo para la introducción del término de búsqueda y la cuadrícula para renderizar los resultados coincidentes.
+En primer lugar, creamos la estructura base de `SearchPageComponent` con la señal local `gifs` que custodiará los resultados encontrados, junto con el diseño visual inicial de la plantilla (encabezado, caja de texto y cuadrícula de resultados, **todavía sin conectar ningún evento de teclado**):
 
-```html title="src/app/gifs/pages/search-page/search-page.component.html"
-<h2 class="text-2xl font-bold mt-5 text-white">Buscar Gifs</h2>
-<h3 class="text-sm text-slate-400">
-  Buscar gifs por nombre, descripción o tags
-</h3>
+=== "src/app/gifs/pages/search-page/search-page.component.ts"
+    ```typescript title="src/app/gifs/pages/search-page/search-page.component.ts (Base)"
+    import { Component, signal } from '@angular/core';
+    import { GifListComponent } from '../../components/gif-list/gif-list.component';
+    import { Gif } from '../../interfaces/gif.interface';
 
-<section class="flex flex-col gap-4">
-  <input
-    type="text"
-    placeholder="Buscar Gifs y presiona Enter..."
-    class="mt-3 bg-slate-900 border border-slate-700 rounded-md p-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-    (keyup.enter)="onSearch(txtSearch.value)"
-    #txtSearch
-  />
-</section>
+    @Component({
+      selector: 'app-search-page',
+      imports: [GifListComponent],
+      templateUrl: './search-page.component.html',
+    })
+    export default class SearchPageComponent {
+      // Señal local que custodia los gifs encontrados en la búsqueda actual
+      gifs = signal<Gif[]>([]);
+    }
+    ```
 
-<section class="py-5">
-  <gif-list [gifs]="gifs()" />
-</section>
-```
+=== "src/app/gifs/pages/search-page/search-page.component.html"
+    ```html title="src/app/gifs/pages/search-page/search-page.component.html (Base)"
+    <h2 class="text-2xl font-bold mt-5 text-slate-900">Buscar Gifs</h2>
+    <h3 class="text-sm text-slate-600">
+      Buscar gifs por nombre, descripción o tags
+    </h3>
+
+    <section class="flex flex-col gap-4">
+      <input
+        type="text"
+        placeholder="Buscar Gifs y presiona Enter..."
+        class="mt-3 bg-white border border-slate-300 rounded-md p-2.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
+      />
+    </section>
+
+    <section class="py-5">
+      <gif-list [gifs]="gifs()" />
+    </section>
+    ```
 
 ### 2. Variables de Referencia de Plantilla (`#txtSearch`) vs Formularios
 
-Una de las decisiones arquitectónicas más importantes al capturar datos de usuario en Angular es determinar qué mecanismo utilizar:
+Antes de leer lo que escribe el usuario en el `<input>`, debemos tomar una decisión arquitectónica clave en Angular: **¿qué mecanismo utilizar para capturar el valor del campo?**
 
 | Mecanismo | Módulos requeridos | Complejidad | Caso de Uso Óptimo |
 | :--- | :--- | :--- | :--- |
@@ -790,7 +821,7 @@ Al declarar `#txtSearch` sobre la etiqueta `<input>`:
 2. Podemos acceder a cualquier propiedad nativa del elemento dentro del ámbito de la plantilla, como `txtSearch.value`.
 3. Mantenemos el componente ultraligero, sin necesidad de importar `FormsModule` ni `ReactiveFormsModule` en los `imports` del componente *standalone*.
 
-### 3. Event Binding Declarativo de Teclado con `(keyup.enter)`
+### 3. Event Binding Declarativo con `(keyup.enter)` y Conexión Final
 
 En JavaScript tradicional o enfoques imperativos, la captura de la tecla Enter requiere interceptar el evento general `keyup` y verificar manualmente el código de la tecla:
 
@@ -808,31 +839,52 @@ Angular proporciona **pseudo-eventos declarativos de teclado**. La sintaxis `(ke
 * La expresión `onSearch(txtSearch.value)` **únicamente** se evalúa cuando la tecla pulsada y liberada es ++enter++.
 * Cualquier otra tecla (letras, números, flechas de dirección) es ignorada por el binding, evitando llamadas innecesarias al método del componente.
 
-### 4. Implementación del Componente de Búsqueda (Estado Inicial)
+Ahora sí, añadimos la referencia `#txtSearch`, el evento `(keyup.enter)` en la plantilla y el método `onSearch(query: string)` en la clase del componente:
 
-Implementamos la clase del componente con una señal local `gifs` que custodiará los resultados encontrados:
+=== "src/app/gifs/pages/search-page/search-page.component.html"
+    ```html title="src/app/gifs/pages/search-page/search-page.component.html" hl_lines="11-12"
+    <h2 class="text-2xl font-bold mt-5 text-slate-900">Buscar Gifs</h2>
+    <h3 class="text-sm text-slate-600">
+      Buscar gifs por nombre, descripción o tags
+    </h3>
 
-```typescript title="src/app/gifs/pages/search-page/search-page.component.ts"
-import { Component, signal } from '@angular/core';
-import { GifListComponent } from '../../components/gif-list/gif-list.component';
-import { Gif } from '../../interfaces/gif.interface';
+    <section class="flex flex-col gap-4">
+      <input
+        type="text"
+        placeholder="Buscar Gifs y presiona Enter..."
+        class="mt-3 bg-white border border-slate-300 rounded-md p-2.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
+        (keyup.enter)="onSearch(txtSearch.value)"
+        #txtSearch
+      />
+    </section>
 
-@Component({
-  selector: 'app-search-page',
-  imports: [GifListComponent],
-  templateUrl: './search-page.component.html',
-})
-export default class SearchPageComponent {
-  // Señal local que custodia los gifs encontrados en la búsqueda actual
-  gifs = signal<Gif[]>([]);
+    <section class="py-5">
+      <gif-list [gifs]="gifs()" />
+    </section>
+    ```
 
-  onSearch(query: string) {
-    console.log({ query });
-  }
-}
-```
+=== "src/app/gifs/pages/search-page/search-page.component.ts"
+    ```typescript title="src/app/gifs/pages/search-page/search-page.component.ts" hl_lines="14-16"
+    import { Component, signal } from '@angular/core';
+    import { GifListComponent } from '../../components/gif-list/gif-list.component';
+    import { Gif } from '../../interfaces/gif.interface';
 
-### 5. Verificación en el Navegador
+    @Component({
+      selector: 'app-search-page',
+      imports: [GifListComponent],
+      templateUrl: './search-page.component.html',
+    })
+    export default class SearchPageComponent {
+      // Señal local que custodia los gifs encontrados en la búsqueda actual
+      gifs = signal<Gif[]>([]);
+
+      onSearch(query: string) {
+        console.log({ query });
+      }
+    }
+    ```
+
+### 4. Verificación en el Navegador
 
 Para comprobar que el canal de eventos está correctamente acoplado:
 
@@ -853,7 +905,7 @@ Antes de ver la solución completa con operadores RxJS, pon en práctica lo apre
 
 1. En `GifService` (`src/app/gifs/services/gifs.service.ts`), crea el método **`searchGifs(query: string)`** que realice una petición HTTP `GET` al endpoint **`${environment.giphyUrl}/gifs/search`** enviando los parámetros `api_key`, `limit: 20` y `q: query`.
 2. En esta primera aproximación, suscríbete dentro del método, transforma `resp.data` con `GifMapper.mapGiphyItemsToGifArray(resp.data)` e imprime el resultado en consola con `console.log({ search: gifs })`.
-3. En **`SearchPageComponent`** (`src/app/gifs/pages/search-page/search-page.component.ts`), inyecta `GifService` mediante `inject(GifService)` y llama a `this.gifService.searchGifs(query)` dentro de `onSearch(query: string)`.
+3. En **`SearchPageComponent`** (`src/app/gifs/pages/search-page/search-page.component.ts`), inyecta `GifService` mediante `inject(GifService)`. Dentro de `onSearch(query: string)`, **limpia los espacios sobrantes con `.trim()`** (evitando lanzar la petición si el término resultante queda vacío) y llama a `this.gifService.searchGifs(cleanQuery)`.
 
 ### ⏸️ Reto Práctico: ¡Inténtalo tú mismo!
 
@@ -867,6 +919,52 @@ Antes de ver la solución completa con operadores RxJS, pon en práctica lo apre
 * **Olvidar el parámetro `q` en `params`:** El endpoint `/gifs/search` requiere obligatoriamente `q: query` además de `api_key` y `limit`.
 * **No suscribirse:** Si solo llamas a `this.http.get(...)` sin `.subscribe(...)` (ni devuelves el Observable para que otro se suscriba), la petición de red **nunca se dispara**.
 * **No limpiar espacios (`trim()`):** Si pulsas ++enter++ con el input vacío o solo espacios, se consume cuota innecesaria de la API de Giphy.
+
+??? success "Ver solución de la Tarea Práctica 1 (Primera aproximación)"
+    **1. En `src/app/gifs/services/gifs.service.ts`:**
+
+    ```typescript
+    searchGifs(query: string) {
+      this.http
+        .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+          params: {
+            api_key: environment.giphyApiKey,
+            limit: 20,
+            q: query,
+          },
+        })
+        .subscribe((resp) => {
+          const gifs = GifMapper.mapGiphyItemsToGifArray(resp.data);
+          console.log({ search: gifs });
+        });
+    }
+    ```
+
+    **2. En `src/app/gifs/pages/search-page/search-page.component.ts`:**
+
+    ```typescript
+    import { Component, inject, signal } from '@angular/core';
+    import { GifListComponent } from '../../components/gif-list/gif-list.component';
+    import { Gif } from '../../interfaces/gif.interface';
+    import { GifService } from '../../services/gifs.service';
+
+    @Component({
+      selector: 'app-search-page',
+      imports: [GifListComponent],
+      templateUrl: './search-page.component.html',
+    })
+    export default class SearchPageComponent {
+      gifService = inject(GifService);
+      gifs = signal<Gif[]>([]);
+
+      onSearch(query: string) {
+        const cleanQuery = query.trim();
+        if (!cleanQuery) return;
+
+        this.gifService.searchGifs(cleanQuery);
+      }
+    }
+    ```
 
 > En la siguiente sección veremos por qué suscribirse dentro del servicio impide devolver los resultados al componente y cómo resolverlo devolviendo un `Observable<Gif[]>` con `.pipe(map(...))`.
 
@@ -902,10 +1000,10 @@ searchGifs(query: string) {
 #### La Solución Arquitectónica
 En una arquitectura limpia con RxJS y Angular, **el servicio prepara, transforma y expone el flujo reactivo**, devolviendo un `Observable<Gif[]>`. Es el componente de presentación el encargado de suscribirse al flujo para volcar los resultados en su estado local (mediante Signals):
 
-``` mermaid
+```mermaid
 flowchart LR
-    Service["<b>GifService.searchGifs()</b><br/>Prepara petición + pipe(map)"] -->|Devuelve Observable&lt;Gif[]&gt;| Component["<b>SearchPageComponent</b><br/>.subscribe((gifs) =&gt; gifs.set(gifs))"]
-    Component -->|Actualiza Señal| View["<b>&lt;gif-list [gifs]='gifs()' /&gt;</b><br/>Renderizado Reactivo"]
+    Service["GifService.searchGifs()<br/>Prepara petición y pipe(map)"] -->|"Devuelve Observable de Gifs"| Component["SearchPageComponent<br/>Se suscribe y actualiza gifs.set()"]
+    Component -->|"Actualiza Señal"| View["GifListComponent<br/>Renderizado Reactivo"]
 ```
 
 ### 2. Implementación en `GifService`: Método `searchGifs()`
@@ -995,23 +1093,57 @@ Este comportamiento acarrea múltiples desventajas:
 
 Para almacenar el historial y optimizar la aplicación, evaluamos dos aproximaciones:
 
-``` mermaid
-flowchart TD
-    subgraph OpcionA ["Opción Ingenua: Array de Términos (string[])"]
-        A1["['goku', 'vegeta']"] --> A2["Permite listar las búsquedas"]
-        A2 --> A3["❌ Al hacer clic en un término, obliga a repetir la petición HTTP"]
-    end
+| Criterio | ❌ Opción Ingenua: `string[]` | ✅ Opción Arquitectónica: `Record<string, Gif[]>` |
+| :--- | :--- | :--- |
+| **Estructura en memoria** | `['goku', 'vegeta']` | `{ goku: [Gif, ...], vegeta: [Gif, ...] }` |
+| **Listar el historial en el menú** | Directo (el propio array) | Directo con `Object.keys(history)` |
+| **Al hacer clic en un término anterior** | Obliga a **repetir la petición HTTP** a Giphy | **Acceso instantáneo en memoria `O(1)`** sin red (`history['goku']`) |
+| **Consumo de cuota API** | Alto (repite búsquedas ya hechas) | Mínimo (caché automática por término) |
 
-    subgraph OpcionB ["Opción Arquitectónica: Hash Map / Diccionario (Record&lt;string, Gif[]&gt;)"]
-        B1["{'goku': [Gif, Gif], 'vegeta': [Gif, Gif]}"] --> B2["Claves (Object.keys) = Lista de Historial"]
-        B1 --> B3["Valores = Caché en Memoria con acceso síncrono O(1)"]
-    end
-```
+!!! info "¿Qué es `Record<K, V>` en TypeScript?"
+    **`Record<Keys, Type>`** es un **tipo utilitario (*Utility Type*) nativo de TypeScript** que sirve para tipar **objetos que actúan como diccionarios o mapas clave-valor** cuando no conocemos de antemano qué claves tendrá el objeto (porque las escribirá el usuario).
 
-Al utilizar una estructura de diccionario indexada por término (`Record<string, Gif[]>`):
+    * **`K` (`string`):** el tipo de las **claves** del objeto (en nuestro caso, cada término buscado en minúsculas: `'goku'`, `'saitama'`, `'naruto'`).
+    * **`V` (`Gif[]`):** el tipo de los **valores** asociados a cada clave (el array de GIFs devuelto por Giphy para ese término).
+    * **Equivalencia interna:** escribir `Record<string, Gif[]>` es exactamente equivalente (pero mucho más limpio y legible) a escribir `{ [clave: string]: Gif[] }`.
+
+    ```typescript
+    // Ejemplo real de cómo luce un Record<string, Gif[]> en memoria:
+    const historial: Record<string, Gif[]> = {
+      goku: [
+        { id: '1', title: 'Goku SSJ', url: 'https://...' },
+        { id: '2', title: 'Goku Kamehameha', url: 'https://...' },
+      ],
+      saitama: [
+        { id: '9', title: 'One Punch', url: 'https://...' },
+      ],
+    };
+
+    // Operaciones habituales sobre un Record:
+    Object.keys(historial); // ['goku', 'saitama'] -> Lista de términos para el menú lateral
+    historial['goku'];      // Gif[]               -> Acceso directo O(1) a la caché
+    ```
+
+    Además, TypeScript te protege en tiempo de compilación: si intentas asignar un `string` o un número en lugar de un `Gif[]` (`historial['goku'] = 'error'`), el compilador marcará el fallo al instante.
+
+Al utilizar esta estructura de diccionario indexada por término (`Record<string, Gif[]>`):
 
 * **Fuente Única de Verdad:** Las claves del objeto representan el historial cronológico de términos.
 * **Caché en Memoria Instantánea:** Los valores almacenan las animaciones previamente recuperadas, eliminando la necesidad de volver a consultar la API externa.
+
+**Modificación en el proyecto:** declaramos la señal `searchHistory` dentro de `GifService` inicializada como un objeto vacío `{}`:
+
+```typescript title="src/app/gifs/services/gifs.service.ts (Paso 1: Declarar searchHistory)" hl_lines="5"
+@Service()
+export class GifService {
+  private http = inject(HttpClient);
+
+  searchHistory = signal<Record<string, Gif[]>>({});
+  trendingGifs = signal<Gif[]>([]);
+  trendingGifsLoading = signal(true);
+  // ...
+}
+```
 
 ### 2. El Operador RxJS `tap()` como Interceptor de Efectos Secundarios
 
@@ -1024,15 +1156,32 @@ Para guardar las búsquedas en la caché en el instante en que la petición resp
 
 ### 3. Principio de Inmutabilidad en Signals (`.update()`) y Normalización
 
-Dentro del operador `tap()`, actualizamos la señal `searchHistory` siguiendo las mejores prácticas de inmutabilidad:
+**Modificación en el proyecto:** importamos `tap` desde `'rxjs'` y lo encadenamos al final de `.pipe(...)` en `searchGifs()` para guardar los resultados en `searchHistory` respetando la inmutabilidad:
 
-```typescript
-tap((items) => {
-  this.searchHistory.update((history) => ({
-    ...history,
-    [query.toLowerCase()]: items,
-  }));
-})
+```typescript title="src/app/gifs/services/gifs.service.ts (Paso 2: Guardar resultados con tap)" hl_lines="1 16-21"
+import { Observable, map, tap } from 'rxjs';
+
+// ... dentro de GifService:
+searchGifs(query: string): Observable<Gif[]> {
+  return this.http
+    .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+      params: {
+        api_key: environment.giphyApiKey,
+        limit: 20,
+        q: query,
+      },
+    })
+    .pipe(
+      map(({ data }) => data),
+      map((items) => GifMapper.mapGiphyItemsToGifArray(items)),
+      tap((items) => {
+        this.searchHistory.update((history) => ({
+          ...history,
+          [query.toLowerCase()]: items,
+        }));
+      })
+    );
+}
 ```
 
 * **Normalización de Claves (`query.toLowerCase()`)**: Garantiza que búsquedas con diferencias de mayúsculas y minúsculas (ej: `Goku`, `goku`, `GOKU`) se asignen al mismo registro de caché, evitando duplicados.
@@ -1040,19 +1189,27 @@ tap((items) => {
 
 ### 4. Señal Computada Derivada: `searchHistoryKeys`
 
-Para alimentar componentes que requieran la lista de términos (como el menú lateral):
+**Modificación en el proyecto:** importamos `computed` desde `'@angular/core'` y declaramos `searchHistoryKeys` justo debajo de `searchHistory` en `GifService` para exponer la lista de términos al menú lateral:
 
-```typescript
+```typescript title="src/app/gifs/services/gifs.service.ts (Paso 3: Señal computada de claves)" hl_lines="1 5"
+import { computed, inject, Service, signal } from '@angular/core';
+
+// ... dentro de GifService:
+searchHistory = signal<Record<string, Gif[]>>({});
 searchHistoryKeys = computed(() => Object.keys(this.searchHistory()));
 ```
 
-* `searchHistoryKeys` se recalcula de forma puramente declarativa y reactiva únicamente cuando `searchHistory` añade una nueva clave.
+* **¿Qué hace `Object.keys(objeto)`?** Es un método nativo de JavaScript que recibe un objeto y **extrae únicamente los nombres de sus claves en forma de array (`string[]`)**.
+    * Por ejemplo, si `this.searchHistory()` contiene `{ goku: [Gif, ...], saitama: [Gif, ...] }`, entonces `Object.keys(this.searchHistory())` devuelve `['goku', 'saitama']`.
+    * Lo necesitamos porque en la plantilla HTML la directiva `@for` solo puede iterar sobre arrays/colecciones, no directamente sobre objetos diccionario.
+* **Reactividad con `computed()`:** `searchHistoryKeys` se recalcula de forma puramente declarativa y automática cada vez que `searchHistory` añade una nueva clave.
 
 ### 5. Acceso Síncrono Defensivo: `getHistoryGifs()`
 
-Añadimos un método auxiliar para recuperar animaciones cacheadas sin necesidad de realizar suscripciones asíncronas:
+**Modificación en el proyecto:** añadimos el método `getHistoryGifs(query: string)` al final de `GifService` para recuperar animaciones cacheadas sin necesidad de realizar suscripciones asíncronas:
 
-```typescript
+```typescript title="src/app/gifs/services/gifs.service.ts (Paso 4: Lectura de caché)" hl_lines="2-4"
+// ... al final de GifService:
 getHistoryGifs(query: string): Gif[] {
   return this.searchHistory()[query.toLowerCase()] ?? [];
 }
@@ -1136,9 +1293,9 @@ export class GifService {
 ## Parámetros Dinámicos de URL e Interoperabilidad con `toSignal`
 
 !!! info "📖 Para saber más: Manual de Referencia"
-    Para aprender cuándo usar Observables vs Signals y cómo combinarlos con `toSignal()`, consulta el **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md)** y **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md)**.
+    Para aprender cómo funciona `toSignal()` y la interoperabilidad entre Observables y Signals, consulta el **[Manual de Referencia: 10. Cliente HTTP (`toSignal()` — Observable a Signal)](manual/10-http.md#41-tosignal-observable-a-signal)**, y para rutas dinámicas el **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md)**.
 
-Para permitir que el usuario comparta un enlace con una búsqueda fija (por ejemplo, `/dashboard/history/dragonball`) o pulse sobre un término del historial en el menú lateral, configuramos una ruta dinámica con parámetros en la aplicación.
+Para permitir que el usuario comparta un enlace con una búsqueda fija (por ejemplo, `/dashboard/history/dragonball`) o pulse sobre un término del historial en el menú lateral, vamos a crear una nueva página de historial (`GifHistoryComponent`) y a configurarle una ruta dinámica con parámetros en dos pasos: primero preparamos el componente base (reto opcional) y después implementamos la ruta dinámica `:query` y la lectura reactiva con `toSignal()`.
 
 ## 🎯 Tarea Práctica 2 (Opcional): Crear la Página de Historial (`GifHistoryComponent`)
 
@@ -1156,7 +1313,29 @@ Antes de configurar los argumentos dinámicos en la URL, prepara la nueva pantal
 
     **Pista:** Recuerda exportar la clase como `export default class GifHistoryComponent` para que `import('./gifs/pages/gif-history/gif-history.component')` funcione directamente en `loadComponent`.
 
-### 1. Definición de la Ruta Dinámica en `src/app/app.routes.ts`
+??? success "Ver solución base (Generación del componente `gif-history`)"
+    1. Genera el componente con Angular CLI:
+
+    ```bash
+    ng g c gifs/pages/gif-history
+    ```
+
+    2. Asegúrate de añadir `default` a la exportación de la clase en `src/app/gifs/pages/gif-history/gif-history.component.ts`:
+
+    ```typescript title="src/app/gifs/pages/gif-history/gif-history.component.ts (Base)"
+    import { Component } from '@angular/core';
+
+    @Component({
+      selector: 'app-gif-history',
+      imports: [],
+      templateUrl: './gif-history.component.html',
+    })
+    export default class GifHistoryComponent {}
+    ```
+
+    A continuación completamos la ruta dinámica `:query` y la lógica de `GifHistoryComponent` con `toSignal()`.
+
+### 1. Solución: Definición de la Ruta Dinámica en `src/app/app.routes.ts`
 
 Registramos la ruta hija `history/:query` bajo el cascarón `DashboardPageComponent`, utilizando carga perezosa (*lazy loading*) mediante la función `loadComponent`:
 
@@ -1199,11 +1378,90 @@ export const routes: Routes = [
 
 * El segmento `:query` actúa como comodín dinámico. Cualquier valor introducido tras `/history/` (ej: `/history/goku`) será capturado por el enrutador de Angular como un parámetro de ruta.
 
-### 2. Conversión Reactiva con `toSignal()`: `GifHistoryComponent`
+### 2. Lectura de Parámetros con `ActivatedRoute` y `toSignal()`: `GifHistoryComponent`
 
-En Angular tradicional, capturar los parámetros de ruta requería suscribirse manualmente al Observable `ActivatedRoute.params` y gestionar la desuscripción en el gancho de ciclo de vida `ngOnDestroy` para prevenir fugas de memoria (*memory leaks*).
+#### ¿Qué son `ActivatedRoute` y `route.params`?
 
-La función **`toSignal()`** (del paquete `@angular/core/rxjs-interop`) resuelve este reto convirtiendo el flujo asíncrono de RxJS en una **Señal pura**, administrando automáticamente el ciclo de vida de la suscripción:
+Cuando una ruta contiene un segmento dinámico como `history/:query`, el componente necesita preguntar al enrutador de Angular qué valor hay escrito actualmente en la URL. Para ello existe el servicio nativo **`ActivatedRoute`** (de `@angular/router`):
+
+* **`ActivatedRoute`:** contiene toda la información sobre la ruta activa actual (segmentos de URL, parámetros dinámicos, query params, etc.).
+* **`route.params`:** es un **`Observable`** que emite un objeto diccionario con los parámetros de la URL cada vez que esta cambia:
+    * Si entras en `/dashboard/history/goku`, `route.params` emite `{ query: 'goku' }`.
+    * Si luego haces clic en otro término del menú lateral (`/dashboard/history/saitama`), Angular **reutiliza el mismo `GifHistoryComponent`** sin destruirlo, y `route.params` emite automáticamente `{ query: 'saitama' }`.
+
+!!! note "¿Por qué `route.params` (Observable) y no una lectura fija?"
+    Aunque existe `route.snapshot.params['query']`, esa lectura solo captura el valor **una vez** al crearse el componente. Si el usuario cambia de `/history/goku` a `/history/saitama` estando ya en la página de historial, la vista **no se actualizaría**. Al usar el Observable `route.params`, reaccionamos a cada cambio de URL.
+
+Vamos a construir `GifHistoryComponent` **en tres pasos progresivos**:
+
+#### Paso 1: Inyectar `ActivatedRoute` y transformar `route.params` con `map()`
+
+Primero inyectamos `ActivatedRoute`. Como `this.route.params` emite un objeto (`{ query: 'goku' }`), usamos `.pipe(map(...))` para quedarnos únicamente con el texto del parámetro `query`:
+
+```typescript title="Paso 1: Inyectar ActivatedRoute y extraer el parámetro :query" hl_lines="2-3 7 10-12"
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
+
+export default class GifHistoryComponent {
+  // 1. Inyectamos la ruta activa actual
+  private route = inject(ActivatedRoute);
+
+  // 2. Transformamos { query: 'goku' } -> 'goku' (o '' si no existe)
+  query$ = this.route.params.pipe(
+    map((params) => params['query'] ?? '')
+  );
+}
+```
+
+#### Paso 2: Convertir el Observable en Señal con `toSignal()`
+
+En Angular tradicional habría que suscribirse manualmente a `query$` y cancelar la suscripción en `ngOnDestroy` para evitar fugas de memoria (*memory leaks*). En su lugar, envolvemos el flujo con **`toSignal()`** (de `@angular/core/rxjs-interop`), que **se suscribe y se desuscribe automáticamente** y nos entrega una señal pura `query()`:
+
+```typescript title="Paso 2: Envolver el Observable con toSignal()" hl_lines="2 9-11"
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
+
+export default class GifHistoryComponent {
+  private route = inject(ActivatedRoute);
+
+  query = toSignal(
+    this.route.params.pipe(map((params) => params['query'] ?? ''))
+  );
+}
+```
+
+#### Paso 3: Leer los GIFs desde la caché con `computed()`
+
+Ahora que `query` es una señal reactiva, inyectamos `GifService` y creamos la señal computada `gifsByKey`. Cada vez que `this.query()` cambie al pulsar otro término del historial, `gifsByKey` recuperará al instante los GIFs cacheados en memoria:
+
+```typescript title="Paso 3: Derivar los GIFs cacheados con computed()" hl_lines="1 5 9 15-18"
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
+import { GifService } from '../../services/gifs.service';
+
+export default class GifHistoryComponent {
+  private route = inject(ActivatedRoute);
+  private gifService = inject(GifService);
+
+  query = toSignal(
+    this.route.params.pipe(map((params) => params['query'] ?? ''))
+  );
+
+  gifsByKey = computed(() => {
+    const currentQuery = this.query();
+    return currentQuery ? this.gifService.getHistoryGifs(currentQuery) : [];
+  });
+}
+```
+
+#### Código Completo de `GifHistoryComponent` (`.ts` y `.html`)
+
+Uniendo los tres pasos e importando `GifListComponent` para pintar la cuadrícula:
 
 === "src/app/gifs/pages/gif-history/gif-history.component.ts"
     ```typescript title="src/app/gifs/pages/gif-history/gif-history.component.ts"
@@ -1239,10 +1497,10 @@ La función **`toSignal()`** (del paquete `@angular/core/rxjs-interop`) resuelve
 === "src/app/gifs/pages/gif-history/gif-history.component.html"
     ```html title="src/app/gifs/pages/gif-history/gif-history.component.html"
     <div class="py-4">
-      <h2 class="text-2xl font-bold text-white mb-2">
-        Historial de Búsqueda: <span class="text-blue-400 capitalize">{{ query() }}</span>
+      <h2 class="text-2xl font-bold text-slate-900 mb-2">
+        Historial de Búsqueda: <span class="text-blue-600 capitalize">{{ query() }}</span>
       </h2>
-      <hr class="border-slate-800 my-4" />
+      <hr class="border-slate-300 my-4" />
 
       <!-- Reutilización del componente de galería -->
       <gif-list [gifs]="gifsByKey()" />
@@ -1623,7 +1881,7 @@ export class GifService {
 
 Para una comprensión exhaustiva de la comunicación HTTP y la reactividad combinada:
 
-* **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md):** Interoperabilidad entre Observables y Señales (`toSignal()`, `toObservable()`).
+* **[Manual de Referencia: 05. Signals y Reactividad](manual/05-signals.md):** Fundamentos de `signal()`, `computed()`, `effect()` y reactividad granular.
 * **[Manual de Referencia: 09. Servicios e Inyección de Dependencias](manual/09-servicios.md):** Inyección funcional con `inject()` y gestión de estado reactivo en servicios.
-* **[Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md):** Guía completa de `provideHttpClient()`, tipado de peticiones, interceptores funcionales y manejo de errores.
+* **[Manual de Referencia: 10. Cliente HTTP y Comunicación con APIs](manual/10-http.md#seccion-4-signals-rxjs):** `provideHttpClient()`, Observables (RxJS), interoperabilidad con Signals (`toSignal()`, `toObservable()`), Resource API e interceptores funcionales.
 * **[Manual de Referencia: 11. Angular Router y Navegación](manual/11-router.md):** Rutas dinámicas con parámetros (`:query`) y enlace de parámetros a inputs de componentes.

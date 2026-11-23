@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" width="680" height="280" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <rect x="0" y="0" width="680" height="280" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+  <rect x="30" y="20" width="270" height="240" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
+  <rect x="31" y="21" width="268" height="79" rx="9" fill="#e2e8f0" />
+  <text x="165" y="57" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">Área ya recorrida</text>
+  <text x="165" y="76" text-anchor="middle" font-size="12" fill="#64748b">(contenido arriba fuera de vista)</text>
+  <rect x="31" y="100" width="268" height="105" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" />
+  <text x="165" y="148" text-anchor="middle" font-size="15" font-weight="700" fill="#1d4ed8">VENTANA VISIBLE</text>
+  <text x="165" y="168" text-anchor="middle" font-size="12" fill="#2563eb">(lo que ve el usuario ahora)</text>
+  <rect x="31" y="205" width="268" height="54" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3" />
+  <text x="165" y="236" text-anchor="middle" font-size="13" font-weight="600" fill="#b45309">Umbral de anticipación (300px)</text>
+  <line x1="315" y1="22" x2="328" y2="22" stroke="#475569" stroke-width="1.8" />
+  <line x1="328" y1="22" x2="328" y2="98" stroke="#475569" stroke-width="1.8" />
+  <line x1="315" y1="98" x2="328" y2="98" stroke="#475569" stroke-width="1.8" />
+  <text x="340" y="56" font-size="13" font-weight="700" fill="#334155">scrollTop</text>
+  <text x="340" y="73" font-size="11.5" fill="#64748b">Píxeles desplazados desde 0</text>
+  <line x1="315" y1="102" x2="328" y2="102" stroke="#2563eb" stroke-width="1.8" />
+  <line x1="328" y1="102" x2="328" y2="203" stroke="#2563eb" stroke-width="1.8" />
+  <line x1="315" y1="203" x2="328" y2="203" stroke="#2563eb" stroke-width="1.8" />
+  <text x="340" y="149" font-size="13" font-weight="700" fill="#1d4ed8">clientHeight</text>
+  <text x="340" y="166" font-size="11.5" fill="#2563eb">Altura visible del contenedor</text>
+  <line x1="315" y1="207" x2="328" y2="207" stroke="#d97706" stroke-width="1.8" />
+  <line x1="328" y1="207" x2="328" y2="258" stroke="#d97706" stroke-width="1.8" />
+  <line x1="315" y1="258" x2="328" y2="258" stroke="#d97706" stroke-width="1.8" />
+  <text x="340" y="229" font-size="13" font-weight="700" fill="#b45309">+ 300px</text>
+  <text x="340" y="246" font-size="11.5" fill="#b45309">Dispara la carga antes del fondo</text>
+  <line x1="535" y1="20" x2="552" y2="20" stroke="#0f172a" stroke-width="2" />
+  <line x1="552" y1="20" x2="552" y2="260" stroke="#0f172a" stroke-width="2" />
+  <line x1="535" y1="260" x2="552" y2="260" stroke="#0f172a" stroke-width="2" />
+  <text x="564" y="136" font-size="13.5" font-weight="700" fill="#0f172a">scrollHeight</text>
+  <text x="564" y="154" font-size="11.5" fill="#475569">Altura total</text>
+  <text x="564" y="169" font-size="11.5" fill="#475569">del contenido</text>
+</svg>

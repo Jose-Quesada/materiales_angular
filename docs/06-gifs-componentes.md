@@ -570,15 +570,15 @@ flowchart LR
 Para solventar este solapamiento, envolvemos la directiva `<router-outlet />` dentro de un contenedor `<div>` con la clase **`ml-[220px]`** (*margin-left: 220px*). Este margen empuja el área de contenido exactamente los mismos 220 píxeles que ocupa el menú lateral:
 
 ```html title="src/app/gifs/pages/dashboard-page/dashboard-page.html" hl_lines="4 9-11"
-<div class="bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white">
-  <div class="flex flex-col relative w-screen">
+<div class="bg-slate-100 overflow-y-scroll w-full h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white">
+  <div class="flex flex-col relative w-full">
     <!-- 1. Menú lateral: sustituimos w-64 por w-[220px] -->
     <div id="menu" class="w-[220px] bg-gray-900 min-h-screen z-10 text-slate-300 fixed left-0 h-screen overflow-y-scroll">
       <!-- Contenido del menú de Creative Tim... -->
     </div>
 
     <!-- 2. Área de contenido dinámico con margen compensatorio de 220px -->
-    <div class="ml-[220px] px-4 flex flex-col flex-1 w-full h-full text-slate-800">
+    <div class="ml-[220px] px-4 flex flex-col flex-1 h-full text-slate-800">
       <router-outlet />
     </div>
   </div>
@@ -824,14 +824,14 @@ Ahora que toda la complejidad visual del menú lateral ha sido desacoplada en su
 === "src/app/gifs/pages/dashboard-page/dashboard-page.html"
     ```html title="src/app/gifs/pages/dashboard-page/dashboard-page.html"
     <div
-      class="bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white"
+      class="bg-slate-100 overflow-y-scroll w-full h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white"
     >
-      <div class="flex flex-col relative w-screen">
+      <div class="flex flex-col relative w-full">
         <!-- 1. Menú lateral atómico independiente -->
         <gifs-side-menu />
 
         <!-- 2. Área de contenido dinámico de rutas hijas con margen compensatorio -->
-        <div class="ml-[220px] px-4 flex flex-col flex-1 w-full h-full text-slate-800">
+        <div class="ml-[220px] px-4 flex flex-col flex-1 h-full text-slate-800">
           <router-outlet />
         </div>
       </div>

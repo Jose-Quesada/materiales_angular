@@ -985,14 +985,26 @@ ngOnInit(): void {
 }
 ```
 
-##### debounceTime y distinctUntilChanged
+##### `debounceTime` y `distinctUntilChanged`
+
+Son la pareja imprescindible para construir **buscadores en tiempo real** (*live search*) eficientes sin bombardear el servidor:
+
+* **`debounceTime(ms)` (Espera de inactividad):** retiene las emisiones mientras sigan llegando valores nuevos y **reinicia un temporizador de `ms` milisegundos con cada pulsación**. Solo deja pasar el último valor cuando transcurre ese tiempo en silencio.
+    * *Sin `debounceTime`:* escribir `"angular"` dispara **7 peticiones HTTP** (`"a"`, `"an"`, `"ang"`, `"angu"`, `"angul"`, `"angula"`, `"angular"`).
+    * *Con `debounceTime(400)`:* escribir `"angular"` dispara **1 sola petición HTTP** (400 ms después de soltar la última tecla).
+* **`distinctUntilChanged()` (Filtro de duplicados consecutivos):** compara el valor actual con el **último valor que dejó pasar** (usando `===` por defecto). Si son iguales, **lo descarta** y evita repetir una petición idéntica.
+    * *Caso real típico:* el usuario busca `"angular"` (se lanza la petición), pulsa por error una tecla extra (`"angulars"`) y la borra rápidamente antes de 400 ms volviendo a `"angular"`. `debounceTime` emitiría `"angular"` de nuevo, pero `distinctUntilChanged()` detecta que el valor no ha cambiado y **frena la petición duplicada**.
+    * *Con objetos:* puedes pasarle una función comparadora personalizada, por ejemplo `distinctUntilChanged((prev, curr) => prev.id === curr.id)`.
 
 ```typescript
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 
+// Secuencia del usuario: 'a' -> 'an' -> 'ang' -> (pausa 400ms) -> 'angs' -> borra -> 'ang' (pausa 400ms)
 buscador$.pipe(
-  debounceTime(400), // Espera 400ms tras la última emisión
-  distinctUntilChanged() // Ignora valores duplicados consecutivos
+  debounceTime(400),        // 1. Espera 400ms de silencio -> deja pasar 'ang'
+  distinctUntilChanged(),   // 2. La segunda vez que llega 'ang' la bloquea ('ang' === 'ang')
+  filter(q => q.trim().length >= 2), // 3. Evita búsquedas vacías o de 1 letra
+  switchMap(q => this.apiService.buscar(q)) // 4. Cancela búsquedas previas en vuelo
 );
 ```
 
@@ -1057,6 +1069,16 @@ Angular proporciona funciones de interoperabilidad para conectar el mundo de Sig
 
 #### 4.1. toSignal() - Observable a Signal
 
+**`toSignal()`** (importado de `@angular/core/rxjs-interop`) convierte cualquier `Observable<T>` de RxJS en una **`Signal` de solo lectura** para consumirla de forma síncrona y declarativa en componentes, plantillas o `computed()`.
+
+**¿Cómo funciona internamente?**
+
+1. **Suscripción inmediata:** en cuanto se ejecuta `toSignal(observable$)`, Angular se suscribe automáticamente al `Observable`.
+2. **Actualización reactiva:** cada vez que el `Observable` emite un nuevo valor por `next`, `toSignal()` actualiza la señal resultante y notifica a la plantilla o a cualquier `computed()` que dependa de ella.
+3. **Limpieza automática (*Sin memory leaks*):** cuando el componente o servicio se destruye, Angular llama automáticamente a `.unsubscribe()`, evitando fugas de memoria sin necesidad de `ngOnDestroy`.
+4. **Valor inicial (`initialValue`):** como un `Observable` puede tardar en emitir su primer valor, por defecto la señal devuelta tiene tipo `Signal<T | undefined>` (vale `undefined` hasta la primera emisión). Si pasas `{ initialValue: [] }` (o `''`, `null`, etc.), garantizas un valor inicial conocido y eliminas el `undefined` del tipo.
+5. **Contexto de inyección:** debe llamarse dentro de un contexto de inyección (como propiedad de clase o en el `constructor()`), salvo que se le pase explícitamente `{ injector }`.
+
 ```typescript
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -1096,6 +1118,18 @@ export class UsersComponent {
 
 #### 4.2. toObservable() - Signal a Observable
 
+**`toObservable()`** (también de `@angular/core/rxjs-interop`) realiza el camino inverso a `toSignal()`: convierte una **`Signal<T>`** en un **`Observable<T>`** de RxJS.
+
+**¿Cuándo y por qué se utiliza?**
+
+Las Signals son ideales para estado síncrono, pero no disponen de operadores temporales o de cancelación asíncrona. `toObservable()` te permite llevar temporalmente una Signal al mundo RxJS para encadenar operadores como **`debounceTime`**, **`distinctUntilChanged`** o **`switchMap`** (por ejemplo, en un buscador en tiempo real) y, si lo deseas, devolver el resultado final a una Signal con `toSignal()`.
+
+**¿Cómo funciona internamente?**
+
+1. **Observación mediante `effect()`:** internamente crea un `effect()` que vigila la Signal y emite cada nuevo valor en un `ReplaySubject(1)` compartido con los suscriptores.
+2. **Emisión asíncrona y estabilizada:** si la Signal cambia varias veces seguidas de forma síncrona (por ejemplo, `termino.set('a'); termino.set('ab');`), `toObservable()` **no emite los estados intermedios**, sino únicamente el último valor estabilizado (`'ab'`).
+3. **Contexto de inyección y cierre automático:** debe llamarse dentro de un contexto de inyección (propiedad de clase o `constructor()`, salvo que se pase `{ injector }`) y completa el Observable automáticamente al destruirse el componente.
+
 ```typescript
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -1118,6 +1152,12 @@ export class SearchComponent {
   );
 }
 ```
+
+**¿Por qué se combinan `toObservable()` y `toSignal()` en este ejemplo (*patrón de ida y vuelta*)?**
+
+1. **Punto de partida (`Signal`):** `termino` vive como una Signal sencilla de actualizar desde el `<input>` del usuario.
+2. **Paso temporal a RxJS (`toObservable`):** la convertimos en `Observable` **únicamente** para aprovechar operadores temporales y de cancelación que las Signals no tienen (`debounceTime(400)` para esperar a que deje de teclear y `switchMap()` para cancelar peticiones HTTP anteriores).
+3. **Regreso a `Signal` (`toSignal`):** al envolver todo el `.pipe(...)` con `toSignal(..., { initialValue: [] })`, Angular **se suscribe y limpia automáticamente** y nos devuelve `resultados` como una Signal lista para pintar directamente en la plantilla con `@for (item of resultados(); ...)` sin usar `.subscribe()` ni `| async`.
 
 #### 4.3. Patrón recomendado
 
@@ -1162,91 +1202,282 @@ export class ProductoListaComponent {
 }
 ```
 
-### SECCIÓN 5 - Resource API
+### SECCIÓN 5 - Resource API: Forma Clásica vs `resource()` vs `rxResource()`
 
-La API `resource()` y `rxResource()` (totalmente estables en Angular 22) proporcionan una forma declarativa y de primera clase para cargar datos asíncronos y conectar APIs REST directamente con el grafo reactivo de señales.
+En Angular moderno conviven **dos grandes paradigmas** para realizar peticiones HTTP y conectar los datos con la interfaz:
 
-#### 5.1. resource() básico
+1. **La Forma Clásica Imperativa (`HttpClient` + `.subscribe()`):** El desarrollador controla manualmente cuándo lanzar la petición, crea señales independientes para los datos (`signal<T>`), la carga (`signal(false)`) y el error (`signal(null)`), y actualiza cada una dentro de los callbacks `next` y `error` de `.subscribe()`.
+2. **La Familia Declarativa `Resource API` (`resource()`, `rxResource()` y `httpResource()`):** Estables en **Angular 22**, encapsulan una operación asíncrona de lectura dentro de un único objeto reactivo (**`ResourceRef<T>`**) conectado al grafo de Signals. Angular se encarga automáticamente de disparar la carga inicial, re-ejecutar la petición cuando cambian las señales de entrada, cancelar peticiones obsoletas en vuelo y exponer señales listas para usar (`value()`, `isLoading()`, `error()`, `status()`).
+
+```mermaid
+flowchart LR
+    subgraph Clasico ["1. Forma Clásica (.subscribe)"]
+        direction TB
+        C1["Llamar método manualmente<br/>(constructor / ngOnInit / click)"] --> C2["http.get().subscribe(...)"]
+        C2 --> C3["Actualizar a mano 3 señales:<br/>datos.set() / cargando.set() / error.set()"]
+    end
+
+    subgraph Moderno ["2. Enfoque Declarativo (resource / rxResource)"]
+        direction TB
+        M1["Señal de entrada<br/>(request: () => id())"] -->|Cambio detectado| M2["Cancela petición anterior<br/>y ejecuta loader automáticamente"]
+        M2 --> M3["ResourceRef expone de serie:<br/>value() · isLoading() · error() · reload()"]
+    end
+```
+
+#### Anatomía de un Resource (`request`, `loader` y `ResourceRef`)
+
+Tanto `resource()` como `rxResource()` comparten la misma estructura declarativa de dos piezas:
+
+* **`request` (Dependencias reactivas):** Función que lee una o varias `Signal`s (por ejemplo, `request: () => ({ id: this.productoId() })`).
+  * Cada vez que cualquiera de esas señales cambia de valor, el Resource **aborta automáticamente la petición anterior que estuviera en vuelo** y vuelve a ejecutar el `loader` con el nuevo valor.
+  * Si `request` devuelve `undefined`, el Resource entra en estado `Idle` (reposo) y **no ejecuta ninguna petición** (muy útil para no buscar hasta que el usuario escriba al menos 2 caracteres).
+* **`loader` (Cargador asíncrono):** Función que recibe `{ request, abortSignal, previous }` y obtiene los datos del servidor.
+  * En **`resource()`**, el `loader` debe devolver una **`Promise<T>`** (por ejemplo, usando `fetch` con `async/await`).
+  * En **`rxResource()`**, el `loader` debe devolver un **`Observable<T>`** (por ejemplo, llamando a un método de un servicio que usa `HttpClient.get()`).
+
+**Señales y métodos que devuelve cualquier Resource (`ResourceRef<T>`):**
+
+| Propiedad / Método | Tipo | Descripción |
+| :--- | :--- | :--- |
+| **`value()`** | `Signal<T \| undefined>` | Contiene el dato devuelto por el servidor (o `undefined` mientras carga por primera vez o si hubo error). |
+| **`hasValue()`** | `() => boolean` | *Type guard* reactivo: devuelve `true` si `value()` ya tiene datos válidos listos para mostrar. |
+| **`isLoading()`** | `Signal<boolean>` | `true` mientras el `loader` está esperando respuesta de la red; pasa a `false` automáticamente al terminar. |
+| **`error()`** | `Signal<unknown>` | Contiene el objeto de error si la petición falló, o `undefined` si no hay error. |
+| **`status()`** | `Signal<ResourceStatus>` | Estado exacto del ciclo de vida: `'Idle'`, `'Loading'`, `'Reloading'`, `'Resolved'`, `'Error'` o `'Local'`. |
+| **`reload()`** | `() => boolean` | Fuerza una recarga manual de la petición actual (ideal para un botón "Reintentar" o "Refrescar"). |
+| **`set()` / `update()`** | Mutación local | Permite modificar el valor en memoria localmente en el cliente (estado `'Local'`) sin esperar al servidor. |
+
+---
+
+#### 5.1. Forma Clásica (`.subscribe()`) vs `resource()` (Basado en Promesas)
+
+Para ver con total claridad qué cambia en el código, vamos a resolver **exactamente el mismo problema** con los tres enfoques: **cargar los productos de una categoría cada vez que cambia la señal `categoria = signal('electronica')`**, mostrando estado de carga, control de errores y botón de recarga.
+
+##### Enfoque A: Forma Clásica (`HttpClient` + `.subscribe()` y señales manuales)
+
+Es el enfoque tradicional e imperativo. El servicio devuelve un `Observable<Producto[]>` y el componente (o el propio servicio) gestiona la suscripción y actualiza manualmente las señales de estado.
 
 ```typescript
-import { resource } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
-@Component({...})
-export class UserDetailComponent {
-  private userService = inject(UserService);
+@Component({
+  selector: 'app-productos-clasico',
+  template: `
+    <select (change)="cambiarCategoria($any($event.target).value)">
+      <option value="electronica">Electrónica</option>
+      <option value="hogar">Hogar</option>
+    </select>
 
-  // ID del usuario, reactivo
-  userId = input.required<number>();
+    @if (cargando()) {
+      <p>Cargando productos...</p>
+    } @else if (error()) {
+      <p class="error">{{ error() }}</p>
+      <button (click)="cargarProductos()">Reintentar</button>
+    } @else {
+      @for (p of productos(); track p.id) {
+        <div>{{ p.nombre }}</div>
+      }
+    }
+  `
+})
+export class ProductosClasicoComponent implements OnInit {
+  private http = inject(HttpClient);
+  private subActual?: Subscription;
 
-  // El resource se recarga automáticamente cuando cambia userId
-  userResource = resource({
-    // request: define las dependencias reactivas
-    request: () => this.userId(),
+  categoria = signal('electronica');
 
-    // loader: función que carga los datos
-    loader: ({ request: id }) =>
-      lastValueFrom(this.userService.obtenerUsuario(id))
+  // 1. Debemos declarar y mantener sincronizadas 3 señales por separado
+  productos = signal<Producto[]>([]);
+  cargando = signal(false);
+  error = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.cargarProductos();
+  }
+
+  cambiarCategoria(nueva: string): void {
+    this.categoria.set(nueva);
+    this.cargarProductos(); // 2. Debemos acordarnos de relanzar la carga manualmente
+  }
+
+  cargarProductos(): void {
+    // 3. Cancelar manualmente la petición anterior para evitar condiciones de carrera
+    this.subActual?.unsubscribe();
+
+    this.cargando.set(true);
+    this.error.set(null);
+
+    this.subActual = this.http
+      .get<Producto[]>(`/api/productos?cat=${this.categoria()}`)
+      .subscribe({
+        next: (datos) => {
+          this.productos.set(datos);
+          this.cargando.set(false);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.error.set(`Error ${err.status}: No se pudo cargar el catálogo`);
+          this.cargando.set(false);
+        }
+      });
+  }
+}
+```
+
+* **✅ Ventajas de la Forma Clásica:**
+  * **Control imperativo total:** Tú decides en qué línea exacta se dispara la petición y qué hacer antes o después.
+  * **Ideal para mutaciones y acumulación:** Es la mejor opción cuando necesitas **concatenar** resultados nuevos a los anteriores (como el **Scroll Infinito**: `this.gifs.update(prev => [...prev, ...nuevos])`) o para peticiones de escritura (`POST`, `PUT`, `DELETE`) al pulsar un botón.
+  * **Didáctica:** Permite al alumno comprender paso a paso cómo funciona el flujo HTTP y las suscripciones.
+* **❌ Inconvenientes de la Forma Clásica:**
+  * **Mucho código repetitivo (*boilerplate*):** Por cada endpoint necesitas crear y actualizar a mano 3 señales (`datos`, `cargando`, `error`).
+  * **Riesgo de *Race Conditions*:** Si el usuario cambia rápido de categoría y olvidas cancelar la suscripción anterior (`unsubscribe()` o `switchMap`), una respuesta lenta antigua puede sobrescribir a la nueva.
+  * **Reactividad desconectada:** Cambiar `this.categoria.set(nueva)` no recarga los datos por sí solo; tienes que acordarte de llamar a `this.cargarProductos()`.
+
+---
+
+##### Enfoque B: `resource()` (Basado en Promesas / `fetch` y `async/await`)
+
+`resource()` (importado de `@angular/core`) está diseñado para trabajar con **Promesas (`Promise`) y funciones `async/await`**, sin utilizar Observables de RxJS.
+
+```typescript
+import { Component, resource, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-productos-resource',
+  template: `
+    <select (change)="categoria.set($any($event.target).value)">
+      <option value="electronica">Electrónica</option>
+      <option value="hogar">Hogar</option>
+    </select>
+
+    @if (productosResource.isLoading()) {
+      <p>Cargando productos...</p>
+    } @else if (productosResource.error()) {
+      <p class="error">No se pudo cargar el catálogo.</p>
+      <button (click)="productosResource.reload()">Reintentar</button>
+    } @else if (productosResource.value(); as lista) {
+      @for (p of lista; track p.id) {
+        <div>{{ p.nombre }}</div>
+      }
+    }
+  `
+})
+export class ProductosResourceComponent {
+  categoria = signal('electronica');
+
+  // resource() usa un loader async/await que devuelve una Promise
+  productosResource = resource({
+    // 1. Dependencia reactiva: cuando 'categoria()' cambie, se relanza el loader
+    request: () => ({ cat: this.categoria() }),
+
+    // 2. Loader basado en Promesa + abortSignal nativo para cancelación
+    loader: async ({ request, abortSignal }) => {
+      const resp = await fetch(`/api/productos?cat=${request.cat}`, {
+        signal: abortSignal // Si 'categoria' cambia a mitad de vuelo, aborta el fetch
+      });
+
+      if (!resp.ok) {
+        throw new Error(`Error HTTP ${resp.status}`);
+      }
+
+      return (await resp.json()) as Producto[];
+    }
   });
 }
 ```
 
-**Propiedades del resource:**
+* **✅ Ventajas de `resource()`:**
+  * **Cero RxJS:** Muy cómodo si consumes SDKs externos basados en Promesas (Firebase, Supabase, AWS Amplify, IndexedDB) o la API nativa `fetch()`.
+  * **Cancelación nativa con `AbortSignal`:** Angular inyecta automáticamente un `abortSignal` en el `loader` y lo activa si `request` cambia antes de que termine la promesa.
+  * **Estado todo-en-uno:** Elimina las señales manuales `cargando` y `error`.
+* **❌ Inconvenientes de `resource()`:**
+  * **Si usas `fetch()`, NO pasa por los Interceptores de Angular (`HttpInterceptorFn`):** Pierdes la inyección automática de tokens JWT, el manejo global de errores y los tests con `HttpTestingController` de `HttpClient`.
+  * **No admite tuberías RxJS directas:** No puedes encadenar operadores como `.pipe(map(...), retry(2))` a menos que uses `rxResource()`.
+  * ⚠️ **Antipatrón frecuente:** Usar `lastValueFrom(this.http.get(...))` dentro de `resource()` desperdicia la cancelación automática de RxJS; si tu servicio ya usa `HttpClient` y devuelve un `Observable`, **debes usar `rxResource()`**, no `resource()`.
 
-| Propiedad | Tipo | Descripción |
-|---|---|---|
-| `value` | `Signal<T>` | Valor actual de los datos |
-| `status` | `Signal<ResourceStatus>` | Estado: Idle, Loading, Resolved, Error |
-| `error` | `Signal<unknown>` | Error si falló |
-| `isLoading` | `Signal<boolean>` | `true` si está cargando |
-| `reload()` | `() => void` | Fuerza recarga manual |
-
-```html
-@if (userResource.isLoading()) {
-  <app-spinner />
-} @else if (userResource.error()) {
-  <app-error [error]="userResource.error()!" />
-} @else if (userResource.value(); as user) {
-  <h2>{{ user.name }}</h2>
-  <p>{{ user.email }}</p>
-  <button (click)="userResource.reload()">Recargar</button>
-}
-```
+---
 
 #### 5.2. rxResource() para integración con RxJS
 
-`rxResource()` es específico para usar con Observables de RxJS:
+##### Enfoque C: `rxResource()` (Basado en `Observable`s de RxJS + `HttpClient`)
+
+`rxResource()` (importado de `@angular/core/rxjs-interop`) es el **puente oficial entre el ecosistema RxJS/`HttpClient` y la Resource API**. Su `loader` devuelve directamente un `Observable<T>` (como los métodos de tus servicios Angular).
 
 ```typescript
+import { Component, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
+import { map, retry } from 'rxjs';
 
-@Component({...})
-export class ProductListComponent {
-  private productService = inject(ProductService);
+@Component({
+  selector: 'app-productos-rx-resource',
+  template: `
+    <select (change)="categoria.set($any($event.target).value)">
+      <option value="electronica">Electrónica</option>
+      <option value="hogar">Hogar</option>
+    </select>
 
-  filtro = signal('todos');
+    @if (productosResource.isLoading()) {
+      <p>Cargando productos...</p>
+    } @else if (productosResource.error()) {
+      <p class="error">No se pudo cargar el catálogo.</p>
+      <button (click)="productosResource.reload()">Reintentar</button>
+    } @else if (productosResource.value(); as lista) {
+      @for (p of lista; track p.id) {
+        <div>{{ p.nombre }}</div>
+      }
+    }
+  `
+})
+export class ProductosRxResourceComponent {
+  private http = inject(HttpClient);
 
-  // rxResource se integra directamente con HttpClient (Observable)
+  categoria = signal('electronica');
+
+  // rxResource() recibe un Observable en su loader y gestiona subscribe/unsubscribe por ti
   productosResource = rxResource({
-    request: () => ({ categoria: this.filtro() }),
+    request: () => ({ cat: this.categoria() }),
     loader: ({ request }) =>
-      this.productService.obtenerProductos({ categoria: request.categoria })
+      this.http.get<ProductoDTO[]>(`/api/productos`, {
+        params: { cat: request.cat }
+      }).pipe(
+        retry(1), // Podemos usar toda la potencia de operadores RxJS y Mappers
+        map(dtos => ProductoMapper.toDomainArray(dtos))
+      )
   });
-
-  productos = computed(() => this.productosResource.value() ?? []);
-  cargando = this.productosResource.isLoading;
-  error = this.productosResource.error;
 }
 ```
 
-#### 5.3. Comparación con el enfoque tradicional
+* **✅ Ventajas de `rxResource()`:**
+  * **Lo mejor de ambos mundos (`HttpClient` + Signals):** Aprovecha toda la infraestructura de `HttpClient` (**Interceptores JWT**, tipado genérico, `params`, operadores RxJS como `map`, `retry`, `catchError` y tus clases `Mapper`) sin tener que escribir ni un solo `.subscribe()` ni gestionar `unsubscribe()`.
+  * **Efecto `switchMap` automático:** Si la señal `categoria()` cambia 5 veces seguidas rápidamente, `rxResource()` se desuscribe automáticamente de las 4 peticiones anteriores (abortándolas en red) y se queda solo con la 5.ª.
+  * **Código limpio y declarativo:** Reduce el componente o servicio a una única declaración reactiva con `.value()`, `.isLoading()`, `.error()` y `.reload()`.
+* **❌ Inconvenientes de `rxResource()`:**
+  * **Solo devuelve el primer valor por carga (pensado para petición/respuesta):** Aunque trabaja con Observables, está diseñado para flujos tipo HTTP (una respuesta por cada cambio de `request`), no para acumular páginas en un mismo array (como un scroll infinito) ni para operaciones de escritura (`POST`/`DELETE`) disparadas por un evento puntual.
+  * **Debe crearse en un contexto de inyección:** Al igual que `toSignal()`, debe declararse como propiedad de clase o dentro del `constructor()` (o pasando un `injector` explícito).
 
-| Característica | HttpClient + toSignal | resource() / rxResource() |
-|---|---|---|
-| Carga inicial | Manual (ngOnInit) | Automática al crear el resource |
-| Recarga por dependencias | Manual con signals + switchMap | Automática con request |
-| Estado (loading/error) | Manual con señales separadas | Incluido (status, error, isLoading) |
-| Recarga manual | Implementación ad-hoc | Método reload() incluido |
-| Código necesario | Más boilerplate | Menos código, más declarativo |
+---
+
+#### 5.3. Tabla Comparativa General y Criterio de Elección
+
+| Característica | Forma Clásica (`HttpClient` + `.subscribe()`) | `resource()` | `rxResource()` | `httpResource()` (Sección 5.4) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Paquete de importación** | `@angular/common/http` | `@angular/core` | `@angular/core/rxjs-interop` | `@angular/common/http` |
+| **¿Qué devuelve el cargador?** | `Observable<T>` (suscripción manual) | **`Promise<T>`** (`async/await`) | **`Observable<T>`** (`HttpClient`) | URL o `HttpResourceRequest` |
+| **Disparo y recarga al cambiar Signals** | Manual (hay que llamar al método) | **Automático** al cambiar `request` | **Automático** al cambiar `request` | **Automático** al cambiar las Signals leídas |
+| **Cancelación de petición anterior** | Manual (`unsubscribe()` o `switchMap`) | **Automática** (vía `abortSignal`) | **Automática** (desuscripción RxJS) | **Automática** (`HttpClient` interno) |
+| **Estados `isLoading()` y `error()`** | Manual (crear 2 señales extra) | **Integrados de serie** | **Integrados de serie** | **Integrados de serie** |
+| **Método `.reload()` integrado** | No (crear método manual) | **Sí** | **Sí** | **Sí** |
+| **¿Pasa por Interceptores HTTP?** | **Sí** | ❌ No (si usas `fetch` nativo) | **Sí** (al usar `HttpClient`) | **Sí** (usa `HttpClient` por debajo) |
+| **¿Permite `.pipe(map(), retry())`?** | **Sí** | ❌ No | **Sí** | Transformación vía opción `parse` / `map` |
+| **¿Sirve para `POST` / `PUT` / `DELETE`?** | **✅ Sí (Ideal)** | ❌ No recomendado | ❌ No recomendado | ❌ No recomendado (solo lectura) |
+| **¿Sirve para acumular páginas (Scroll Infinito)?** | **✅ Sí (Ideal con `.update()`)** | ⚠️ Complejo (sobrescribe `value()`) | ⚠️ Complejo (sobrescribe `value()`) | ⚠️ Complejo (sobrescribe `value()`) |
+
+!!! tip "Regla de Oro Arquitectónica: ¿Cuál debo elegir en cada caso?"
+    1. **Para lecturas (`GET`) con servicios Angular, Mappers e Interceptores:** usa **`rxResource()`** (o **`httpResource()`** si es una consulta REST directa). Te ahorrarás las señales manuales de carga/error y las suscripciones.
+    2. **Para lecturas asíncronas con librerías basadas en Promesas (Firebase, Supabase, `fetch`):** usa **`resource()`**.
+    3. **Para escrituras (`POST`, `PUT`, `DELETE`), acciones de botón o acumulación incremental (Scroll Infinito):** sigue usando la **Forma Clásica con `HttpClient` y `.subscribe()`**, ya que ahí necesitas control imperativo sobre cuándo disparar la acción y cómo mutar o concatenar el estado existente.
 
 #### 5.4. `httpResource()`: El estándar de `@angular/common/http` (Estable en Angular 22)
 
