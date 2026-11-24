@@ -81,6 +81,14 @@ export interface Item {
 
 ---
 
+## 🖼️ Wireframe Visual: Vistas, Componentes y Flujo de Datos
+
+Antes de empezar a escribir código, observa en el siguiente esquema cómo encajan las dos vistas (`/home` y `/tracker`), qué componentes son contenedores (*Smart*) frente a presentacionales (*Dumb*), y exactamente qué datos entran por `input.required()` y salen por `output()` hacia `TrackerService`:
+
+![Wireframe visual de Práctica 01: Tracker Reactivo SPA](../assets/tracker-spa-wireframe.svg)
+
+---
+
 ## 🛠️ Especificaciones Técnicas y Fases de Desarrollo
 
 ### Fase 1: Creación del Proyecto y Layout SPA
@@ -130,7 +138,7 @@ export class TrackerService {
 El servicio debe implementar las siguientes 5 capacidades:
 
 #### 1. Lectura Defensiva con Fallback Inicial
-Declara fuera de la clase la función `loadFromLocalStorage()` que intente leer la clave `'tracker_items'` de `localStorage`. Si está vacía o se produce un error de lectura, debe retornar un array de al menos **3 elementos de prueba iniciales**.
+Declara fuera de la clase la función `loadFromLocalStorage()` que intente leer la clave `'tracker_items'` de `localStorage`. Si está vacía o se produce un error de lectura, debe devolver un array de al menos **3 elementos de prueba iniciales**.
 
 #### 2. Estado Maestro con `signal()`
 Define la señal reactiva central inicializada con la lectura del almacenamiento local:

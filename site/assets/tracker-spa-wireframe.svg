@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 680" width="880" height="680" role="img" aria-labelledby="title desc" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <title id="title">Wireframe visual de Práctica 01: Tracker Reactivo SPA</title>
+  <desc id="desc">Diagrama wireframe que muestra las dos vistas de la SPA (/home y /tracker), la barra de navegación, los componentes Smart y Dumb con sus inputs y outputs, y el servicio singleton TrackerService con Signals, computed y effect hacia localStorage.</desc>
+
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="880" height="680" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Barra de navegador -->
+  <rect x="0" y="0" width="880" height="36" rx="14" fill="#e2e8f0" />
+  <rect x="0" y="22" width="880" height="14" fill="#e2e8f0" />
+  <circle cx="22" cy="18" r="5.5" fill="#f87171" />
+  <circle cx="40" cy="18" r="5.5" fill="#fbbf24" />
+  <circle cx="58" cy="18" r="5.5" fill="#4ade80" />
+  <rect x="90" y="7" width="380" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="104" y="22" font-size="11.5" fill="#475569">localhost:4200/tracker  (rutas: /home · /tracker · ** → /home)</text>
+
+  <!-- 1. AppComponent (Shell + Navbar fijo) -->
+  <rect x="18" y="48" width="844" height="492" rx="10" fill="#ffffff" stroke="#475569" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="30" y="38" width="350" height="22" rx="5" fill="#334155" />
+  <text x="40" y="53" font-size="11.5" font-weight="700" fill="#ffffff">AppComponent (&lt;app-navbar /&gt; + &lt;router-outlet /&gt;)</text>
+
+  <!-- 1A. NavbarComponent -->
+  <rect x="34" y="68" width="812" height="42" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+  <text x="48" y="93" font-size="11" font-weight="700" fill="#38bdf8">&lt;app-navbar /&gt;</text>
+
+  <rect x="165" y="77" width="115" height="24" rx="4" fill="#1e293b" />
+  <text x="222" y="93" text-anchor="middle" font-size="10.5" fill="#cbd5e1">Home (/home)</text>
+
+  <rect x="292" y="77" width="130" height="24" rx="4" fill="#2563eb" />
+  <text x="357" y="93" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">Tracker (/tracker)</text>
+
+  <text x="832" y="93" text-anchor="end" font-size="10" fill="#94a3b8">routerLink · routerLinkActive="active" · exact: true</text>
+
+  <!-- 2A. Vista /home (Resumen compacto) -->
+  <rect x="34" y="124" width="812" height="92" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2" />
+  <rect x="46" y="114" width="430" height="20" rx="5" fill="#4f46e5" />
+  <text x="56" y="128" font-size="10.5" font-weight="700" fill="#ffffff">Vista 1 · HomePageComponent (/home) — Lee computed() de TrackerService</text>
+
+  <!-- Dashboard Cards (/home) -->
+  <rect x="52" y="144" width="246" height="58" rx="7" fill="#ffffff" stroke="#a5b4fc" stroke-width="1.5" />
+  <text x="66" y="164" font-size="10.5" font-weight="700" fill="#4338ca">Total de elementos</text>
+  <text x="66" y="186" font-size="15" font-weight="800" fill="#1e1b4b">3</text>
+  <text x="284" y="186" text-anchor="end" font-size="10" fill="#6366f1">totalItems()</text>
+
+  <rect x="316" y="144" width="246" height="58" rx="7" fill="#ffffff" stroke="#a5b4fc" stroke-width="1.5" />
+  <text x="330" y="164" font-size="10.5" font-weight="700" fill="#047857">Completados</text>
+  <text x="330" y="186" font-size="15" font-weight="800" fill="#064e3b">1</text>
+  <text x="548" y="186" text-anchor="end" font-size="10" fill="#059669">completedCount()</text>
+
+  <rect x="580" y="144" width="248" height="58" rx="7" fill="#ffffff" stroke="#a5b4fc" stroke-width="1.5" />
+  <text x="594" y="164" font-size="10.5" font-weight="700" fill="#b45309">Valor acumulado (h / kg / €)</text>
+  <text x="594" y="186" font-size="15" font-weight="800" fill="#78350f">145</text>
+  <text x="814" y="186" text-anchor="end" font-size="10" fill="#d97706">totalValue()</text>
+
+  <!-- 2B. Vista /tracker (Smart Container) -->
+  <rect x="34" y="234" width="812" height="292" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="46" y="224" width="490" height="21" rx="5" fill="#d97706" />
+  <text x="56" y="238" font-size="11" font-weight="700" fill="#ffffff">Vista 2 · TrackerPageComponent (/tracker · Smart) — Orquesta Servicio e Hijos</text>
+
+  <!-- Hijo Izquierdo: ItemAddComponent (Dumb) -->
+  <rect x="52" y="256" width="350" height="254" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="66" y="276" font-size="11.5" font-weight="700" fill="#0369a1">&lt;app-item-add /&gt; (Dumb · Emisor)</text>
+  <text x="66" y="292" font-size="10" fill="#0284c7">Preview reactivo: "Agregando: {{ title() }}"</text>
+
+  <rect x="66" y="304" width="322" height="28" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.5" />
+  <text x="78" y="322" font-size="10.5" fill="#475569">title: [ Hades II ]  (signal)</text>
+
+  <rect x="66" y="338" width="322" height="28" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.5" />
+  <text x="78" y="356" font-size="10.5" fill="#475569">category: [ PC ]  (signal)</text>
+
+  <rect x="66" y="372" width="322" height="28" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.5" />
+  <text x="78" y="390" font-size="10.5" fill="#475569">value: [ 25 ]  (número · signal)</text>
+
+  <rect x="66" y="408" width="146" height="28" rx="6" fill="#0284c7" />
+  <text x="139" y="426" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">+ Añadir elemento</text>
+  <text x="224" y="426" font-size="9.5" fill="#0369a1">Valida y limpia campos</text>
+
+  <rect x="66" y="446" width="322" height="50" rx="6" fill="#bae6fd" />
+  <text x="227" y="463" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0c4a6e">↑ Emite al Padre · output&lt;Item&gt;()</text>
+  <text x="227" y="481" text-anchor="middle" font-size="10" fill="#0369a1">(onNewItem)="trackerService.addItem($event)"</text>
+
+  <!-- Flecha central entre columnas -->
+  <text x="424" y="366" text-anchor="middle" font-size="20" font-weight="700" fill="#d97706">→</text>
+  <text x="424" y="384" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">Vía</text>
+  <text x="424" y="396" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">Servicio</text>
+
+  <!-- Hijo Derecho: ItemListComponent (Dumb) -->
+  <rect x="446" y="256" width="382" height="254" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" />
+  <text x="460" y="276" font-size="11.5" font-weight="700" fill="#6b21a8">&lt;app-item-list /&gt; (Dumb · Presentacional)</text>
+  <text x="460" y="292" font-size="10" fill="#7e22ce">@for (item of items(); track item.id) ... @empty</text>
+
+  <!-- Fila 1 completada -->
+  <rect x="460" y="304" width="354" height="32" rx="5" fill="#dcfce7" stroke="#4ade80" stroke-width="1.4" />
+  <text x="472" y="324" font-size="10.5" fill="#166534" text-decoration="line-through">1. Elden Ring · PC · 85</text>
+  <rect x="738" y="310" width="30" height="20" rx="4" fill="#16a34a" />
+  <text x="753" y="324" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">✓</text>
+  <rect x="774" y="310" width="30" height="20" rx="4" fill="#ef4444" />
+  <text x="789" y="324" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">✕</text>
+
+  <!-- Fila 2 pendiente -->
+  <rect x="460" y="342" width="354" height="32" rx="5" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2" />
+  <text x="472" y="362" font-size="10.5" fill="#334155">2. Hollow Knight · Switch · 40</text>
+  <rect x="738" y="348" width="30" height="20" rx="4" fill="#e2e8f0" />
+  <text x="753" y="362" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">○</text>
+  <rect x="774" y="348" width="30" height="20" rx="4" fill="#ef4444" />
+  <text x="789" y="362" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">✕</text>
+
+  <!-- Nota estilos dinámicos y @empty -->
+  <text x="462" y="392" font-size="9.5" fill="#6b21a8">Estilos dinámicos: [class.table-success]="item.isCompleted" | @empty si 0 items</text>
+
+  <!-- Callouts Input / Output ItemList -->
+  <rect x="460" y="404" width="354" height="40" rx="6" fill="#e9d5ff" />
+  <text x="637" y="420" text-anchor="middle" font-size="10" font-weight="700" fill="#581c87">↓ Recibe del Padre · input.required&lt;Item[]&gt;()</text>
+  <text x="637" y="435" text-anchor="middle" font-size="10" fill="#6b21a8">[items]="trackerService.items()"</text>
+
+  <rect x="460" y="450" width="354" height="46" rx="6" fill="#fae8ff" stroke="#d946ef" stroke-width="1" />
+  <text x="637" y="467" text-anchor="middle" font-size="10" font-weight="700" fill="#86198f">↑ Emite al Padre · output&lt;string | number&gt;()</text>
+  <text x="637" y="484" text-anchor="middle" font-size="9.8" fill="#a21caf">(onToggle)="...toggleItem($event)" · (onDelete)="...deleteItem($event)"</text>
+
+  <!-- 3. TrackerService (@Service() · Singleton + localStorage) -->
+  <rect x="18" y="562" width="844" height="104" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2" />
+  <rect x="30" y="551" width="380" height="22" rx="5" fill="#059669" />
+  <text x="40" y="566" font-size="11.5" font-weight="700" fill="#ffffff">TrackerService (@Service() · Singleton · Capa de Estado)</text>
+
+  <rect x="34" y="582" width="400" height="70" rx="7" fill="#ffffff" stroke="#34d399" stroke-width="1.5" />
+  <text x="48" y="601" font-size="11" font-weight="700" fill="#065f46">items = signal&lt;Item[]&gt;(loadFromLocalStorage())</text>
+  <text x="48" y="619" font-size="10" fill="#475569">• addItem(item) → .update(prev =&gt; [...prev, item])</text>
+  <text x="48" y="636" font-size="10" fill="#475569">• toggleItem(id) (.map)  ·  deleteItem(id) (.filter)</text>
+
+  <rect x="450" y="582" width="396" height="70" rx="7" fill="#ffffff" stroke="#34d399" stroke-width="1.5" />
+  <text x="464" y="601" font-size="11" font-weight="700" fill="#065f46">computed() + effect() → localStorage</text>
+  <text x="464" y="619" font-size="10" fill="#475569">• totalItems(), completedCount(), totalValue()</text>
+  <text x="464" y="636" font-size="10" fill="#475569">• effect(): localStorage.setItem('tracker_items', JSON...)</text>
+
+  <!-- Flechas entre TrackerPage y TrackerService -->
+  <line x1="227" y1="526" x2="227" y2="562" stroke="#059669" stroke-width="2" />
+  <polygon points="227,562 222,552 232,552" fill="#059669" />
+
+  <line x1="637" y1="562" x2="637" y2="526" stroke="#059669" stroke-width="2" />
+  <polygon points="637,526 632,536 642,536" fill="#059669" />
+</svg>

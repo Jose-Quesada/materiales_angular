@@ -32,7 +32,7 @@ flowchart TD
 
     subgraph CapaServicio ["3. CountryService (@Service()) con Caché Map"]
         Nav --> CheckCache{"<b>¿Existe la clave en el Map?</b>"}
-        CheckCache -- "Sí (Cache Hit)" --> ReturnMemory["<b>Retorno inmediato: of(cache.get(key))</b><br/>0ms latencia, 0 peticiones HTTP"]
+        CheckCache -- "Sí (Cache Hit)" --> ReturnMemory["<b>Devolución inmediata: of(cache.get(key))</b><br/>0ms latencia, 0 peticiones HTTP"]
         CheckCache -- "No (Cache Miss)" --> FetchHTTP["<b>HTTP GET a REST Countries</b><br/>Guarda con <code>tap(countries => cache.set(...))</code>"]
     end
 
@@ -372,7 +372,7 @@ En la primera fase declaramos `selectedRegion = signal<Region | null>(null)` y e
 
 ## 4. Preservación de Estado en la URL con Query Parameters (en 3 Fases)
 
-Si el usuario busca `"madrid"`, entra a ver la ficha de España (`/country/by/ESP`) y pulsa **Regresar**, Angular destruye y recrea `ByCapitalPage` desde cero, dejando el buscador vacío.
+Si el usuario busca `"madrid"`, entra a ver la ficha de España (`/country/by/ESP`) y pulsa **Volver**, Angular destruye y recrea `ByCapitalPage` desde cero, dejando el buscador vacío.
 
 Podríamos pensar en guardar un `lastQuery` en `CountryService`, pero esa solución **no resuelve recargas (`F5`) ni permite compartir un enlace con resultados** a otro usuario. La solución arquitectónica correcta es reflejar el filtro activo en los **Query Parameters de la URL** (`/country/by-capital?query=madrid`).
 

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" width="820" height="340" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Fondo -->
+  <rect x="0" y="0" width="820" height="340" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Lado Izquierdo: ANTES (Fase 1 monolítico) -->
+  <rect x="18" y="24" width="230" height="296" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="2" />
+  <rect x="30" y="13" width="206" height="22" rx="5" fill="#e11d48" />
+  <text x="133" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">Fase 1: Todo en ByCapitalPage</text>
+
+  <rect x="34" y="54" width="198" height="72" rx="7" fill="#ffffff" stroke="#fda4af" stroke-width="1.5" />
+  <text x="133" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#9f1239">&lt;input /&gt; + &lt;button&gt;</text>
+  <text x="133" y="96" text-anchor="middle" font-size="10" fill="#64748b">Acoplado a esta página</text>
+  <text x="133" y="112" text-anchor="middle" font-size="9.5" fill="#be123c">(no reutilizable en Por País)</text>
+
+  <rect x="34" y="142" width="198" height="122" rx="7" fill="#ffffff" stroke="#fda4af" stroke-width="1.5" />
+  <text x="133" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#9f1239">&lt;table&gt; DaisyUI</text>
+  <text x="133" y="204" text-anchor="middle" font-size="10" fill="#64748b">Habría que copiar y pegar</text>
+  <text x="133" y="220" text-anchor="middle" font-size="10" fill="#64748b">en 3 páginas distintas</text>
+
+  <text x="133" y="298" text-anchor="middle" font-size="10.5" font-weight="700" fill="#be123c">❌ Código duplicado</text>
+
+  <!-- Flecha de Refactorización -->
+  <text x="278" y="164" text-anchor="middle" font-size="22" font-weight="800" fill="#4f46e5">⇒</text>
+  <text x="278" y="184" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4f46e5">Extracción</text>
+  <text x="278" y="197" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4f46e5">Atómica</text>
+
+  <!-- Lado Derecho: DESPUÉS (Fase 2 con Input / Output) -->
+  <rect x="310" y="24" width="492" height="296" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="322" y="13" width="350" height="22" rx="5" fill="#d97706" />
+  <text x="334" y="28" font-size="11" font-weight="700" fill="#ffffff">Fase 2: ByCapitalPage (Padre · Orquestador)</text>
+
+  <!-- Bloque Padre arriba -->
+  <rect x="328" y="48" width="456" height="44" rx="7" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="342" y="67" font-size="11" font-weight="700" fill="#92400e">onSearch(value: string) { console.log({ value }); }</text>
+  <text x="342" y="83" font-size="10" fill="#78350f">Envía configuración hacia abajo (input) y escucha eventos hacia arriba (output)</text>
+
+  <!-- Flecha INPUT (Padre -> SearchInput) -->
+  <line x1="395" y1="92" x2="395" y2="146" stroke="#0284c7" stroke-width="2.2" />
+  <polygon points="395,148 389,138 401,138" fill="#0284c7" />
+  <rect x="324" y="104" width="142" height="30" rx="5" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" />
+  <text x="395" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0369a1">↓ input() · Entrada</text>
+  <text x="395" y="129" text-anchor="middle" font-size="9" fill="#0284c7">placeholder="Buscar por capital"</text>
+
+  <!-- Flecha OUTPUT (SearchInput -> Padre) -->
+  <line x1="510" y1="148" x2="510" y2="94" stroke="#059669" stroke-width="2.2" />
+  <polygon points="510,92 504,102 516,102" fill="#059669" />
+  <rect x="472" y="104" width="136" height="30" rx="5" fill="#ecfdf5" stroke="#059669" stroke-width="1" />
+  <text x="540" y="117" text-anchor="middle" font-size="9.5" font-weight="700" fill="#047857">↑ output() · Evento</text>
+  <text x="540" y="129" text-anchor="middle" font-size="9" fill="#059669">(value)="onSearch($event)"</text>
+
+  <!-- Hijo 1: SearchInput -->
+  <rect x="328" y="150" width="270" height="152" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" />
+  <text x="342" y="170" font-size="11" font-weight="700" fill="#0369a1">&lt;country-search-input /&gt;</text>
+  <text x="342" y="186" font-size="10" fill="#0284c7">SearchInput (Reutilizable)</text>
+  <rect x="342" y="198" width="242" height="36" rx="5" fill="#ffffff" stroke="#7dd3fc" stroke-width="1.2" />
+  <text x="352" y="213" font-size="10" font-weight="600" fill="#0369a1">placeholder = input('Buscar')</text>
+  <text x="352" y="227" font-size="10" font-weight="600" fill="#047857">value = output&lt;string&gt;()</text>
+  <rect x="342" y="244" width="150" height="24" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="350" y="260" font-size="9.5" fill="#94a3b8">[placeholder]="placeholder()"</text>
+  <rect x="498" y="244" width="86" height="24" rx="4" fill="#0284c7" />
+  <text x="541" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">Buscar</text>
+  <text x="463" y="290" text-anchor="middle" font-size="9.5" fill="#0c4a6e">value.emit(txtSearch.value)</text>
+
+  <!-- Hijo 2: CountryList -->
+  <rect x="614" y="150" width="170" height="152" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2" />
+  <text x="626" y="170" font-size="11" font-weight="700" fill="#6b21a8">&lt;country-list /&gt;</text>
+  <text x="626" y="186" font-size="10" fill="#7e22ce">CountryList</text>
+  <rect x="626" y="198" width="146" height="68" rx="5" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2" />
+  <text x="699" y="220" text-anchor="middle" font-size="10.5" font-weight="700" fill="#581c87">Tabla DaisyUI</text>
+  <text x="699" y="238" text-anchor="middle" font-size="9.5" fill="#64748b">Se reutilizará en</text>
+  <text x="699" y="252" text-anchor="middle" font-size="9.5" fill="#64748b">Capital, País y Región</text>
+  <text x="699" y="290" text-anchor="middle" font-size="9.5" font-weight="600" fill="#6b21a8">En Sec. 10: [countries]</text>
+</svg>

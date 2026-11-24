@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 490" role="img" aria-labelledby="title desc">
+  <title id="title">Arquitectura visual de PipesApp: Navbar dinámica, RouterOutlet y Proyección de Contenido</title>
+  <desc id="desc">Diagrama wireframe de PipesApp mostrando el contenedor principal, el menú app-navbar generado desde app.routes.ts, el router-outlet cargando páginas en modo lazy y el componente app-card con proyección de contenido mediante ng-content.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .shell { fill: #1e293b; stroke: #475569; stroke-width: 2; rx: 14; }
+      .navbar { fill: #282a36; stroke: #6272a4; stroke-width: 2; rx: 10; }
+      .outlet { fill: #161d2f; stroke: #38bdf8; stroke-width: 2; stroke-dasharray: 8 5; rx: 12; }
+      .card { fill: #282a36; stroke: #bd93f9; stroke-width: 2; rx: 10; }
+      .slot { fill: #1e293b; stroke: #50fa7b; stroke-width: 1.8; stroke-dasharray: 6 4; rx: 8; }
+      .pill { fill: #334155; rx: 6; }
+      .pill-active { fill: #ff79c6; rx: 6; }
+      .badge-blue { fill: #0284c7; rx: 6; }
+      .badge-purple { fill: #7c3aed; rx: 6; }
+      .badge-green { fill: #059669; rx: 6; }
+      .text-main { fill: #f8fafc; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 600; }
+      .text-sub { fill: #cbd5e1; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 12px; }
+      .text-dark { fill: #0f172a; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; }
+      .text-code { fill: #8be9fd; font-family: Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 600; }
+      .text-green { fill: #50fa7b; font-family: Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 600; }
+      .text-pink { fill: #ff79c6; font-family: Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 600; }
+      .title-top { fill: #f8fafc; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 18px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect class="bg" width="920" height="490" rx="16" />
+
+  <!-- Título superior -->
+  <text x="28" y="36" class="title-top">PipesApp — Layout Principal, Rutas Dinámicas y Proyección de Contenido</text>
+  <text x="28" y="56" class="text-sub">Tema DaisyUI: dracula  |  Contenedor centrado: &lt;main class="mx-auto max-w-7xl px-2 pt-2"&gt;</text>
+
+  <!-- App Shell (<main>) -->
+  <rect class="shell" x="28" y="74" width="864" height="392" />
+  <rect class="badge-blue" x="44" y="88" width="160" height="24" />
+  <text x="56" y="104" class="text-main" style="font-size:12px;">app.html (&lt;main&gt;)</text>
+
+  <!-- Navbar -->
+  <rect class="navbar" x="48" y="124" width="824" height="68" />
+  <text x="64" y="145" class="text-code">&lt;app-navbar /&gt;</text>
+  <text x="180" y="145" class="text-sub">Lee app.routes.ts dinámicamente (@for route of routes)</text>
+
+  <!-- Route Pills -->
+  <rect class="pill-active" x="64" y="156" width="150" height="26" />
+  <text x="86" y="173" class="text-dark">Pipes Básicos (/basic)</text>
+
+  <rect class="pill" x="226" y="156" width="170" height="26" />
+  <text x="244" y="173" class="text-sub">Numbers Pipe (/numbers)</text>
+
+  <rect class="pill" x="408" y="156" width="210" height="26" />
+  <text x="424" y="173" class="text-sub">Pipes no tan comunes (/uncommon)</text>
+
+  <rect class="pill" x="630" y="156" width="214" height="26" />
+  <text x="646" y="173" class="text-sub">Pipes Personalizados (/custom)</text>
+
+  <!-- Router Outlet -->
+  <rect class="outlet" x="48" y="208" width="824" height="242" />
+  <text x="64" y="232" class="text-code">&lt;router-outlet /&gt;</text>
+  <text x="194" y="232" class="text-sub">Carga perezosa (loadComponent + export default class)</text>
+
+  <!-- Left box: Páginas 12 -->
+  <rect class="card" x="68" y="248" width="372" height="184" />
+  <rect class="badge-purple" x="84" y="262" width="176" height="22" />
+  <text x="94" y="277" class="text-main" style="font-size:12px;">Sección 12: Pipes Nativos</text>
+
+  <text x="84" y="305" class="text-main">• BasicPage (/basic)</text>
+  <text x="96" y="322" class="text-sub">uppercase, lowercase, titlecase, date + LocaleService</text>
+
+  <text x="84" y="346" class="text-main">• NumbersPage (/numbers)</text>
+  <text x="96" y="363" class="text-sub">number (DecimalPipe), currency, percent</text>
+
+  <text x="84" y="387" class="text-main">• UncommonPage (/uncommon)</text>
+  <text x="96" y="404" class="text-sub">i18nSelect, i18nPlural, slice, json, keyvalue, async</text>
+
+  <!-- Right box: Card Content Projection -->
+  <rect class="card" x="462" y="248" width="390" height="184" />
+  <rect class="badge-green" x="478" y="262" width="234" height="22" />
+  <text x="488" y="277" class="text-main" style="font-size:12px;">Reutilización: &lt;app-card [title]&gt;</text>
+
+  <text x="478" y="306" class="text-pink">title = input.required&lt;string&gt;()</text>
+  <text x="478" y="324" class="text-sub">Renderiza la cabecera &lt;h2 class="card-title"&gt;</text>
+
+  <!-- ng-content slot -->
+  <rect class="slot" x="478" y="336" width="358" height="80" />
+  <text x="494" y="358" class="text-green">&lt;ng-content /&gt;  (Proyección de Contenido)</text>
+  <text x="494" y="378" class="text-sub">El componente padre inyecta libremente párrafos,</text>
+  <text x="494" y="396" class="text-sub">botones, bloques &lt;pre&gt;, listas @for o @if (obs | async)</text>
+</svg>

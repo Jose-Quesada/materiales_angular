@@ -319,7 +319,7 @@ Actualizamos `CountryList` para recibir `countries = input.required<Country[]>()
         <thead>
           <tr>
             <th>#</th>
-            <th>Ícono</th>
+            <th>Icono</th>
             <th>Bandera</th>
             <th>Nombre</th>
             <th>Capital</th>
@@ -544,7 +544,7 @@ En lugar de duplicar bloques `@if` de carga/error/vacío en cada página, delega
         <thead>
           <tr>
             <th>#</th>
-            <th>Ícono</th>
+            <th>Icono</th>
             <th>Bandera</th>
             <th>Nombre</th>
             <th>Capital</th>
@@ -656,7 +656,7 @@ Aunque consultemos un único código Alpha (`/alpha/ESP`), la API de REST Countr
 ### 5.2. Componente reutilizable `NotFound` y servicio `Location`
 
 Creamos `src/app/shared/components/not-found/` para mostrar una vista amigable cuando el usuario introduce un código de país inexistente.  
-Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angular/common` y ejecutamos **`this.location.back()`** (historial nativo del navegador). Así el botón devuelve al usuario exactamente a la pantalla desde la que vino (sea *Por capital*, *Por país* o *Por región*), manteniendo `NotFound` 100% reutilizable:
+Para el enlace **"Volver"**, inyectamos el servicio **`Location`** de `@angular/common` y ejecutamos **`this.location.back()`** (historial nativo del navegador). Así el botón devuelve al usuario exactamente a la pantalla desde la que vino (sea *Por capital*, *Por país* o *Por región*), manteniendo `NotFound` 100% reutilizable:
 
 === "not-found.ts"
     ```typescript title="src/app/shared/components/not-found/not-found.ts" hl_lines="1 10 13"
@@ -703,7 +703,7 @@ Para el enlace **"Regresar"**, inyectamos el servicio **`Location`** de `@angula
         </g>
       </svg>
       <h1>No se encontró el país</h1>
-      <a (click)="goBack()" class="link-primary cursor-pointer">Regresar</a>
+      <a (click)="goBack()" class="link-primary cursor-pointer">Volver</a>
     </section>
     ```
 

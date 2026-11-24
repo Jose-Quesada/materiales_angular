@@ -51,7 +51,7 @@
   <!-- Cabecera tabla -->
   <rect x="86" y="282" width="648" height="22" rx="4" fill="#e9d5ff" />
   <text x="102" y="297" font-size="10.5" font-weight="700" fill="#581c87">#</text>
-  <text x="145" y="297" font-size="10.5" font-weight="700" fill="#581c87">Ícono</text>
+  <text x="145" y="297" font-size="10.5" font-weight="700" fill="#581c87">Icono</text>
   <text x="215" y="297" font-size="10.5" font-weight="700" fill="#581c87">Bandera</text>
   <text x="310" y="297" font-size="10.5" font-weight="700" fill="#581c87">Nombre</text>
   <text x="435" y="297" font-size="10.5" font-weight="700" fill="#581c87">Capital</text>

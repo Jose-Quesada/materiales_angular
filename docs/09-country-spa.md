@@ -187,17 +187,41 @@ En el proyecto moderno con **Tailwind CSS v4 + DaisyUI v5** (estándar actual en
     @tailwind utilities;
     ```
 
+#### Verificación rápida: comprobar que Tailwind CSS y DaisyUI funcionan
+
+Antes de continuar, sustituye temporalmente el contenido de `src/app/app.html` por este bloque de prueba (y reinicia `ng serve` si ya lo tenías arrancado):
+
+```html title="src/app/app.html (Prueba temporal de Tailwind + DaisyUI)"
+<div class="p-8 space-y-4">
+  <!-- Clases puras de Tailwind CSS -->
+  <h1 class="text-3xl font-bold underline">Prueba Tailwind + DaisyUI</h1>
+
+  <!-- Componentes y tema 'sunset' de DaisyUI -->
+  <div class="flex gap-3">
+    <button class="btn btn-primary">Botón Primary</button>
+    <button class="btn btn-secondary">Botón Secondary</button>
+    <span class="badge badge-accent self-center">Tema sunset activo</span>
+  </div>
+</div>
+```
+
+**Qué debes ver en `http://localhost:4200`:**
+
+* Fondo oscuro propio del tema **`sunset`** de DaisyUI.
+* El título grande, en negrita y subrayado (confirma que **Tailwind CSS** compila).
+* Los botones redondeados con colores coral/rosa y la etiqueta `badge` (confirma que **DaisyUI** está activo). Si solo ves botones grises sin estilo, detén la terminal (++ctrl+c++) y ejecuta de nuevo `ng serve`.
+
 ### 1.3. Cascarón global con *Sticky Footer* en `App`
 
 Antes de crear las páginas, preparamos `src/app/app.html` con un contenedor **Flexbox vertical** que garantice que el pie de página (`<app-footer />`) quede siempre pegado en la parte inferior de la pantalla aunque la página tenga pocos resultados:
 
-```html title="src/app/app.html" hl_lines="1 4 6"
+```html title="src/app/app.html" hl_lines="1 4"
 <main class="m-auto flex-grow flex flex-col min-h-screen">
   <router-outlet />
 
   <div class="flex-1 flex-grow"></div>
 
-  <app-footer />
+  <!-- En el punto 4.2 crearemos e insertaremos aquí <app-footer /> -->
 </main>
 ```
 
@@ -219,7 +243,7 @@ src/app/
 │   │   └── top-menu/
 │   ├── interfaces/               # Contratos y tipos (Sección 10 y 11)
 │   ├── layouts/                  # Layouts contenedores con outlet hijo
-│   │   └── CountryLayout/
+│   │   └── country-layout/
 │   ├── pages/                    # Páginas asociadas a una ruta
 │   │   ├── by-capital-page/
 │   │   ├── by-country-page/
@@ -239,7 +263,14 @@ src/app/
 
 ### 2.1. Creación de `HomePage` y `ByCapitalPage`
 
-Creamos inicialmente dos páginas base para conectar las primeras rutas:
+Generamos inicialmente las dos páginas base desde la terminal con Angular CLI:
+
+```bash
+ng g c shared/pages/home-page --skip-tests --inline-style
+ng g c country/pages/by-capital-page --skip-tests --inline-style
+```
+
+El CLI generará sus archivos `.ts` y `.html` correspondientes:
 
 === "HomePage"
     ```typescript title="src/app/shared/pages/home-page/home-page.ts"
@@ -265,9 +296,19 @@ Creamos inicialmente dos páginas base para conectar las primeras rutas:
     export class ByCapitalPage {}
     ```
 
-### 2.2. Enrutador Global (`src/app/app.routes.ts`)
+### 2.2. Enrutador Global (`src/app/app.routes.ts`) y Archivo Base `country.routes.ts`
 
-En `src/app/app.routes.ts` cargamos la portada (`HomePage`) de forma ansiosa (*eager*) al entrar en la raíz `''`, y delegamos toda la sección `/country` mediante carga perezosa (`loadChildren`):
+Antes de referenciar `./country/country.routes` desde `app.routes.ts` (para que TypeScript no marque error de módulo inexistente), creamos el archivo vacío base **`src/app/country/country.routes.ts`** (que completaremos en el siguiente apartado con `CountryLayout` y sus rutas hijas):
+
+```typescript title="src/app/country/country.routes.ts (Base inicial)"
+import { Routes } from '@angular/router';
+
+export const countryRoutes: Routes = [];
+
+export default countryRoutes;
+```
+
+Ahora sí, en `src/app/app.routes.ts` cargamos la portada (`HomePage`) de forma ansiosa (*eager*) al entrar en la raíz `''`, y delegamos toda la sección `/country` mediante carga perezosa (`loadChildren`):
 
 ```typescript title="src/app/app.routes.ts" hl_lines="5-12"
 import { Routes } from '@angular/router';
@@ -299,37 +340,32 @@ export const routes: Routes = [
 
 Un **Layout Component** es un componente cascarón diseñado para envolver un conjunto de rutas relacionadas: renderiza elementos fijos comunes (como el menú superior de navegación) e incluye su **propio `<router-outlet />` interno** donde se inyecta la página hija activa.
 
-```text
-[CountryLayout] -> ruta padre '' dentro de /country
-┌────────────────────────────────────────────────────────┐
-│  <country-top-menu />  (Por capital | Por país | ...)  │
-├────────────────────────────────────────────────────────┤
-│  <section class="px-4">                                │
-│    <router-outlet />   <-- Aquí se carga by-capital,   │
-│                            by-country, by-region, etc. │
-│  </section>                                            │
-└────────────────────────────────────────────────────────┘
-```
+![Esquema de CountryLayout con menú fijo y router-outlet interno para rutas hijas](assets/country-layout-outlet-diagram.svg)
 
 ### 3.1. Creación de `CountryLayout`
 
-Creamos el componente en `src/app/country/layouts/CountryLayout/CountryLayout.component.ts`:
+Generamos el componente de layout con Angular CLI:
 
-```typescript title="src/app/country/layouts/CountryLayout/CountryLayout.component.ts" hl_lines="2 7"
+```bash
+ng g c country/layouts/country-layout --skip-tests --inline-style
+```
+
+Editamos `src/app/country/layouts/country-layout/country-layout.ts` y su plantilla (el menú `<country-top-menu />` lo crearemos y conectaremos en el punto 5):
+
+```typescript title="src/app/country/layouts/country-layout/country-layout.ts" hl_lines="2 6"
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TopMenu } from '../../components/top-menu/top-menu';
 
 @Component({
   selector: 'app-country-layout',
-  imports: [RouterOutlet, TopMenu],
-  templateUrl: './CountryLayout.component.html',
+  imports: [RouterOutlet],
+  templateUrl: './country-layout.html',
 })
 export class CountryLayout {}
 ```
 
-```html title="src/app/country/layouts/CountryLayout/CountryLayout.component.html" hl_lines="1 4"
-<country-top-menu />
+```html title="src/app/country/layouts/country-layout/country-layout.html" hl_lines="4"
+<!-- En el punto 5 añadiremos aquí <country-top-menu /> -->
 
 <section class="px-4">
   <router-outlet />
@@ -338,12 +374,12 @@ export class CountryLayout {}
 
 ### 3.2. Archivo de Rutas por Funcionalidad: `country.routes.ts` (Fase 1)
 
-Definimos inicialmente la ruta padre que monta `CountryLayout` y su arreglo `children` con la primera ruta hija (`by-capital`) y la redirección por defecto:
+Definimos inicialmente la ruta padre que monta `CountryLayout` y su array `children` con la primera ruta hija (`by-capital`) y la redirección por defecto:
 
 ```typescript title="src/app/country/country.routes.ts (Fase 1)" hl_lines="7-18 22"
 import { Routes } from '@angular/router';
 import { ByCapitalPage } from './pages/by-capital-page/by-capital-page';
-import { CountryLayout } from './layouts/CountryLayout/CountryLayout.component';
+import { CountryLayout } from './layouts/country-layout/country-layout';
 
 export const countryRoutes: Routes = [
   {
@@ -373,7 +409,7 @@ Al navegar a `/country`, Angular entra en `countryRoutes`, carga el `CountryLayo
 
 ### 4.1. Portada de Bienvenida (`HomePage`)
 
-Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui.com/components/hero/) en `home-page.html` y añadimos `RouterLink` en el botón **Empezar** para navegar hacia `/country`:
+Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui.com/components/hero/#hero-with-overlay-image) en `home-page.html` y añadimos `RouterLink` en el botón **Empezar** para navegar hacia `/country`:
 
 === "home-page.ts"
     ```typescript title="src/app/shared/pages/home-page/home-page.ts" hl_lines="2 6"
@@ -413,7 +449,13 @@ Utilizamos el componente **Hero with overlay** de [DaisyUI Hero](https://daisyui
 
 ### 4.2. Pie de Página Reutilizable (`Footer`)
 
-Creamos `Footer` en `src/app/shared/components/footer/` tomando la plantilla estándar de DaisyUI Footer y lo registramos en `App`:
+Generamos el componente `Footer` desde la terminal:
+
+```bash
+ng g c shared/components/footer --skip-tests --inline-style
+```
+
+Tomamos la plantilla estándar de [DaisyUI Footer (*Footer with a logo section*)](https://daisyui.com/components/footer/#footer-with-a-logo-section) y lo registramos en `App`:
 
 === "footer.ts"
     ```typescript title="src/app/shared/components/footer/footer.ts"
@@ -429,7 +471,7 @@ Creamos `Footer` en `src/app/shared/components/footer/` tomando la plantilla est
 
 === "footer.html"
     ```html title="src/app/shared/components/footer/footer.html"
-    <footer class="footer bg-base-200 text-base-content p-10">
+    <footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
       <aside>
         <svg
           width="50"
@@ -473,7 +515,7 @@ Creamos `Footer` en `src/app/shared/components/footer/` tomando la plantilla est
     </footer>
     ```
 
-=== "app.ts"
+=== "app.ts y app.html"
     ```typescript title="src/app/app.ts" hl_lines="3 7"
     import { Component } from '@angular/core';
     import { RouterOutlet } from '@angular/router';
@@ -487,18 +529,48 @@ Creamos `Footer` en `src/app/shared/components/footer/` tomando la plantilla est
     export class App {}
     ```
 
+    Y añadimos `<app-footer />` al final de `src/app/app.html`:
+
+    ```html title="src/app/app.html" hl_lines="6"
+    <main class="m-auto flex-grow flex flex-col min-h-screen">
+      <router-outlet />
+
+      <div class="flex-1 flex-grow"></div>
+
+      <app-footer />
+    </main>
+    ```
+
 ---
 
 ## 5. Menú Superior e Iconos SVG con Iconify (`TopMenu`)
 
-Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por región*), creamos `TopMenu` (`src/app/country/components/top-menu/`) utilizando el componente [DaisyUI Menu](https://daisyui.com/components/menu/) (`menu bg-base-200 sm:menu-horizontal rounded-box`) e iconos vectoriales SVG copiados directamente desde [Iconify](https://iconify.design/).
+Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por región*), generamos `TopMenu` con Angular CLI:
+
+```bash
+ng g c country/components/top-menu --skip-tests --inline-style --prefix=country
+```
+
+!!! tip "Uso de `--prefix=country` en Angular CLI"
+    Al añadir `--prefix=country`, el CLI genera directamente **`selector: 'country-top-menu'`** en lugar de `app-top-menu`, listo para usar como `<country-top-menu />` en `CountryLayout`.
+
+Utilizamos el componente [DaisyUI Menu (*Responsive: vertical en móvil, horizontal en escritorio*)](https://daisyui.com/components/menu/#responsive-vertical-on-small-screen-horizontal-on-large-screen) (`menu bg-base-200 sm:menu-horizontal rounded-box`) e iconos vectoriales SVG copiados directamente desde [Iconify](https://icon-sets.iconify.design/):
 
 * **Navegación declarativa:** cada enlace apunta a su ruta hija relativa (`routerLink="by-capital"`, `by-country`, `by-region`).
 * **Estado activo automático:** `routerLinkActive="btn-primary"` resalta en el color primario del tema `sunset` el botón cuya ruta coincide con la URL actual.
 * **Importaciones necesarias:** debemos importar `RouterLink` y `RouterLinkActive` de `@angular/router` en el `@Component` para que las directivas funcionen.
 
+!!! tip "🎨 Cómo trabajar con Iconify paso a paso"
+    **[Iconify](https://icon-sets.iconify.design/)** reúne más de 200.000 iconos vectoriales gratuitos (*Lucide*, *Heroicons*, *Material Design*, *FontAwesome*, *Tabler*...) listos para copiar como `<svg>` puro, **sin instalar paquetes `npm` ni cargar hojas de estilos externas** como hacíamos con FontAwesome.
+
+    1. Entra en [icon-sets.iconify.design](https://icon-sets.iconify.design/) y escribe en el buscador lo que necesites en inglés (por ejemplo: `city`, `globe`, `world` o `map`).
+    2. Haz clic sobre el icono elegido.
+    3. En la parte inferior, abre la pestaña **SVG**, ajusta el tamaño a `20` (`width="20" height="20"`) y copia el bloque `<svg>...</svg>`.
+    4. Pégalo directamente dentro del enlace `<a>` en `top-menu.html`.
+    5. **Truco del color (`currentColor`):** si el `<path>` usa `fill="currentColor"` o `stroke="currentColor"`, el icono adoptará automáticamente el color de texto del botón de DaisyUI (incluso cuando cambie al estar activo con `btn-primary`).
+
 === "top-menu.ts"
-    ```typescript title="src/app/country/components/top-menu/top-menu.ts" hl_lines="2 6"
+    ```typescript title="src/app/country/components/top-menu/top-menu.ts" hl_lines="2 5-6"
     import { Component } from '@angular/core';
     import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -571,6 +643,31 @@ Para navegar entre las pantallas de búsqueda (*Por capital*, *Por país* y *Por
     </nav>
     ```
 
+Ahora que `TopMenu` existe, lo importamos en `CountryLayout` y lo colocamos encima de su `<router-outlet />` interno:
+
+=== "country-layout.ts"
+    ```typescript title="src/app/country/layouts/country-layout/country-layout.ts" hl_lines="3 7"
+    import { Component } from '@angular/core';
+    import { RouterOutlet } from '@angular/router';
+    import { TopMenu } from '../../components/top-menu/top-menu';
+
+    @Component({
+      selector: 'app-country-layout',
+      imports: [RouterOutlet, TopMenu],
+      templateUrl: './country-layout.html',
+    })
+    export class CountryLayout {}
+    ```
+
+=== "country-layout.html"
+    ```html title="src/app/country/layouts/country-layout/country-layout.html" hl_lines="1"
+    <country-top-menu />
+
+    <section class="px-4">
+      <router-outlet />
+    </section>
+    ```
+
 ---
 
 ## 6. Inputs, Tablas y Componentización Progresiva (en 3 Fases)
@@ -582,10 +679,10 @@ Para que resulte fácil entender cómo evoluciona la interfaz desde un bloque r�
 
 ### Fase 1: Prototipado directo en `ByCapitalPage`
 
-En un primer momento maquetamos directamente dentro de `by-capital-page.html` tanto el buscador como la tabla de países usando DaisyUI:
+En un primer momento sustituimos todo el contenido inicial de `by-capital-page.html` para maquetar directamente tanto el buscador como la tabla de países usando DaisyUI:
 
 === "by-capital-page.html (Fase 1)"
-    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html (Prototipo inicial)" hl_lines="7-8 11 19-27"
+    ```html title="src/app/country/pages/by-capital-page/by-capital-page.html (Prototipo inicial completo)"
     <section class="flex flex-row gap-2 mt-2">
       <input
         type="text"
@@ -606,7 +703,7 @@ En un primer momento maquetamos directamente dentro de `by-capital-page.html` ta
         <thead>
           <tr>
             <th>#</th>
-            <th>Ícono</th>
+            <th>Icono</th>
             <th>Bandera</th>
             <th>Nombre</th>
             <th>Capital</th>
@@ -642,14 +739,27 @@ En un primer momento maquetamos directamente dentro de `by-capital-page.html` ta
 
 ### Fase 2: Tarea 1 — Extracción a `SearchInput` y `CountryList`
 
-Como **exactamente la misma caja de búsqueda** se usará también en *Por país*, y **exactamente la misma tabla** se reutilizará en *Por capital*, *Por país* y *Por región*, extraemos ambos bloques a sus propios componentes bajo `src/app/country/components/`:
+Como **exactamente la misma caja de búsqueda** se usará también en *Por país*, y **exactamente la misma tabla** se reutilizará en *Por capital*, *Por país* y *Por región*, extraemos ambos bloques a sus propios componentes. Este esquema muestra **qué pasa de la Fase 1 a la Fase 2** y cómo fluyen los datos con **`input()`** (hacia abajo) y **`output()`** (hacia arriba):
+
+![Esquema de extracción de SearchInput y CountryList con input() y output()](assets/country-fase2-extraction-diagram.svg)
+
+Generamos ambos componentes bajo `src/app/country/components/`:
+
+```bash
+ng g c country/components/search-input --skip-tests --inline-style --prefix=country
+ng g c country/components/country-list --skip-tests --inline-style --selector=country-list
+```
+
+!!! tip "¿Por qué `--prefix=country` en uno y `--selector=country-list` en el otro?"
+    * `--prefix=country` en `search-input` genera directamente `selector: 'country-search-input'`.
+    * En `country-list`, usar `--prefix=country` duplicaría el prefijo (`country-country-list`); pasando **`--selector=country-list`** fijamos el selector exacto `<country-list />` desde el primer momento.
 
 #### A. Componente `SearchInput` (`country-search-input`)
 
 Recibe un `placeholder` opcional (con valor por defecto `'Buscar'`) mediante `input('Buscar')` y emite el término tecleado mediante `output<string>()`:
 
 === "search-input.ts"
-    ```typescript title="src/app/country/components/search-input/search-input.ts" hl_lines="9-10"
+    ```typescript title="src/app/country/components/search-input/search-input.ts" hl_lines="4 9-10"
     import { Component, input, output } from '@angular/core';
 
     @Component({
@@ -686,7 +796,7 @@ Recibe un `placeholder` opcional (con valor por defecto `'Buscar'`) mediante `in
 Aísla el esqueleto de la tabla DaisyUI que mostrará el listado de países en las distintas pantallas (en la Sección 10 recibirá la lista real de países y estados de carga/error):
 
 === "country-list.ts"
-    ```typescript title="src/app/country/components/country-list/country-list.ts"
+    ```typescript title="src/app/country/components/country-list/country-list.ts" hl_lines="4"
     import { Component } from '@angular/core';
 
     @Component({
@@ -704,7 +814,7 @@ Aísla el esqueleto de la tabla DaisyUI que mostrará el listado de países en l
         <thead>
           <tr>
             <th>#</th>
-            <th>Ícono</th>
+            <th>Icono</th>
             <th>Bandera</th>
             <th>Nombre</th>
             <th>Capital</th>
@@ -753,7 +863,13 @@ Ahora `ByCapitalPage` importa ambos componentes atómicos y su plantilla queda r
 
 ### Fase 3: Tarea 2 — Páginas adicionales y ruta dinámica `by/:code`
 
-Completamos las tres páginas restantes del dominio `country`:
+Generamos las tres páginas restantes del dominio `country`:
+
+```bash
+ng g c country/pages/by-country-page --skip-tests --inline-style
+ng g c country/pages/by-region-page --skip-tests --inline-style
+ng g c country/pages/country-page --skip-tests --inline-style
+```
 
 === "ByCountryPage"
     ```typescript title="src/app/country/pages/by-country-page/by-country-page.ts"
@@ -813,7 +929,7 @@ Finalmente, registramos todas las rutas hijas en `src/app/country/country.routes
 ```typescript title="src/app/country/country.routes.ts (Completo)" hl_lines="17-28"
 import { Routes } from '@angular/router';
 import { ByCapitalPage } from './pages/by-capital-page/by-capital-page';
-import { CountryLayout } from './layouts/CountryLayout/CountryLayout.component';
+import { CountryLayout } from './layouts/country-layout/country-layout';
 import { ByCountryPage } from './pages/by-country-page/by-country-page';
 import { ByRegionPage } from './pages/by-region-page/by-region-page';
 import { CountryPage } from './pages/country-page/country-page';
