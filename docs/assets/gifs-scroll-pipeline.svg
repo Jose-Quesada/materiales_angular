@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 450" width="860" height="450" role="img" aria-labelledby="title desc" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
+  <title id="title">Flujo de 3 fases: Scroll Infinito, Paginación Concurrente y Masonry en GifsApp</title>
+  <desc id="desc">Diagrama de tres fases codificadas por color: Fase 1 Detección de Scroll en UI con viewChild y cálculo de umbral; Fase 2 Control de Concurrencia y Paginación en GifService; Fase 3 Layout Masonry con señal computada y persistencia con ScrollStateService.</desc>
+
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+    </marker>
+  </defs>
+
+  <!-- Fondo general -->
+  <rect x="0" y="0" width="860" height="450" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- FASE 1: UI / Detección de Scroll -->
+  <rect x="20" y="20" width="820" height="118" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
+  <rect x="34" y="10" width="320" height="22" rx="6" fill="#2563eb" />
+  <text x="46" y="25" font-size="11.5" font-weight="700" fill="#ffffff">Fase 1 · Detección de Scroll y Eventos (UI)</text>
+
+  <rect x="38" y="44" width="352" height="78" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" />
+  <text x="214" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">viewChild('groupDiv')</text>
+  <text x="214" y="88" text-anchor="middle" font-size="11.5" fill="#475569">Referencia reactiva al contenedor DOM</text>
+  <text x="214" y="106" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#2563eb">overflow-y-scroll + (scroll)="onScroll()"</text>
+
+  <line x1="392" y1="83" x2="432" y2="83" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-blue)" />
+
+  <rect x="440" y="44" width="382" height="78" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" />
+  <text x="631" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">Detección de Umbral Infinito</text>
+  <rect x="456" y="79" width="350" height="28" rx="6" fill="#dbeafe" />
+  <text x="631" y="98" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" font-weight="700" fill="#1d4ed8">scrollTop + clientHeight + 300 &gt;= scrollHeight</text>
+
+  <!-- Flecha Fase 1 -> Fase 2 -->
+  <line x1="430" y1="138" x2="430" y2="162" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-slate)" />
+
+  <!-- FASE 2: Control de Concurrencia y Paginación -->
+  <rect x="20" y="168" width="820" height="118" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+  <rect x="34" y="158" width="405" height="22" rx="6" fill="#d97706" />
+  <text x="46" y="173" font-size="11.5" font-weight="700" fill="#ffffff">Fase 2 · Control de Concurrencia y Paginación (GifService)</text>
+
+  <rect x="38" y="192" width="352" height="78" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5" />
+  <text x="214" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">Bloqueo Concurrente (trendingGifsLoading)</text>
+  <text x="214" y="236" text-anchor="middle" font-size="11.5" fill="#475569">Evita múltiples llamadas HTTP simultáneas</text>
+  <text x="214" y="254" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#b45309">if (this.trendingGifsLoading()) return;</text>
+
+  <line x1="392" y1="231" x2="432" y2="231" stroke="#d97706" stroke-width="2.4" marker-end="url(#arrow-amber)" />
+
+  <rect x="440" y="192" width="382" height="78" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5" />
+  <text x="631" y="216" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">Paginación y Acumulación Inmutable</text>
+  <text x="631" y="236" text-anchor="middle" font-size="11.5" fill="#475569">Petición con offset incremental (page * 20)</text>
+  <text x="631" y="254" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#b45309">trendingGifs.update(cur =&gt; [...cur, ...gifs])</text>
+
+  <!-- Flecha Fase 2 -> Fase 3 -->
+  <line x1="430" y1="286" x2="430" y2="310" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-slate)" />
+
+  <!-- FASE 3: Layout Masonry y Persistencia de Scroll -->
+  <rect x="20" y="316" width="820" height="118" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2" />
+  <rect x="34" y="306" width="350" height="22" rx="6" fill="#059669" />
+  <text x="46" y="321" font-size="11.5" font-weight="700" fill="#ffffff">Fase 3 · Layout Masonry y Persistencia de Scroll</text>
+
+  <rect x="38" y="340" width="352" height="78" rx="8" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5" />
+  <text x="214" y="364" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Señal Computada (trendingGifGroup)</text>
+  <text x="214" y="384" text-anchor="middle" font-size="11.5" fill="#475569">Deriva matriz reactiva en grupos de 3 para Masonry</text>
+  <text x="214" y="402" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#047857">computed&lt;Gif[][]&gt;(() =&gt; ...)</text>
+
+  <line x1="392" y1="379" x2="432" y2="379" stroke="#059669" stroke-width="2.4" marker-end="url(#arrow-emerald)" />
+
+  <rect x="440" y="340" width="382" height="78" rx="8" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5" />
+  <text x="631" y="364" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">ScrollStateService (@Service() Singleton)</text>
+  <text x="631" y="384" text-anchor="middle" font-size="11.5" fill="#475569">Preserva y restaura la posición al volver a la ruta</text>
+  <text x="631" y="402" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#047857">scrollDiv.scrollTop = trendingScrollState()</text>
+</svg>

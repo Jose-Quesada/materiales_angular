@@ -1199,7 +1199,7 @@ Angular genera varios archivos de configuración TypeScript que trabajan juntos 
 | `experimentalDecorators` | Necesario para usar @Component, @Injectable, @Input, etc. |
 | `target` | Versión de ECMAScript de salida (ES2022 recomendado) |
 | `module` | Sistema de módulos (ES2022 para tree-shaking óptimo) |
-| `strictTemplates` | Type checking en plantillas Angular (detecta errores de tipos en `{{ }}` y `[ ]`) |
+| `strictTemplates` | Type checking en plantillas Angular (detecta errores de tipos en `{{ }}` y `[ ]`). **Nota (Angular 22+):** está activado en `true` por defecto aunque se omita en `tsconfig.json`. |
 | `baseUrl` | Directorio base para importaciones no relativas |
 | `paths` | Alias de rutas para imports (ej: `@app/components/mi-componente`) |
 

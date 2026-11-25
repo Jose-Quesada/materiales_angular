@@ -548,7 +548,7 @@ En JavaScript tradicional, debes declarar las propiedades fuera y asignarlas man
 ### Modificadores de Acceso
 
 * **`public`:** Accesible desde cualquier lugar (dentro de la clase, instancias y plantillas HTML). Es el valor por defecto si no se especifica.
-* **`private`:** Accesible única y exclusivamente dentro de los métodos de la propia clase.
+* **`private`:** Accesible únicamente dentro de la propia clase (en **Angular 22.2+**, también es accesible desde la plantilla `.html` del propio componente; para ocultarlo incluso a la plantilla se usan campos privados nativos de JS con `#propiedad`. Ver [Manual 04: Visibilidad en Plantillas](manual/04-plantillas.md#6-acceso-a-miembros-private-desde-la-plantilla-angular-222)).
 * **`protected`:** Accesible dentro de la clase y de las clases hijas que hereden de ella.
 * **`readonly`:** Permite inicializar el valor pero impide mutarlo posteriormente.
 

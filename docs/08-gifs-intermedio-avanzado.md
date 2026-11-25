@@ -16,22 +16,7 @@ En esta sección elevamos la calidad de nuestra aplicación **GifsApp** a un niv
 * **Patrones UX:** Infinite Scrolling con bloqueo de peticiones concurrentes (*Concurrency Lock*), Preservación de posición del viewport (*Scroll Restoration Pattern*).
 * **Código Fuente de Referencia:** [GitHub - DevTalles GifsApp (fin-seccion-08)](https://github.com/DevTalles-corp/angular-gif-app/tree/fin-seccion-08)
 
-``` mermaid
-flowchart TD
-    subgraph Deteccion ["Fase 1 · Detección de Scroll y Eventos (UI)"]
-        DOM["<b>viewChild('groupDiv')</b><br/>Referencia reactiva al contenedor con overflow-y-scroll"] --> Calc["<b>Detección de Umbral Infinito</b><br/><code>scrollTop + clientHeight + 300 >= scrollHeight</code>"]
-    end
-
-    subgraph Orquestacion ["Fase 2 · Control de Concurrencia y Paginación (GifService)"]
-        Lock["<b>Bloqueo Concurrente (trendingGifsLoading)</b><br/>Evita múltiples llamadas HTTP simultáneas mientras carga"] --> Fetch["<b>Paginación y Acumulación</b><br/>Petición con offset incremental y .update() inmutable"]
-    end
-
-    subgraph Presentacion ["Fase 3 · Layout Masonry y Persistencia de Scroll"]
-        Masonry["<b>Señal Computada (trendingGifGroup)</b><br/>Matriz reactiva de grupos de 3 para rejilla Masonry"] --> ScrollState["<b>ScrollStateService (Singleton)</b><br/>Preserva y restaura scrollTop en navegación"]
-    end
-
-    Deteccion ==> Orquestacion ==> Presentacion
-```
+![Flujo de 3 fases: Scroll Infinito, Paginación Concurrente y Masonry en GifsApp](assets/gifs-scroll-pipeline.svg)
 
 ### 🗺️ Mapa Visual: Rejilla Masonry (`Gif[][]`), `#groupDiv` y Servicios
 

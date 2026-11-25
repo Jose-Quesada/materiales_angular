@@ -763,6 +763,9 @@ El flujo de renderizado opera de forma 100% reactiva:
         * **`constructor()`:** Se ejecuta al instanciar la clase JavaScript, **antes** de que Angular haya resuelto los `input()` del componente. En Angular moderno se reserva para inicialización muy ligera o inyección de dependencias (`inject()`).
         * **`ngOnInit()`:** Se ejecuta justo después de que Angular haya enlazado los valores iniciales de los `input()`. Es el lugar adecuado cuando una petición HTTP **depende de un `input()`** del componente o cuando quieres recargar datos explícitamente cada vez que se monta la vista.
 
+!!! info "Novedad Angular 22.2+: ¿y si declaro `private gifService = inject(GifService)`?"
+    En versiones anteriores de Angular, marcar `gifService` como `private` impedía usarlo en `trending-page.html` (error `TS2341`). A partir de **Angular 22.2**, el compilador considera la clase `.ts` y su plantilla `.html` como una misma unidad encapsulada, por lo que **sí puedes acceder a miembros `private` desde el HTML del propio componente** (mientras siguen ocultos hacia el exterior). Si deseas ocultar un campo incluso a su propia plantilla, utiliza campos privados nativos de JavaScript (`#propiedad`). Consulta la tabla completa de visibilidad en el **[Manual 04: Plantillas (Acceso a miembros `private`)](manual/04-plantillas.md#6-acceso-a-miembros-private-desde-la-plantilla-angular-222)**.
+
 ---
 
 ## Diseño de Pantalla y Captura de Eventos: `SearchPageComponent`
@@ -1557,26 +1560,17 @@ Con la ruta dinámica y el componente de historial en funcionamiento, conectamos
 
 ### 1. El Reto de la Reactividad entre Componentes Desacoplados
 
-Observa la estructura de componentes de la aplicación:
+Observa el anidamiento real de componentes dentro de la aplicación y cómo se comunican a través del servicio:
 
-``` mermaid
-flowchart TD
-    Dashboard["DashboardPageComponent (Shell)"] --> SideMenu["SideMenuComponent"]
-    SideMenu --> SideMenuOptions["SideMenuOptionsComponent (Navegación Lateral)"]
-    
-    Dashboard --> AreaPrincipal["Área de Contenido (Router Outlet)"]
-    AreaPrincipal --> SearchPage["SearchPageComponent (Input de Búsqueda)"]
-    AreaPrincipal --> HistoryPage["GifHistoryComponent (Vista de Historial)"]
-    
-    SearchPage -.->|"1. Dispara búsqueda"| Service["GifService (Singleton)"]
-    Service -.->|"2. Actualiza searchHistory"| Service
-    Service ==>|"3. Notifica cambio en searchHistoryKeys()"| SideMenuOptions
-```
+![Anidamiento de componentes en GifsApp y comunicación reactiva vía GifService](assets/gifs-reactividad-desacoplada.svg)
 
 `SearchPageComponent` (donde el usuario introduce términos) y `SideMenuOptionsComponent` (donde queremos mostrar el historial) son **componentes hermanos totalmente desacoplados**.
 
-* **En arquitecturas tradicionales:** Sincronizar estos dos componentes requería levantar eventos al padre (`@Output()` / `EventEmitter`), utilizar servicios con `Subject` / `BehaviorSubject` de RxJS o librerías externas de gestión de estado (NgRx).
+* **En arquitecturas tradicionales:** Sincronizar estos dos componentes requería levantar eventos al padre (`@Output()` / `EventEmitter`), utilizar servicios con [`Subject` / `BehaviorSubject`](manual/10-http.md#25-subject-y-sus-variantes-multicasting) de RxJS o librerías externas de gestión de estado (NgRx).
 * **Con Angular Signals y un Servicio Singleton:** Basta con que `SideMenuOptionsComponent` lea la señal computada `gifService.searchHistoryKeys()`. Cuando el usuario realiza una búsqueda, el servicio actualiza la señal y Angular actualiza **únicamente** la lista del menú lateral de forma reactiva y automática.
+
+!!! tip "📖 ¿Qué son `Subject` y `BehaviorSubject`?"
+    Son tipos especiales de `Observable` de **RxJS** que permiten emitir valores a múltiples suscriptores a la vez (*multicasting*) para compartir estado entre componentes desacoplados (`BehaviorSubject`, además, recuerda siempre el último valor emitido). Antes de la llegada de las **Signals**, eran la forma habitual de gestionar estado reactivo en servicios de Angular. Puedes consultar su explicación completa, tabla comparativa y ejemplos en el **[Manual de Referencia: 10. Cliente HTTP y RxJS (`Subject` y sus variantes)](manual/10-http.md#25-subject-y-sus-variantes-multicasting)**.
 
 ## 🎯 Tarea Práctica 3: Mostrar el Historial Dinámico en el Menú Lateral
 

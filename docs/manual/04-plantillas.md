@@ -48,30 +48,7 @@ Piensa en las plantillas como el escenario de un teatro. Los actores (componente
 
 ## Desarrollo teórico
 
-```mermaid
-flowchart TD
-    subgraph Componente["Componente (Lógica TypeScript)"]
-        state["<b>Estado Reactivo / Signals</b><br/>Propiedades y modelos de datos"]
-        methods["<b>Métodos y Handlers</b><br/>Funciones que ejecutan acciones"]
-    end
-
-    subgraph Vista["Plantilla (DOM HTML)"]
-        domText["<b>Texto y Nodos</b><br/>Interpolación: {{ expresion() }}"]
-        domProp["<b>Propiedades DOM</b><br/>Property Binding: [propiedad]='valor'"]
-        domEvent["<b>Eventos de Usuario</b><br/>Event Binding: (click)='handler()'"]
-        domModel["<b>Formularios Bidireccionales</b><br/>Two-Way Binding: [(ngModel)]='campo'"]
-    end
-
-    state ==>|"Interpolación"| domText
-    state ==>|"Property Binding"| domProp
-    domEvent ==>|"Event Binding"| methods
-    state <-->|"Two-Way Binding"| domModel
-
-    classDef comp fill:#f8f9fa,stroke:#d32f2f,stroke-width:2px;
-    classDef view fill:#e3f2fd,stroke:#1976d2,stroke-width:2px;
-    class Componente comp;
-    class Vista view;
-```
+![Flujo de Data Binding en Angular: Componente TypeScript y Plantilla HTML](../assets/plantillas-data-binding.svg)
 
 ### Interpolación
 
@@ -655,20 +632,11 @@ export class AppComponent {
 }
 ```
 
-#### Comparativa Arquitectónica: model() vs [(ngModel)]
+#### Comparativa Arquitectónica: `model()` vs `[(ngModel)]`
 
 Tanto `model()` como `[(ngModel)]` utilizan en la plantilla la sintaxis de *"banana in a box"* `[( ... )]`, lo que suele generar confusión en los alumnos que aprenden Angular. Sin embargo, resuelven **problemas arquitectónicos totalmente distintos** y pertenecen a capas diferentes del framework:
 
-```mermaid
-flowchart TD
-    subgraph NgModelFlow ["1. Ámbito de [(ngModel)] — Formularios y DOM"]
-        TS1["<b>Componente TS</b><br/><code>termino = ''</code>"] <-->|"[(ngModel)]<br/>Requiere FormsModule"| DOM1["<b>Control HTML Nativo</b><br/><code>&lt;input type='text'&gt;</code><br/><i>Rastrea estados: dirty, touched, valid</i>"]
-    end
-
-    subgraph ModelFlow ["2. Ámbito de model() — Jerarquía de Componentes"]
-        Padre["<b>Componente Padre</b><br/><code>total = signal(5)</code>"] <-->|"[(cantidad)]<br/>Reactividad con Signals"| Hijo["<b>Componente Hijo Custom</b><br/><code>cantidad = model(0)</code><br/><i>Sintetiza Input + Output implícito</i>"]
-    end
-```
+![Comparativa arquitectónica: [(ngModel)] frente a model()](../assets/plantillas-model-vs-ngmodel.svg)
 
 ##### Tabla de diferencias técnicas
 
@@ -1660,6 +1628,81 @@ Adelantado para su estabilización progresiva, Angular introduce una sintaxis de
   </div>
 }
 ```
+
+#### 6. Acceso a Miembros `private` desde la Plantilla (Angular 22.2+)
+
+Hasta Angular 22.1, si declarabas una propiedad o servicio con el modificador `private` de TypeScript e intentabas leerlo desde el HTML del propio componente, el compilador lanzaba el clásico error **`TS2341` (*Property '...' is private and only accessible within class...*)**.
+
+A partir de **Angular 22.2**, el framework considera que la clase `.ts` y su plantilla `.html` forman una **misma unidad encapsulada**. Por tanto, el compilador permite referenciar directamente en la vista cualquier propiedad o método marcado con `private` sin necesidad de cambiarlo a `public` o `protected`:
+
+```typescript
+@Component({
+  selector: 'app-trending-page',
+  template: `
+    <!-- ✅ Válido en Angular 22.2+: la plantilla forma parte de la encapsulación del componente -->
+    <gif-list [gifs]="gifService.trendingGifs()" />
+
+    <!-- ❌ Error de compilación: los campos nativos # de JS sí permanecen ocultos a la plantilla -->
+    <!-- <p>{{ #tokenInterno }}</p> -->
+  `,
+})
+export default class TrendingPage {
+  private gifService = inject(GifService);   // Accesible en .ts y en su .html (inaccesible desde fuera)
+  #tokenInterno = 'solo-logica-interna';     // Oculto incluso para su propia plantilla HTML
+}
+```
+
+Si en algún momento quieres ocultar una propiedad **incluso a su propia plantilla HTML**, debes utilizar los **campos privados nativos de JavaScript (`#propiedad`)**:
+
+| Modificador | Accesible en la clase (`.ts`) | Accesible en su HTML | Accesible desde fuera |
+| :--- | :---: | :---: | :---: |
+| `public` *(por defecto)* | Sí | Sí | Sí |
+| `protected` | Sí | Sí | Solo en clases hijas |
+| `private` *(TypeScript)* | Sí | **Sí *(desde v22.2)*** | No |
+| `#propiedad` *(JS nativo)* | Sí | **No** | No |
+
+**¿Cuándo usar `protected` en Angular?**
+
+En proyectos reales de Angular existen dos escenarios muy claros para `protected`:
+
+1. **Compartir estado o dependencias con clases hijas (herencia controlada):** Si creas una clase base abstracta (por ejemplo, una página base con estado de carga y navegación), `protected` permite que las páginas hijas hereden y usen esas propiedades tanto en su `.ts` como en su `.html`, manteniéndolas ocultas hacia el exterior (algo que `private` no permitiría heredar):
+
+```typescript
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+
+// Clase base reutilizable: expone estado y utilidades solo a sus subclases y plantillas
+export abstract class BasePage {
+  protected readonly router = inject(Router);
+  protected isLoading = signal(false);
+
+  protected navegarA(ruta: string): void {
+    this.router.navigateByUrl(ruta);
+  }
+}
+
+@Component({
+  selector: 'app-productos-page',
+  template: `
+    @if (isLoading()) {
+      <p>Cargando productos...</p>
+    } @else {
+      <button (click)="navegarA('/inicio')">Volver al inicio</button>
+    }
+  `,
+})
+export default class ProductosPage extends BasePage {
+  // ✅ Puede usar this.isLoading y this.navegarA() por ser protected en BasePage
+  recargar(): void {
+    this.isLoading.set(true);
+  }
+}
+```
+
+2. **Separar la API pública de un componente de sus miembros exclusivos de plantilla:** Incluso sin herencia, muchos equipos siguen la guía de estilo de marcar como `public` únicamente lo que forma parte de la interfaz externa del componente (`input()`, `output()`, `model()` o métodos pensados para invocarse desde un padre vía `viewChild()`), y como `protected` (o `private` en Angular 22.2+) todo aquello que solo consume su propia plantilla HTML.
+
+!!! note "Chequeo estricto activo por defecto (`strictTemplates`)"
+    Que `private` sea accesible en la plantilla **no significa** que se haya desactivado el chequeo estricto. Desde **Angular 22**, `strictTemplates: true` está activado por defecto aunque no aparezca escrito en `tsconfig.json`.
 
 ## Ejemplos guiados
 
