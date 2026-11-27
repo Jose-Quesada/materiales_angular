@@ -1199,6 +1199,24 @@ searchGifs(query: string): Observable<Gif[]> {
 * **Normalización de Claves (`query.toLowerCase()`)**: Garantiza que búsquedas con diferencias de mayúsculas y minúsculas (ej: `Goku`, `goku`, `GOKU`) se asignen al mismo registro de caché, evitando duplicados.
 * **Inmutabilidad Estricta (`...history`)**: Nunca mutamos el objeto directamente (`history[query] = items`). El método `.update()` recibe el estado anterior y devuelve un **nuevo objeto en memoria** mediante el operador de propagación (*spread*), permitiendo que el grafo de reactividad de Signals detecte el cambio de referencia y notifique a las vistas asociadas.
 
+!!! tip "💡 ¿Por qué van los corchetes en `[query.toLowerCase()]: items`? (Propiedades Computadas en JS)"
+    En JavaScript/TypeScript (ES6+), cuando usas corchetes `[ ... ]` **en el nombre de una propiedad dentro de un objeto `{ ... }`**, **NO estás creando un array**, sino una **propiedad computada (*Computed Property Name*)**.
+
+    Los corchetes le indican a JavaScript que **evalúe primero la expresión** de su interior y use el **resultado** como nombre dinámico de la clave:
+
+    ```typescript
+    const query = 'Goku';
+
+    // ✅ Con corchetes: evalúa query.toLowerCase() → 'goku' y crea la clave dinámica 'goku'
+    const ok = { [query.toLowerCase()]: items };   // Resultado: { goku: [...] }
+
+    // ❌ Sin corchetes con variable: crearía una clave literal llamada "query"
+    const mal1 = { query: items };                 // Resultado: { query: [...] }
+
+    // ❌ Sin corchetes con expresión: error de sintaxis (SyntaxError)
+    // const mal2 = { query.toLowerCase(): items };
+    ```
+
 ### 4. Señal Computada Derivada: `searchHistoryKeys`
 
 **Modificación en el proyecto:** importamos `computed` desde `'@angular/core'` y declaramos `searchHistoryKeys` justo debajo de `searchHistory` en `GifService` para exponer la lista de términos al menú lateral:

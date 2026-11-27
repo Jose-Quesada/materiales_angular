@@ -153,19 +153,23 @@ El secreto está en utilizar el callback **`onCleanup`** que Angular inyecta aut
 
 ## 2. Caché en Memoria con `Map` en `CountryService`
 
-Si el usuario busca `"Madrid"`, luego busca `"Tegucigalpa"`, y regresa a buscar `"Madrid"`, no tiene sentido volver a consultar por red la misma respuesta geográfica.
+Si el usuario busca `"Madrid"`, luego busca `"Tegucigalpa"`, y vuelve a buscar `"Madrid"`, no tiene sentido repetir la consulta por red para la misma respuesta geográfica.
 
 ### 2.1. Seguridad en el Mapper ante búsquedas cortas (`Optional Chaining`)
 
-Al buscar automáticamente con el debounce, términos cortos como `"te"` o `"an"` devuelven territorios especiales (como la Antártida o Macao) donde `restCountry.capital` viene `undefined`. Si aún tenías `restCountry.capital.join(',')` sin protección, lanzará un error en consola. Asegúrate de usar encadenamiento opcional en `src/app/country/mappers/country.mapper.ts`:
+Al buscar automáticamente con el debounce, términos cortos como `"te"` o `"an"` devuelven territorios especiales (como la Antártida o Macao) donde `restCountry.capitals` llega vacío (`[]`) o `undefined`. Si no proteges esa transformación, lanzará un error en consola o dejará la celda en blanco. Asegúrate de usar encadenamiento opcional y un texto de respaldo en `src/app/country/mappers/country.mapper.ts`:
 
-```typescript title="src/app/country/mappers/country.mapper.ts (Protección con ?. )" hl_lines="3"
+```typescript title="src/app/country/mappers/country.mapper.ts (Protección con ?. en v5)" hl_lines="3-4"
     return {
-      cca2: restCountry.cca2,
-      capital: restCountry.capital?.join(','),
-      flag: restCountry.flag,
-      flagSvg: restCountry.flags.svg,
-      name: restCountry.translations['spa']?.common ?? 'No Spanish Name',
+      cca2: restCountry.codes.alpha_2,
+      capital:
+        restCountry.capitals?.map((capital) => capital.name).join(', ') ||
+        'Sin capital',
+      flag: restCountry.flag.emoji,
+      flagSvg: restCountry.flag.url_svg,
+      name:
+        restCountry.names.translations?.['spa']?.common ??
+        restCountry.names.common,
       population: restCountry.population,
       region: restCountry.region,
       subRegion: restCountry.subregion,
@@ -183,64 +187,79 @@ Al buscar automáticamente con el debounce, términos cortos como `"te"` o `"an"
 
 Declaramos almacenes privados independientes por endpoint (`queryCacheCapital` y `queryCacheCountry`, más `queryCacheRegion` que añadiremos en el punto 3) dentro de `CountryService` decorado con **`@Service()`** en Angular 22:
 
-```typescript title="src/app/country/services/country.service.ts (Con Caché en Capital y País)" hl_lines="2 11 15-16 22-24 29 43-45 49"
-import { HttpClient } from '@angular/common/http';
+```typescript title="src/app/country/services/country.service.ts (REST Countries v5 con Caché en Capital y País)" hl_lines="1 5-7 11 13-14 16-17 23-25 35 49-51 60"
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { map, Observable, catchError, throwError, delay, of, tap } from 'rxjs';
 
-import { RESTCountry } from '../interfaces/rest-countries.interface';
+import { environment } from '../../../environments/environment';
+import type { RESTCountriesV5Response } from '../interfaces/rest-countries.interface';
 import type { Country } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
-
-const API_URL = 'https://restcountries.com/v3.1';
 
 @Service()
 export class CountryService {
   private http = inject(HttpClient);
+  private headers = new HttpHeaders({
+    Authorization: `Bearer ${environment.restCountriesApiKey}`,
+  });
 
   private queryCacheCapital = new Map<string, Country[]>();
   private queryCacheCountry = new Map<string, Country[]>();
 
   searchByCapital(query: string): Observable<Country[]> {
-    query = query.toLowerCase();
+    query = query.toLowerCase().trim();
 
     // 1. Cache Hit: si la clave existe, devolvemos inmediatamente un Observable con los datos en memoria
     if (this.queryCacheCapital.has(query)) {
       return of(this.queryCacheCapital.get(query) ?? []);
     }
 
-    // 2. Cache Miss: consultamos HTTP y guardamos el resultado en Map con tap()
-    return this.http.get<RESTCountry[]>(`${API_URL}/capital/${query}`).pipe(
-      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
-      tap((countries) => this.queryCacheCapital.set(query, countries)),
-      catchError((error) => {
-        console.log('Error fetching ', error);
-        return throwError(
-          () => new Error(`No se pudo obtener países con ese query ${query}`)
-        );
+    // 2. Cache Miss: consultamos HTTP (REST Countries v5) y guardamos el resultado en Map con tap()
+    return this.http
+      .get<RESTCountriesV5Response>(`${environment.restCountriesApiUrl}/capitals`, {
+        headers: this.headers,
+        params: { q: query },
       })
-    );
+      .pipe(
+        map((resp) =>
+          CountryMapper.mapRestCountryArrayToCountryArray(resp.data.objects)
+        ),
+        tap((countries) => this.queryCacheCapital.set(query, countries)),
+        catchError((error) => {
+          console.log('Error fetching ', error);
+          return throwError(
+            () => new Error(`No se pudieron obtener países con la búsqueda «${query}»`)
+          );
+        })
+      );
   }
 
   searchByCountry(query: string): Observable<Country[]> {
-    const url = `${API_URL}/name/${query}`;
-    query = query.toLowerCase();
+    query = query.toLowerCase().trim();
 
     if (this.queryCacheCountry.has(query)) {
       return of(this.queryCacheCountry.get(query) ?? []);
     }
 
-    return this.http.get<RESTCountry[]>(url).pipe(
-      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
-      tap((countries) => this.queryCacheCountry.set(query, countries)),
-      delay(2000),
-      catchError((error) => {
-        console.log('Error fetching ', error);
-        return throwError(
-          () => new Error(`No se pudo obtener países con ese query ${query}`)
-        );
+    return this.http
+      .get<RESTCountriesV5Response>(`${environment.restCountriesApiUrl}/name`, {
+        headers: this.headers,
+        params: { q: query },
       })
-    );
+      .pipe(
+        map((resp) =>
+          CountryMapper.mapRestCountryArrayToCountryArray(resp.data.objects)
+        ),
+        tap((countries) => this.queryCacheCountry.set(query, countries)),
+        delay(2000),
+        catchError((error) => {
+          console.log('Error fetching ', error);
+          return throwError(
+            () => new Error(`No se pudieron obtener países con la búsqueda «${query}»`)
+          );
+        })
+      );
   }
 }
 ```
@@ -272,30 +291,37 @@ export type Region =
 
 Añadimos el mapa privado `private queryCacheRegion = new Map<Region, Country[]>();` y el método correspondiente en `CountryService`:
 
-```typescript title="src/app/country/services/country.service.ts (Método searchByRegion)" hl_lines="1 6-8 12"
+```typescript title="src/app/country/services/country.service.ts (Método searchByRegion en v5)" hl_lines="1 6-8 10-14 16-19"
   private queryCacheRegion = new Map<Region, Country[]>();
 
   searchByRegion(region: Region): Observable<Country[]> {
-    const url = `${API_URL}/region/${region}`;
+    const url = `${environment.restCountriesApiUrl}/region/${region}`;
 
     if (this.queryCacheRegion.has(region)) {
       return of(this.queryCacheRegion.get(region) ?? []);
     }
 
-    return this.http.get<RESTCountry[]>(url).pipe(
-      map((resp) => CountryMapper.mapRestCountryArrayToCountryArray(resp)),
-      tap((countries) => this.queryCacheRegion.set(region, countries)),
-      catchError((error) => {
-        console.log('Error fetching ', error);
-        return throwError(
-          () => new Error(`No se pudo obtener países con ese query ${region}`)
-        );
+    return this.http
+      .get<RESTCountriesV5Response>(url, {
+        headers: this.headers,
+        params: { limit: 100 }, // v5 pagina por defecto a 25 resultados; 100 es el máximo del plan gratuito
       })
-    );
+      .pipe(
+        map((resp) =>
+          CountryMapper.mapRestCountryArrayToCountryArray(resp.data.objects)
+        ),
+        tap((countries) => this.queryCacheRegion.set(region, countries)),
+        catchError((error) => {
+          console.log('Error fetching ', error);
+          return throwError(
+            () => new Error(`No se pudieron obtener países de la región «${region}»`)
+          );
+        })
+      );
   }
 ```
 
-*(Nota sobre el repositorio del curso: en la rama original `fin-seccion-11` se deslizó un pequeño desliz tipográfico leyendo `this.queryCacheCountry.has(region)` en lugar de `this.queryCacheRegion.has(region)`. Aquí lo corregimos usando `this.queryCacheRegion` para que la caché de regiones funcione realmente).*
+*(Nota sobre el repositorio del curso: en la rama original `fin-seccion-11` hubo un pequeño error tipográfico al comprobar `this.queryCacheCountry.has(region)` en lugar de `this.queryCacheRegion.has(region)`. Aquí lo corregimos usando `this.queryCacheRegion` para que la caché de regiones funcione correctamente).*
 
 ### Paso 3: Implementar `ByRegionPage` (Fase inicial con `signal()`)
 

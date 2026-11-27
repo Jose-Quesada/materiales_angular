@@ -17,8 +17,8 @@ nav = [
       { "09. CountryApp: Rutas, Layout y DaisyUI" = "09-country-spa.md" },
       { "10. CountryApp: Servicios, Resources y Pipes" = "10-country-funcionalidad.md" },
       { "11. CountryApp: Debounce, Caché y QueryParams" = "11-country-intermedio-avanzado.md" },
-      { "12. PipesApp: Pipes Nativos e i18n" = "12-pipes.md" },
-      { "13. PipesApp: Pipes Personalizados" = "13-pipes-personalizados.md" },
+   #   { "12. PipesApp: Pipes Nativos e i18n" = "12-pipes.md" },
+   #   { "13. PipesApp: Pipes Personalizados" = "13-pipes-personalizados.md" },
   ]},
   { "Manual de Referencia" = [
       { "01. Introducción al Framework" = "manual/01-introduccion.md" },

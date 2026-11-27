@@ -876,35 +876,74 @@ En `src/app/pages/dragonball/dragonball-page.html`, enlazamos el evento `(click)
 !!! info "📖 Para saber más: Manual de Referencia"
     Profundiza en los patrones Smart/Dumb, la API moderna `input()`, `output()` y la reactividad bidireccional con `model()` en el **[Manual de Referencia: 07. Comunicación entre Componentes](manual/07-anidar-componentes.md)**.
 
-Cuando una vista contiene un formulario y una lista, mezclar ambos en un solo archivo rompe la **Separación de Responsabilidades (SoC)**. Vamos a extraer dos componentes atómicos:
+Cuando una vista contiene un formulario y una lista, mezclar ambos en un solo archivo rompe la **Separación de Responsabilidades (SoC)** y dificulta la reutilización. Para resolverlo, dividimos la página aplicando el patrón **Smart & Dumb**:
 
-* `CharacterList`: Componente tonto (*Dumb*) que solo muestra datos recibidos.
-* `CharacterAdd`: Componente que gestiona el formulario y emite eventos hacia el padre.
+* **Componente Padre (*Smart* / Contenedor):** `DragonballSuperPage`. Es el dueño del estado maestro (`characters`) y de la lógica que lo modifica (`addCharacter`).
+* **Componentes Hijos (*Dumb* / Presentacionales):**
+    * `CharacterList`: recibe datos y se limita a renderizarlos.
+    * `CharacterAdd`: gestiona el formulario local y avisa al padre cuando se crea un personaje nuevo.
+
+Para coordinar esta jerarquía, Angular impone un **flujo de datos unidireccional** regido por una regla de oro: **los datos bajan del padre a los hijos con `input()` y los eventos suben de los hijos al padre con `output()`**.
 
 ```mermaid
 flowchart TD
-    subgraph Padre ["DragonballSuperPage (Componente Contenedor Padre / Smart)"]
+    subgraph Padre ["DragonballSuperPage (Componente Padre / Smart)"]
+        direction TB
         Estado["<b>Estado Reactivo Maestro y Lógica</b><br/><code>characters = signal(Character[])</code><br/><code>addCharacter(character)</code>"]
 
-        subgraph Plantilla ["Plantilla HTML del Padre: Componentes Hijos Anidados (Dumb)"]
+        subgraph Hijos ["Plantilla HTML del Padre: Componentes Hijos (Dumb)"]
+            direction LR
+            Lista["<b>CharacterList</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code><br/><code>listName = input('...')</code>"]
             Add["<b>CharacterAdd</b><br/><i>(Formulario de Entrada)</i><br/><code>newCharacter = output()</code>"]
-            Lista["<b>CharacterList</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code>"]
-            Add ~~~ Lista
         end
 
-        Add -->|"<b>2. Flujo Ascendente (Output Event)</b><br/><code>(newCharacter)='addCharacter($event)'</code>"| Estado
-        Estado -->|"<b>1. Flujo Descendente (Input Binding)</b><br/><code>[characters]='characters()'</code>"| Lista
+        Estado -->|"<b>1. Datos bajan (Input Binding)</b><br/><code>[characters]='characters()'</code>"| Lista
+        Estado ~~~ Add
+        Add -->|"<b>2. Eventos suben (Output Event)</b><br/><code>(newCharacter)='addCharacter($event)'</code>"| Estado
     end
 
     style Padre fill:#f8f9fa,stroke:#1976d2,stroke-width:2px
     style Estado fill:#e3f2fd,stroke:#1976d2,stroke-width:1.5px
-    style Plantilla fill:#ffffff,stroke:#7b1fa2,stroke-width:1.5px,stroke-dasharray: 4 4
-    style Add fill:#fff3e0,stroke:#f57c00,stroke-width:1.5px
+    style Hijos fill:#ffffff,stroke:#7b1fa2,stroke-width:1.5px,stroke-dasharray: 4 4
     style Lista fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
+    style Add fill:#fff3e0,stroke:#f57c00,stroke-width:1.5px
 ```
 
-### El Componente Hijo: `CharacterList`
-Utiliza el nuevo **`input.required<T>()`** de Angular 19:
+---
+
+### 1. Datos de Padre a Hijo: Signal Inputs (`input()` e `input.required()`)
+
+#### ¿Qué es un Signal Input?
+
+Un **Signal Input** es el mecanismo moderno de Angular (introducido en v17.1+ y estándar en Angular 19+) que permite a un componente hijo **declarar propiedades de entrada** para recibir datos desde su componente padre.
+
+A diferencia de una propiedad de clase corriente, `input()` devuelve automáticamente una **Signal de solo lectura (`InputSignal<T>`)**. Esto significa que, cada vez que el padre actualiza el valor enviado, Angular reactualiza la vista del hijo de forma granular y automática.
+
+#### Dos formas de declarar un Input
+
+| Variante | Sintaxis en el Hijo | ¿Cuándo usarla? |
+| :--- | :--- | :--- |
+| **Obligatorio** | `characters = input.required<Character[]>();` | Cuando el componente **no puede funcionar** sin ese dato. Si el padre olvida enviarlo en el HTML, **TypeScript/Angular lanza un error de compilación**. |
+| **Opcional** | `listName = input<string>('Listado de Personajes');` | Cuando el dato es configurable pero dispone de un **valor por defecto** si el padre decide no proporcionarlo. |
+
+#### Tres reglas clave al trabajar con `input()`
+
+1. **Se leen como una Signal (con paréntesis `()`):**  
+   Tanto en el HTML (`{{ listName() }}`, `@for (c of characters(); ...)`) como en TypeScript (`this.characters()`), debes invocarlos con `()` para leer su valor actual.
+2. **Son estrictamente de solo lectura (Inmutables):**  
+   Un `InputSignal` **no dispone de `.set()` ni `.update()`**. El componente hijo nunca debe modificar directamente los datos que le pertenecen al padre; si necesita transformarlos, usa `computed()` o `linkedSignal()`.
+3. **Dos formas de pasar datos desde la plantilla del padre:**
+    * **Property Binding con corchetes `[propiedad]="expresion"`:** Evalúa una expresión TypeScript (una señal, un array, un número o un booleano). Ejemplo: `[characters]="characters()"`.
+    * **Atributo literal sin corchetes `propiedad="texto"`:** Útil únicamente para pasar cadenas de texto fijas (`string`). Ejemplo: `listName="Guerreros Z"`.
+
+??? info "🏛️ Nota sobre código legado: `@Input()` clásico vs `input()` moderno"
+    En proyectos anteriores a Angular 17.1 verás el decorador `@Input() characters: Character[] = [];`. La función moderna **`input()`** lo sustituye porque garantiza tipado estricto sin `undefined` accidentales, se integra de forma nativa con Signals (`computed`, `effect`) y funciona sin necesidad de `ngOnChanges`.
+
+---
+
+#### Aplicación Práctica: El Componente Hijo `CharacterList`
+
+Creamos el componente presentacional `CharacterList` declarando un input obligatorio (`characters`) y uno opcional con valor por defecto (`listName`):
 
 === "src/app/components/dragonball/character-list/character-list.ts"
     ```typescript title="src/app/components/dragonball/character-list/character-list.ts"
@@ -949,6 +988,69 @@ Utiliza el nuevo **`input.required<T>()`** de Angular 19:
       }
     </ul>
     ```
+
+##### ¿Cómo lo consume el componente padre?
+
+Para usar `<dragonball-character-list />` dentro de la página padre (`DragonballSuperPage`), recuerda siempre **dos pasos**:
+
+1. Registrar `CharacterList` en el array `imports: [CharacterList]` del decorador `@Component` del padre.
+2. Enlazar sus entradas en la plantilla HTML del padre:
+
+```html
+<dragonball-character-list
+  listName="Guerreros Z"
+  [characters]="characters()"
+/>
+```
+
+*(Si omitieras `[characters]="..."`, el compilador de Angular marcaría un error inmediato al ser un `input.required()`).*
+
+---
+
+### 2. Eventos de Hijo a Padre: Signal Outputs (`output()`)
+
+#### ¿Por qué necesitamos `output()`?
+
+Como los datos fluyen únicamente hacia abajo y el componente hijo no conoce ni debe mutar el estado del padre, ¿cómo avisa el formulario `CharacterAdd` a `DragonballSuperPage` de que el usuario ha creado un nuevo personaje?
+
+Mediante la función **`output<T>()`** de `@angular/core`. Un `output` permite que un componente hijo **emita eventos personalizados hacia su padre**, adjuntando opcionalmente una carga útil (*payload*) fuertemente tipada.
+
+#### Ciclo completo de un `output()` en 3 pasos
+
+1. **Declarar el emisor en el componente hijo:**  
+   Importamos `output` desde `@angular/core` e indicamos entre `< >` el tipo de dato que viajará en el evento:
+   ```typescript
+   // En el hijo (CharacterAdd)
+   newCharacter = output<Character>();
+   ```
+2. **Emitir el evento cuando ocurra la acción:**  
+   Cuando el usuario pulsa "Agregar" y los datos son válidos, invocamos `.emit(valor)`:
+   ```typescript
+   // Envía el nuevo objeto Character hacia el componente padre
+   this.newCharacter.emit(character);
+   ```
+3. **Escuchar el evento en la plantilla del padre con `( )` y `$event`:**  
+   En el HTML del padre, enlazamos el nombre exacto del `output` entre paréntesis (igual que `(click)`). Angular inyecta automáticamente el objeto emitido en la variable especial **`$event`**:
+   ```html
+   <!-- En el padre (DragonballSuperPage) -->
+   <dragonball-character-add
+     (newCharacter)="addCharacter($event)"
+   />
+   ```
+
+!!! tip "Resumen Visual: `input()` vs `output()`"
+    | Característica | `input()` / `input.required()` | `output()` |
+    | :--- | :--- | :--- |
+    | **Dirección del flujo** | ⬇️ **Padre → Hijo** (bajan datos) | ⬆️ **Hijo → Padre** (suben eventos) |
+    | **Declaración en el hijo** | `characters = input.required<Character[]>();` | `newCharacter = output<Character>();` |
+    | **Uso interno en el hijo** | Lectura como signal: `this.characters()` | Emisión de aviso: `this.newCharacter.emit(dato)` |
+    | **Enlace en el HTML del padre** | Corchetes: `[characters]="characters()"` | Paréntesis: `(newCharacter)="addCharacter($event)"` |
+    | **Analogía** | **Buzón de entrada** (recibe información) | **Timbre de aviso** (notifica una acción) |
+
+??? info "🏛️ Nota sobre código legado: `@Output()` + `EventEmitter` vs `output()` moderno"
+    En versiones clásicas de Angular se escribía `@Output() newCharacter = new EventEmitter<Character>();`. La función moderna **`output<Character>()`** elimina la dependencia de RxJS, reduce el tamaño del bundle y mantiene la misma sintaxis de emisión (`.emit()`) y de escucha en plantilla (`(newCharacter)="..."`).
+
+Con estos dos mecanismos dominados, ya tienes todo lo necesario para construir tu primer componente hijo con `output()` en la siguiente tarea práctica.
 
 ---
 

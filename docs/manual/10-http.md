@@ -1229,11 +1229,11 @@ flowchart LR
 Tanto `resource()` como `rxResource()` comparten la misma estructura declarativa de dos piezas:
 
 * **`request` (Dependencias reactivas):** Función que lee una o varias `Signal`s (por ejemplo, `request: () => ({ id: this.productoId() })`).
-  * Cada vez que cualquiera de esas señales cambia de valor, el Resource **aborta automáticamente la petición anterior que estuviera en vuelo** y vuelve a ejecutar el `loader` con el nuevo valor.
-  * Si `request` devuelve `undefined`, el Resource entra en estado `Idle` (reposo) y **no ejecuta ninguna petición** (muy útil para no buscar hasta que el usuario escriba al menos 2 caracteres).
+    * Cada vez que cualquiera de esas señales cambia de valor, el Resource **aborta automáticamente la petición anterior que estuviera en curso** y vuelve a ejecutar el `loader` con el nuevo valor.
+    * Si `request` devuelve `undefined`, el Resource entra en estado `Idle` (reposo) y **no ejecuta ninguna petición** (muy útil para no buscar hasta que el usuario escriba al menos 2 caracteres).
 * **`loader` (Cargador asíncrono):** Función que recibe `{ request, abortSignal, previous }` y obtiene los datos del servidor.
-  * En **`resource()`**, el `loader` debe devolver una **`Promise<T>`** (por ejemplo, usando `fetch` con `async/await`).
-  * En **`rxResource()`**, el `loader` debe devolver un **`Observable<T>`** (por ejemplo, llamando a un método de un servicio que usa `HttpClient.get()`).
+    * En **`resource()`**, el `loader` debe devolver una **`Promise<T>`** (por ejemplo, usando `fetch` con `async/await`).
+    * En **`rxResource()`**, el `loader` debe devolver un **`Observable<T>`** (por ejemplo, llamando a un método de un servicio que usa `HttpClient.get()`).
 
 **Señales y métodos que devuelve cualquier Resource (`ResourceRef<T>`):**
 
@@ -1326,13 +1326,13 @@ export class ProductosClasicoComponent implements OnInit {
 ```
 
 * **✅ Ventajas de la Forma Clásica:**
-  * **Control imperativo total:** Tú decides en qué línea exacta se dispara la petición y qué hacer antes o después.
-  * **Ideal para mutaciones y acumulación:** Es la mejor opción cuando necesitas **concatenar** resultados nuevos a los anteriores (como el **Scroll Infinito**: `this.gifs.update(prev => [...prev, ...nuevos])`) o para peticiones de escritura (`POST`, `PUT`, `DELETE`) al pulsar un botón.
-  * **Didáctica:** Permite al alumno comprender paso a paso cómo funciona el flujo HTTP y las suscripciones.
+    * **Control imperativo total:** Tú decides en qué línea exacta se dispara la petición y qué hacer antes o después.
+    * **Ideal para mutaciones y acumulación:** Es la mejor opción cuando necesitas **concatenar** resultados nuevos a los anteriores (como el **Scroll Infinito**: `this.gifs.update(prev => [...prev, ...nuevos])`) o para peticiones de escritura (`POST`, `PUT`, `DELETE`) al pulsar un botón.
+    * **Didáctica:** Permite al alumno comprender paso a paso cómo funciona el flujo HTTP y las suscripciones.
 * **❌ Inconvenientes de la Forma Clásica:**
-  * **Mucho código repetitivo (*boilerplate*):** Por cada endpoint necesitas crear y actualizar a mano 3 señales (`datos`, `cargando`, `error`).
-  * **Riesgo de *Race Conditions*:** Si el usuario cambia rápido de categoría y olvidas cancelar la suscripción anterior (`unsubscribe()` o `switchMap`), una respuesta lenta antigua puede sobrescribir a la nueva.
-  * **Reactividad desconectada:** Cambiar `this.categoria.set(nueva)` no recarga los datos por sí solo; tienes que acordarte de llamar a `this.cargarProductos()`.
+    * **Mucho código repetitivo (*boilerplate*):** Por cada endpoint necesitas crear y actualizar a mano 3 señales (`datos`, `cargando`, `error`).
+    * **Riesgo de *Race Conditions*:** Si el usuario cambia rápido de categoría y olvidas cancelar la suscripción anterior (`unsubscribe()` o `switchMap`), una respuesta lenta antigua puede sobrescribir a la nueva.
+    * **Reactividad desconectada:** Cambiar `this.categoria.set(nueva)` no recarga los datos por sí solo; tienes que acordarte de llamar a `this.cargarProductos()`.
 
 ---
 
@@ -1374,7 +1374,7 @@ export class ProductosResourceComponent {
     // 2. Loader basado en Promesa + abortSignal nativo para cancelación
     loader: async ({ request, abortSignal }) => {
       const resp = await fetch(`/api/productos?cat=${request.cat}`, {
-        signal: abortSignal // Si 'categoria' cambia a mitad de vuelo, aborta el fetch
+        signal: abortSignal // Si 'categoria' cambia mientras está en curso, aborta el fetch
       });
 
       if (!resp.ok) {
@@ -1388,13 +1388,13 @@ export class ProductosResourceComponent {
 ```
 
 * **✅ Ventajas de `resource()`:**
-  * **Cero RxJS:** Muy cómodo si consumes SDKs externos basados en Promesas (Firebase, Supabase, AWS Amplify, IndexedDB) o la API nativa `fetch()`.
-  * **Cancelación nativa con `AbortSignal`:** Angular inyecta automáticamente un `abortSignal` en el `loader` y lo activa si `request` cambia antes de que termine la promesa.
-  * **Estado todo-en-uno:** Elimina las señales manuales `cargando` y `error`.
+    * **Cero RxJS:** Muy cómodo si consumes SDKs externos basados en Promesas (Firebase, Supabase, AWS Amplify, IndexedDB) o la API nativa `fetch()`.
+    * **Cancelación nativa con `AbortSignal`:** Angular inyecta automáticamente un `abortSignal` en el `loader` y lo activa si `request` cambia antes de que termine la promesa.
+    * **Estado todo-en-uno:** Elimina las señales manuales `cargando` y `error`.
 * **❌ Inconvenientes de `resource()`:**
-  * **Si usas `fetch()`, NO pasa por los Interceptores de Angular (`HttpInterceptorFn`):** Pierdes la inyección automática de tokens JWT, el manejo global de errores y los tests con `HttpTestingController` de `HttpClient`.
-  * **No admite tuberías RxJS directas:** No puedes encadenar operadores como `.pipe(map(...), retry(2))` a menos que uses `rxResource()`.
-  * ⚠️ **Antipatrón frecuente:** Usar `lastValueFrom(this.http.get(...))` dentro de `resource()` desperdicia la cancelación automática de RxJS; si tu servicio ya usa `HttpClient` y devuelve un `Observable`, **debes usar `rxResource()`**, no `resource()`.
+    * **Si usas `fetch()`, NO pasa por los Interceptores de Angular (`HttpInterceptorFn`):** Pierdes la inyección automática de tokens JWT, el manejo global de errores y los tests con `HttpTestingController` de `HttpClient`.
+    * **No admite tuberías RxJS directas:** No puedes encadenar operadores como `.pipe(map(...), retry(2))` a menos que uses `rxResource()`.
+    * ⚠️ **Antipatrón frecuente:** Usar `lastValueFrom(this.http.get(...))` dentro de `resource()` desperdicia la cancelación automática de RxJS; si tu servicio ya usa `HttpClient` y devuelve un `Observable`, **debes usar `rxResource()`**, no `resource()`.
 
 ---
 
@@ -1450,12 +1450,12 @@ export class ProductosRxResourceComponent {
 ```
 
 * **✅ Ventajas de `rxResource()`:**
-  * **Lo mejor de ambos mundos (`HttpClient` + Signals):** Aprovecha toda la infraestructura de `HttpClient` (**Interceptores JWT**, tipado genérico, `params`, operadores RxJS como `map`, `retry`, `catchError` y tus clases `Mapper`) sin tener que escribir ni un solo `.subscribe()` ni gestionar `unsubscribe()`.
-  * **Efecto `switchMap` automático:** Si la señal `categoria()` cambia 5 veces seguidas rápidamente, `rxResource()` se desuscribe automáticamente de las 4 peticiones anteriores (abortándolas en red) y se queda solo con la 5.ª.
-  * **Código limpio y declarativo:** Reduce el componente o servicio a una única declaración reactiva con `.value()`, `.isLoading()`, `.error()` y `.reload()`.
+    * **Lo mejor de ambos mundos (`HttpClient` + Signals):** Aprovecha toda la infraestructura de `HttpClient` (**Interceptores JWT**, tipado genérico, `params`, operadores RxJS como `map`, `retry`, `catchError` y tus clases `Mapper`) sin tener que escribir ni un solo `.subscribe()` ni gestionar `unsubscribe()`.
+    * **Efecto `switchMap` automático:** Si la señal `categoria()` cambia 5 veces seguidas rápidamente, `rxResource()` se desuscribe automáticamente de las 4 peticiones anteriores (abortándolas en red) y se queda solo con la 5.ª.
+    * **Código limpio y declarativo:** Reduce el componente o servicio a una única declaración reactiva con `.value()`, `.isLoading()`, `.error()` y `.reload()`.
 * **❌ Inconvenientes de `rxResource()`:**
-  * **Solo devuelve el primer valor por carga (pensado para petición/respuesta):** Aunque trabaja con Observables, está diseñado para flujos tipo HTTP (una respuesta por cada cambio de `request`), no para acumular páginas en un mismo array (como un scroll infinito) ni para operaciones de escritura (`POST`/`DELETE`) disparadas por un evento puntual.
-  * **Debe crearse en un contexto de inyección:** Al igual que `toSignal()`, debe declararse como propiedad de clase o dentro del `constructor()` (o pasando un `injector` explícito).
+    * **Solo devuelve el primer valor por carga (pensado para petición/respuesta):** Aunque trabaja con Observables, está diseñado para flujos tipo HTTP (una respuesta por cada cambio de `request`), no para acumular páginas en un mismo array (como un scroll infinito) ni para operaciones de escritura (`POST`/`DELETE`) disparadas por un evento puntual.
+    * **Debe crearse en un contexto de inyección:** Al igual que `toSignal()`, debe declararse como propiedad de clase o dentro del `constructor()` (o pasando un `injector` explícito).
 
 ---
 
@@ -2170,6 +2170,93 @@ Cuando se registran múltiples interceptores en `provideHttpClient(withIntercept
 Petición (ida):      authInterceptor  ──>  loggingInterceptor  ──>  errorInterceptor  ──>  [Backend API]
 Respuesta (vuelta):  authInterceptor  <──  loggingInterceptor  <──  errorInterceptor  <──  [Backend API]
 ```
+
+---
+
+### SECCIÓN 7 - CORS (*Cross-Origin Resource Sharing*) y Proxy de Desarrollo
+
+Uno de los errores más frecuentes al conectar una aplicación Angular con una API externa es encontrarse en la consola del navegador con el temido mensaje rojo:
+
+> `Access to fetch at 'https://api.ejemplo.com/...' from origin 'http://localhost:4200' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
+
+Para resolverlo sin frustración es fundamental entender qué es un **origen**, por qué el navegador bloquea la respuesta y dónde debe configurarse el permiso.
+
+#### 7.1. ¿Qué es un «Origen» (*Origin*) y la *Same-Origin Policy*?
+
+En la web, el **origen** de una página viene definido por exactamente **tres componentes**:
+
+`Origen = Protocolo (http/https) + Dominio (hostname) + Puerto`
+
+Si cambia **cualquiera** de esos tres elementos, el navegador considera que se trata de un **origen distinto (*Cross-Origin*)**:
+
+| URL desde tu app Angular | URL de la API destino | ¿Mismo origen? | Motivo |
+| :--- | :--- | :---: | :--- |
+| `http://localhost:4200` | `http://localhost:4200/assets/data.json` | **Sí** | Mismo protocolo, dominio y puerto |
+| `http://localhost:4200` | `https://api.restcountries.com/countries/v5` | **No** | Cambian protocolo, dominio y puerto |
+| `http://localhost:4200` | `http://localhost:3000/api/users` | **No** | Cambia el puerto (`4200` ≠ `3000`) |
+| `http://localhost:4200` | `https://localhost:4200/api` | **No** | Cambia el protocolo (`http` ≠ `https`) |
+
+Por seguridad, todos los navegadores modernos aplican la **Política del Mismo Origen (*Same-Origin Policy* o SOP)**: impiden por defecto que el JavaScript de una web lea respuestas de otro dominio para evitar que una página maliciosa robe datos privados de sesiones abiertas del usuario en otros servicios.
+
+#### 7.2. ¿Qué es CORS y por qué funciona en Postman pero falla en Angular?
+
+**CORS (*Cross-Origin Resource Sharing* — Intercambio de Recursos de Origen Cruzado)** es el mecanismo estándar basado en **cabeceras HTTP** mediante el cual un servidor le indica al navegador qué orígenes externos tienen permiso para leer sus respuestas.
+
+!!! warning "La duda clásica del aula: «¡En Postman funciona, pero en Angular da error de CORS!»"
+    **CORS es una protección aplicada exclusivamente por el navegador web**, no por Angular ni por Postman.
+
+    * **Postman, `curl` o un servidor Node.js** no son navegadores y **no aplican** la política CORS, por lo que siempre muestran la respuesta.
+    * **Chrome, Firefox o Edge** sí envían automáticamente la cabecera `Origin: http://localhost:4200` y **bloquean la lectura del JSON** si el servidor no devuelve la cabecera `Access-Control-Allow-Origin` autorizando ese origen.
+    * **Conclusión clave:** un error de CORS **nunca se soluciona añadiendo cabeceras `Access-Control-Allow-Origin` en Angular**; quien tiene que autorizar el origen es siempre el **servidor** (o el panel de configuración de la API externa).
+
+#### 7.3. Peticiones *Preflight* (`OPTIONS`) con `Authorization: Bearer`
+
+Cuando tu aplicación Angular envía cabeceras personalizadas de autenticación (como `Authorization: Bearer TU_API_KEY` en **REST Countries v5**) o peticiones `PUT`/`DELETE` con JSON, el navegador realiza primero una **petición de verificación previa (*Preflight*)** usando el método HTTP **`OPTIONS`**:
+
+```mermaid
+sequenceDiagram
+    participant Nav as Navegador (http://localhost:4200)
+    participant API as Servidor API (https://api.restcountries.com)
+
+    Nav->>API: 1. OPTIONS /countries/v5/capitals?q=madrid<br/>Origin: http://localhost:4200<br/>Access-Control-Request-Headers: authorization
+    alt Origen autorizado en el servidor
+        API-->>Nav: 2. HTTP 204 OK<br/>Access-Control-Allow-Origin: http://localhost:4200<br/>Access-Control-Allow-Headers: authorization
+        Nav->>API: 3. GET /countries/v5/capitals?q=madrid<br/>Authorization: Bearer TU_API_KEY
+        API-->>Nav: 4. HTTP 200 OK + JSON { data: { objects: [...] } }
+    else Origen NO autorizado
+        API-->>Nav: 2. Sin cabecera Access-Control-Allow-Origin válida
+        Note over Nav: El navegador bloquea la petición y lanza error CORS en consola
+    end
+```
+
+#### 7.4. Cómo resolver CORS correctamente según el escenario
+
+1. **API externa con lista blanca de orígenes (caso REST Countries v5):**
+   * Entra en el panel de control de la API (sección **API Keys**) y registra el dominio desde el que harás peticiones en **Allowed Origins** (por ejemplo, `localhost` durante el desarrollo y `tu-dominio.com` en producción).
+2. **Backend propio (Node/Express, NestJS, Spring Boot, .NET, etc.):**
+   * Configura CORS explícitamente en el servidor devolviendo `Access-Control-Allow-Origin` con el origen de tu frontend (por ejemplo `http://localhost:4200` en desarrollo) y `Access-Control-Allow-Headers: Content-Type, Authorization`.
+3. **Proxy de desarrollo en Angular CLI (`proxy.conf.json`):**
+   * Si durante el desarrollo local consumes un backend propio que todavía no tiene configurado CORS, puedes configurar un proxy en el servidor de desarrollo de Angular para que las peticiones a `/api` salgan desde el mismo origen (`localhost:4200`) y el CLI las reenvíe servidor-a-servidor:
+
+```json title="proxy.conf.json (raíz del proyecto)"
+{
+  "/api": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
+```
+
+Y arrancar el servidor de desarrollo indicando el archivo de proxy:
+
+```bash
+ng serve --proxy-config proxy.conf.json
+```
+
+!!! danger "Qué NO debes hacer"
+    * **No instales extensiones de navegador tipo «Disable CORS»** como solución definitiva: solo enmascaran el problema en tu ordenador y tu aplicación seguirá fallando en cualquier otro navegador o usuario real.
+    * **Recuerda que el proxy de `ng serve` solo existe en desarrollo:** en producción el servidor real (o un reverse proxy como Nginx) debe exponer las cabeceras CORS adecuadas.
 
 ## Ejemplos guiados
 
@@ -3003,44 +3090,72 @@ export class UserCrudService extends GenericCrudService<User> {
 
 === "country.service.ts"
     ```typescript
-    import { Injectable, inject } from '@angular/core';
-    import { HttpClient } from '@angular/common/http';
-    import { Observable } from 'rxjs';
-    import { Country } from '../models/country.interface';
+    import { Service, inject } from '@angular/core';
+    import { HttpClient, HttpHeaders } from '@angular/common/http';
+    import { map, Observable } from 'rxjs';
+    import { Country, RESTCountriesV5Response } from '../models/country.interface';
 
-    @Injectable({ providedIn: 'root' })
+    @Service()
     export class CountryService {
       private http = inject(HttpClient);
-      private apiUrl = 'https://restcountries.com/v3.1';
+      private apiUrl = 'https://api.restcountries.com/countries/v5';
+      // Requiere API Key gratuita de https://restcountries.com/sign-up y añadir "localhost" en Allowed Origins (CORS)
+      private headers = new HttpHeaders({
+        Authorization: 'Bearer TU_API_KEY',
+      });
 
       obtenerTodos(): Observable<Country[]> {
-        return this.http.get<Country[]>(
-          `${this.apiUrl}/all?fields=name,cca3,region,subregion,population,capital,flags,currencies,languages`
-        );
+        return this.http
+          .get<RESTCountriesV5Response>(this.apiUrl, {
+            headers: this.headers,
+            params: {
+              limit: 100,
+              response_fields:
+                'names,codes,region,subregion,population,capitals,flag,currencies,languages',
+            },
+          })
+          .pipe(map((resp) => resp.data.objects));
       }
 
       buscarPorNombre(nombre: string): Observable<Country[]> {
-        return this.http.get<Country[]>(`${this.apiUrl}/name/${nombre}`);
+        return this.http
+          .get<RESTCountriesV5Response>(`${this.apiUrl}/name`, {
+            headers: this.headers,
+            params: { q: nombre },
+          })
+          .pipe(map((resp) => resp.data.objects));
       }
 
       obtenerPorRegion(region: string): Observable<Country[]> {
-        return this.http.get<Country[]>(`${this.apiUrl}/region/${region}`);
+        return this.http
+          .get<RESTCountriesV5Response>(`${this.apiUrl}/region/${region}`, {
+            headers: this.headers,
+            params: { limit: 100 },
+          })
+          .pipe(map((resp) => resp.data.objects));
       }
     }
     ```
 
 === "country.interface.ts"
     ```typescript
+    export interface RESTCountriesV5Response {
+      data: {
+        objects: Country[];
+        meta: { total: number; request_id: string };
+      };
+    }
+
     export interface Country {
-      name: { common: string; official: string };
-      cca3: string;
+      names: { common: string; official: string };
+      codes: { alpha_2: string; alpha_3: string };
       region: string;
       subregion: string;
       population: number;
-      capital: string[];
-      flags: { png: string; svg: string };
-      currencies: Record<string, { name: string; symbol: string }>;
-      languages: Record<string, string>;
+      capitals: { name: string }[];
+      flag: { emoji: string; url_png: string; url_svg: string };
+      currencies: { code: string; name: string; symbol: string }[];
+      languages: { iso639_1: string; name: string; native_name: string }[];
     }
     ```
 
