@@ -893,20 +893,20 @@ flowchart TD
 
         subgraph Hijos ["Plantilla HTML del Padre: Componentes Hijos (Dumb)"]
             direction LR
-            Lista["<b>CharacterList</b><br/><i>(Listado de Personajes)</i><br/><code>characters = input.required()</code><br/><code>listName = input('...')</code>"]
-            Add["<b>CharacterAdd</b><br/><i>(Formulario de Entrada)</i><br/><code>newCharacter = output()</code>"]
+            Add["<b>CharacterAdd</b><br/><i>(Columna Izquierda · Formulario)</i><br/><code>newCharacter = output()</code>"]
+            Lista["<b>CharacterList</b><br/><i>(Columna Derecha · Listado)</i><br/><code>characters = input.required()</code><br/><code>listName = input('...')</code>"]
         end
 
-        Estado -->|"<b>1. Datos bajan (Input Binding)</b><br/><code>[characters]='characters()'</code>"| Lista
         Estado ~~~ Add
-        Add -->|"<b>2. Eventos suben (Output Event)</b><br/><code>(newCharacter)='addCharacter($event)'</code>"| Estado
+        Add -->|"<b>1. Eventos suben (Output Event)</b><br/><code>(newCharacter)='addCharacter($event)'</code>"| Estado
+        Estado -->|"<b>2. Datos bajan (Input Binding)</b><br/><code>[characters]='characters()'</code>"| Lista
     end
 
     style Padre fill:#f8f9fa,stroke:#1976d2,stroke-width:2px
     style Estado fill:#e3f2fd,stroke:#1976d2,stroke-width:1.5px
     style Hijos fill:#ffffff,stroke:#7b1fa2,stroke-width:1.5px,stroke-dasharray: 4 4
-    style Lista fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
     style Add fill:#fff3e0,stroke:#f57c00,stroke-width:1.5px
+    style Lista fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px
 ```
 
 ---
